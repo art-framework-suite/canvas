@@ -1,7 +1,7 @@
 #ifndef art_Utilities_FirstAbsoluteOrLookupWithDotPolicy_h
 #define art_Utilities_FirstAbsoluteOrLookupWithDotPolicy_h
 
-#include "art/Utilities/fwd.h"
+#include "canvas/Utilities/fwd.h"
 
 #include "cetlib/filepath_maker.h"
 #include "cetlib/search_path.h"

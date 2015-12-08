@@ -1,8 +1,8 @@
-#include "art/Persistency/Common/RefCoreStreamer.h"
+#include "canvas/Persistency/Common/RefCoreStreamer.h"
 
-#include "art/Persistency/Common/EDProductGetterFinder.h"
-#include "art/Persistency/Common/RefCore.h"
-#include "art/Persistency/Provenance/ProductID.h"
+#include "canvas/Persistency/Common/EDProductGetterFinder.h"
+#include "canvas/Persistency/Common/RefCore.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
 
 #include "TBuffer.h"
 #include "TClassRef.h"

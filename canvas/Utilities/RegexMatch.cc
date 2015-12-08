@@ -1,6 +1,6 @@
 // functions used to assist with regular expression matching of strings
 
-#include "art/Utilities/RegexMatch.h"
+#include "canvas/Utilities/RegexMatch.h"
 #include "cetlib/replace_all.h"
 
 #include <regex>

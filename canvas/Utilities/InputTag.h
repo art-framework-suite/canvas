@@ -1,7 +1,7 @@
 #ifndef art_Utilities_InputTag_h
 #define art_Utilities_InputTag_h
 
-#include "art/Utilities/fwd.h"
+#include "canvas/Utilities/fwd.h"
 #include "fhiclcpp/ParameterSet.h"
 
 #include <iosfwd>

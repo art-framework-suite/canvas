@@ -8,7 +8,7 @@
 //
 // ======================================================================
 
-#include "art/Persistency/Common/fwd.h"
+#include "canvas/Persistency/Common/fwd.h"
 
 #include <memory>
 #include <string>

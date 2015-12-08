@@ -3,7 +3,7 @@
 
 // ----------------------------------------------------------------------
 
-#include "art/Utilities/fwd.h"
+#include "canvas/Utilities/fwd.h"
 
 namespace art {
 

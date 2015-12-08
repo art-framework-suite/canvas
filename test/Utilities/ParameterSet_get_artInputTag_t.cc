@@ -1,4 +1,4 @@
-#include "art/Utilities/InputTag.h"
+#include "canvas/Utilities/InputTag.h"
 #include "fhiclcpp/ParameterSet.h"
 #include "fhiclcpp/exception.h"
 

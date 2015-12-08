@@ -1,4 +1,4 @@
-#include "art/Utilities/FirstAbsoluteOrLookupWithDotPolicy.h"
+#include "canvas/Utilities/FirstAbsoluteOrLookupWithDotPolicy.h"
 
 #include "cetlib/filesystem.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"

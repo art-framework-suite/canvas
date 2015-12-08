@@ -1,0 +1,71 @@
+#!/bin/bash
+for file in `git grep "#include \"art/Utilities/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "canvas/Utilities/!#include "canvas/Utilities/!g' $file; done
+for file in `git grep "#include \"art/Persistency/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "canvas/Persistency/!#include "canvas/Persistency/!g' $file; done
+for file in `git grep "#include "canvas/Persistency/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "canvas/Persistency/!#include "canvas/Persistency/!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w art_Persistency_Common | cut -d: -f1 | sort -u`;do sed -i.bak -e's!art_Persistency_Common!canvas_Persistency_Common!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w art_Persistency_Common_dict | cut -d: -f1 | sort -u`;do sed -i.bak -e's!art_Persistency_Common_dict!canvas_Persistency_Common_dict!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w art_Persistency_Provenance | cut -d: -f1 | sort -u`;do sed -i.bak -e's!art_Persistency_Provenance!canvas_Persistency_Provenance!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w art_Persistency_StdDictionaries | cut -d: -f1 | sort -u`;do sed -i.bak -e's!art_Persistency_StdDictionaries!canvas_Persistency_StdDictionaries!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w art_Persistency_StdDictionaries_dict | cut -d: -f1 | sort -u`;do sed -i.bak -e's!art_Persistency_StdDictionaries_dict!canvas_Persistency_StdDictionaries_dict!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w art_Persistency_RootDB | cut -d: -f1 | sort -u`;do sed -i.bak -e's!art_Persistency_RootDB!canvas_Persistency_RootDB!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w art_Persistency_WrappedStdDictionaries | cut -d: -f1 | sort -u`;do sed -i.bak -e's!art_Persistency_WrappedStdDictionaries!canvas_Persistency_WrappedStdDictionaries!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w art_Persistency_WrappedStdDictionaries_dict | cut -d: -f1 | sort -u`;do sed -i.bak -e's!art_Persistency_WrappedStdDictionaries_dict!canvas_Persistency_WrappedStdDictionaries_dict!g' $file; done
+for file in `find . -name classes*.def`;do sed -i.bak -e's!include=art/Persistency/!include="canvas/Persistency/!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w art_Utilities | cut -d: -f1 | sort -u`;do sed -i.bak -e's!art_Utilities!canvas_Utilities!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w ART_PERSISTENCY_COMMON | cut -d: -f1 | sort -u`;do sed -i.bak -e's!ART_PERSISTENCY_COMMON!CANVAS_PERSISTENCY_COMMON!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w ART_PERSISTENCY_PROVENANCE | cut -d: -f1 | sort -u`;do sed -i.bak -e's!ART_PERSISTENCY_PROVENANCE!CANVAS_PERSISTENCY_PROVENANCE!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w ART_PERSISTENCY_ROOTDB | cut -d: -f1 | sort -u`;do sed -i.bak -e's!ART_PERSISTENCY_ROOTDB!CANVAS_PERSISTENCY_ROOTDB!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w ART_UTILITIES | cut -d: -f1 | sort -u`;do sed -i.bak -e's!ART_UTILITIES!CANVAS_UTILITIES!g' $file; done
+for file in `git grep "#include \"SimulationBase/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "nudata/SimulationBase/!#include "nudata/SimulationBase/!g' $file; done
+for file in `git grep "#include \"Simulation/SimChannel.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsimlite/Simulation/SimChannel.h!#include "larsimlite/Simulation/SimChannel.h!g' $file; done
+for file in `git grep "#include \"Simulation/SimPhotons.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsimlite/Simulation/SimPhotons.h!#include "larsimlite/Simulation/SimPhotons.h!g' $file; done
+for file in `git grep "#include \"Simulation/AuxDetSimChannel.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsimlite/Simulation/AuxDetSimChannel.h!#include "larsimlite/Simulation/AuxDetSimChannel.h!g' $file; done
+for file in `git grep "#include \"Simulation/BeamGateInfo.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsimlite/Simulation/BeamGateInfo.h!#include "larsimlite/Simulation/BeamGateInfo.h!g' $file; done
+for file in `git grep "#include \"Simulation/sim.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/sim.h!#include "larsim/Simulation/sim.h!g' $file; done
+for file in `git grep "#include \"Simulation/SimListUtils.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/SimListUtils.h!#include "larsim/Simulation/SimListUtils.h!g' $file; done
+for file in `git grep "#include \"Simulation/EmEveIdCalculator.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/EmEveIdCalculator.h!#include "larsim/Simulation/EmEveIdCalculator.h!g' $file; done
+for file in `git grep "#include \"Simulation/EveIdCalculator.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/EveIdCalculator.h!#include "larsim/Simulation/EveIdCalculator.h!g' $file; done
+for file in `git grep "#include \"Simulation/PhotonVoxels.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/PhotonVoxels.h!#include "larsim/Simulation/PhotonVoxels.h!g' $file; done
+for file in `git grep "#include \"Simulation/LArVoxelCalculator.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/LArVoxelCalculator.h!#include "larsim/Simulation/LArVoxelCalculator.h!g' $file; done
+for file in `git grep "#include \"Simulation/LArVoxelList.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/LArVoxelList.h!#include "larsim/Simulation/LArVoxelList.h!g' $file; done
+for file in `git grep "#include \"Simulation/LArVoxelID.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/LArVoxelID.h!#include "larsim/Simulation/LArVoxelID.h!g' $file; done
+for file in `git grep "#include \"Simulation/LArVoxelData.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/LArVoxelData.h!#include "larsim/Simulation/LArVoxelData.h!g' $file; done
+for file in `git grep "#include \"Simulation/ParticleList.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/ParticleList.h!#include "larsim/Simulation/ParticleList.h!g' $file; done
+for file in `git grep "#include \"Simulation/ParticleHistory.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/ParticleHistory.h!#include "larsim/Simulation/ParticleHistory.h!g' $file; done
+for file in `git grep "#include \"Simulation/LArG4Parameters.h" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/Simulation/LArG4Parameters.h!#include "larsim/Simulation/LArG4Parameters.h!g' $file; done
+for file in `git grep "#include \"DetSim/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/DetSim/!#include "larsim/DetSim/!g' $file; done
+for file in `git grep "#include \"EventGenerator/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/EventGenerator/!#include "larsim/EventGenerator/!g' $file; done
+for file in `git grep "#include \"PhotonPropagation/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/PhotonPropagation/!#include "larsim/PhotonPropagation/!g' $file; done
+for file in `git grep "#include \"LArG4/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/LArG4/!#include "larsim/LArG4/!g' $file; done
+for file in `git grep "#include \"MCCheater/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/MCCheater/!#include "larsim/MCCheater/!g' $file; done
+for file in `git grep "#include \"MCSTReco/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/MCSTReco/!#include "larsim/MCSTReco/!g' $file; done
+for file in `git grep "#include \"SimFilters/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/SimFilters/!#include "larsim/SimFilters/!g' $file; done
+for file in `git grep "#include \"TriggerAlgo/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larsim/TriggerAlgo/!#include "larsim/TriggerAlgo/!g' $file; done
+for file in `git grep "#include \"EventGeneratorBase/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "nutools/EventGeneratorBase/!#include "nutools/EventGeneratorBase/!g' $file; done
+for file in `git grep "#include \"G4Base/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "nutools/G4Base/!#include "nutools/G4Base/!g' $file; done
+for file in `git grep "#include \"Geometry/"| cut -d: -f1| sort -u`;do sed -i.bak -e's!#include "larcore/Geometry/!#include "larcore/Geometry/!g' $file; done
+for file in `git grep "#include \"SummaryData/"| cut -d: -f1| sort -u`;do sed -i.bak -e's!#include "larcorelite/SummaryData/!#include "larcorelite/SummaryData/!g' $file; done
+for file in `git grep "#include \"SimpleTypesAndConstants/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larcorelite/SimpleTypesAndConstants/!#include "larcorelite/SimpleTypesAndConstants/!g' $file; done
+for file in `git grep "#include \"AnalysisBase/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "lardatalite/AnalysisBase/!#include "lardatalite/AnalysisBase/!g' $file; done
+for file in `git grep "#include \"MCBase/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "lardatalite/MCBase/!#include "lardatalite/MCBase/!g' $file; done
+for file in `git grep "#include \"OpticalDetectorData/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "lardatalite/OpticalDetectorData/!#include "lardatalite/OpticalDetectorData/!g' $file; done
+for file in `git grep "#include \"RawData/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "lardatalite/RawData/!#include "lardatalite/RawData/!g' $file; done
+for file in `git grep "#include \"RecoBase/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "lardatalite/RecoBase/!#include "lardatalite/RecoBase/!g' $file; done
+for file in `git grep "#include \"AnalysisAlg/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "lardata/AnalysisAlg/!#include "lardata/AnalysisAlg/!g' $file; done
+for file in `git grep "#include \"RecoBaseArt/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "lardata/RecoBaseArt/!#include "lardata/RecoBaseArt/!g' $file; done
+for file in `git grep "#include \"RecoObjects/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "lardata/RecoObjects/!#include "lardata/RecoObjects/!g' $file; done
+for file in `git grep "#include \"Utilities/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "lardata/Utilities/!#include "lardata/Utilities/!g' $file; done
+for file in `git grep "#include \"Filters/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larevt/Filters/!#include "larevt/Filters/!g' $file; done
+for file in `git grep "#include \"SpaceCharge/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larevt/SpaceCharge/!#include "larevt/SpaceCharge/!g' $file; done
+for file in `git grep "#include \"CalibrationDBI/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larevt/CalibrationDBI/!#include "larevt/CalibrationDBI/!g' $file; done
+for file in `git grep "#include \"CalData/" | cut -d: -f1 | sort -u`;do sed -i.bak -e's!#include "larevt/CalData/!#include "larevt/CalData/!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w Geometry | cut -d: -f1 | sort -u`;do sed -i.bak -e's! Geometry! larcore_Geometry!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w SummaryData | cut -d: -f1 | sort -u`;do sed -i.bak -e's! SummaryData! larcorelite_SummaryData!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w Filters | cut -d: -f1 | sort -u`;do sed -i.bak -e's! Filters! larevt_Filters!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w RawData | cut -d: -f1 | sort -u`;do sed -i.bak -e's! RawData! lardatalite_RawData!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w RecoBase | cut -d: -f1 | sort -u`;do sed -i.bak -e's! RecoBase! lardatalite_RecoBase!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w MCBase | cut -d: -f1 | sort -u`;do sed -i.bak -e's! MCBase! lardatalite_MCBase!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w Utilities | cut -d: -f1 | sort -u`;do sed -i.bak -e's! Utilities! lardata_Utilities!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w SimulationBase | cut -d: -f1 | sort -u`;do sed -i.bak -e's! SimulationBase! nudata_SimulationBase!g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w Simulation | cut -d: -f1 | sort -u`;do sed -i.bak -e's! Simulation ! larsimlite_Simulation !g' $file; done
+for file in `find . -name CMakeLists.txt | xargs grep -w EventGenerator | cut -d: -f1 | sort -u`;do sed -i.bak -e's! EventGenerator ! larsim_EventGenerator !g' $file; done

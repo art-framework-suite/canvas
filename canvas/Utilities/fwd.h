@@ -6,9 +6,9 @@
 
 // These headers are required to forward-declare adequately types and
 // contain *only* what is required so to do.
-#include "art/Utilities/Exception.h"
-#include "art/Utilities/JobMode.h"
-#include "art/Utilities/Verbosity.h"
+#include "canvas/Utilities/Exception.h"
+#include "canvas/Utilities/JobMode.h"
+#include "canvas/Utilities/Verbosity.h"
 
 namespace art {
   class debugavlue; // DebugMacros.h

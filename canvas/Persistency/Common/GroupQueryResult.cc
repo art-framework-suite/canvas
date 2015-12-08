@@ -5,7 +5,7 @@
 //
 // ======================================================================
 
-#include "art/Persistency/Common/GroupQueryResult.h"
+#include "canvas/Persistency/Common/GroupQueryResult.h"
 
 #include <cassert>
 

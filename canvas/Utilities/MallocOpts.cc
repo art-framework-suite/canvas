@@ -11,7 +11,7 @@
 // ------------------ resetting malloc options -----------------------
 
 
-#include "art/Utilities/MallocOpts.h"
+#include "canvas/Utilities/MallocOpts.h"
 
 #if !defined(__APPLE__)
 #include <malloc.h>

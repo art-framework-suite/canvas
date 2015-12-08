@@ -1,8 +1,8 @@
 #ifndef art_Persistency_Common_EDProductGetter_h
 #define art_Persistency_Common_EDProductGetter_h
 
-#include "art/Persistency/Provenance/ProductID.h"
-#include "art/Utilities/fwd.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
+#include "canvas/Utilities/fwd.h"
 
 namespace art {
   class EDProduct;

@@ -26,7 +26,7 @@
 // These values will need to be checked when new CPUs are available or
 // when we move to 64 bit executables.
 
-#include "art/Utilities/fwd.h"
+#include "canvas/Utilities/fwd.h"
 
 #include <string>
 #include <ostream>

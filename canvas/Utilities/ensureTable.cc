@@ -1,4 +1,4 @@
-#include "art/Utilities/ensureTable.h"
+#include "canvas/Utilities/ensureTable.h"
 
 #include "fhiclcpp/intermediate_table.h"
 

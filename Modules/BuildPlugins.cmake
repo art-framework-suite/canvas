@@ -48,9 +48,9 @@ function(simple_plugin name type)
     list(INSERT simple_plugin_liblist 0
       art_Framework_Core
       art_Framework_Principal
-      art_Persistency_Common
-      art_Persistency_Provenance
-      art_Utilities
+      canvas_Persistency_Common
+      canvas_Persistency_Provenance
+      canvas_Utilities
       fhiclcpp
       cetlib
       ${ROOT_CORE}

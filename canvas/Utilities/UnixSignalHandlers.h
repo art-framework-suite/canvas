@@ -8,7 +8,7 @@ and manipulate Unix-style signal handling.
 
 ----------------------------------------------------------------------*/
 
-#include "art/Utilities/fwd.h"
+#include "canvas/Utilities/fwd.h"
 
 #include "boost/thread/thread.hpp"
 

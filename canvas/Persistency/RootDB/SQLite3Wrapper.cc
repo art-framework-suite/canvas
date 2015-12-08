@@ -1,8 +1,8 @@
-#include "art/Persistency/RootDB/SQLite3Wrapper.h"
+#include "canvas/Persistency/RootDB/SQLite3Wrapper.h"
 
-#include "art/Persistency/RootDB/tkeyvfs.h"
-#include "art/Persistency/RootDB/SQLErrMsg.h"
-#include "art/Utilities/Exception.h"
+#include "canvas/Persistency/RootDB/tkeyvfs.h"
+#include "canvas/Persistency/RootDB/SQLErrMsg.h"
+#include "canvas/Utilities/Exception.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
 #include <cassert>

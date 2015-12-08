@@ -8,7 +8,7 @@
 //
 // This is a thin wrapper around boost::filesystem::path::parent_path().
 ////////////////////////////////////////////////////////////////////////
-#include "art/Utilities/parent_path.h"
+#include "canvas/Utilities/parent_path.h"
 #include "boost/filesystem.hpp"
 
 std::string

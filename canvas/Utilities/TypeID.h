@@ -9,7 +9,7 @@
 // persisted across invocations of the program.
 //
 
-#include "art/Utilities/fwd.h"
+#include "canvas/Utilities/fwd.h"
 #include <iosfwd>
 #include <string>
 #include <typeinfo>

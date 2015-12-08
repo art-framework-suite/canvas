@@ -1,4 +1,4 @@
-#include "art/Utilities/PluginSuffixes.h"
+#include "canvas/Utilities/PluginSuffixes.h"
 
 namespace {
   auto reverseMap( std::map<art::suffix_type, std::string> const& map )

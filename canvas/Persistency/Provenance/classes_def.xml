@@ -52,7 +52,7 @@
           targetClass="art::ProductRegistry"
           source="art::ProductList productList_;"
           target="productList_"
-          include="art/Persistency/Provenance/ProductList.h">
+          include="canvas/Persistency/Provenance/ProductList.h">
     <![CDATA[
         art::ProductList::const_iterator it  = onfile.productList_.begin();
         art::ProductList::const_iterator end = onfile.productList_.end();

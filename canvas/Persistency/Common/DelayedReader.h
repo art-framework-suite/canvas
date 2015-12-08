@@ -9,8 +9,8 @@
 // input sources to retrieve EDProducts from external storage.
 //
 
-#include "art/Persistency/Common/EDProduct.h"
-#include "art/Utilities/fwd.h"
+#include "canvas/Persistency/Common/EDProduct.h"
+#include "canvas/Utilities/fwd.h"
 #include "cetlib/exempt_ptr.h"
 
 #include <memory>

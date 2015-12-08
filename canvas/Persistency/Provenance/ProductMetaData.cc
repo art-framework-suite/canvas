@@ -1,4 +1,4 @@
-#include "art/Persistency/Provenance/ProductMetaData.h"
+#include "canvas/Persistency/Provenance/ProductMetaData.h"
 // vim: set sw=2:
 
 namespace art {

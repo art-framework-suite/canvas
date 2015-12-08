@@ -2,7 +2,7 @@
 #define art_Persistency_RootDB_MetaDataAccess_h
 // Provide access to the One True meta data database handle.
 
-#include "art/Persistency/RootDB/SQLite3Wrapper.h"
+#include "canvas/Persistency/RootDB/SQLite3Wrapper.h"
 
 namespace art {
   class MetaDataAccess;

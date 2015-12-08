@@ -13,7 +13,7 @@
  *  Performance comparison make sense only if the clock-rate has been fixed
  */
 
-#include "art/Utilities/fwd.h"
+#include "canvas/Utilities/fwd.h"
 
 namespace art {
   namespace details {

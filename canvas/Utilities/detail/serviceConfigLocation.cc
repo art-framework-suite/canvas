@@ -1,4 +1,4 @@
-#include "art/Utilities/detail/serviceConfigLocation.h"
+#include "canvas/Utilities/detail/serviceConfigLocation.h"
 #include "fhiclcpp/intermediate_table.h"
 
 std::string
