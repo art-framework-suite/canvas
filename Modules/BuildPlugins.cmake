@@ -39,6 +39,8 @@ function(simple_plugin name type)
   if("${type}" STREQUAL "service")
     list(INSERT simple_plugin_liblist 0
       art_Framework_Services_Registry
+      canvas_Persistency_Common
+      canvas_Utilities
       fhiclcpp
       cetlib
       ${Boost_FILESYSTEM_LIBRARY}
