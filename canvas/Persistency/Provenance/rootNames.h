@@ -1,5 +1,5 @@
-#ifndef art_Framework_IO_Root_rootNames_h
-#define art_Framework_IO_Root_rootNames_h
+#ifndef art_Persistency_Provenance_rootNames_h
+#define art_Persistency_Provenance_rootNames_h
 
 #include "canvas/Persistency/Provenance/BranchChildren.h"
 #include "canvas/Persistency/Provenance/BranchIDList.h"
@@ -73,7 +73,7 @@ namespace art {
 
   }  // rootNames
 }
-#endif /* art_Framework_IO_Root_rootNames_h */
+#endif /* art_Persistency_Provenance_rootNames_h */
 
 // Local Variables:
 // mode: c++
