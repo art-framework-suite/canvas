@@ -2,7 +2,7 @@
 #include "boost/test/auto_unit_test.hpp"
 #include "boost/test/output_test_stream.hpp"
 
-#include "art/Utilities/InputTag.h"
+#include "canvas/Utilities/InputTag.h"
 
 #include <string>
 

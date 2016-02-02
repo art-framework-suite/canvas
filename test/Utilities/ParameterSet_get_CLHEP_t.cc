@@ -1,4 +1,4 @@
-#include "art/Utilities/ParameterSetHelpers/CLHEP_ps.h"
+#include "canvas/Utilities/ParameterSetHelpers/CLHEP_ps.h"
 #include "fhiclcpp/ParameterSet.h"
 #include "fhiclcpp/exception.h"
 

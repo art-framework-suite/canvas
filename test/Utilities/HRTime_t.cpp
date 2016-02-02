@@ -1,4 +1,4 @@
-#include "art/Utilities/HRRealTime.h"
+#include "canvas/Utilities/HRRealTime.h"
 
 #include "test/CppUnit_testdriver.icpp"
 #include <cppunit/extensions/HelperMacros.h>

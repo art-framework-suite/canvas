@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE (ScheduleID_t)
 #include "boost/test/auto_unit_test.hpp"
 
-#include "art/Utilities/ScheduleID.h"
+#include "canvas/Utilities/ScheduleID.h"
 
 #include <stdexcept>
 

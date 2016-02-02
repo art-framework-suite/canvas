@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE ( parent_path_t )
 #include "boost/test/auto_unit_test.hpp"
 
-#include "art/Utilities/parent_path.h"
+#include "canvas/Utilities/parent_path.h"
 
 BOOST_AUTO_TEST_SUITE(parent_path_t)
 

@@ -1,5 +1,5 @@
 
-#include "art/Utilities/MallocOpts.h"
+#include "canvas/Utilities/MallocOpts.h"
 #include <iostream>
 #include <cassert>
 using namespace std;

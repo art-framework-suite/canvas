@@ -2,7 +2,7 @@
 #define BOOST_TEST_MODULE (pointersEqual_t)
 #include "boost/test/auto_unit_test.hpp"
 
-#include "art/Utilities/pointersEqual.h"
+#include "canvas/Utilities/pointersEqual.h"
 BOOST_AUTO_TEST_SUITE(pointersEqual_t)
 
 class A { };
