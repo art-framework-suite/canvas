@@ -1,13 +1,13 @@
-#ifndef art_Version_GetReleaseVersion_h
-#define art_Version_GetReleaseVersion_h
+#ifndef canvas_Version_GetReleaseVersion_h
+#define canvas_Version_GetReleaseVersion_h
 
 #include <string>
 
-namespace art {
+namespace canvas {
   std::string const &  getReleaseVersion( );
 }
 
-#endif /* art_Version_GetReleaseVersion_h */
+#endif /* canvas_Version_GetReleaseVersion_h */
 
 // Local Variables:
 // mode: c++

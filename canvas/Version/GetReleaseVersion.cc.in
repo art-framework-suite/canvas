@@ -1,7 +1,7 @@
 // This is a comment
-#include "art/Version/GetReleaseVersion.h"
+#include "canvas/Version/GetReleaseVersion.h"
 
-namespace art {
+namespace canvas {
 
   std::string const & getReleaseVersion() {
     static std::string const releaseVersion("@version@");
