@@ -8,7 +8,7 @@ art_dictionary(NO_INSTALL)
 set(standard_libraries
   canvas_Persistency_Provenance
   canvas_Utilities
-  art_Version
+  canvas_Version
   ${Boost_THREAD_LIBRARY}
   ${ROOT_CINTEX}
   ${ROOT_CORE}

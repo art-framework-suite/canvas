@@ -3,7 +3,7 @@
 #include "canvas/Persistency/Provenance/ProcessHistory.h"
 #include "fhiclcpp/ParameterSetID.h"
 #include "canvas/Utilities/GetPassID.h"
-#include "art/Version/GetReleaseVersion.h"
+#include "canvas/Version/GetReleaseVersion.h"
 
 int main()
 {
@@ -11,8 +11,8 @@ int main()
   assert(pnl1 == pnl1);
   art::ProcessHistory pnl2;
   assert(pnl1 == pnl2);
-  art::ProcessConfiguration iHLT(std::string("HLT"), fhicl::ParameterSetID(), art::getReleaseVersion(), art::getPassID());
-  art::ProcessConfiguration iRECO(std::string("RECO"), fhicl::ParameterSetID(), art::getReleaseVersion(), art::getPassID());
+  art::ProcessConfiguration iHLT(std::string("HLT"), fhicl::ParameterSetID(), canvas::getReleaseVersion(), art::getPassID());
+  art::ProcessConfiguration iRECO(std::string("RECO"), fhicl::ParameterSetID(), canvas::getReleaseVersion(), art::getPassID());
   pnl2.push_back(iHLT);
   assert(pnl1 != pnl2);
   art::ProcessHistory pnl3;
