@@ -1,6 +1,6 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent art	v2_00_00pre
+parent canvas	v1_00_00rc0
 defaultqual	e9
 #
 fcldir -
@@ -17,16 +17,6 @@ cetbuildtools	v4_18_02	-	only_for_build
 end_product_list
 
 qualifier	messagefacility	root		clhep		cppunit		python	tbb		compiler	notes
-e6:debug	e6:debug	e6:debug	e6:debug	e6:debug	-nq-	e6:debug	gcc
-e6:prof		e6:prof		e6:prof		e6:prof		e6:prof		-nq-	e6:prof		gcc
-e6:prof:sse2	e6:prof		e6:prof		e6:prof		e6:prof		-nq-	e6:prof		gcc		-msse2 -ftree-vectorizer-verbose
-nu:e6:debug	e6:debug	e6:nu:debug	e6:debug	e6:debug	-nq-	e6:debug	gcc
-nu:e6:prof	e6:prof		e6:nu:prof	e6:prof		e6:prof		-nq-	e6:prof		gcc
-e7:debug	e7:debug	e7:debug	e7:debug	e7:debug	-nq-	e7:debug	gcc
-e7:prof		e7:prof		e7:prof		e7:prof		e7:prof		-nq-	e7:prof		gcc
-e7:prof:sse2	e7:prof		e7:prof		e7:prof		e7:prof		-nq-	e7:prof		gcc		-msse2 -ftree-vectorizer-verbose
-nu:e7:debug	e7:debug	e7:nu:debug	e7:debug	e7:debug	-nq-	e7:debug	gcc
-nu:e7:prof	e7:prof		e7:nu:prof	e7:prof		e7:prof		-nq-	e7:prof		gcc
 e9:debug	e9:debug	e9:debug	e9:debug	e9:debug	-nq-	e9:debug	gcc
 e9:prof		e9:prof		e9:prof		e9:prof		e9:prof		-nq-	e9:prof		gcc
 e9:prof:sse2	e9:prof		e9:prof		e9:prof		e9:prof		-nq-	e9:prof		gcc		-msse2 -ftree-vectorizer-verbose
