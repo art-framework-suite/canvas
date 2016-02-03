@@ -1,5 +1,5 @@
 # project name
-project(artCode)
+#project(artCode)
 
 include(ArtMake)
 
@@ -7,4 +7,3 @@ include(ArtMake)
 add_subdirectory (Version)
 add_subdirectory (Utilities)
 add_subdirectory (Persistency)
-add_subdirectory (FWLite)
