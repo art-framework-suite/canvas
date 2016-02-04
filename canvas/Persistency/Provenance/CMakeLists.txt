@@ -1,5 +1,4 @@
 set( canvas_Persistency_Provenance_libraries
-  canvas_Persistency_RootDB
   canvas_Utilities
   MF_MessageLogger
   ${ROOT_CORE}
@@ -8,11 +7,10 @@ set( canvas_Persistency_Provenance_libraries
 
 art_make(SUBDIRS detail
   LIB_LIBRARIES
-  canvas_Persistency_RootDB
   canvas_Utilities
   ${Boost_THREAD_LIBRARY}
   MF_MessageLogger
-	)
+        )
 
 install_headers(SUBDIRS detail)
 install_source(SUBDIRS detail)

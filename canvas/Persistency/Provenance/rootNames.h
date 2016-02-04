@@ -5,7 +5,7 @@
 #include "canvas/Persistency/Provenance/BranchIDList.h"
 #include "canvas/Persistency/Provenance/FileIndex.h"
 #include "canvas/Persistency/Provenance/ParameterSetMap.h"
-#include "canvas/Persistency/Provenance/ProcessHistoryRegistry.h"
+#include "canvas/Persistency/Provenance/ProcessHistory.h"
 #include "canvas/Persistency/Provenance/ProductRegistry.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/TypeID.h"
