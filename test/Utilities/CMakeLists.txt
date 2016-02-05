@@ -2,7 +2,7 @@
 
 art_dictionary(NO_DEFAULT_LIBRARIES DICTIONARY_LIBRARIES cetlib NO_INSTALL)
 
-set(default_test_libraries
+set(default_canvas_test_libraries
   canvas_Utilities
   test_Utilities_dict
   cetlib
@@ -12,15 +12,15 @@ set(default_test_libraries
   )
 
 cet_test(FriendlyName_t USE_BOOST_UNIT
-  LIBRARIES ${default_test_libraries}
+  LIBRARIES ${default_canvas_test_libraries}
   )
 
 cet_test(TypeID_t USE_BOOST_UNIT
-  LIBRARIES ${default_test_libraries}
+  LIBRARIES ${default_canvas_test_libraries}
   )
 
 cet_test(ensurePointer_t USE_BOOST_UNIT
-  LIBRARIES ${default_test_libraries}
+  LIBRARIES ${default_canvas_test_libraries}
   )
 
 cet_test(uniform_type_name_test USE_BOOST_UNIT
