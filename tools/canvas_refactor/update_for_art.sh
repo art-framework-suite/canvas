@@ -87,8 +87,7 @@ if [[ -n "${file}" ]]; then
     one_file "$file"
   fi
 else
-  for F in `find $TOP \( -type d \( -name .git -o -name .svn -o -name CVS -o -name ups -o -name Modules -o -path '*/tools' -o -path '*/doc' -o -path '*/paper'  -o -path '*/perllib' -o -path '*/rapidjson' \) \
-                       -prune \) -o -type f \! \( -name '*~' -o -name '*.bak' -o -name '*.orig' -o -name '*.new' -o -name '*.gdml' -o -name '*.py' -o -name '*.sh' -o -name '*.o' -o -name '*.so' -o -name '*.os' -o -name '*.root' -o -name '*.txt'  -o -name '*.tex' -o -name 'SConscript' \) -print`; do
+  for F in `find $TOP \( -name "*.c*" -o -name "*.C*" -o -name "*.h*" -o -name "*.H*" \) -print`; do
     one_file "$F"
   done
   for F in `find $TOP -name CMakeLists.txt -print`; do
