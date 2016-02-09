@@ -10,8 +10,8 @@
 // the dependence of the RefCoreStreamer on the classes
 // that derive from this class. In the full framework
 // this will be a base class for the art::EventPrincipal
-// and in artfwlite this will be a base class for
-// the artfwlite::Event.
+// and in gallery this will be a base class for
+// the gallery::Event.
 
 namespace art {
 
