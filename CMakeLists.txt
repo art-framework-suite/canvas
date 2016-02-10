@@ -44,15 +44,13 @@ cet_report_compiler_flags()
 
 find_ups_product( cppunit )
 find_ups_product( clhep )
-find_ups_product (cetbuildtools)
-find_ups_product( cetpkgsupport )
 find_ups_product( cetlib )
 find_ups_product( fhiclcpp )
 find_ups_product( messagefacility )
-find_ups_product( sqlite )
+find_ups_product( tbb )
 find_ups_root( )
-find_ups_product( tbb  )
 find_ups_boost( )
+find_ups_product ( cetbuildtools )
 
 
 # define CLHEP
