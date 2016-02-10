@@ -13,7 +13,6 @@ namespace art {
 
   template <typename L, typename R, typename D> class Assns;
   template <typename L, typename R> class Assns<L, R, void>;
-  class DelayedReader;
   class EDProduct;
   class EDProductGetter;
   class GroupQueryResult;
