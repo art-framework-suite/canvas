@@ -18,6 +18,7 @@ template class art::Wrapper<art::HLTPathStatus>;
 template class art::Wrapper<std::vector<art::HLTPathStatus>>;
 template class art::Wrapper<art::HLTGlobalStatus>;
 template class art::Wrapper<art::TriggerResults>;
+template class art::Ptr<int>;
 template class std::vector<art::Ptr<int>>;
 template class art::PtrVector<int>;
 template class art::Wrapper<art::PtrVector<int>>;
