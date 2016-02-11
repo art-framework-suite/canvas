@@ -17,5 +17,5 @@ cet_test(TypeTools_t USE_BOOST_UNIT
   ${ROOT_CINT}
   ${ROOT_REFLEX}
   ${CPPUNIT}
-  -ldl
+  ${CMAKE_DL_LIBS}
   )
