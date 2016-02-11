@@ -3,5 +3,5 @@
 
 int main()
 {
-  assert(canvas::getReleaseVersion() == std::string("@version@"));
+  assert(art::getCanvasReleaseVersion() == std::string("@version@"));
 }

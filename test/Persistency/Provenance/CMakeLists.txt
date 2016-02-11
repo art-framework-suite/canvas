@@ -14,7 +14,7 @@ set(standard_libraries
   ${ROOT_CORE}
   ${ROOT_CINT}
   ${ROOT_REFLEX}
-  -ldl
+  ${CMAKE_DL_LIBS}
   )
 
 cet_test(EventID_t USE_BOOST_UNIT
@@ -46,7 +46,7 @@ cet_test(RootClassMapping_t USE_BOOST_UNIT
   ${ROOT_CORE}
   ${ROOT_CINT}
   ${ROOT_REFLEX}
-  -ldl
+  ${CMAKE_DL_LIBS}
   # When ROOT is fixed WILL_FAIL should be removed and the code in ASSNS
   # (and associated ioread rules) should be fixed accordingly.
   TEST_PROPERTIES WILL_FAIL true
@@ -69,7 +69,7 @@ cet_test(TypeTools_t USE_BOOST_UNIT
   ${ROOT_CINT}
   ${ROOT_REFLEX}
   ${CPPUNIT}
-  -ldl
+  ${CMAKE_DL_LIBS}
   )
 
 cet_test(TypeWithDict_t USE_BOOST_UNIT

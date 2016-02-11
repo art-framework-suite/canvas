@@ -3,9 +3,7 @@ project(canvas_Persistency_Common)
 
 set(canvas_Persistency_Common_sources
   CacheStreamers.cc
-  DelayedReader.cc
   EDProduct.cc
-  GroupQueryResult.cc
   PtrVectorBase.cc
   RNGsnapshot.cc
   RefCore.cc
@@ -15,17 +13,17 @@ set(canvas_Persistency_Common_sources
   traits.cc
 )
 
-set( canvas_Persistency_Common_libraries 
-	canvas_Persistency_Provenance
-	canvas_Utilities
-	${ROOT_CORE}
-	${Boost_THREAD_LIBRARY}
-	)
+set( canvas_Persistency_Common_libraries
+        canvas_Persistency_Provenance
+        canvas_Utilities
+        ${ROOT_CORE}
+        ${Boost_THREAD_LIBRARY}
+        )
 
 art_make_library( LIBRARY_NAME canvas_Persistency_Common
                   SOURCE ${canvas_Persistency_Common_sources}
-		  LIBRARIES ${canvas_Persistency_Common_libraries}
-		 )
+                  LIBRARIES ${canvas_Persistency_Common_libraries}
+                 )
 
 art_dictionary(DICTIONARY_LIBRARIES canvas_Persistency_Common)
 

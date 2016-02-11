@@ -37,6 +37,7 @@
   targetClass="art::PtrVectorBase" source="std::vector<unsigned long> indices_;" target="indicies_">
   <![CDATA[indicies_ = onfile.indices_; ]]>
  </ioread>
+ <class name="art::Ptr<int>"/>
  <class name="std::vector<art::Ptr<int> >"/>
  <class name="art::PtrVector<int>"/>
  <class name="art::Wrapper<art::PtrVector<int> >"/>

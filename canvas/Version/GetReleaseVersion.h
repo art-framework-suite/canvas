@@ -3,8 +3,8 @@
 
 #include <string>
 
-namespace canvas {
-  std::string const &  getReleaseVersion( );
+namespace art {
+  std::string const &  getCanvasReleaseVersion();
 }
 
 #endif /* canvas_Version_GetReleaseVersion_h */
