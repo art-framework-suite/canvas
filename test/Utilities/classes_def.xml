@@ -6,5 +6,4 @@
   <class name="arttest::MyBigPOD" ClassVersion="10">
    <version ClassVersion="10" checksum="1187013485"/>
   </class>
-  <class name="cet::map_vector<std::string>"/>
 </lcgdict>
