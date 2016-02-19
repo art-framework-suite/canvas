@@ -5,6 +5,7 @@ use vars qw(%header_list);
 
 # explicit headers to avoid conflicts with experiment code
 BEGIN { %header_list = (
+"art/Framework/Core/RootDictionaryManager.h" => "canvas/DictionaryManager/RootDictionaryManager.h",
 "art/Framework/IO/Root/RefCoreStreamer.h" => "canvas/Persistency/Common/RefCoreStreamer.h",
 "art/Framework/IO/Root/rootNames.h" => "canvas/Persistency/Provenance/rootNames.h",
 "art/Persistency/CLHEPDictionaries/classes.h" => "canvas/Persistency/CLHEPDictionaries/classes.h",
@@ -67,6 +68,7 @@ BEGIN { %header_list = (
 "art/Persistency/Provenance/ProductRegistry.h" => "canvas/Persistency/Provenance/ProductRegistry.h",
 "art/Persistency/Provenance/ProductStatus.h" => "canvas/Persistency/Provenance/ProductStatus.h",
 "art/Persistency/Provenance/ProvenanceFwd.h" => "canvas/Persistency/Provenance/ProvenanceFwd.h",
+"art/Persistency/Provenance/ReflexTools.h" => "canvas/Persistency/Provenance/ReflexTools.h",
 "art/Persistency/Provenance/ReleaseVersion.h" => "canvas/Persistency/Provenance/ReleaseVersion.h",
 "art/Persistency/Provenance/ResultsAuxiliary.h" => "canvas/Persistency/Provenance/ResultsAuxiliary.h",
 "art/Persistency/Provenance/RunAuxiliary.h" => "canvas/Persistency/Provenance/RunAuxiliary.h",
@@ -78,8 +80,6 @@ BEGIN { %header_list = (
 "art/Persistency/Provenance/Transient.h" => "canvas/Persistency/Provenance/Transient.h",
 "art/Persistency/Provenance/TransientStreamer.h" => "canvas/Persistency/Provenance/TransientStreamer.h",
 "art/Persistency/Provenance/TypeLabel.h" => "canvas/Persistency/Provenance/TypeLabel.h",
-"art/Persistency/Provenance/TypeTools.h" => "canvas/Persistency/Provenance/TypeTools.h",
-"art/Persistency/Provenance/TypeWithDict.h" => "canvas/Persistency/Provenance/TypeWithDict.h",
 "art/Persistency/Provenance/classes.h" => "canvas/Persistency/Provenance/classes.h",
 "art/Persistency/Provenance/ParameterSetID.h" => "canvas/Persistency/Provenance/ParameterSetID.h",
 "art/Persistency/StdDictionaries/classes.h" => "canvas/Persistency/StdDictionaries/classes.h",
@@ -94,7 +94,7 @@ BEGIN { %header_list = (
 "art/Utilities/detail/metaprogramming.h" => "canvas/Utilities/detail/metaprogramming.h",
 "art/Utilities/ensurePointer.h" => "canvas/Utilities/ensurePointer.h",
 "art/Utilities/uniform_type_name.h" => "canvas/Utilities/uniform_type_name.h"
-		       ); }
+                       ); }
 
 foreach my $inc (sort keys %header_list) {
   s&^(\s*#include\s+["<])\Q$inc\E(.*)&${1}$header_list{$inc}${2}& and last;
