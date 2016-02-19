@@ -1,7 +1,7 @@
-#ifndef art_Persistency_Provenance_SortInvalidFirst_h
-#define art_Persistency_Provenance_SortInvalidFirst_h
+#ifndef canvas_Persistency_Provenance_SortInvalidFirst_h
+#define canvas_Persistency_Provenance_SortInvalidFirst_h
 
-#include <functional>
+#include "cpp0x/functional"
 
 namespace art {
    template <typename T> class SortInvalidFirst;
@@ -28,7 +28,7 @@ private:
    T invalidValue_;
 };
 
-#endif /* art_Persistency_Provenance_SortInvalidFirst_h */
+#endif /* canvas_Persistency_Provenance_SortInvalidFirst_h */
 
 // Local Variables:
 // mode: c++

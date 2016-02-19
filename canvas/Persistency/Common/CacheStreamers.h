@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_CacheStreamers_h
-#define art_Persistency_Common_CacheStreamers_h
+#ifndef canvas_Persistency_Common_CacheStreamers_h
+#define canvas_Persistency_Common_CacheStreamers_h
 
 #include "TClassStreamer.h"
 #include "TClassRef.h"
@@ -30,7 +30,7 @@ private:
   void setCacheStreamers();
 }
 
-#endif /* art_Persistency_Common_CacheStreamers_h */
+#endif /* canvas_Persistency_Common_CacheStreamers_h */
 
 // Local Variables:
 // mode: c++

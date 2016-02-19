@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_setPtr_h
-#define art_Persistency_Common_setPtr_h
+#ifndef canvas_Persistency_Common_setPtr_h
+#define canvas_Persistency_Common_setPtr_h
 
 #include "canvas/Persistency/Common/detail/maybeCastObj.h"
 #include "cetlib/map_vector.h"
@@ -57,7 +57,7 @@ art::setPtr(cet::map_vector<T> const & obj,
   }
 }
 
-#endif /* art_Persistency_Common_setPtr_h */
+#endif /* canvas_Persistency_Common_setPtr_h */
 
 // Local Variables:
 // mode: c++

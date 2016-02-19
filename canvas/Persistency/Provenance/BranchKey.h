@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_BranchKey_h
-#define art_Persistency_Provenance_BranchKey_h
+#ifndef canvas_Persistency_Provenance_BranchKey_h
+#define canvas_Persistency_Provenance_BranchKey_h
 
 /*----------------------------------------------------------------------
 
@@ -96,7 +96,7 @@ art::operator!=(BranchKey const& a, BranchKey const& b) {
 
 #endif /* __GCCXML__ */
 
-#endif /* art_Persistency_Provenance_BranchKey_h */
+#endif /* canvas_Persistency_Provenance_BranchKey_h */
 
 // Local Variables:
 // mode: c++

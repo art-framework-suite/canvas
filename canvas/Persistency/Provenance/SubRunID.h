@@ -1,11 +1,10 @@
-#ifndef art_Persistency_Provenance_SubRunID_h
-#define art_Persistency_Provenance_SubRunID_h
+#ifndef canvas_Persistency_Provenance_SubRunID_h
+#define canvas_Persistency_Provenance_SubRunID_h
 
 // A SubRunID represents a unique period within a run.
 
 #include "canvas/Persistency/Provenance/RunID.h"
-
-#include <cstdint>
+#include "cpp0x/cstdint"
 #include <ostream>
 
 namespace art {
@@ -383,7 +382,7 @@ FIRST_SUBRUN_NUMBER()
 }
 #endif /* __GCCXML__ */
 
-#endif /* art_Persistency_Provenance_SubRunID_h */
+#endif /* canvas_Persistency_Provenance_SubRunID_h */
 
 // Local Variables:
 // mode: c++

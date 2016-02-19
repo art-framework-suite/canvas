@@ -1,5 +1,5 @@
 #include "canvas/Persistency/Common/PtrVector.h"
-#include "art/Persistency/Common/TestHandle.h"
+#include "canvas/Persistency/Common/TestHandle.h"
 #include "canvas/Persistency/Common/Wrapper.h"
 
 #include "test/Persistency/Common/IntValues.h"

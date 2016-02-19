@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_BranchMapper_h
-#define art_Persistency_Provenance_BranchMapper_h
+#ifndef canvas_Persistency_Provenance_BranchMapper_h
+#define canvas_Persistency_Provenance_BranchMapper_h
 
 // ======================================================================
 //
@@ -12,10 +12,10 @@
 #include "cetlib/container_algorithms.h"
 #include "cetlib/exempt_ptr.h"
 #include "cetlib/value_ptr.h"
+#include "cpp0x/memory"
 
 #include <iosfwd>
 #include <map>
-#include <memory>
 #include <set>
 
 namespace art {
@@ -31,24 +31,26 @@ namespace art {
 
 class art::BranchMapper {
 public:
-
+#ifndef __GCCXML__
   BranchMapper(BranchMapper const&) = delete;
   BranchMapper& operator=(BranchMapper const&) = delete;
-
+#endif
   typedef  cet::exempt_ptr<ProductProvenance const>  result_t;
 
   explicit BranchMapper(bool delayedRead = false);
-  virtual ~BranchMapper() = default;
+  virtual ~BranchMapper() { }
 
   void write(std::ostream &) const;
 
   result_t branchToProductProvenance(BranchID const &) const;
-  result_t insert(std::unique_ptr<ProductProvenance const>&& );
 
+#ifndef __GCCXML__
+  result_t insert(std::unique_ptr<ProductProvenance const>&& );
+#endif
   void setDelayedRead(bool value) {delayedRead_ = value;}
 
 private:
-  using eiSet = std::map <BranchID, cet::value_ptr<ProductProvenance const> >;
+  typedef std::map <BranchID, cet::value_ptr<ProductProvenance const> >  eiSet;
 
   eiSet         entryInfoSet_;
   mutable bool  delayedRead_;
@@ -68,7 +70,7 @@ art::operator << (std::ostream &os, BranchMapper const &p)
 
 // ======================================================================
 
-#endif /* art_Persistency_Provenance_BranchMapper_h */
+#endif /* canvas_Persistency_Provenance_BranchMapper_h */
 
 // Local Variables:
 // mode: c++

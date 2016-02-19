@@ -1,6 +1,6 @@
 //
 #include <cppunit/extensions/HelperMacros.h>
-#include "art/Persistency/Common/CloningPtr.h"
+#include "canvas/Persistency/Common/CloningPtr.h"
 
 #include <vector>
 

@@ -1,5 +1,5 @@
 # project name
-#project(artCode)
+project(artCode)
 
 include(ArtMake)
 

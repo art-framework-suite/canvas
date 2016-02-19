@@ -10,22 +10,20 @@
 #include "canvas/Persistency/Common/RefCore.h"
 #include "canvas/Persistency/Common/TriggerResults.h"
 #include "canvas/Persistency/Common/Wrapper.h"
-
-#include <utility>
+#include "cpp0x/utility"
 #include <vector>
 
-template class art::Wrapper<art::HLTPathStatus>;
-template class art::Wrapper<std::vector<art::HLTPathStatus>>;
-template class art::Wrapper<art::HLTGlobalStatus>;
-template class art::Wrapper<art::TriggerResults>;
-template class art::Ptr<int>;
-template class std::vector<art::Ptr<int>>;
-template class art::PtrVector<int>;
-template class art::Wrapper<art::PtrVector<int>>;
-//template class std::vector<std::pair<art::RefCore, size_t>>;
-//template class std::pair<art::RefCore, size_t>;
+namespace {
+  struct dictionary {
+    art::Wrapper<art::HLTPathStatus> dummyx16;
+    art::Wrapper<std::vector<art::HLTPathStatus> > dummyx17;
+    art::Wrapper<art::HLTGlobalStatus> dummyx18;
+    art::Wrapper<art::TriggerResults>  dummyx19;
+    art::Ptr<int>                      dummypi;
+    art::PtrVector<int>                dummypvi;
+    art::Wrapper<art::PtrVector<int> > dummypviw;
 
-// Local Variables:
-// mode: c++
-// End:
-//
+    std::pair<art::RefCore, size_t> prs;
+    std::vector<std::pair<art::RefCore, size_t> > vprs;
+  };
+}  // namespace

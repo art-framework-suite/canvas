@@ -4,7 +4,7 @@
 #include "cetlib/exception.h"
 
 // For nullptr:
-#include <memory>
+#include "cpp0x/memory"
 
 class TBuffer;
 

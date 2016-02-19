@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_RunID_h
-#define art_Persistency_Provenance_RunID_h
+#ifndef canvas_Persistency_Provenance_RunID_h
+#define canvas_Persistency_Provenance_RunID_h
 
 //
 // A RunID represents a unique period of operation of the data
@@ -8,7 +8,7 @@
 // Each RunID contains a fixed-size unsigned integer, the run number.
 //
 
-#include <cstdint>
+#include "cpp0x/cstdint"
 #include <iosfwd>
 
 namespace art {
@@ -282,7 +282,7 @@ FIRST_RUN_NUMBER()
 }
 #endif /* __GCCXML__ */
 
-#endif /* art_Persistency_Provenance_RunID_h */
+#endif /* canvas_Persistency_Provenance_RunID_h */
 
 // Local Variables:
 // mode: c++

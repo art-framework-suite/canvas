@@ -1,11 +1,10 @@
-#ifndef art_Persistency_Common_PtrVectorBase_h
-#define art_Persistency_Common_PtrVectorBase_h
+#ifndef canvas_Persistency_Common_PtrVectorBase_h
+#define canvas_Persistency_Common_PtrVectorBase_h
 
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/RefCore.h"
-
+#include "cpp0x/utility"
 #include <typeinfo>
-#include <utility>
 #include <vector>
 
 class TBuffer;
@@ -21,9 +20,7 @@ namespace art {
 class art::PtrVectorBase {
 public:
   typedef unsigned long key_type;
-#if 0
 protected:
-#endif
   typedef std::vector<key_type> indices_t;
 public:
   typedef indices_t::size_type size_type;
@@ -141,7 +138,7 @@ operator==(PtrVectorBase const &other) const {
 }
 
 #endif /* __GCCXML__ */
-#endif /* art_Persistency_Common_PtrVectorBase_h */
+#endif /* canvas_Persistency_Common_PtrVectorBase_h */
 
 // Local Variables:
 // mode: c++

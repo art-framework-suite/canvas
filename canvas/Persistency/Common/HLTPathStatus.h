@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_HLTPathStatus_h
-#define art_Persistency_Common_HLTPathStatus_h
+#ifndef canvas_Persistency_Common_HLTPathStatus_h
+#define canvas_Persistency_Common_HLTPathStatus_h
 
 /** \class art::HLTPathStatus
  *
@@ -24,9 +24,8 @@
  */
 
 #include "canvas/Persistency/Common/HLTenums.h"
-
+#include "cpp0x/cstdint"
 #include <cassert>
-#include <cstdint>
 
 namespace art
 {
@@ -42,7 +41,7 @@ namespace art
     // constructor
     HLTPathStatus(const hlt::HLTState state = hlt::Ready, const unsigned int index = 0)
     : status_(index*4+state) {
-      assert (state<hlt::UNKNOWN);
+      assert (state<4);
       assert (index<16384);
     }
 
@@ -67,7 +66,7 @@ namespace art
 
 // ======================================================================
 
-#endif /* art_Persistency_Common_HLTPathStatus_h */
+#endif /* canvas_Persistency_Common_HLTPathStatus_h */
 
 // Local Variables:
 // mode: c++

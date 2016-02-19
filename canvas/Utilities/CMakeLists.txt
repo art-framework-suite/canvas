@@ -7,10 +7,10 @@ art_make(LIB_LIBRARIES
   ${Boost_REGEX_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_THREAD_LIBRARY}
-  ${ROOT_CORE}
-  ${TBB}
+  ${ROOT_CINT}
+  ${ROOT_REFLEX}
   -lpthread
-  ${CMAKE_DL_LIBS}
+  -ldl
   SUBDIRS detail
   )
 

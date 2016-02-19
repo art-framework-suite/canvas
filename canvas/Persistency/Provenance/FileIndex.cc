@@ -1,9 +1,9 @@
 #include "canvas/Persistency/Provenance/FileIndex.h"
 
 #include "cetlib/container_algorithms.h"
+#include "cpp0x/algorithm"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
-#include <algorithm>
 #include <iomanip>
 #include <ostream>
 

@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_SubRunAuxiliary_h
-#define art_Persistency_Provenance_SubRunAuxiliary_h
+#ifndef canvas_Persistency_Provenance_SubRunAuxiliary_h
+#define canvas_Persistency_Provenance_SubRunAuxiliary_h
 
 #include <iosfwd>
 
@@ -83,7 +83,7 @@ operator<<(std::ostream& os, const art::SubRunAuxiliary& p) {
    return os;
 }
 
-#endif /* art_Persistency_Provenance_SubRunAuxiliary_h */
+#endif /* canvas_Persistency_Provenance_SubRunAuxiliary_h */
 
 // Local Variables:
 // mode: c++

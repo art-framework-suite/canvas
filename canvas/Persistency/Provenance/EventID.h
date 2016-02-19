@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_EventID_h
-#define art_Persistency_Provenance_EventID_h
+#ifndef canvas_Persistency_Provenance_EventID_h
+#define canvas_Persistency_Provenance_EventID_h
 
 // An EventID labels an unique readout of the data acquisition system,
 // which we call an "event".
@@ -7,8 +7,8 @@
 #include "canvas/Persistency/Provenance/RunID.h"
 #include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Utilities/Exception.h"
+#include "cpp0x/cstdint"
 
-#include <cstdint>
 #include <iosfwd>
 
 namespace art {
@@ -446,7 +446,7 @@ FIRST_EVENT_NUMBER()
 }
 #endif /* __GCCXML__ */
 
-#endif /* art_Persistency_Provenance_EventID_h */
+#endif /* canvas_Persistency_Provenance_EventID_h */
 
 // Local Variables:
 // mode: c++

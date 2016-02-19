@@ -180,20 +180,20 @@ The last three are really functions:
 
 UnixSignalService replacement -
 
- #include "canvas/Utilities/UnixSignalhandlers.h"
+ #include "art/Utilities/UnixSignalhandlers.h"
 
  art::setupSignals(pset.get<bool>("enableSigInt",true));
 
 LoadAllDictionaries replacement -
 
- #include "canvas/Utilities/LoadAllDictionaries.h"
+ #include "art/Utilities/LoadAllDictionaries.h"
 
  if(pset.get<bool>("doLoad",true))
    art::loadAllDictionaries();
 
 InitRootHandlers replacement -
 
- #include "canvas/Persistency/Common/InitRootHandlers.h"
+ #include "art/Persistency/Common/InitRootHandlers.h"
 
  if(pset.get<bool>("unloadRootSigHandler",false))
    art::unloadRootSigHandler();

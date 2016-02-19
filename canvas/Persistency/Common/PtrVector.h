@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_PtrVector_h
-#define art_Persistency_Common_PtrVector_h
+#ifndef canvas_Persistency_Common_PtrVector_h
+#define canvas_Persistency_Common_PtrVector_h
 
 // ======================================================================
 //
@@ -10,7 +10,6 @@
 
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/PtrVectorBase.h"
-#include "cetlib/compiler_macros.h"
 
 #ifndef __GCCXML__
 #include <initializer_list>
@@ -18,7 +17,7 @@
 #endif
 #include <vector>
 
-#if GCC_IS_AT_LEAST(4,9,0) || CLANG_IS_AT_LEAST(3,5,0)
+#if GCC_IS_AT_LEAST(4,9,0)
 #define PV_INSERT_POSITION_TYPE const_iterator
 #else
 #define PV_INSERT_POSITION_TYPE iterator
@@ -757,7 +756,7 @@ art::swap(PtrVector<T> & lhs, PtrVector<T> & rhs)
 #endif // __GCCXML__
 
 #undef PV_INSERT_POSITION_TYPE
-#endif /* art_Persistency_Common_PtrVector_h */
+#endif /* canvas_Persistency_Common_PtrVector_h */
 
 // Local Variables:
 // mode: c++

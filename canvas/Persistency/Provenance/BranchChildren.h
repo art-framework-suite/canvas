@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_BranchChildren_h
-#define art_Persistency_Provenance_BranchChildren_h
+#ifndef canvas_Persistency_Provenance_BranchChildren_h
+#define canvas_Persistency_Provenance_BranchChildren_h
 
 /*----------------------------------------------------------------------
 
@@ -7,16 +7,15 @@ BranchChildren: Dependency information between branches.
 
 ----------------------------------------------------------------------*/
 
-#include "canvas/Persistency/Provenance/BranchID.h"
-
 #include <map>
 #include <set>
+#include "canvas/Persistency/Provenance/BranchID.h"
 
 namespace art {
 
   class BranchChildren {
   private:
-    using BranchIDSet = std::set<BranchID>;
+    typedef std::set<BranchID> BranchIDSet;
   public:
 
     // Clear all information.
@@ -34,14 +33,14 @@ namespace art {
     void appendToDescendants(BranchID parent, BranchIDSet& descendants) const;
 
   private:
-    using map_t = std::map<BranchID, BranchIDSet>;
+    typedef std::map<BranchID, BranchIDSet> map_t;
     map_t childLookup_;
 
     void append_(map_t const& lookup, BranchID item, BranchIDSet& itemSet) const;
   };
 
 }
-#endif /* art_Persistency_Provenance_BranchChildren_h */
+#endif /* canvas_Persistency_Provenance_BranchChildren_h */
 
 // Local Variables:
 // mode: c++

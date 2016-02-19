@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_RefCore_h
-#define art_Persistency_Common_RefCore_h
+#ifndef canvas_Persistency_Common_RefCore_h
+#define canvas_Persistency_Common_RefCore_h
 
 // ======================================================================
 //
@@ -11,8 +11,7 @@
 
 #include "canvas/Persistency/Common/EDProductGetter.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
-
-#include <algorithm>
+#include "cpp0x/algorithm"
 
 namespace art {
   class EDProduct;
@@ -205,7 +204,7 @@ art::swap(art::RefCore & lhs, art::RefCore & rhs)
 
 
 #endif /* __GCCXML__ */
-#endif /* art_Persistency_Common_RefCore_h */
+#endif /* canvas_Persistency_Common_RefCore_h */
 
 // Local Variables:
 // mode: c++

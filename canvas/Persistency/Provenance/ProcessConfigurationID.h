@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ProcessConfigurationID_h
-#define art_Persistency_Provenance_ProcessConfigurationID_h
+#ifndef canvas_Persistency_Provenance_ProcessConfigurationID_h
+#define canvas_Persistency_Provenance_ProcessConfigurationID_h
 
 #include "canvas/Persistency/Provenance/HashedTypes.h"
 #include "canvas/Persistency/Provenance/Hash.h"
@@ -10,7 +10,7 @@ namespace art
 }
 
 
-#endif /* art_Persistency_Provenance_ProcessConfigurationID_h */
+#endif /* canvas_Persistency_Provenance_ProcessConfigurationID_h */
 
 // Local Variables:
 // mode: c++

@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ProductList_h
-#define art_Persistency_Provenance_ProductList_h
+#ifndef canvas_Persistency_Provenance_ProductList_h
+#define canvas_Persistency_Provenance_ProductList_h
 ////////////////////////////////////////////////////////////////////////
 // ProductList
 //
@@ -15,7 +15,7 @@ namespace art
   typedef std::map<BranchKey, BranchDescription> ProductList;
 }
 
-#endif /* art_Persistency_Provenance_ProductList_h */
+#endif /* canvas_Persistency_Provenance_ProductList_h */
 
 // Local Variables:
 // mode: c++

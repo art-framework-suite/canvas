@@ -1,5 +1,5 @@
-#ifndef art_Utilities_DebugMacros_h
-#define art_Utilities_DebugMacros_h
+#ifndef canvas_Utilities_DebugMacros_h
+#define canvas_Utilities_DebugMacros_h
 
 #include "canvas/Utilities/fwd.h"
 
@@ -21,7 +21,7 @@ namespace art {
 
 #define FDEBUG(lev) if(lev <= art::debugit()) std::cerr
 
-#endif /* art_Utilities_DebugMacros_h */
+#endif /* canvas_Utilities_DebugMacros_h */
 
 // Local Variables:
 // mode: c++

@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ProcessConfiguration_h
-#define art_Persistency_Provenance_ProcessConfiguration_h
+#ifndef canvas_Persistency_Provenance_ProcessConfiguration_h
+#define canvas_Persistency_Provenance_ProcessConfiguration_h
 
 // ======================================================================
 //
@@ -66,7 +66,7 @@ namespace art {
 
 // ======================================================================
 
-#endif /* art_Persistency_Provenance_ProcessConfiguration_h */
+#endif /* canvas_Persistency_Provenance_ProcessConfiguration_h */
 
 // Local Variables:
 // mode: c++

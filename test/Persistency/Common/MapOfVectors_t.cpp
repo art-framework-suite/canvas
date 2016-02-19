@@ -2,7 +2,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #define private public
-#include "art/Persistency/Common/MapOfVectors.h"
+#include "canvas/Persistency/Common/MapOfVectors.h"
 #undef private
 
 #include "canvas/Utilities/Exception.h"

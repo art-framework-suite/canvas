@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_GetProduct_h
-#define art_Persistency_Common_GetProduct_h
+#ifndef canvas_Persistency_Common_GetProduct_h
+#define canvas_Persistency_Common_GetProduct_h
 
 namespace art {
   namespace detail {
@@ -17,7 +17,7 @@ namespace art {
   }
 }
 
-#endif /* art_Persistency_Common_GetProduct_h */
+#endif /* canvas_Persistency_Common_GetProduct_h */
 
 // Local Variables:
 // mode: c++

@@ -1,5 +1,5 @@
-#ifndef art_Utilities_fwd_h
-#define art_Utilities_fwd_h
+#ifndef canvas_Utilities_fwd_h
+#define canvas_Utilities_fwd_h
 ////////////////////////////////////////////////////////////////////////
 // Fowrard declarations for art/Utilities.
 ////////////////////////////////////////////////////////////////////////
@@ -12,7 +12,7 @@ namespace art {
   class debugavlue; // DebugMacros.h
   class TypeID;
 }
-#endif /* art_Utilities_fwd_h */
+#endif /* canvas_Utilities_fwd_h */
 
 // Local Variables:
 // mode: c++

@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_fwd_h
-#define art_Persistency_Common_fwd_h
+#ifndef canvas_Persistency_Common_fwd_h
+#define canvas_Persistency_Common_fwd_h
 
 // ======================================================================
 //
@@ -7,7 +7,7 @@
 //
 // ======================================================================
 
-#include <memory>
+#include "cpp0x/memory"
 
 namespace art {
 
@@ -15,7 +15,6 @@ namespace art {
   template <typename L, typename R> class Assns<L, R, void>;
   class EDProduct;
   class EDProductGetter;
-  class GroupQueryResult;
   class HLTGlobalStatus;
   class HLTPathStatus;
   class OutputHandle;
@@ -30,7 +29,7 @@ namespace art {
 
 // ======================================================================
 
-#endif /* art_Persistency_Common_fwd_h */
+#endif /* canvas_Persistency_Common_fwd_h */
 
 // Local Variables:
 // mode: c++

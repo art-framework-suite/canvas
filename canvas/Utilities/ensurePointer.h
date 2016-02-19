@@ -1,5 +1,5 @@
-#ifndef art_Utilities_ensurePointer_h
-#define art_Utilities_ensurePointer_h
+#ifndef canvas_Utilities_ensurePointer_h
+#define canvas_Utilities_ensurePointer_h
 
 // Ensure we can get a desired pointer type from a compatible iterator.
 
@@ -9,12 +9,13 @@
 // test/Utilities/ensurePointer.h for testing coverage illustration.
 
 #include "canvas/Utilities/Exception.h"
+#include "cetlib/demangle.h"
+#include "cpp0x/type_traits"
+
 #include "boost/mpl/assert.hpp"
 #include "boost/type_traits.hpp"
-#include "cetlib/demangle.h"
 
 #include <iterator>
-#include <type_traits>
 
 namespace art {
   template <typename WANTED_POINTER, typename InputIterator>
@@ -70,7 +71,7 @@ catch (std::bad_cast &)
       << cet::demangle_symbol(typeid(WANTED_POINTER).name())
       << " are incompatible.\n";
 }
-#endif /* art_Utilities_ensurePointer_h */
+#endif /* canvas_Utilities_ensurePointer_h */
 
 // Local Variables:
 // mode: c++

@@ -54,7 +54,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(TestedmTrie);
 #include <sstream>
 #include <list>
 
-#include "art/Persistency/Common/Trie.h"
+#include "canvas/Persistency/Common/Trie.h"
 
 
   void TestedmTrie::testString()

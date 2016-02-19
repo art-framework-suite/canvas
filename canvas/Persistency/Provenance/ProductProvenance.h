@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ProductProvenance_h
-#define art_Persistency_Provenance_ProductProvenance_h
+#ifndef canvas_Persistency_Provenance_ProductProvenance_h
+#define canvas_Persistency_Provenance_ProductProvenance_h
 
 /*----------------------------------------------------------------------
 
@@ -7,16 +7,16 @@ ProductProvenance: The event dependent portion of the description of a product
 and how it came into existence, plus the status.
 
 ----------------------------------------------------------------------*/
+#include <iosfwd>
+#include <vector>
+
+#include "cpp0x/memory"
 
 #include "canvas/Persistency/Provenance/BranchID.h"
 #include "canvas/Persistency/Provenance/ParentageID.h"
 #include "canvas/Persistency/Provenance/ProductStatus.h"
 #include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 #include "canvas/Persistency/Provenance/Transient.h"
-
-#include <iosfwd>
-#include <memory>
-#include <vector>
 
 /*
   ProductProvenance
@@ -38,11 +38,11 @@ public:
   explicit ProductProvenance(BranchID const& bid);
   ProductProvenance(BranchID const& bid,
                     ProductStatus status);
-
+#ifndef __GCCXML__
   ProductProvenance(BranchID const& bid,
                     ProductStatus status,
                     std::shared_ptr<Parentage> parentagePtr);
-
+#endif
   ProductProvenance(BranchID const& bid,
                     ProductStatus status,
                     ParentageID const& id);
@@ -74,8 +74,11 @@ public:
 private:
 
   std::shared_ptr<Parentage> & parentagePtr() const
-  {return transients_.get().parentagePtr_;}
-
+#ifdef __GCCXML__
+;
+#else
+ {return transients_.get().parentagePtr_;}
+#endif
   BranchID branchID_;
   mutable ProductStatus productStatus_;
   ParentageID parentageID_;
@@ -97,7 +100,7 @@ art::operator<<(std::ostream& os, ProductProvenance const& p) {
 
 inline bool art::operator!=(ProductProvenance const& a, ProductProvenance const& b) { return !(a==b); }
 
-#endif /* art_Persistency_Provenance_ProductProvenance_h */
+#endif /* canvas_Persistency_Provenance_ProductProvenance_h */
 
 // Local Variables:
 // mode: c++

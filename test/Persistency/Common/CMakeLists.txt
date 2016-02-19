@@ -1,26 +1,35 @@
 # project name
 project(DataFormatsCommonTest)
 
+file( GLOB cpp_files *.cpp )
 set( cc_files ptr_t.cppunit.cc
-              IntValues_reflex.cc )
-	      
-set( test_Persistency_Common_libraries canvas_Persistency_Common
-                canvas_Persistency_Provenance
-                canvas_Utilities
-                art_Framework_Services_Registry
-		${Boost_THREAD_LIBRARY}
-		${Boost_PYTHON_LIBRARY}
-		${ROOT_MATRIX}
-		${ROOT_REFLEX}
-		${ROOT_CORE}
-		${PYTHON} )	      
+  IntValues_reflex.cc )
+
+link_libraries( canvas_Persistency_Common
+  canvas_Persistency_Provenance
+  canvas_Utilities
+  ${Boost_THREAD_LIBRARY}
+  ${Boost_PYTHON_LIBRARY}
+  ${ROOT_MATRIX}
+  ${ROOT_REFLEX}
+  ${ROOT_CORE}
+  ${PYTHON} )
 
 
-foreach(test_source MapOfVectors_t.cpp RefCore_t.cpp traits_t.cpp Trie_t.cpp Wrapper_t.cpp)
-  get_filename_component(test_name ${test_source} NAME_WE )
-  cet_test(${test_name} SOURCES ${test_source} LIBRARIES ${test_Persistency_Common_libraries})
-endforeach()
+foreach(file ${cpp_files} )
+  if( ${file} MATCHES testRunner.cpp )
+  elseif( ${file} MATCHES ReflexTools_t.cpp )
+  else()
+    get_filename_component(ename ${file} NAME_WE )
+    add_executable( ${ename}  ${file} )
+    add_test( ${ename} ${EXECUTABLE_OUTPUT_PATH}/${ename} )
+  endif()
+endforeach(file ${cpp_files} )
 
-cet_test(testDataFormatsCommon SOURCES testRunner.cpp ${cc_files}
-                               LIBRARIES ${test_Persistency_Common_libraries})
+add_executable( testDataFormatsCommon testRunner.cpp ${cc_files} )
+add_test( testDataFormatsCommon ${EXECUTABLE_OUTPUT_PATH}/testDataFormatsCommon )
 
+add_executable( ReflexTools_t ReflexTools_t.cpp )
+target_link_libraries( ReflexTools_t DataFormatsWrappedStdDictionaries_dict
+                                     DataFormatsWrappedStdDictionaries_map  )
+add_test( ReflexTools_t ${EXECUTABLE_OUTPUT_PATH}/ReflexTools_t )

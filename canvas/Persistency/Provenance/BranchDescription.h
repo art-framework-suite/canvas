@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_BranchDescription_h
-#define art_Persistency_Provenance_BranchDescription_h
+#ifndef canvas_Persistency_Provenance_BranchDescription_h
+#define canvas_Persistency_Provenance_BranchDescription_h
 
 /*----------------------------------------------------------------------
 
@@ -83,6 +83,7 @@ public:
   std::string const &branchName() const {return guts().branchName_;}
   BranchType const &branchType() const {return branchType_;}
   std::string const &wrappedName() const {return guts().wrappedName_;}
+  std::string const &wrappedCintName() const {return guts().wrappedCintName_;}
 
   void merge(BranchDescription const& other);
   void swap(BranchDescription &other);
@@ -103,6 +104,10 @@ public:
 
     // The wrapped class name, which is currently derivable fron the other attributes.
     std::string wrappedName_;
+
+    // The wrapped class name for branches (Cint has requirements
+    // here), which is currently derivable fron the other attributes.
+    std::string wrappedCintName_;
 
     // Was this branch produced in this process
     // rather than in a previous process
@@ -182,7 +187,7 @@ namespace art {
                     BranchDescription::MatchMode m);
 }
 
-#endif /* art_Persistency_Provenance_BranchDescription_h */
+#endif /* canvas_Persistency_Provenance_BranchDescription_h */
 
 // Local Variables:
 // mode: c++
