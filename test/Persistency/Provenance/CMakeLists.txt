@@ -1,6 +1,7 @@
 art_dictionary(NO_INSTALL)
 
 set(standard_libraries
+  canvas_DictionaryManager
   canvas_Persistency_Provenance
   canvas_Utilities
   canvas_Version
@@ -10,6 +11,11 @@ set(standard_libraries
   ${ROOT_CINT}
   ${ROOT_REFLEX}
   -ldl
+  )
+
+cet_test(ReflexTools_t USE_BOOST_UNIT
+  LIBRARIES
+  ${standard_libraries}
   )
 
 cet_test(EventID_t USE_BOOST_UNIT
@@ -40,7 +46,7 @@ cet_test(RootClassMapping_t USE_BOOST_UNIT
   ${ROOT_THREAD}
   ${ROOT_CORE}
   ${ROOT_CINT}
-        ${ROOT_REFLEX}
+  ${ROOT_REFLEX}
   -ldl
   # When ROOT is fixed WILL_FAIL should be removed and the code in ASSNS
   # (and associated ioread rules) should be fixed accordingly.

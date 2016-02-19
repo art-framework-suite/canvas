@@ -9,6 +9,7 @@ include(CetTest)
 cet_test_env("FHICL_FILE_PATH=.")
 
 # build Persistency libraries
+add_subdirectory (DictionaryManager)
 add_subdirectory (Persistency/Provenance)
 # add_subdirectory (Version)
 add_subdirectory (Utilities)
