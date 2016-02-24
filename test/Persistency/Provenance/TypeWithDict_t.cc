@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE (TypeWithDict_t)
-#include "boost/test/auto_unit_test.hpp"
+#include "cetlib/quiet_unit_test.hpp"
 
 #include "canvas/Persistency/Provenance/TypeWithDict.h"
 #include "canvas/Utilities/uniform_type_name.h"

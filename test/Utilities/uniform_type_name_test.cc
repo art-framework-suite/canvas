@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE (uniform_type_name_test)
-#include "boost/test/auto_unit_test.hpp"
+#include "cetlib/quiet_unit_test.hpp"
 
 #include "canvas/Utilities/uniform_type_name.h"
 
