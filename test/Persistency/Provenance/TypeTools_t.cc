@@ -1,7 +1,7 @@
 // Test of the TypeTools functions.
 
 #define BOOST_TEST_MODULE (TypeTools_t)
-#include "boost/test/auto_unit_test.hpp"
+#include "cetlib/quiet_unit_test.hpp"
 
 #include <iostream>
 #include <typeinfo>
