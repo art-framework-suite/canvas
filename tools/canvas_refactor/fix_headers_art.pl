@@ -88,6 +88,7 @@ BEGIN { %header_list = (
 "art/Utilities/Exception.h" => "canvas/Utilities/Exception.h",
 "art/Utilities/FriendlyName.h" => "canvas/Utilities/FriendlyName.h",
 "art/Utilities/GetPassID.h" => "canvas/Utilities/GetPassID.h",
+"art/Utilities/InputTag.h" => "canvas/Utilities/InputTag.h",
 "art/Utilities/TestHelper.h" => "canvas/Utilities/TestHelper.h",
 "art/Utilities/TypeID.h" => "canvas/Utilities/TypeID.h",
 "art/Utilities/WrappedClassName.h" => "canvas/Utilities/WrappedClassName.h",
