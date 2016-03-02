@@ -11,6 +11,16 @@ set(default_canvas_test_libraries
   ${ROOT_REFLEX}
   )
 
+cet_test(InputTag_t USE_BOOST_UNIT
+  LIBRARIES ${default_canvas_test_libraries}
+  )
+
+cet_test(ParameterSet_get_artInputTag_t
+  LIBRARIES ${default_canvas_test_libraries}
+  TEST_ARGS "dummy"
+  REF "${CMAKE_CURRENT_SOURCE_DIR}/ParameterSet_get_artInputTag_t-ref.txt"
+  )
+
 cet_test(FriendlyName_t USE_BOOST_UNIT
   LIBRARIES ${default_canvas_test_libraries}
   )
