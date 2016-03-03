@@ -24,6 +24,7 @@
  */
 
 #include "canvas/Persistency/Common/HLTenums.h"
+#include "canvas/Persistency/Common/detail/aggregate.h"
 
 #include <cassert>
 #include <cstdint>
@@ -60,6 +61,11 @@ namespace art
     bool accept() const {return ((state() == hlt::Pass) || !wasrun());}
     // has this path encountered an error (exception)?
     bool error()  const {return (state() == hlt::Exception);}
+
+    void aggregate(HLTPathStatus const&) const
+    {
+      detail::EventOnlyProduct(this);
+    }
 
   };  // HLTPathStatus
 

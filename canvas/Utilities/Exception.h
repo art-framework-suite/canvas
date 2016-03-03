@@ -50,7 +50,8 @@ namespace art {
       SQLExecutionError,
       InvalidNumber,
       NotFound,
-      ServiceNotFound // = 30
+      ServiceNotFound, // = 30
+      ProductCannotBeAggregated
     };
 
   }  // errors

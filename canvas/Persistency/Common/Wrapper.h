@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "canvas/Persistency/Common/EDProduct.h"
+#include "canvas/Persistency/Common/detail/aggregate.h"
 #include "canvas/Utilities/DebugMacros.h"
 #include "cetlib/demangle.h"
 
@@ -86,6 +87,8 @@ public:
 
 private:
 
+  void do_combine(EDProduct* product) override;
+
   std::unique_ptr<EDProduct>
   do_makePartner(std::type_info const & wanted_type) const override;
 
@@ -102,7 +105,6 @@ private:
   T && refOrThrow(T * ptr);
 
   bool present;
-  //   T const obj;
   T obj;
 
 };  // Wrapper<>
@@ -183,37 +185,25 @@ productSize() const
 }
 
 template <typename T>
+void
+art::Wrapper<T>::
+do_combine(art::EDProduct* p)
+{
+  auto wp = static_cast<Wrapper<T>*>(p);
+  using detail::aggregate;
+  aggregate(obj, *wp->product());
+}
+
+template <typename T>
 std::unique_ptr<art::EDProduct>
 art::Wrapper<T>::
 do_makePartner(std::type_info const & wanted_wrapper) const
 {
-  //std::cout
-  //    << "-----> Begin Wrapper<"
-  //    << cet::demangle_symbol(typeid(T).name())
-  //    << ">::do_makePartner(std::type_info const&)"
-  //    << std::endl;
   std::unique_ptr<art::EDProduct> retval;
-  typename std::conditional<detail::has_makePartner_member<T>::value,
-                            DoMakePartner<T>,
-                            DoNotMakePartner<T>>::type maybe_maker;
-  //std::cout
-  //    << "calling "
-  //    << cet::demangle_symbol(typeid(maybe_maker).name())
-  //    << "("
-  //    << &obj
-  //    << ", "
-  //    << cet::demangle_symbol(wanted_wrapper.name())
-  //    << std::endl;
+  std::conditional_t<detail::has_makePartner_member<T>::value,
+                     DoMakePartner<T>,
+                     DoNotMakePartner<T>> maybe_maker;
   retval = maybe_maker(obj, wanted_wrapper);
-  //std::cout
-  //    << "returning "
-  //    << retval.get()
-  //    << std::endl;
-  //std::cout
-  //    << "-----> End   Wrapper<"
-  //    << cet::demangle_symbol(typeid(T).name())
-  //    << ">::do_makePartner(std::type_info const&)"
-  //    << std::endl;
   return retval;
 }
 
@@ -225,7 +215,7 @@ do_setPtr(std::type_info const & toType,
           unsigned long index,
           void const*& ptr) const
 {
-  typename std::conditional < has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T> >::type maybe_filler;
+  std::conditional_t< has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T> > maybe_filler;
   maybe_filler(this->obj, toType, index, ptr);
 }
 
@@ -237,7 +227,7 @@ do_getElementAddresses(std::type_info const & toType,
                        std::vector<unsigned long> const & indices,
                        std::vector<void const *>& ptrs) const
 {
-  typename std::conditional < has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T> >::type maybe_filler;
+  std::conditional_t < has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T> > maybe_filler;
   maybe_filler(this->obj, toType, indices, ptrs);
 }
 
@@ -280,13 +270,13 @@ namespace art {
 
 template< typename T >
 struct art::detail::has_fillView_member {
-  static bool const value =
+  static bool constexpr value =
     sizeof(has_fillView_helper<T>(0)) == sizeof(yes_tag);
 };
 
 template< typename T >
 struct art::detail::has_size_member {
-  static bool const value =
+  static bool constexpr value =
     sizeof(has_size_helper<T>(0)) == sizeof(yes_tag);
 };
 
@@ -294,18 +284,18 @@ struct art::detail::has_size_member {
 // and therefore require specializations to avoid problems.
 template<>
 struct art::detail::has_size_member<CLHEP::HepMatrix> {
-  static bool const value = false;
+  static bool constexpr value = false;
 };
 
 template<>
 struct art::detail::has_size_member<CLHEP::HepSymMatrix> {
-  static bool const value = false;
+  static bool constexpr value = false;
 };
 
 
 template <typename T>
 struct art::detail::has_makePartner_member {
-  static bool const value =
+  static bool constexpr value =
     sizeof(has_makePartner_helper<T>(0)) == sizeof(yes_tag);
 };
 
@@ -439,17 +429,7 @@ namespace art {
     std::unique_ptr<EDProduct>
     operator()(T const & obj,
                std::type_info const & wanted_wrapper_type) const {
-      //std::cout
-      //    << "-----> Begin DoMakePartner::operator()("
-      //    << cet::demangle_symbol(typeid(T).name())
-      //    << " const&, std::type_info const&)"
-      //    << std::endl;
       if (typeid(Wrapper<typename T::partner_t>) == wanted_wrapper_type) {
-        //std::cout
-        //    << "-----> End   DoMakePartner::operator()("
-        //    << cet::demangle_symbol(typeid(T).name())
-        //    << " const&, std::type_info const&)"
-        //    << std::endl;
         return obj.makePartner();
       }
       throw Exception(errors::LogicError, "makePartner")
@@ -463,11 +443,6 @@ namespace art {
     std::unique_ptr<EDProduct>
     operator()(T const &,
                std::type_info const &) const {
-      //std::cout
-      //    << "-----> Begin DoNotMakePartner::operator()("
-      //    << cet::demangle_symbol(typeid(T).name())
-      //    << " const&, std::type_info const&)"
-      //    << std::endl;
       throw Exception(errors::LogicError, "makePartner")
           << "Attempted to make partner of a product that does not know how!\n"
           << "Please report to the ART framework developers.\n";

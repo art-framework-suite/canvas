@@ -84,7 +84,6 @@ private:
   EventNumber_t event_;
 };
 
-#ifndef __GCCXML__
 inline
 art::EventID::
 EventID()
@@ -444,7 +443,6 @@ FIRST_EVENT_NUMBER()
 {
   return 1u;
 }
-#endif /* __GCCXML__ */
 
 #endif /* art_Persistency_Provenance_EventID_h */
 

@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "canvas/Persistency/Common/HLTGlobalStatus.h"
+#include "canvas/Persistency/Common/detail/aggregate.h"
 #include "canvas/Persistency/Common/traits.h"
 #include "fhiclcpp/ParameterSetID.h"
 
@@ -62,6 +63,11 @@ namespace art {
       TriggerResults temp(rhs);
       this->swap(temp);
       return *this;
+    }
+
+    void aggregate(TriggerResults const&)
+    {
+      detail::EventOnlyProduct(this);
     }
 
   };  // TriggerResults

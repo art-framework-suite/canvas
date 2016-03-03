@@ -36,110 +36,95 @@
 
 namespace art {
 
-   class FileIndex;
+  class FileIndex;
 
 }
 
 class art::FileIndex {
 
 public:
-   typedef long long EntryNumber_t;
+  typedef long long EntryNumber_t;
 
-   FileIndex();
+  FileIndex();
 
-   // use compiler-generated copy c'tor, copy assignment, and d'tor
+  // use compiler-generated copy c'tor, copy assignment, and d'tor
 
-   void addEntry(EventID const &eID, EntryNumber_t entry);
+  void addEntry(EventID const &eID, EntryNumber_t entry);
 
-   void addEntryOnLoad(EventID const &eID, EntryNumber_t entry);
+  void addEntryOnLoad(EventID const &eID, EntryNumber_t entry);
 
-   enum EntryType {kRun, kSubRun, kEvent, kEnd};
+  enum EntryType {kRun, kSubRun, kEvent, kEnd};
 
-   class Element {
-   public:
-      static EntryNumber_t const invalidEntry;
-      Element() : eventID_(), entry_(invalidEntry) {
-      }
-      Element(EventID const &eID, EntryNumber_t entry = invalidEntry) :
-         eventID_(eID), entry_(entry) {
-      }
-      EntryType getEntryType() const {
-         return eventID_.isValid()?kEvent:(eventID_.subRunID().isValid()?kSubRun:kRun);
-      }
-      EventID eventID_;
-      EntryNumber_t entry_;
-   };
+  class Element {
+  public:
+    static EntryNumber_t const invalidEntry;
+    Element() : eventID_(), entry_(invalidEntry) {
+    }
+    Element(EventID const &eID, EntryNumber_t entry = invalidEntry) :
+      eventID_(eID), entry_(entry) {
+    }
+    EntryType getEntryType() const {
+      return eventID_.isValid()?kEvent:(eventID_.subRunID().isValid()?kSubRun:kRun);
+    }
+    EventID eventID_;
+    EntryNumber_t entry_;
+  };
 
-   typedef std::vector<Element>::const_iterator const_iterator;
-   typedef std::vector<Element>::iterator iterator;
+  typedef std::vector<Element>::const_iterator const_iterator;
+  typedef std::vector<Element>::iterator iterator;
 
-   void sortBy_Run_SubRun_Event();
-   void sortBy_Run_SubRun_EventEntry();
+  void sortBy_Run_SubRun_Event();
+  void sortBy_Run_SubRun_EventEntry();
 
-   const_iterator
-   findPosition(EventID const &eID) const;
+  const_iterator
+  findPosition(EventID const &eID) const;
 
-   const_iterator
-   findEventPosition(EventID const &eID, bool exact) const;
+  template <typename ID>
+  const_iterator
+  findPosition(ID const& id, bool exact) const;
 
-   const_iterator
-   findSubRunPosition(SubRunID const &srID, bool exact) const;
+  const_iterator
+  findSubRunOrRunPosition(SubRunID const &srID) const;
 
-   const_iterator
-   findRunPosition(RunID const &rID, bool exact) const;
+  template <typename ID>
+  bool contains(ID const& id, bool exact) const {
+    return findPosition(id, exact) != entries_.end();
+  }
 
-   const_iterator
-   findSubRunOrRunPosition(SubRunID const &srID) const;
+  iterator begin() {return entries_.begin();}
+  const_iterator cbegin() const { return entries_.begin();}
 
-   bool
-   containsEvent(EventID const &eID, bool exact) const {
-      return findEventPosition(eID, exact) != entries_.end();
-   }
+  iterator end() {return entries_.end();}
+  const_iterator cend() const { return entries_.end();}
 
-   bool
-   containsSubRun(SubRunID const &srID, bool exact) const {
-      return findSubRunPosition(srID, exact) != entries_.end();
-   }
+  std::vector<Element>::size_type size() const {return entries_.size();}
 
-   bool
-   containsRun(RunID const &rID, bool exact) const {
-      return findRunPosition(rID, exact) != entries_.end();
-   }
+  bool empty() const {return entries_.empty();}
 
-   iterator begin() {return entries_.begin();}
-   const_iterator cbegin() const { return entries_.begin();}
+  bool allEventsInEntryOrder() const;
 
-   iterator end() {return entries_.end();}
-   const_iterator cend() const { return entries_.end();}
+  bool eventsUniqueAndOrdered() const;
 
-   std::vector<Element>::size_type size() const {return entries_.size();}
+  enum SortState { kNotSorted, kSorted_Run_SubRun_Event, kSorted_Run_SubRun_EventEntry};
 
-   bool empty() const {return entries_.empty();}
-
-   bool allEventsInEntryOrder() const;
-
-   bool eventsUniqueAndOrdered() const;
-
-   enum SortState { kNotSorted, kSorted_Run_SubRun_Event, kSorted_Run_SubRun_EventEntry};
-
-   struct Transients {
-      Transients();
-      bool allInEntryOrder_;
-      bool resultCached_;
-      SortState sortState_;
-   };
+  struct Transients {
+    Transients();
+    bool allInEntryOrder_;
+    bool resultCached_;
+    SortState sortState_;
+  };
 
 private:
 
-   bool& allInEntryOrder() const {return transients_.get().allInEntryOrder_;}
-   bool& resultCached() const {return transients_.get().resultCached_;}
-   SortState& sortState() const {return transients_.get().sortState_;}
+  bool& allInEntryOrder() const {return transients_.get().allInEntryOrder_;}
+  bool& resultCached() const {return transients_.get().resultCached_;}
+  SortState& sortState() const {return transients_.get().sortState_;}
 
-   const_iterator
-   findEventForUnspecifiedSubRun(EventID const &eID, bool exact) const;
+  const_iterator
+  findEventForUnspecifiedSubRun(EventID const &eID, bool exact) const;
 
-   std::vector<Element> entries_;
-   mutable Transient<Transients> transients_;
+  std::vector<Element> entries_;
+  mutable Transient<Transients> transients_;
 };
 
 namespace art {

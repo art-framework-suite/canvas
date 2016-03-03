@@ -60,13 +60,13 @@ namespace art {
   class Ptr;
 
   template <typename T, typename U>
-  typename std::enable_if<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>::type
+  std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
   operator == (Ptr<T> const & lhs, Ptr<U> const & rhs);
   template <typename T, typename U>
-  typename std::enable_if<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>::type
+  std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
   operator != (Ptr<T> const & lhs, Ptr<U> const & rhs);
   template <typename T, typename U>
-  typename std::enable_if<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>::type
+  std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
   operator < (Ptr<T> const & lhs, Ptr<U> const & rhs);
 
   // Fill a vector of Ptrs from a persistent collection. Alternatively,
@@ -113,10 +113,10 @@ public:
 
   // 4.
   template <typename U>
-  Ptr(Ptr<U> const & iOther, typename std::enable_if<std::is_base_of<T, U>::value>::type * dummy = 0);
+  Ptr(Ptr<U> const & iOther, std::enable_if_t<std::is_base_of<T, U>::value> * dummy = 0);
 
   template <typename U>
-  Ptr(Ptr<U> const & iOther, typename std::enable_if<std::is_base_of<U, T>::value>::type * dummy = 0);
+  Ptr(Ptr<U> const & iOther, std::enable_if_t<std::is_base_of<U, T>::value> * dummy = 0);
 
   // 5. See notes above.
   Ptr(ProductID const & productID, T const * item, key_type itemKey);
@@ -136,11 +136,10 @@ public:
   key_type key() const;
   bool hasCache() const;
   RefCore const & refCore() const;
-#ifndef __GCCXML__
-  explicit
-#endif
-  operator bool () const;
+
+  explicit operator bool () const;
   EDProductGetter const * productGetter() const;
+  void aggregate(Ptr const&) const;
 
   // MUST UPDATE WHEN CLASS IS CHANGED!
   static short Class_Version() { return 10; }
@@ -162,7 +161,6 @@ struct art::detail::EnsurePointer<TO, art::Ptr<PTRVAL> > {
   operator()(Ptr<PTRVAL> const & from) const;
 };
 
-#ifndef __GCCXML__
 namespace art {
   namespace detail {
     template <typename T, typename C>
@@ -189,7 +187,7 @@ ItemGetter<T, C>::operator()(C const * product,
                              typename Ptr<T>::key_type iKey) const
 {
   assert(product != 0);
-  typename C::const_iterator it = product->begin();
+  auto it = product->begin();
   advance(it, iKey);
   T const * address = detail::GetProduct<C>::address(it);
   return address;
@@ -232,7 +230,7 @@ operator()(cet::map_vector<T> const * product,
 {
   assert(product != 0);
   cet::map_vector_key k(static_cast<unsigned>(iKey));
-  typename cet::map_vector<T>::const_iterator it = product->find(k);
+  auto it = product->find(k);
   if (it == product->end()) {
     return nullptr;
   }
@@ -243,6 +241,8 @@ operator()(cet::map_vector<T> const * product,
 
 ////////////////////////////////////
 // Ptr implementation.
+
+#include "canvas/Persistency/Common/detail/aggregate.h"
 
 template <typename T>
 inline
@@ -295,7 +295,7 @@ template <typename T>
 template <typename U>
 inline
 art::Ptr<T>::
-Ptr(Ptr<U> const & iOther, typename std::enable_if<std::is_base_of<T, U>::value>::type *):
+Ptr(Ptr<U> const & iOther, std::enable_if_t<std::is_base_of<T, U>::value> *):
   core_(iOther.id(),
         (iOther.hasCache() ? static_cast<T const *>(iOther.get()) : static_cast<T const *>(0)),
         iOther.productGetter()),
@@ -307,7 +307,7 @@ template <typename T>
 template <typename U>
 inline
 art::Ptr<T>::
-Ptr(Ptr<U> const & iOther, typename std::enable_if<std::is_base_of<U, T>::value>::type *)
+Ptr(Ptr<U> const & iOther, std::enable_if_t<std::is_base_of<U, T>::value> *)
   :
   core_(iOther.id(),
         dynamic_cast<T const *>(iOther.get()),
@@ -439,6 +439,14 @@ productGetter() const
 }
 
 template <typename T>
+inline
+void
+art::Ptr<T>::aggregate(Ptr const&) const
+{
+  detail::EventOnlyProduct(this);
+}
+
+template <typename T>
 template <typename C>
 inline
 T const *
@@ -482,7 +490,7 @@ template <typename T, typename U>
 inline
 auto
 art::operator == (Ptr<T> const & lhs, Ptr<U> const & rhs)
--> typename std::enable_if<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>::type
+-> std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
 {
   return lhs.refCore() == rhs.refCore() && lhs.key() == rhs.key();
 }
@@ -491,7 +499,7 @@ template <typename T, typename U>
 inline
 auto
 art::operator != (Ptr<T> const & lhs, Ptr<U> const & rhs)
--> typename std::enable_if<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>::type
+-> std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
 {
   return ! (lhs == rhs);
 }
@@ -500,7 +508,7 @@ template <typename T, typename U>
 inline
 auto
 art::operator < (Ptr<T> const & lhs, Ptr<U> const & rhs)
--> typename std::enable_if<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>::type
+-> std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
 {
   // The ordering of integer keys guarantees that the ordering of Ptrs within
   // a collection will be identical to the ordering of the referenced objects in the collection.
@@ -547,9 +555,6 @@ std::ostream & art::operator << (std::ostream & os, Ptr<T> const & p)
   os << "(" << p.id() << ", " << p.key() << ")";
   return os;
 }
-
-#endif /* __GCCXML */
-
 
 #endif /* art_Persistency_Common_Ptr_h */
 
