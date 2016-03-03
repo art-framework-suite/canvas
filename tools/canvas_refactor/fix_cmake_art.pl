@@ -19,3 +19,8 @@ foreach my $lib (sort keys %dir_list) {
   #s&\b\Q${lib}\E([^\.\s]*\b)([^\.]|$)&$dir_list{$lib}${1}${2}&g and last;
   s&\b\Q${lib}\E\b([^\.]|$)&$dir_list{$lib}${1}${2}&g and last;
 }
+
+s/\$\{ART_PERSISTENCY_COMMON\}/art_Persistency_Common canvas_Persistency_Common/g;
+s/\$\{ART_PERSISTENCY_PROVENANCE\}/art_Persistency_Provenance canvas_Persistency_Provenance/g;
+s/\$\{ART_UTILITIES\}/art_Utilities canvas_Utilities/g;
+s&\$ENV\{ART_DIR\}/Modules&\$ENV\{CANVAS_DIR\}/Modules&g;
