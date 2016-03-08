@@ -2,7 +2,7 @@
 ########################################################################
 # cp-tag
 #
-# ART-specific cross-package tagger.
+# cross-package tagger for art, critic, and gallery
 #
 # Requires MANAGER role on all packages to be tagged (including ART).
 #
@@ -12,10 +12,9 @@
 
 # Subsidiary packages to be tagged, These must be in order: ie package
 # n's product_list must set up package n+1.
-declare -a packages=(messagefacility fhicl-cpp cetlib cpp0x)
-
-# Tag message.
-tag_msg='ART suite cross-package tag'
+##declare -a art_packages=(messagefacility fhicl-cpp cetlib cpp0x)
+##declare -a critic_packages=(art canvas messagefacility fhicl-cpp cetlib cpp0x)
+##declare -a gallery_packages=(canvas messagefacility fhicl-cpp cetlib cpp0x)
 
 function ensure_gitconfig() {
     local package=$1
@@ -55,7 +54,7 @@ prog=${0##*/}
 function usage() {
     cat 1>&2 <<EOF
 ${prog} --help|-h|-\?
-${prog} <tag>+
+${prog} --tagtype|-t <art|critic|gallery> <tag>+
 EOF
 }
 
@@ -65,7 +64,8 @@ if (( $? != 4 )); then
   exit 1
 fi
 
-TEMP=`getopt -n "$prog" -o ':h\?' --long help -- "${@}"`
+TEMP=`getopt -n "$prog" -o ':h\?:t:' --long help -l tagtype: -- "${@}"`
+echo "option list: $TEMP"
 
 eval set -- "$TEMP"
 while true; do
@@ -73,6 +73,12 @@ while true; do
     --help|-h|-\?)
       usage
       exit 1
+      ;;
+    --tagtype|-t)
+      shift
+      tag_type="$1"
+      shift
+      echo "tagging for $tag_type"
       ;;
     --)
       shift
@@ -85,34 +91,62 @@ while true; do
   esac
 done
 
-[[ -z "$1" ]] && { echo "Require existing ART tag as non-option argument" 1>&2; exit 1; }
+[[ -z "$1" ]] && { echo "Require existing $tag_type tag as non-option argument" 1>&2; exit 1; }
+
+if [[ -z "$tag_type" ]]; then
+   echo "tag type is unspecified, defaulting to art"
+   tag_type=art
+fi
+
+case $tag_type in
+  "art" )
+    declare -a packages=(messagefacility fhicl-cpp cetlib cpp0x)
+    suite_name=ART_SUITE
+    ;;
+  "critic" )
+    declare -a packages=(art canvas messagefacility fhicl-cpp cetlib cpp0x)
+    suite_name=ART_SUITE
+    ;;
+  "gallery" )
+    declare -a packages=(canvas messagefacility fhicl-cpp cetlib cpp0x)
+    suite_name=GALLERY_SUITE
+   ;;
+  * )
+    echo "unrecognized tag type $tag_type"
+    usage
+    exit 1
+    ;;
+esac
+
+# Tag message.
+tag_msg='$tag_type suite cross-package tag'
 
 while [[ -n "$1" ]]; do
-  art_version=$1
+  pkg_version=$1
   shift
-  art_version_bits=($(echo "$art_version" | sed -e 's&^v\([0-9]\{1,\}\)_\([0-9]\{1,\}\)_\([0-9]\{1,\}\)\(.*\)$&\1 \2 \3 \4&'))
-  if (( ${art_version_bits[0]} > 1 )) || { (( ${art_version_bits[0]} == 1 )) && (( ${art_version_bits[1]} >= 18 )); }; then
+  pkg_version_bits=($(echo "$pkg_version" | sed -e 's&^v\([0-9]\{1,\}\)_\([0-9]\{1,\}\)_\([0-9]\{1,\}\)\(.*\)$&\1 \2 \3 \4&'))
+  if (( ${pkg_version_bits[0]} > 1 )) || { (( ${pkg_version_bits[0]} == 1 )) && (( ${pkg_version_bits[1]} >= 18 )); }; then
     # cpp0x was dropped from v1_18_00+
     unset packages[3]
   fi
-  ensure_gitconfig art
+  ensure_gitconfig $tag_type
 
-  ssh p-art@cdcvs.fnal.gov "cd /cvs/projects/art && { git tag | grep -q $art_version || { echo 'Unable to find ART tag ${art_version}' 1>&2; exit 1; }; } && `maybe_tag \"ART_SUITE_${art_version}\" \"${art_version}\"`"
+  ssh p-$tag_type@cdcvs.fnal.gov "cd /cvs/projects/$tag_type && { git tag | grep -q $pkg_version || { echo 'Unable to find $tag_type tag ${pkg_version}' 1>&2; exit 1; }; } && `maybe_tag \"${suite_name}_${pkg_version}\" \"${pkg_version}\"`"
 
-  last_pkg=art
+  last_pkg=$tag_type
   for package in "${packages[@]}"; do
     product=`product_for "$package"`
-    pv=`wget --no-check-certificate -q -O - "https://cdcvs.fnal.gov/redmine/projects/${last_pkg}/repository/raw/ups/product_deps?rev=ART_SUITE_${art_version}" | \
+    pv=`wget --no-check-certificate -q -O - "https://cdcvs.fnal.gov/redmine/projects/${last_pkg}/repository/raw/ups/product_deps?rev=${suite_name}_${pkg_version}" | \
      grep    -e '^[ 	]*'"$product"'[ 	]\{1,\}' | \
      sed -e 's/^[ 	]*'"$product"'[ 	]\{1,\}\(v[^ 	]*\).*$/\1/'`
     if [[ -n "$pv" ]]; then
-      echo "Found $package tag $pv corresponding to ART tag $art_version."
+      echo "Found $package tag $pv corresponding to $tag_type tag $pkg_version."
     else
-      echo "Could not find tag for package $package corresponding to ART tag $art_version." 1>&2
+      echo "Could not find tag for package $package corresponding to $tag_type tag $pkg_version." 1>&2
       continue
     fi
     ensure_gitconfig $package
-    ptag "${package}" "ART_SUITE_${art_version}" "${pv}"
+    ptag "${package}" "${suite_name}_${pkg_version}" "${pv}"
     last_pkg=${package}
   done
 done
