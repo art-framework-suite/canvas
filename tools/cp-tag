@@ -103,7 +103,8 @@ case $tag_type in
     suite_name=ART_SUITE
     ;;
   "critic" )
-    declare -a packages=(art canvas messagefacility fhicl-cpp cetlib cpp0x)
+    # critic is a special case, we are going to explicitly check and tag both critic and art
+    declare -a packages=(canvas messagefacility fhicl-cpp cetlib cpp0x)
     suite_name=ART_SUITE
     ;;
   "gallery" )
@@ -123,16 +124,39 @@ tag_msg='$tag_type suite cross-package tag'
 while [[ -n "$1" ]]; do
   pkg_version=$1
   shift
-  pkg_version_bits=($(echo "$pkg_version" | sed -e 's&^v\([0-9]\{1,\}\)_\([0-9]\{1,\}\)_\([0-9]\{1,\}\)\(.*\)$&\1 \2 \3 \4&'))
-  if (( ${pkg_version_bits[0]} > 1 )) || { (( ${pkg_version_bits[0]} == 1 )) && (( ${pkg_version_bits[1]} >= 18 )); }; then
-    # cpp0x was dropped from v1_18_00+
-    unset packages[3]
+  if [[ $tag_type == "art" ]];then
+    pkg_version_bits=($(echo "$pkg_version" | sed -e 's&^v\([0-9]\{1,\}\)_\([0-9]\{1,\}\)_\([0-9]\{1,\}\)\(.*\)$&\1 \2 \3 \4&'))
+    if (( ${pkg_version_bits[0]} > 1 )) || { (( ${pkg_version_bits[0]} == 1 )) && (( ${pkg_version_bits[1]} >= 18 )); }; then
+      # cpp0x was dropped from v1_18_00+
+      unset packages[3]
+    fi
   fi
   ensure_gitconfig $tag_type
 
-  ssh p-$tag_type@cdcvs.fnal.gov "cd /cvs/projects/$tag_type && { git tag | grep -q $pkg_version || { echo 'Unable to find $tag_type tag ${pkg_version}' 1>&2; exit 1; }; } && `maybe_tag \"${suite_name}_${pkg_version}\" \"${pkg_version}\"`"
-
-  last_pkg=$tag_type
+  # no longer quite so simple
+  #ssh p-$tag_type@cdcvs.fnal.gov "cd /cvs/projects/$tag_type && { git tag | grep -q $pkg_version || { echo 'Unable to find $tag_type tag ${pkg_version}' 1>&2; exit 1; }; } && `maybe_tag \"${suite_name}_${pkg_version}\" \"${pkg_version}\"`"
+  tag_list=`ssh p-$tag_type@cdcvs.fnal.gov "cd /cvs/projects/$tag_type && git tag | grep $pkg_version"`
+  echo "found tag $tag_list"
+  if [[ $tag_list != $pkg_version ]]; then
+    echo "Unable to find $tag_type tag ${pkg_version}"
+    exit 1
+  fi
+  # critic is a special case, we need to check ups/product_deps for the art release
+  if [[ $tag_type == "critic" ]];then
+     echo "checking critic"
+     critic_version=${pkg_version}
+     pkg_version=`wget --no-check-certificate -q -O - "https://cdcvs.fnal.gov/redmine/projects/critic/repository/raw/ups/product_deps?rev=${pkg_version}" | \
+	 grep    -e '^[ 	]*'"art"'[ 	]\{1,\}' | \
+	 sed -e 's/^[ 	]*'"art"'[ 	]\{1,\}\(v[^ 	]*\).*$/\1/'`
+     echo "tagging for $pkg_version"
+     ssh p-critic@cdcvs.fnal.gov "cd /cvs/projects/critic && { git tag | grep -q $critic_version || { echo 'Unable to find critic tag ${critic_version}' 1>&2; exit 1; }; } && `maybe_tag \"${suite_name}_${pkg_version}\" \"${critic_version}\"`"
+     ssh p-art@cdcvs.fnal.gov "cd /cvs/projects/art && { git tag | grep -q $pkg_version || { echo 'Unable to find art tag ${pkg_version}' 1>&2; exit 1; }; } && `maybe_tag \"${suite_name}_${pkg_version}\" \"${pkg_version}\"`"
+     last_pkg=art
+  else
+     echo "$tag_type is OK"
+     ssh p-$tag_type@cdcvs.fnal.gov "cd /cvs/projects/$tag_type && { git tag | grep -q $pkg_version || { echo 'Unable to find $tag_type tag ${pkg_version}' 1>&2; exit 1; }; } && `maybe_tag \"${suite_name}_${pkg_version}\" \"${pkg_version}\"`"
+     last_pkg=$tag_type
+  fi
   for package in "${packages[@]}"; do
     product=`product_for "$package"`
     pv=`wget --no-check-certificate -q -O - "https://cdcvs.fnal.gov/redmine/projects/${last_pkg}/repository/raw/ups/product_deps?rev=${suite_name}_${pkg_version}" | \
