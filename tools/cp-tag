@@ -77,7 +77,7 @@ while true; do
       shift
       tag_type="$1"
       shift
-      echo "tagging for $tag_type"
+      echo "tag type is $tag_type"
       ;;
     --)
       shift
