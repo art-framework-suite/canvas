@@ -65,7 +65,6 @@ if (( $? != 4 )); then
 fi
 
 TEMP=`getopt -n "$prog" -o ':h\?:t:' --long help -l tagtype: -- "${@}"`
-echo "option list: $TEMP"
 
 eval set -- "$TEMP"
 while true; do
