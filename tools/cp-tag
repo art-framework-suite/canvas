@@ -13,8 +13,8 @@
 # Subsidiary packages to be tagged, These must be in order: ie package
 # n's product_list must set up package n+1.
 ##declare -a art_packages=(messagefacility fhicl-cpp cetlib cpp0x)
-##declare -a critic_packages=(art canvas messagefacility fhicl-cpp cetlib cpp0x)
-##declare -a gallery_packages=(canvas messagefacility fhicl-cpp cetlib cpp0x)
+##declare -a critic_packages=(art canvas messagefacility fhicl-cpp cetlib)
+##declare -a gallery_packages=(canvas messagefacility fhicl-cpp cetlib)
 
 function ensure_gitconfig() {
     local package=$1
@@ -104,11 +104,11 @@ case $tag_type in
     ;;
   "critic" )
     # critic is a special case, we are going to explicitly check and tag both critic and art
-    declare -a packages=(canvas messagefacility fhicl-cpp cetlib cpp0x)
+    declare -a packages=(canvas messagefacility fhicl-cpp cetlib)
     suite_name=ART_SUITE
     ;;
   "gallery" )
-    declare -a packages=(canvas messagefacility fhicl-cpp cetlib cpp0x)
+    declare -a packages=(canvas messagefacility fhicl-cpp cetlib)
     suite_name=GALLERY_SUITE
    ;;
   * )
@@ -135,8 +135,8 @@ while [[ -n "$1" ]]; do
 
   # no longer quite so simple
   #ssh p-$tag_type@cdcvs.fnal.gov "cd /cvs/projects/$tag_type && { git tag | grep -q $pkg_version || { echo 'Unable to find $tag_type tag ${pkg_version}' 1>&2; exit 1; }; } && `maybe_tag \"${suite_name}_${pkg_version}\" \"${pkg_version}\"`"
-  tag_list=`ssh p-$tag_type@cdcvs.fnal.gov "cd /cvs/projects/$tag_type && git tag | grep $pkg_version"`
-  echo "found tag $tag_list"
+  tag_list=`ssh p-$tag_type@cdcvs.fnal.gov "cd /cvs/projects/$tag_type && git tag | grep $pkg_version | grep -v ${suite_name}_${pkg_version}"`
+  #echo "found tag $tag_list"
   if [[ $tag_list != $pkg_version ]]; then
     echo "Unable to find $tag_type tag ${pkg_version}"
     exit 1
