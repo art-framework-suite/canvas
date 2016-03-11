@@ -81,6 +81,39 @@ EOF
               my $pv = pkg_version($package, $suite_version);
               sprintf("h2. \%s\%s.\n\n",
                       rpage($package, $pv), new_first($package, $pv, $dot_version)); } @known_packages;
+} elsif (lc $package eq "gallery") { # Want Gallery Suite release notes.
+  if ($options->{since}) {
+    print STDERR "--since option ignored for gallery suite release notes.\n";
+  }
+  my $suite_version = suite_version($vnum);
+  my $dot_version = dot_version($vnum);
+  my $prod_version = prod_version($vnum);
+  my $version_date = tag_date("art", $suite_version);
+  print "h1. Gallery Suite Release Notes $dot_version ($version_date).\n\n";
+  print "* \"Download page\":https://scisoft.fnal.gov/scisoft/bundles/gallery/${prod_version}/art-${prod_version}.html.\n";
+  my $prev = previous_version($dot_version, @all_suite_versions);
+  if ($prev =~ /^\d/) {
+    print "* Previous version's [[Release Notes $prev|release notes]].\n\n";
+  }
+  print "h2. External package changes.\n\n\n";
+  print "h2. Gallery ",
+    vpage($dot_version),
+      ".\n\n";
+  print <<EOF;
+h3. New features:
+
+
+h3. Bug fixes:
+
+
+h3. Known issues:
+
+
+EOF
+  print map { my $package = $_;
+              my $pv = pkg_version($package, $suite_version);
+              sprintf("h2. \%s\%s.\n\n",
+                      rpage($package, $pv), new_first($package, $pv, $dot_version)); } @known_packages;
 } else {                        # Simpler: want package release notes.
   if ($options->{"suite-version"}) {
     $vnum = pkg_version($package, $vnum);
