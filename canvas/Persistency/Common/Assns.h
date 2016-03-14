@@ -117,42 +117,42 @@ namespace art {
     class AssnsStreamer : public TClassStreamer {
     public:
       void operator()(TBuffer & R_b, void * objp) {
-        /**/std::cout
-        /**/    << "-----> Begin AssnsStreamer<"
-        /**/    << cet::demangle_symbol(typeid(L).name())
-        /**/    << ", "
-        /**/    << cet::demangle_symbol(typeid(R).name())
-        /**/    << "::operator()"
-        /**/    << std::endl;
+        //*/std::cout
+        //*/    << "-----> Begin AssnsStreamer<"
+        //*/    << cet::demangle_symbol(typeid(L).name())
+        //*/    << ", "
+        //*/    << cet::demangle_symbol(typeid(R).name())
+        //*/    << "::operator()"
+        //*/    << std::endl;
         static TClassRef cl(TClass::GetClass(typeid(Assns<L, R, void>)));
         Assns<L, R, void> *obj = reinterpret_cast<Assns<L, R, void> *>(objp);
         if (R_b.IsReading()) {
-          /**/std::cout
-          /**/    << "in reading case"
-          /**/    << std::endl;
+          //*/std::cout
+          //*/    << "in reading case"
+          //*/    << std::endl;
           cl->ReadBuffer(R_b, obj);
-          /**/std::cout
-          /**/    << "calling fill_transients"
-          /**/    << std::endl;
+          //*/std::cout
+          //*/    << "calling fill_transients"
+          //*/    << std::endl;
           obj->fill_transients();
         }
         else {
-          /**/std::cout
-          /**/    << "in writing case"
-          /**/    << std::endl;
-          /**/std::cout
-          /**/    << "calling fill_from_transients"
-          /**/    << std::endl;
+          //*/std::cout
+          //*/    << "in writing case"
+          //*/    << std::endl;
+          //*/std::cout
+          //*/    << "calling fill_from_transients"
+          //*/    << std::endl;
           obj->fill_from_transients();
           cl->WriteBuffer(R_b, obj);
         }
-        /**/std::cout
-        /**/    << "-----> End   AssnsStreamer<"
-        /**/    << cet::demangle_symbol(typeid(L).name())
-        /**/    << ", "
-        /**/    << cet::demangle_symbol(typeid(R).name())
-        /**/    << "::operator()"
-        /**/    << std::endl;
+        //*/std::cout
+        //*/    << "-----> End   AssnsStreamer<"
+        //*/    << cet::demangle_symbol(typeid(L).name())
+        //*/    << ", "
+        //*/    << cet::demangle_symbol(typeid(R).name())
+        //*/    << "::operator()"
+        //*/    << std::endl;
       }
     };
   }
@@ -464,8 +464,8 @@ template <typename L, typename R>
 void
 art::Assns<L, R, void>::fill_transients()
 {
-  // Precondition: ptrs_ is empty.
   // Precondition: ptr_data_1_.size() = ptr_data_2_.size();
+  ptrs_.clear();
   ptrs_.reserve(ptr_data_1_.size());
   ptr_data_t & l_ref = left_first() ? ptr_data_1_ : ptr_data_2_;
   ptr_data_t & r_ref = left_first() ? ptr_data_2_ : ptr_data_1_;
