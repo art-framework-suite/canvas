@@ -52,6 +52,16 @@ cet_test(RootClassMapping_t USE_BOOST_UNIT
   TEST_PROPERTIES WILL_FAIL true
   )
 
+cet_test(EventRange_t USE_BOOST_UNIT
+  LIBRARIES
+  canvas_Persistency_Provenance
+  )
+
+cet_test(RangeSet_t USE_BOOST_UNIT
+  LIBRARIES
+  canvas_Persistency_Provenance
+  )
+
 cet_test(TypeTools_t USE_BOOST_UNIT
   LIBRARIES
   canvas_Persistency_Provenance
@@ -78,4 +88,3 @@ cet_test(TypeWithDict_t USE_BOOST_UNIT
   canvas_Utilities
   ${ROOT_CORE}
   )
-

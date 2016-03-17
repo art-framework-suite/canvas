@@ -21,16 +21,16 @@ using fhicl::ParameterSetID;
 
 namespace {
 
-void throwExceptionWithText(const char* txt)
-{
-  throw art::Exception(art::errors::LogicError)
+  void throwExceptionWithText(const char* txt)
+  {
+    throw art::Exception(art::errors::LogicError)
       << "Problem using an incomplete BranchDescription\n"
       << txt
       << "\nPlease report this error to the ART developers\n";
-}
+  }
 
-static char const underscore('_');
-static char const period('.');
+  constexpr char underscore('_');
+  constexpr char period('.');
 
 }
 
@@ -565,4 +565,3 @@ operator<<(std::ostream& os, BranchDescription const& p)
 }
 
 } // namespace art
-

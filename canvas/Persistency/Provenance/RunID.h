@@ -8,11 +8,11 @@
 // Each RunID contains a fixed-size unsigned integer, the run number.
 //
 
+#include "canvas/Persistency/Provenance/IDNumber.h"
 #include <cstdint>
 #include <iosfwd>
 
 namespace art {
-  typedef std::uint32_t RunNumber_t;
   class RunID;
 
   std::ostream &
@@ -35,7 +35,7 @@ public:
 
   static RunID maxRun();
   static RunID firstRun();
-  static RunID flushRun();
+  static constexpr RunID flushRun();
 
   // Comparison operators.
   bool operator==(RunID const & other) const;
@@ -49,18 +49,11 @@ public:
   operator<<(std::ostream & os, RunID const & iID);
 
 private:
-  struct FlushFlag { };
+  struct FlushFlag {};
 
-  explicit RunID(FlushFlag);
+  explicit constexpr RunID(FlushFlag);
 
   RunNumber_t inRangeOrInvalid(RunNumber_t r);
-
-  static constexpr RunNumber_t INVALID_RUN_NUMBER();
-  static constexpr RunNumber_t MAX_VALID_RUN_NUMBER();
-  static constexpr RunNumber_t FLUSH_RUN_NUMBER();
-  static constexpr RunNumber_t MAX_NATURAL_RUN_NUMBER();
-  static constexpr RunNumber_t FIRST_RUN_NUMBER();
-
   RunNumber_t run_;
 };
 
@@ -70,7 +63,7 @@ constexpr
 art::RunID::
 RunID()
   :
-  run_(INVALID_RUN_NUMBER())
+  run_(IDNumber<Level::Run>::invalid())
 {
 }
 
@@ -95,7 +88,7 @@ bool
 art::RunID::
 isValid() const
 {
-  return (run_ != INVALID_RUN_NUMBER());
+  return (run_ != IDNumber<Level::Run>::invalid());
 }
 
 inline
@@ -103,7 +96,7 @@ bool
 art::RunID::
 isFlush() const
 {
-  return (run_ == FLUSH_RUN_NUMBER());
+  return (run_ == IDNumber<Level::Run>::flush_value());
 }
 
 #include "canvas/Utilities/Exception.h"
@@ -117,7 +110,7 @@ next() const
     throw Exception(errors::InvalidNumber)
         << "cannot increment invalid run number.";
   }
-  else if (run_ == MAX_NATURAL_RUN_NUMBER()) {
+  else if (run_ == IDNumber<Level::Run>::max_natural()) {
     throw Exception(errors::InvalidNumber)
         << "cannot increment maximum run number.";
   }
@@ -133,7 +126,7 @@ previous() const
     throw Exception(errors::InvalidNumber)
         << "cannot decrement minimum run number.";
   }
-  else if (run_ == MAX_NATURAL_RUN_NUMBER()) {
+  else if (run_ == IDNumber<Level::Run>::max_natural()) {
     throw Exception(errors::InvalidNumber)
         << "cannot increment maximum run number.";
   }
@@ -145,7 +138,7 @@ art::RunID
 art::RunID::
 maxRun()
 {
-  return RunID(MAX_NATURAL_RUN_NUMBER());
+  return RunID(IDNumber<Level::Run>::max_natural());
 }
 
 inline
@@ -153,10 +146,11 @@ art::RunID
 art::RunID::
 firstRun()
 {
-  return RunID(FIRST_RUN_NUMBER());
+  return RunID(IDNumber<Level::Run>::first());
 }
 
 inline
+constexpr
 art::RunID
 art::RunID::
 flushRun()
@@ -188,7 +182,7 @@ bool
 art::RunID::
 operator<(RunID const & other) const
 {
-  static SortInvalidFirst<RunNumber_t> op(INVALID_RUN_NUMBER());
+  static SortInvalidFirst<RunNumber_t> op(IDNumber<Level::Run>::invalid());
   return op(run_, other.run_);
 }
 
@@ -220,9 +214,9 @@ inline
 art::RunNumber_t
 art::RunID::inRangeOrInvalid(RunNumber_t r)
 {
-  if (r == INVALID_RUN_NUMBER() ||
-      (r >= FIRST_RUN_NUMBER() &&
-       r <=  MAX_NATURAL_RUN_NUMBER())) {
+  if (r == IDNumber<Level::Run>::invalid() ||
+      (r >= IDNumber<Level::Run>::first() &&
+       r <=  IDNumber<Level::Run>::max_natural())) {
     return r;
   }
   else {
@@ -233,52 +227,12 @@ art::RunID::inRangeOrInvalid(RunNumber_t r)
 }
 
 inline
+constexpr
 art::RunID::
 RunID(FlushFlag)
   :
-  run_(FLUSH_RUN_NUMBER())
-{
-}
-
-constexpr
-art::RunNumber_t
-art::RunID::
-INVALID_RUN_NUMBER()
-{
-  return -1;
-}
-
-constexpr
-art::RunNumber_t
-art::RunID::
-MAX_VALID_RUN_NUMBER()
-{
-  return INVALID_RUN_NUMBER() - 1;
-}
-
-constexpr
-art::RunNumber_t
-art::RunID::
-FLUSH_RUN_NUMBER()
-{
-  return MAX_VALID_RUN_NUMBER();
-}
-
-constexpr
-art::RunNumber_t
-art::RunID::
-MAX_NATURAL_RUN_NUMBER()
-{
-  return FLUSH_RUN_NUMBER() - 1;
-}
-
-constexpr
-art::RunNumber_t
-art::RunID::
-FIRST_RUN_NUMBER()
-{
-  return 1;
-}
+  run_{IDNumber<Level::Run>::flush_value()}
+{}
 
 #endif /* art_Persistency_Provenance_RunID_h */
 

@@ -35,6 +35,8 @@ struct art::BranchKey {
 
   explicit BranchKey(BranchDescription const& desc);
 
+  std::string branchName() const;
+
   std::string friendlyClassName_;
   std::string moduleLabel_;
   std::string productInstanceName_;

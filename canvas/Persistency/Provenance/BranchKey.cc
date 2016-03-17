@@ -8,6 +8,11 @@
 #include "canvas/Persistency/Provenance/BranchKey.h"
 #include "canvas/Persistency/Provenance/BranchDescription.h"
 
+namespace {
+  constexpr char underscore('_');
+  constexpr char period('.');
+}
+
 namespace art
 {
   BranchKey::BranchKey(BranchDescription const& desc) :
@@ -16,6 +21,20 @@ namespace art
     productInstanceName_(desc.productInstanceName()),
     processName_(desc.processName()),
     branchType_(desc.branchType()){}
+
+  std::string BranchKey::branchName() const
+  {
+    std::string result;
+    result += friendlyClassName_;
+    result += underscore;
+    result += moduleLabel_;
+    result += underscore;
+    result += productInstanceName_;
+    result += underscore;
+    result += processName_;
+    result += period;
+    return result;
+  }
 
   std::ostream&
   operator<<(std::ostream& os, BranchKey const& bk) {

@@ -83,11 +83,14 @@ public:
   std::string productSize() const override;
 
   // MUST UPDATE WHEN CLASS IS CHANGED!
-  static short Class_Version() { return 10; }
+  static short Class_Version() { return 11; }
 
 private:
 
   void do_combine(EDProduct* product) override;
+
+  void do_setRangeSetID(unsigned) override;
+  unsigned do_getRangeSetID() const override;
 
   std::unique_ptr<EDProduct>
   do_makePartner(std::type_info const & wanted_type) const override;
@@ -105,6 +108,7 @@ private:
   T && refOrThrow(T * ptr);
 
   bool present;
+  unsigned rangeSetID;
   T obj;
 
 };  // Wrapper<>
@@ -137,8 +141,9 @@ template <typename T>
 art::Wrapper<T>::
 Wrapper()
   :
-  EDProduct(),
-  present(false),
+  EDProduct{},
+  present{false},
+  rangeSetID{-1u},
   obj()
 {
 }
@@ -146,8 +151,9 @@ Wrapper()
 template <typename T>
 art::Wrapper<T>::
 Wrapper(std::unique_ptr<T> ptr) :
-  EDProduct(),
-  present(ptr.get() != 0),
+  EDProduct{},
+  present{ptr.get() != 0},
+  rangeSetID{-1u},
   obj(refOrThrow(ptr.get()))
 {
 }
@@ -192,6 +198,21 @@ do_combine(art::EDProduct* p)
   auto wp = static_cast<Wrapper<T>*>(p);
   using detail::aggregate;
   aggregate(obj, *wp->product());
+}
+
+template <typename T>
+void
+art::Wrapper<T>::do_setRangeSetID(unsigned const id)
+{
+  rangeSetID = id;
+}
+
+template <typename T>
+unsigned
+art::Wrapper<T>::
+do_getRangeSetID() const
+{
+  return rangeSetID;
 }
 
 template <typename T>
@@ -324,7 +345,7 @@ namespace art {
     void operator()(std::vector<bool> const &,
                     std::vector<void const *> &) {
       throw Exception(errors::ProductDoesNotSupportViews)
-          << "Product type std::vector<bool> has no fillView() capability.\n";
+        << "Product type std::vector<bool> has no fillView() capability.\n";
     }
   };  // fillView<vector<bool>>
 
@@ -332,7 +353,7 @@ namespace art {
   struct fillView< std::vector<E>, false > {
     void operator()(std::vector<E> const & product,
                     std::vector<void const *> & view) {
-    for (auto const & p : product) {
+      for (auto const & p : product) {
         view.push_back(&p);
       }
     }
@@ -342,7 +363,7 @@ namespace art {
   struct fillView< std::list<E>, false > {
     void operator()(std::list<E> const & product,
                     std::vector<void const *> & view) {
-    for (auto const & p : product) {
+      for (auto const & p : product) {
         view.push_back(&p);
       }
     }
@@ -372,11 +393,11 @@ namespace art {
   struct fillView<cet::map_vector<E>, false> {
     void operator() (cet::map_vector<E> const & product,
                      std::vector<void const *> & view)
-      {
-        for (auto const & p : product) {
-          view.push_back(&p.second);
-        }
+    {
+      for (auto const & p : product) {
+        view.push_back(&p.second);
       }
+    }
   }; // fillView<cet::map_vector<E>>
 
   template <typename T >
@@ -396,27 +417,27 @@ namespace art {
 
   template <class E >
   struct productSize<std::vector<E>, false>
-      : public productSize<std::vector<E>, true>
+    : public productSize<std::vector<E>, true>
   { };
 
   template <class E >
   struct productSize<std::list<E>, false>
-      : public productSize<std::list<E>, true>
+    : public productSize<std::list<E>, true>
   { };
 
   template <class E >
   struct productSize<std::deque<E>, false>
-      : public productSize<std::deque<E>, true>
+    : public productSize<std::deque<E>, true>
   { };
 
   template <class E >
   struct productSize<std::set<E>, false>
-      : public productSize<std::set<E>, true>
+    : public productSize<std::set<E>, true>
   { };
 
   template <class E >
   struct productSize<PtrVector<E>, false>
-      : public productSize<PtrVector<E>, true>
+    : public productSize<PtrVector<E>, true>
   { };
 
   template <class E >
@@ -433,8 +454,8 @@ namespace art {
         return obj.makePartner();
       }
       throw Exception(errors::LogicError, "makePartner")
-          << "Attempted to make partner with inconsistent type information:\n"
-          << "Please report to the ART framework developers.\n";
+        << "Attempted to make partner with inconsistent type information:\n"
+        << "Please report to the ART framework developers.\n";
     }
   };
 
@@ -444,8 +465,8 @@ namespace art {
     operator()(T const &,
                std::type_info const &) const {
       throw Exception(errors::LogicError, "makePartner")
-          << "Attempted to make partner of a product that does not know how!\n"
-          << "Please report to the ART framework developers.\n";
+        << "Attempted to make partner of a product that does not know how!\n"
+        << "Please report to the ART framework developers.\n";
     }
   };
 
@@ -467,9 +488,9 @@ namespace art {
                     unsigned long,
                     void const* &) const {
       throw Exception(errors::ProductDoesNotSupportPtr)
-          << "The product type "
-          << cet::demangle_symbol(typeid(T).name())
-          << "\ndoes not support art::Ptr\n";
+        << "The product type "
+        << cet::demangle_symbol(typeid(T).name())
+        << "\ndoes not support art::Ptr\n";
     }
 
     void operator()(T const &,
@@ -477,9 +498,9 @@ namespace art {
                     const std::vector<unsigned long>&,
                     std::vector<void const *>&) const {
       throw Exception(errors::ProductDoesNotSupportPtr)
-          << "The product type "
-          << cet::demangle_symbol(typeid(T).name())
-          << "\ndoes not support art::PtrVector\n";
+        << "The product type "
+        << cet::demangle_symbol(typeid(T).name())
+        << "\ndoes not support art::PtrVector\n";
     }
   };
 

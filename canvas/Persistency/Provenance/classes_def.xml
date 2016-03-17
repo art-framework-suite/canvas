@@ -100,7 +100,8 @@
   <class name="art::Timestamp" ClassVersion="10">
     <version ClassVersion="10" checksum="2438251709"/>
   </class>
-  <class name="art::SubRunAuxiliary" ClassVersion="10">
+  <class name="art::SubRunAuxiliary" ClassVersion="11">
+   <version ClassVersion="11" checksum="1706997496"/>
     <version ClassVersion="10" checksum="832515965"/>
   </class>
   <class name="art::SubRunID" ClassVersion="10">

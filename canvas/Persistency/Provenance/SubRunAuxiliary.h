@@ -11,76 +11,86 @@
 // Auxiliary subRun data that is persistent
 
 namespace art {
-   class SubRunAuxiliary;
+  class SubRunAuxiliary;
 }
 
 class art::SubRunAuxiliary {
 public:
-   SubRunAuxiliary()
-      :
-      processHistoryID_(),
-      id_(),
-      beginTime_(),
-      endTime_()
-   {}
 
-   SubRunAuxiliary(SubRunID const &theId,
-                   Timestamp const &theTime,
-                   Timestamp const &theEndTime)
-      :
-      processHistoryID_(),
-      id_(theId),
-      beginTime_(theTime),
-      endTime_(theEndTime)
-   {}
+  SubRunAuxiliary()
+    :
+    processHistoryID_(),
+    rangeSetID_(-1u),
+    id_(),
+    beginTime_(),
+    endTime_()
+  {}
 
-   SubRunAuxiliary(RunNumber_t const &theRun,
-                   SubRunNumber_t const &theSubRun,
-                   Timestamp const &theTime,
-                   Timestamp const &theEndTime)
-      :
-      processHistoryID_(),
-      id_(theRun, theSubRun),
-      beginTime_(theTime),
-      endTime_(theEndTime)
-   {}
+  SubRunAuxiliary(SubRunID const &theId,
+                  Timestamp const &theTime,
+                  Timestamp const &theEndTime)
+    :
+    processHistoryID_(),
+    rangeSetID_(-1u),
+    id_(theId),
+    beginTime_(theTime),
+    endTime_(theEndTime)
+  {}
 
-   void write(std::ostream& os) const;
+  SubRunAuxiliary(RunNumber_t const &theRun,
+                  SubRunNumber_t const &theSubRun,
+                  Timestamp const &theTime,
+                  Timestamp const &theEndTime)
+    :
+    processHistoryID_(),
+    rangeSetID_(-1u),
+    id_(theRun, theSubRun),
+    beginTime_(theTime),
+    endTime_(theEndTime)
+  {}
 
-   ProcessHistoryID& processHistoryID() const { return processHistoryID_; }
+  void write(std::ostream& os) const;
 
-   void setProcessHistoryID(ProcessHistoryID const &phid) const { processHistoryID_ = phid; }
+  ProcessHistoryID& processHistoryID() const { return processHistoryID_; }
 
-   SubRunID const &id() const { return id_; }
-   RunID const &runID() const { return id_.runID(); }
-   RunNumber_t run() const { return id_.run(); }
-   SubRunNumber_t subRun() const { return id_.subRun(); }
+  void setProcessHistoryID(ProcessHistoryID const &phid) const { processHistoryID_ = phid; }
 
-   Timestamp const &beginTime() const { return beginTime_; }
+  SubRunID const &id() const { return id_; }
+  RunID const &runID() const { return id_.runID(); }
+  RunNumber_t run() const { return id_.run(); }
+  SubRunNumber_t subRun() const { return id_.subRun(); }
 
-   Timestamp const &endTime() const { return endTime_; }
+  Timestamp const &beginTime() const { return beginTime_; }
 
-   void setEndTime(Timestamp const &time) {
-      if (endTime_ == Timestamp::invalidTimestamp()) endTime_ = time;
-   }
+  Timestamp const &endTime() const { return endTime_; }
 
-   bool mergeAuxiliary(SubRunAuxiliary const &newAux);
+  void setEndTime(Timestamp const &time)
+  {
+    if (endTime_ == Timestamp::invalidTimestamp()) endTime_ = time;
+  }
 
-   // most recent process that processed this subRun
-   // is the last on the list, this defines what "latest" is
-   mutable ProcessHistoryID processHistoryID_;
+  void setRangeSetID(unsigned const id) const { rangeSetID_ = id; }
+  auto rangeSetID() const { return rangeSetID_; }
 
-   SubRunID id_;
-   // Times from DAQ
-   Timestamp beginTime_;
-   Timestamp endTime_;
+  bool mergeAuxiliary(SubRunAuxiliary const &newAux);
+
+  // most recent process that processed this subRun
+  // is the last on the list, this defines what "latest" is
+  mutable ProcessHistoryID processHistoryID_;
+  mutable unsigned rangeSetID_;
+
+  SubRunID id_;
+  // Times from DAQ
+  Timestamp beginTime_;
+  Timestamp endTime_;
+
 };
 
 inline
 std::ostream&
 operator<<(std::ostream& os, const art::SubRunAuxiliary& p) {
-   p.write(os);
-   return os;
+  p.write(os);
+  return os;
 }
 
 #endif /* art_Persistency_Provenance_SubRunAuxiliary_h */
