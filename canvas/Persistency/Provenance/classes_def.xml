@@ -107,7 +107,8 @@
   <class name="art::SubRunID" ClassVersion="10">
     <version ClassVersion="10" checksum="2879307132"/>
   </class>
-  <class name="art::RunAuxiliary" ClassVersion="10">
+  <class name="art::RunAuxiliary" ClassVersion="11">
+   <version ClassVersion="11" checksum="632272083"/>
     <version ClassVersion="10" checksum="156856400"/>
   </class>
   <class name="art::ResultsAuxiliary" ClassVersion="10">
