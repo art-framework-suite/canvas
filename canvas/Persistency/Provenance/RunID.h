@@ -22,7 +22,7 @@ namespace art {
 
 class art::RunID {
 public:
-  RunID();
+  constexpr RunID();
   explicit RunID(RunNumber_t i);
 
   RunNumber_t run() const;
@@ -49,7 +49,6 @@ public:
   operator<<(std::ostream & os, RunID const & iID);
 
 private:
-#ifndef __GCCXML__
   struct FlushFlag { };
 
   explicit RunID(FlushFlag);
@@ -61,13 +60,13 @@ private:
   static constexpr RunNumber_t FLUSH_RUN_NUMBER();
   static constexpr RunNumber_t MAX_NATURAL_RUN_NUMBER();
   static constexpr RunNumber_t FIRST_RUN_NUMBER();
-#endif
 
   RunNumber_t run_;
 };
 
-#ifndef __GCCXML__
+
 inline
+constexpr
 art::RunID::
 RunID()
   :
@@ -280,7 +279,6 @@ FIRST_RUN_NUMBER()
 {
   return 1;
 }
-#endif /* __GCCXML__ */
 
 #endif /* art_Persistency_Provenance_RunID_h */
 

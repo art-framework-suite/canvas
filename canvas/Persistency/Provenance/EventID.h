@@ -21,7 +21,7 @@ namespace art {
 
 class art::EventID {
 public:
-  EventID();
+  constexpr EventID();
   EventID(RunNumber_t r, SubRunNumber_t sr, EventNumber_t e);
 
   // This needs to be done in enough places in the framework that this
@@ -85,11 +85,12 @@ private:
 };
 
 inline
+constexpr
 art::EventID::
 EventID()
   :
   subRun_(),
-  event_()
+  event_(INVALID_EVENT_NUMBER())
 {
 }
 
