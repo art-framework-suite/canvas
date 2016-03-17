@@ -40,14 +40,14 @@ namespace art {
 
   void
   FileIndex::addEntry(EventID const &eID, EntryNumber_t entry) {
-    entries_.push_back(FileIndex::Element(eID, entry));
+    entries_.emplace_back(eID, entry);
     resultCached() = false;
     sortState() = kNotSorted;
   }
 
   void
   FileIndex::addEntryOnLoad(EventID const &eID, EntryNumber_t entry) {
-    entries_.push_back(FileIndex::Element(eID, entry));
+    entries_.emplace_back(eID, entry);
     resultCached() = false;
   }
 
