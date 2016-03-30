@@ -271,9 +271,9 @@ public:
 private:
   friend class art::Assns<right_t, left_t, data_t>; // partner_t.
 
-  virtual void swap_(art::Assns<L, R, void> &other);
+  void swap_(art::Assns<L, R, void> &other) override;
 #ifndef __GCCXML__
-  virtual std::unique_ptr<EDProduct> makePartner_() const;
+  std::unique_ptr<EDProduct> makePartner_() const override;
 #endif
   std::vector<data_t> data_;
 };
@@ -521,7 +521,7 @@ void
 art::Assns<L, R, void>::init_streamer()
 {
   //std::cout
-  //    << "-----> Begin Assns<" 
+  //    << "-----> Begin Assns<"
   //    << cet::demangle_symbol(typeid(L).name())
   //    << ", "
   //    << cet::demangle_symbol(typeid(R).name())
@@ -531,7 +531,7 @@ art::Assns<L, R, void>::init_streamer()
   if (cl->GetStreamer() == 0) {
     //std::cout
     //    << "adopting streamer "
-    //    << "art::Assns<" 
+    //    << "art::Assns<"
     //    << cet::demangle_symbol(typeid(L).name())
     //    << ", "
     //    << cet::demangle_symbol(typeid(R).name())
@@ -540,7 +540,7 @@ art::Assns<L, R, void>::init_streamer()
     cl->AdoptStreamer(new detail::AssnsStreamer<L, R>);
   }
   //std::cout
-  //    << "-----> End   Assns<" 
+  //    << "-----> End   Assns<"
   //    << cet::demangle_symbol(typeid(L).name())
   //    << ", "
   //    << cet::demangle_symbol(typeid(R).name())

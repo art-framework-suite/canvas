@@ -27,7 +27,7 @@ namespace art {
       finder_ = finder;
     }
 
-    void operator() (TBuffer &R_b, void *objp);
+    void operator() (TBuffer &R_b, void *objp) override;
 
   private:
     cet::exempt_ptr<EDProductGetterFinder const> finder_;
