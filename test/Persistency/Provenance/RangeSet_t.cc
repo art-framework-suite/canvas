@@ -16,13 +16,34 @@ BOOST_AUTO_TEST_CASE(empty)
   BOOST_CHECK(rs.is_sorted());
 }
 
-BOOST_AUTO_TEST_CASE(disjoint)
+BOOST_AUTO_TEST_CASE(disjoint1)
 {
   RangeSet rs {1};
   rs.emplace_range(1,2,7);
   rs.emplace_range(1,9,14);
   BOOST_CHECK(rs.has_disjoint_ranges());
   BOOST_CHECK(rs.is_sorted());
+}
+
+BOOST_AUTO_TEST_CASE(disjoint2)
+{
+  RangeSet rs1 {1};
+  rs1.emplace_range(1,1,8);
+  rs1.emplace_range(1,9,14);
+  rs1.emplace_range(3,1,8);
+  rs1.emplace_range(4,5,8);
+  BOOST_CHECK(rs1.has_disjoint_ranges());
+  BOOST_CHECK(rs1.is_sorted());
+
+  RangeSet rs2 {1};
+  rs2.emplace_range(1,8,9);
+  rs2.emplace_range(1,14,101);
+  rs2.emplace_range(2,14,101);
+  rs2.emplace_range(4,1,5);
+  BOOST_CHECK(rs2.has_disjoint_ranges());
+  BOOST_CHECK(rs2.is_sorted());
+
+  BOOST_CHECK(art::are_disjoint(rs1,rs2));
 }
 
 BOOST_AUTO_TEST_CASE(collapsing1)
@@ -119,13 +140,39 @@ BOOST_AUTO_TEST_CASE(merging2)
   rs2.collapse();
   BOOST_REQUIRE(rs2.has_disjoint_ranges());
 
+  BOOST_CHECK(!art::are_disjoint(rs1, rs2));
   rs1.merge(rs2);
-  BOOST_CHECK_EQUAL(rs1.ranges().size(), 3u);
 
   std::vector<EventRange> const ref_ranges {
     EventRange{1,1,3},
     EventRange{1,1,7},
     EventRange{1,4,8}
+  };
+
+  RangeSet const ref {2, ref_ranges};
+  BOOST_CHECK_EQUAL(rs1, ref);
+}
+
+BOOST_AUTO_TEST_CASE(merging3)
+{
+  // Ranges: [1,3) & [4,8)
+  RangeSet rs1 {2};
+  rs1.emplace_range(1,1,3);
+  rs1.emplace_range(1,4,8);
+  rs1.collapse();
+  BOOST_REQUIRE(rs1.has_disjoint_ranges());
+
+  // Ranges: [3,4)
+  RangeSet rs2 {2};
+  rs2.emplace_range(1,3,4);
+  rs2.collapse();
+  BOOST_REQUIRE(rs2.has_disjoint_ranges());
+
+  BOOST_REQUIRE(art::are_disjoint(rs1, rs2));
+  rs1.merge(rs2);
+
+  std::vector<EventRange> const ref_ranges {
+    EventRange{1,1,8},
   };
 
   RangeSet const ref {2, ref_ranges};

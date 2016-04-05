@@ -73,14 +73,54 @@ namespace art {
     auto begin() const { return begin_; }
     auto end()   const { return end_; }
 
+    static bool are_valid(EventRange const& l, EventRange const& r)
+    {
+      return l.is_valid() && r.is_valid();
+    }
+
+    bool is_valid() const
+    {
+      using art::is_valid;
+      return is_valid(subrun_) && is_valid(begin_) && is_valid(end_);
+    }
+
     bool is_adjacent(EventRange const& other) const
     {
+      if (!are_valid(*this, other)) return false;
       return subrun_ == other.subrun_ && end_ == other.begin_;
     }
 
     bool is_disjoint(EventRange const& other) const
     {
+      if (!are_valid(*this, other)) return false;
       return (subrun_ == other.subrun_) ? end_ <= other.begin_ : true;
+    }
+
+    bool is_same(EventRange const& other) const
+    {
+      if (!are_valid(*this, other)) return false;
+      return operator==(other);
+    }
+
+    // is_same(other) == true:
+    //     implies is_subset(other) == true
+    //     implies is_superset(other) == true
+    bool is_subset(EventRange const& other) const
+    {
+      if (!are_valid(*this, other)) return false;
+      return subrun_ == other.subrun_ && begin_ >= other.begin_ && end_ <= other.end_;
+    }
+
+    bool is_superset(EventRange const& other) const
+    {
+      if (!are_valid(*this, other)) return false;
+      return subrun_ == other.subrun_ && begin_ <= other.begin_ && end_ >= other.end_;
+    }
+
+    bool is_overlapping(EventRange const& other) const
+    {
+      if (!are_valid(*this, other)) return false;
+      return !is_disjoint(other) && !is_subset(other) && !is_superset(other);
     }
 
   private:
@@ -105,8 +145,8 @@ namespace art {
     return os;
   }
 
-  inline bool is_adjacent(EventRange const& l,
-                          EventRange const& r)
+  inline bool are_adjacent(EventRange const& l,
+                           EventRange const& r)
   {
     return l.is_adjacent(r);
   }

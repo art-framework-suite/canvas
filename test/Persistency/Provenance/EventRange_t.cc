@@ -46,4 +46,28 @@ BOOST_AUTO_TEST_CASE(lessThan)
   BOOST_CHECK(er3.is_disjoint(er4));
 }
 
+BOOST_AUTO_TEST_CASE(traits1)
+{
+  EventRange const er0 {1,1,6};
+  EventRange const er1 {1,2,4};
+  BOOST_CHECK(er1.is_subset(er0));
+  BOOST_CHECK(!er1.is_superset(er0));
+  BOOST_CHECK(!er0.is_subset(er1));
+  BOOST_CHECK(er0.is_superset(er1));
+  BOOST_CHECK(!er1.is_overlapping(er0));
+  BOOST_CHECK(!er0.is_overlapping(er1));
+}
+
+BOOST_AUTO_TEST_CASE(traits2)
+{
+  EventRange const er0 {1,1,6};
+  EventRange const er1 {1,2,8};
+  BOOST_CHECK(!er1.is_subset(er0));
+  BOOST_CHECK(!er1.is_superset(er0));
+  BOOST_CHECK(!er0.is_subset(er1));
+  BOOST_CHECK(!er0.is_superset(er1));
+  BOOST_CHECK(er1.is_overlapping(er0));
+  BOOST_CHECK(er0.is_overlapping(er1));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

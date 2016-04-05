@@ -39,13 +39,7 @@ namespace art {
       isCollapsed_ = false;
     }
 
-    template <typename ... ARGS>
-    void set_and_emplace_range(RunNumber_t const r, ARGS&& ... args)
-    {
-      run_ = r;
-      ranges_.emplace_back(args...);
-      isCollapsed_ = false;
-    }
+    void set_run(RunNumber_t const r) { run_ = r; }
 
     auto run() const { return run_; }
     auto const& ranges() const { return ranges_; }
@@ -64,6 +58,7 @@ namespace art {
     RangeSet& merge(RangeSet const& other);
     bool is_sorted() const { return std::is_sorted(ranges_.cbegin(),
                                                    ranges_.cend()); }
+    bool is_collapsed() const { return isCollapsed_; }
     std::string to_compact_string() const;
     bool has_disjoint_ranges() const;
     void sort() { cet::sort_all(ranges_); }
@@ -78,12 +73,6 @@ namespace art {
     unsigned checksum_ {invalidChecksum()};
   };
 
-  inline bool operator==(RangeSet const& l,
-                         RangeSet const& r)
-  {
-    return l.run() == r.run() && l.ranges() == r.ranges();
-  }
-
   inline std::ostream& operator<<(std::ostream& os, RangeSet const& rs)
   {
     os << " Run: " << rs.run();
@@ -93,11 +82,19 @@ namespace art {
     return os;
   }
 
-  inline bool is_disjoint(RangeSet const& l [[gnu::unused]],
-                          RangeSet const& r [[gnu::unused]])
+  inline bool operator==(RangeSet const& l,
+                         RangeSet const& r)
   {
-    return true;
+    return l.run() == r.run() && l.ranges() == r.ranges();
   }
+
+  inline bool are_same(RangeSet const& l,
+                       RangeSet const& r)
+  {
+    return l == r;
+  }
+
+  bool are_disjoint(RangeSet const& l, RangeSet const& r);
 
 }
 

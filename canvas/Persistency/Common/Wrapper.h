@@ -12,7 +12,6 @@
 #include "canvas/Utilities/DebugMacros.h"
 #include "cetlib/demangle.h"
 
-#include <iostream>
 #include <memory>
 
 // Required for specializations of has_size_member<T>, below.
