@@ -3,9 +3,10 @@
 
 #include <iosfwd>
 
+#include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
-#include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Persistency/Provenance/RunID.h"
+#include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Persistency/Provenance/Timestamp.h"
 
 // Auxiliary subRun data that is persistent
@@ -16,6 +17,8 @@ namespace art {
 
 class art::SubRunAuxiliary {
 public:
+
+  static constexpr BranchType branch_type = InSubRun;
 
   SubRunAuxiliary()
     :
