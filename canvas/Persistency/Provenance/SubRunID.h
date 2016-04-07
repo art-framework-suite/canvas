@@ -19,7 +19,7 @@ namespace art {
 
 class art::SubRunID {
 public:
-  SubRunID();
+  constexpr SubRunID();
   SubRunID(RunID rID, SubRunNumber_t srID);
   SubRunID(RunNumber_t rID,
            SubRunNumber_t srID);
@@ -55,7 +55,7 @@ public:
   operator<<(std::ostream & os, SubRunID const & iID);
 
 private:
-#ifndef __GCCXML__
+
   struct FlushFlag { };
 
   explicit SubRunID(FlushFlag);
@@ -70,14 +70,13 @@ private:
   static constexpr SubRunNumber_t FLUSH_SUBRUN_NUMBER();
   static constexpr SubRunNumber_t MAX_NATURAL_SUBRUN_NUMBER();
   static constexpr SubRunNumber_t FIRST_SUBRUN_NUMBER();
-#endif
 
   RunID run_;
   SubRunNumber_t subRun_;
 };
 
-#ifndef __GCCXML__
 inline
+constexpr
 art::SubRunID::
 SubRunID()
   :
@@ -381,7 +380,6 @@ FIRST_SUBRUN_NUMBER()
 {
   return 0;
 }
-#endif /* __GCCXML__ */
 
 #endif /* art_Persistency_Provenance_SubRunID_h */
 

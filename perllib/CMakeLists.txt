@@ -1,2 +1,0 @@
-add_subdirectory( CetSkel )
-add_subdirectory( CetSkelPlugins )
