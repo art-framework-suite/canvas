@@ -3,6 +3,8 @@
 
 #include "canvas/Persistency/Provenance/EventRange.h"
 #include "canvas/Persistency/Provenance/IDNumber.h"
+#include "canvas/Persistency/Provenance/RunID.h"
+#include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Utilities/Exception.h"
 #include "cetlib/container_algorithms.h"
 
@@ -20,9 +22,25 @@ namespace art {
   class RangeSet {
   public:
 
-    explicit RangeSet(RunNumber_t const r)
-      : RangeSet(r,{})
-    {}
+    static RangeSet invalid()
+    {
+      return RangeSet{};
+    }
+
+    static RangeSet for_run(RunNumber_t const r)
+    {
+      return RangeSet{r};
+    }
+
+    static RangeSet for_subrun(SubRunID const srid)
+    {
+      return RangeSet{srid.run(), {EventRange::for_subrun(srid.subRun())}};
+    }
+
+    static RangeSet for_run(RunID const rid)
+    {
+      return for_run(rid.run());
+    }
 
     explicit RangeSet(RunNumber_t const r,
                       std::vector<EventRange> const& eventRanges)
@@ -32,6 +50,20 @@ namespace art {
       collapse();
     }
 
+    RunNumber_t run() const { return run_; }
+    std::vector<EventRange> const& ranges() const { return ranges_; }
+    bool is_valid() const;
+    bool is_sorted() const;
+    bool is_collapsed() const { return isCollapsed_; }
+    std::string to_compact_string() const;
+    bool has_disjoint_ranges() const;
+
+    bool empty() const { return ranges_.empty(); }
+    auto begin() const { return ranges_.begin(); }
+    auto end() const { return ranges_.end(); }
+
+    unsigned checksum() const {return checksum_;}
+
     template <typename ... ARGS>
     void emplace_range(ARGS&& ... args)
     {
@@ -40,35 +72,26 @@ namespace art {
     }
 
     void set_run(RunNumber_t const r) { run_ = r; }
-
-    auto run() const { return run_; }
-    auto const& ranges() const { return ranges_; }
-
+    decltype(auto) front() { return ranges_.front(); }
+    decltype(auto) back() { return ranges_.back(); }
+    RangeSet& collapse();
+    RangeSet& merge(RangeSet const& other);
+    void sort() { cet::sort_all(ranges_); }
     void pop_front() { ranges_.erase(std::begin(ranges_)); }
     void clear() { ranges_.clear(); }
 
-    decltype(auto) front() { return ranges_.front(); }
-    decltype(auto) back() { return ranges_.back(); }
-    bool empty() const { return ranges_.empty(); }
-    auto begin() const { return ranges_.begin(); }
-    auto end() const { return ranges_.end(); }
-
-    unsigned checksum() const {return checksum_;}
-    RangeSet& collapse();
-    RangeSet& merge(RangeSet const& other);
-    bool is_sorted() const { return std::is_sorted(ranges_.cbegin(),
-                                                   ranges_.cend()); }
-    bool is_collapsed() const { return isCollapsed_; }
-    std::string to_compact_string() const;
-    bool has_disjoint_ranges() const;
-    void sort() { cet::sort_all(ranges_); }
+    static constexpr unsigned invalidChecksum() { return std::numeric_limits<unsigned>::max(); }
 
   private:
 
-    static constexpr unsigned invalidChecksum() { return std::numeric_limits<unsigned>::max(); }
+    explicit RangeSet() = default;
 
-    RunNumber_t run_;
-    std::vector<EventRange> ranges_;
+    explicit RangeSet(RunNumber_t const r)
+      : run_{r}
+    {}
+
+    RunNumber_t run_ {IDNumber<Level::Run>::invalid()};
+    std::vector<EventRange> ranges_ {};
     bool isCollapsed_ {false};
     unsigned checksum_ {invalidChecksum()};
   };

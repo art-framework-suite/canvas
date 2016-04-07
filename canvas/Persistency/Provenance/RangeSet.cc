@@ -18,7 +18,8 @@ namespace {
 
 namespace art {
 
-  RangeSet& RangeSet::collapse()
+  RangeSet&
+  RangeSet::collapse()
   {
     if (isCollapsed_)
       return *this;
@@ -59,7 +60,8 @@ namespace art {
     return *this;
   }
 
-  RangeSet& RangeSet::merge(RangeSet const& other)
+  RangeSet&
+  RangeSet::merge(RangeSet const& other)
   {
     std::vector<EventRange> merged;
     std::merge(ranges_.begin(), ranges_.end(),
@@ -72,7 +74,8 @@ namespace art {
     return *this;
   }
 
-  bool RangeSet::has_disjoint_ranges() const
+  bool
+  RangeSet::has_disjoint_ranges() const
   {
     if (isCollapsed_ || is_sorted() ) {
       return ranges_.size() < 2ull ? true : disjoint(ranges_);
@@ -84,7 +87,20 @@ namespace art {
     return tmp.has_disjoint_ranges();
   }
 
-  std::string RangeSet::to_compact_string() const
+  bool
+  RangeSet::is_valid() const
+  {
+    return run_ != IDNumber<Level::Run>::invalid();
+  }
+
+  bool
+  RangeSet::is_sorted() const
+  {
+    return std::is_sorted(ranges_.cbegin(), ranges_.cend());
+  }
+
+  std::string
+  RangeSet::to_compact_string() const
   {
     using namespace std;
     string s {to_string(run_)};

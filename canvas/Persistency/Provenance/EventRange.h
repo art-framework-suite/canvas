@@ -5,8 +5,6 @@
 #include "canvas/Utilities/Exception.h"
 
 #include <ostream>
-#include <set>
-#include <vector>
 
 namespace art {
 
@@ -14,6 +12,11 @@ namespace art {
   public:
 
     explicit EventRange() = default;
+
+    static EventRange for_subrun(SubRunNumber_t const s)
+    {
+      return EventRange{s};
+    }
 
     explicit EventRange(SubRunNumber_t const s,
                         EventNumber_t const i,
@@ -124,6 +127,12 @@ namespace art {
     }
 
   private:
+
+    explicit EventRange(SubRunNumber_t const s)
+      : subrun_{s}
+    {
+      checkOrdering_(begin_, end_);
+    }
 
     void checkOrdering_(EventNumber_t const b,
                         EventNumber_t const e)
