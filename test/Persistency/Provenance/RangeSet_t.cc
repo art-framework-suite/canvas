@@ -3,7 +3,9 @@
 #include "cetlib/quiet_unit_test.hpp"
 
 #include <iostream>
+#include <string>
 
+using namespace std::string_literals;
 using art::EventRange;
 using art::RangeSet;
 
@@ -11,23 +13,27 @@ BOOST_AUTO_TEST_SUITE(RangeSet_t)
 
 BOOST_AUTO_TEST_CASE(empty)
 {
-  auto rs = RangeSet::for_run(1);
+  auto rs = RangeSet::forRun(72);
   BOOST_CHECK(rs.has_disjoint_ranges());
   BOOST_CHECK(rs.is_sorted());
+  BOOST_CHECK(rs.is_collapsed());
+  BOOST_CHECK(rs.is_full_run());
+  BOOST_CHECK_EQUAL(rs.to_compact_string(),"72"s);
 }
 
 BOOST_AUTO_TEST_CASE(disjoint1)
 {
-  auto rs = RangeSet::for_run(1);
+  RangeSet rs {1};
   rs.emplace_range(1,2,7);
   rs.emplace_range(1,9,14);
   BOOST_CHECK(rs.has_disjoint_ranges());
   BOOST_CHECK(rs.is_sorted());
+  BOOST_CHECK(!rs.is_full_run());
 }
 
 BOOST_AUTO_TEST_CASE(disjoint2)
 {
-  auto rs1 = RangeSet::for_run(1);
+  RangeSet rs1 {1};
   rs1.emplace_range(1,1,8);
   rs1.emplace_range(1,9,14);
   rs1.emplace_range(3,1,8);
@@ -35,7 +41,7 @@ BOOST_AUTO_TEST_CASE(disjoint2)
   BOOST_CHECK(rs1.has_disjoint_ranges());
   BOOST_CHECK(rs1.is_sorted());
 
-  auto rs2 = RangeSet::for_run(1);
+  RangeSet rs2 {1};
   rs2.emplace_range(1,8,9);
   rs2.emplace_range(1,14,101);
   rs2.emplace_range(2,14,101);
@@ -48,7 +54,7 @@ BOOST_AUTO_TEST_CASE(disjoint2)
 
 BOOST_AUTO_TEST_CASE(collapsing1)
 {
-  auto rs = RangeSet::for_run(1);
+  RangeSet rs {1};
   rs.emplace_range(1,1,4);
   rs.emplace_range(1,4,6);
   rs.emplace_range(1,6,11);
@@ -63,7 +69,7 @@ BOOST_AUTO_TEST_CASE(collapsing1)
 
 BOOST_AUTO_TEST_CASE(collapsing2)
 {
-  auto rs = RangeSet::for_run(1);
+  RangeSet rs {1};
   rs.emplace_range(1,1,4);
   rs.emplace_range(1,1,11);
   rs.emplace_range(1,4,11);
@@ -73,7 +79,7 @@ BOOST_AUTO_TEST_CASE(collapsing2)
   BOOST_CHECK(rs.is_sorted());
   rs.collapse();
 
-  auto ref = RangeSet::for_run(1);
+  RangeSet ref {1};
   ref.emplace_range(1,1,11);
   ref.emplace_range(2,1,11);
   rs.collapse();
@@ -83,9 +89,50 @@ BOOST_AUTO_TEST_CASE(collapsing2)
   BOOST_CHECK_EQUAL(rs.to_compact_string(), ref_string);
 }
 
+BOOST_AUTO_TEST_CASE(splitting1)
+{
+  RangeSet rs {1};
+  rs.emplace_range(1,2,7);
+  rs.emplace_range(1,9,14);
+  rs.split_range(1,4);
+  RangeSet ref {1};
+  ref.emplace_range(1,2,4);
+  ref.emplace_range(1,4,7);
+  ref.emplace_range(1,9,14);
+  BOOST_CHECK_EQUAL(rs, ref);
+}
+
+BOOST_AUTO_TEST_CASE(splitting2)
+{
+  RangeSet rs {1};
+  rs.emplace_range(1,2,7);
+  rs.emplace_range(1,9,14);
+  BOOST_CHECK(rs.split_range(1,7) == rs.end());
+  BOOST_CHECK(rs.split_range(2,7) == rs.end());
+}
+
+BOOST_AUTO_TEST_CASE(splitting3)
+{
+  RangeSet rs {1};
+  rs.emplace_range(1,2,3);
+  BOOST_CHECK(rs.split_range(1,2) == rs.end()); // Range too small to split
+  BOOST_CHECK(rs.split_range(1,3) == rs.end()); // SubRun 1, Event 3 not contained in range
+}
+
+BOOST_AUTO_TEST_CASE(assigning)
+{
+  RangeSet rs {1};
+  rs.emplace_range(1,2,7);
+  rs.emplace_range(1,9,14);
+  rs.split_range(1,4);
+  RangeSet ref {1};
+  ref.assign_ranges(rs.begin(), rs.end());
+  BOOST_CHECK_EQUAL(rs, ref);
+}
+
 BOOST_AUTO_TEST_CASE(sorting)
 {
-  auto rs = RangeSet::for_run(2);
+  RangeSet rs {2};
   rs.emplace_range(1,1,3);
   rs.emplace_range(1,2,4);
   rs.emplace_range(1,4,8);
@@ -95,7 +142,7 @@ BOOST_AUTO_TEST_CASE(sorting)
   rs.emplace_range(1,1,9);
   BOOST_CHECK(!rs.is_sorted());
 
-  auto ref = RangeSet::for_run(2);
+  RangeSet ref {2};
   ref.emplace_range(1,1,3);
   ref.emplace_range(1,2,8);
   ref.emplace_range(1,1,9);
@@ -105,14 +152,14 @@ BOOST_AUTO_TEST_CASE(sorting)
 BOOST_AUTO_TEST_CASE(merging1)
 {
   // Ranges: [1,3) & [4,8)
-  auto rs1 = RangeSet::for_run(2);
+  RangeSet rs1 {2};
   rs1.emplace_range(1,1,3);
   rs1.emplace_range(1,4,8);
   rs1.collapse();
   BOOST_REQUIRE(rs1.has_disjoint_ranges());
 
   // Ranges: [3,4) & [8,11)
-  auto rs2 = RangeSet::for_run(2);
+  RangeSet rs2 {2};
   rs2.emplace_range(1,3,4);
   rs2.emplace_range(1,8,11);
   rs2.collapse();
@@ -128,14 +175,14 @@ BOOST_AUTO_TEST_CASE(merging1)
 BOOST_AUTO_TEST_CASE(merging2)
 {
   // Ranges: [1,3) & [4,8)
-  auto rs1 = RangeSet::for_run(2);
+  RangeSet rs1 {2};
   rs1.emplace_range(1,1,3);
   rs1.emplace_range(1,4,8);
   rs1.collapse();
   BOOST_REQUIRE(rs1.has_disjoint_ranges());
 
   // Ranges: [1,7)
-  auto rs2 = RangeSet::for_run(2);
+  RangeSet rs2 {2};
   rs2.emplace_range(1,1,7);
   rs2.collapse();
   BOOST_REQUIRE(rs2.has_disjoint_ranges());
@@ -156,14 +203,14 @@ BOOST_AUTO_TEST_CASE(merging2)
 BOOST_AUTO_TEST_CASE(merging3)
 {
   // Ranges: [1,3) & [4,8)
-  auto rs1 = RangeSet::for_run(2);
+  RangeSet rs1 {2};
   rs1.emplace_range(1,1,3);
   rs1.emplace_range(1,4,8);
   rs1.collapse();
   BOOST_REQUIRE(rs1.has_disjoint_ranges());
 
   // Ranges: [3,4)
-  auto rs2 = RangeSet::for_run(2);
+  RangeSet rs2 {2};
   rs2.emplace_range(1,3,4);
   rs2.collapse();
   BOOST_REQUIRE(rs2.has_disjoint_ranges());

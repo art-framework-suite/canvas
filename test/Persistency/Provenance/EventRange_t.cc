@@ -8,12 +8,22 @@ using art::EventRange;
 
 BOOST_AUTO_TEST_SUITE(EventRange_t)
 
+BOOST_AUTO_TEST_CASE(fullSubRun)
+{
+  auto er = EventRange::forSubRun(134);
+  BOOST_CHECK(er.is_valid());
+  BOOST_CHECK(er.is_full_subrun());
+  BOOST_CHECK(er.contains(er.subrun(), 17));
+}
+
 BOOST_AUTO_TEST_CASE(merge1)
 {
   EventRange er1 {1,2,4};
   EventRange er2 {1,3,6};
   BOOST_CHECK(!er1.merge(er2));
   BOOST_CHECK(!er1.is_disjoint(er2));
+  BOOST_CHECK(er1.is_valid());
+  BOOST_CHECK(!er1.is_full_subrun());
 }
 
 BOOST_AUTO_TEST_CASE(merge2)
@@ -26,9 +36,10 @@ BOOST_AUTO_TEST_CASE(merge2)
 
   EventRange const ref {1,2,6};
   BOOST_CHECK_EQUAL(er1, ref);
-  BOOST_CHECK(er1.contains(2));
-  BOOST_CHECK(er1.contains(4));
-  BOOST_CHECK(!er1.contains(6));
+  BOOST_CHECK(er1.contains(1,2));
+  BOOST_CHECK(er1.contains(1,4));
+  BOOST_CHECK(!er1.contains(1,6));
+  BOOST_CHECK(!er1.contains(2,4));
 }
 
 BOOST_AUTO_TEST_CASE(lessThan)

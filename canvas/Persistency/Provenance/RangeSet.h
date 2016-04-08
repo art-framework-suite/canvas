@@ -22,37 +22,20 @@ namespace art {
   class RangeSet {
   public:
 
-    static RangeSet invalid()
-    {
-      return RangeSet{};
-    }
+    static RangeSet invalid();
+    static RangeSet forRun(RunNumber_t const r);
+    static RangeSet forRun(RunID const rid);
+    static RangeSet forSubRun(SubRunID const srid);
 
-    static RangeSet for_run(RunNumber_t const r)
-    {
-      return RangeSet{r};
-    }
+    explicit RangeSet(RunNumber_t const r);
+    explicit RangeSet(RunNumber_t const r, std::vector<EventRange> const& eventRanges);
 
-    static RangeSet for_subrun(SubRunID const srid)
-    {
-      return RangeSet{srid.run(), {EventRange::for_subrun(srid.subRun())}};
-    }
-
-    static RangeSet for_run(RunID const rid)
-    {
-      return for_run(rid.run());
-    }
-
-    explicit RangeSet(RunNumber_t const r,
-                      std::vector<EventRange> const& eventRanges)
-      : run_{r}
-      , ranges_{eventRanges}
-    {
-      collapse();
-    }
+    using const_iterator = std::vector<EventRange>::const_iterator;
 
     RunNumber_t run() const { return run_; }
     std::vector<EventRange> const& ranges() const { return ranges_; }
     bool is_valid() const;
+    bool is_full_run() const { return fullRun_; }
     bool is_sorted() const;
     bool is_collapsed() const { return isCollapsed_; }
     std::string to_compact_string() const;
@@ -64,20 +47,21 @@ namespace art {
 
     unsigned checksum() const {return checksum_;}
 
-    template <typename ... ARGS>
-    void emplace_range(ARGS&& ... args)
-    {
-      ranges_.emplace_back(args...);
-      isCollapsed_ = false;
-    }
-
-    void set_run(RunNumber_t const r) { run_ = r; }
     decltype(auto) front() { return ranges_.front(); }
     decltype(auto) back() { return ranges_.back(); }
+
+    void assign_ranges(const_iterator b, const_iterator e);
+
+    template <typename ... ARGS>
+    void emplace_range(ARGS&& ... args);
+
     RangeSet& collapse();
     RangeSet& merge(RangeSet const& other);
+    const_iterator split_range(SubRunNumber_t s,
+                               EventNumber_t e);
+    void set_run(RunNumber_t const r) { run_ = r; }
+
     void sort() { cet::sort_all(ranges_); }
-    void pop_front() { ranges_.erase(std::begin(ranges_)); }
     void clear() { ranges_.clear(); }
 
     static constexpr unsigned invalidChecksum() { return std::numeric_limits<unsigned>::max(); }
@@ -85,13 +69,20 @@ namespace art {
   private:
 
     explicit RangeSet() = default;
+    explicit RangeSet(RunNumber_t const r, bool fullRun);
 
-    explicit RangeSet(RunNumber_t const r)
-      : run_{r}
-    {}
+    void require_not_full_run()
+    {
+      if (fullRun_)
+        throw art::Exception(art::errors::LogicError,"RangeSet::require_not_full_run")
+          << "\nA RangeSet created using RangeSet::forRun cannot be modified.\n";
+    }
 
     RunNumber_t run_ {IDNumber<Level::Run>::invalid()};
     std::vector<EventRange> ranges_ {};
+
+    // Auxiliary info
+    bool fullRun_ {false};
     bool isCollapsed_ {false};
     unsigned checksum_ {invalidChecksum()};
   };
@@ -118,6 +109,18 @@ namespace art {
   }
 
   bool are_disjoint(RangeSet const& l, RangeSet const& r);
+
+  //==========================================================
+  // Implementation details
+
+  template <typename ... ARGS>
+  void
+  RangeSet::emplace_range(ARGS&& ... args)
+  {
+    require_not_full_run();
+    ranges_.emplace_back(std::forward<ARGS>(args)...);
+    isCollapsed_ = false;
+  }
 
 }
 
