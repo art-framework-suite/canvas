@@ -1,4 +1,4 @@
-#include "RootClassMapping_t.h"
+#include "test/Persistency/Provenance/RootClassMapping_t.h"
 
 #include <string>
 

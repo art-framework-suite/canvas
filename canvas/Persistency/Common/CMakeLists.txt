@@ -1,6 +1,3 @@
-# project name
-project(canvas_Persistency_Common)
-
 foreach(ART_IPR_BASE_NAME FindOne FindMany)
   UNSET(ART_IPR_BY_PTR)
   SET(ART_IPR_CLASS_NAME ${ART_IPR_BASE_NAME})
@@ -15,29 +12,14 @@ foreach(ART_IPR_BASE_NAME FindOne FindMany)
     @ONLY)
 endforeach()
 
-set(canvas_Persistency_Common_sources
-  CacheStreamers.cc
-  EDProduct.cc
-  PtrVectorBase.cc
-  RNGsnapshot.cc
-  RefCore.cc
-  RefCoreStreamer.cc
-  detail/maybeCastObj.cc
-  detail/setPtrVectorBaseStreamer.cc
-  traits.cc
-)
-
-set( canvas_Persistency_Common_libraries
-        canvas_Persistency_Provenance
-        canvas_Utilities
-        ${ROOT_CORE}
-        ${Boost_THREAD_LIBRARY}
-        )
-
-art_make_library( LIBRARY_NAME canvas_Persistency_Common
-                  SOURCE ${canvas_Persistency_Common_sources}
-                  LIBRARIES ${canvas_Persistency_Common_libraries}
-                 )
+cet_make(SUBDIRS detail
+  LIBRARIES
+  canvas_Persistency_Provenance
+  canvas_Utilities
+  ${ROOT_CORE}
+  ${Boost_THREAD_LIBRARY}
+  NO_DICTIONARY
+  )
 
 art_dictionary(DICTIONARY_LIBRARIES canvas_Persistency_Common)
 
