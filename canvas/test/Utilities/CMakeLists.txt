@@ -4,7 +4,7 @@ art_dictionary(NO_DEFAULT_LIBRARIES DICTIONARY_LIBRARIES cetlib NO_INSTALL)
 
 set(default_canvas_test_libraries
   canvas_Utilities
-  test_Utilities_dict
+  canvas_test_Utilities_dict
   cetlib
   MF_MessageLogger
   ${ROOT_CINT}

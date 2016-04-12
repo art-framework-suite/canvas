@@ -1,4 +1,4 @@
-#include "test/Utilities/TypeNameBranchName_t.h"
+#include "canvas/test/Utilities/TypeNameBranchName_t.h"
 
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/FriendlyName.h"

@@ -61,8 +61,6 @@ include(ArtDictionary)
 # source
 add_subdirectory (canvas)
 
-# testing
-add_subdirectory(test)
 
 # ups - table and config files
 add_subdirectory(ups)

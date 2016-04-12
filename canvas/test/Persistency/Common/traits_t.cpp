@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#include "test/CppUnit_testdriver.icpp"
+#include "canvas/test/CppUnit_testdriver.icpp"
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "canvas/Persistency/Common/traits.h"
