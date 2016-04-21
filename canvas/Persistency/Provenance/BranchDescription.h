@@ -68,20 +68,22 @@ public:
 
   std::string const& moduleLabel() const {return moduleLabel_;}
   std::string const& processName() const {return processName_;}
-  BranchID const& branchID() const {return branchID_;}
   std::string const& producedClassName() const {return producedClassName_;}
   std::string const& friendlyClassName() const {return friendlyClassName_;}
   std::string const& productInstanceName() const {return productInstanceName_;}
 
-  bool const & produced() const {return guts().produced_;}
-  bool const & transient() const {return guts().transient_;}
+  bool produced() const {return guts().produced_;}
+  bool transient() const {return guts().transient_;}
 
-  int const & splitLevel() const {return guts().splitLevel_;}
-  int const & basketSize() const {return guts().basketSize_;}
-  int const & compression() const {return guts().compression_;}
+  int splitLevel() const {return guts().splitLevel_;}
+  int basketSize() const {return guts().basketSize_;}
+  int compression() const {return guts().compression_;}
+
   std::set<fhicl::ParameterSetID> const& psetIDs() const {return psetIDs_;}
+
+  BranchID branchID() const {return branchID_;}
+  BranchType branchType() const {return branchType_;}
   std::string const &branchName() const {return guts().branchName_;}
-  BranchType const &branchType() const {return branchType_;}
   std::string const &wrappedName() const {return guts().wrappedName_;}
 
   void merge(BranchDescription const& other);
