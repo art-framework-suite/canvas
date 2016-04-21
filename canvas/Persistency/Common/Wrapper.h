@@ -194,9 +194,15 @@ void
 art::Wrapper<T>::
 do_combine(art::EDProduct* p)
 {
+  if (!p->isPresent()) return;
+
   auto wp = static_cast<Wrapper<T>*>(p);
   using detail::aggregate;
   aggregate(obj, *wp->product());
+
+  // The presence for the combined product is 'true', if we get this
+  // far.
+  present = true;
 }
 
 template <typename T>

@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(disjoint2)
   BOOST_CHECK(rs2.has_disjoint_ranges());
   BOOST_CHECK(rs2.is_sorted());
 
-  BOOST_CHECK(art::are_disjoint(rs1,rs2));
+  BOOST_CHECK(art::disjoint_ranges(rs1,rs2));
 }
 
 BOOST_AUTO_TEST_CASE(collapsing1)
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_CASE(merging2)
   rs2.collapse();
   BOOST_REQUIRE(rs2.has_disjoint_ranges());
 
-  BOOST_CHECK(!art::are_disjoint(rs1, rs2));
+  BOOST_CHECK(!art::disjoint_ranges(rs1, rs2));
   rs1.merge(rs2);
 
   std::vector<EventRange> const ref_ranges {
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE(merging3)
   rs2.collapse();
   BOOST_REQUIRE(rs2.has_disjoint_ranges());
 
-  BOOST_REQUIRE(art::are_disjoint(rs1, rs2));
+  BOOST_REQUIRE(art::disjoint_ranges(rs1, rs2));
   rs1.merge(rs2);
 
   std::vector<EventRange> const ref_ranges {

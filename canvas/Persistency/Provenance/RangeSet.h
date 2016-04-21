@@ -102,13 +102,13 @@ namespace art {
     return l.run() == r.run() && l.ranges() == r.ranges();
   }
 
-  inline bool are_same(RangeSet const& l,
-                       RangeSet const& r)
+  inline bool same_ranges(RangeSet const& l,
+                          RangeSet const& r)
   {
     return l == r;
   }
 
-  bool are_disjoint(RangeSet const& l, RangeSet const& r);
+  bool disjoint_ranges(RangeSet const& l, RangeSet const& r);
 
   //==========================================================
   // Implementation details

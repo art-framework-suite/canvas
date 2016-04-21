@@ -122,6 +122,13 @@ RangeSet&
 RangeSet::merge(RangeSet const& other)
 {
   require_not_full_run();
+
+  if (!other.is_valid())
+    return *this;
+
+  if (!is_valid())
+    run_ = other.run();
+
   std::vector<EventRange> merged;
   std::merge(ranges_.begin(), ranges_.end(),
              other.ranges_.begin(), other.ranges_.end(),
@@ -215,7 +222,7 @@ RangeSet::RangeSet(RunNumber_t const r,
 {}
 
 bool
-art::are_disjoint(RangeSet const& l, RangeSet const& r)
+art::disjoint_ranges(RangeSet const& l, RangeSet const& r)
 {
   // If either RangeSet by itself is not disjoint, return false
   if (!l.has_disjoint_ranges() || !r.has_disjoint_ranges()) return false;
