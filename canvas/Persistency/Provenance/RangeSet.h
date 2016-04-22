@@ -23,7 +23,6 @@ namespace art {
   public:
 
     static RangeSet invalid();
-    static RangeSet forRun(RunNumber_t const r);
     static RangeSet forRun(RunID const rid);
     static RangeSet forSubRun(SubRunID const srid);
 

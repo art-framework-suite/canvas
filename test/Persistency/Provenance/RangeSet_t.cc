@@ -1,5 +1,6 @@
 #define BOOST_TEST_MODULE (RangeSet_t)
 #include "canvas/Persistency/Provenance/RangeSet.h"
+#include "canvas/Persistency/Provenance/RunID.h"
 #include "cetlib/quiet_unit_test.hpp"
 
 #include <iostream>
@@ -8,12 +9,13 @@
 using namespace std::string_literals;
 using art::EventRange;
 using art::RangeSet;
+using art::RunID;
 
 BOOST_AUTO_TEST_SUITE(RangeSet_t)
 
 BOOST_AUTO_TEST_CASE(empty)
 {
-  auto rs = RangeSet::forRun(72);
+  auto rs = RangeSet::forRun(RunID{72});
   BOOST_CHECK(rs.has_disjoint_ranges());
   BOOST_CHECK(rs.is_sorted());
   BOOST_CHECK(rs.is_collapsed());

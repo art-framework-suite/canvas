@@ -33,15 +33,9 @@ RangeSet::invalid()
 }
 
 RangeSet
-RangeSet::forRun(RunNumber_t const r)
-{
-  return RangeSet{r, true};
-}
-
-RangeSet
 RangeSet::forRun(RunID const rid)
 {
-  return forRun(rid.run());
+  return RangeSet{rid.run(), true};
 }
 
 RangeSet
