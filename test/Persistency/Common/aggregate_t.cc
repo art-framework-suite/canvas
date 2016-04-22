@@ -8,6 +8,7 @@
 #include "boost/test/test_tools.hpp"
 
 #include "cetlib/map_vector.h"
+#include "cetlib/test_macros.h"
 #include "test/Persistency/Common/MockRun.h"
 
 #include <map>
@@ -20,10 +21,13 @@
 using namespace std::string_literals;
 using arttest::MockRun;
 
-#define ART_CHECK_EQUAL_COLLECTIONS(test, ref)                  \
-  auto t = test;                                                \
-  BOOST_CHECK_EQUAL_COLLECTIONS(t.begin(), t.end(),             \
-                                ref.begin(), ref.end())
+// The MockRun::get() function returns by value, and not reference.
+// Using the bare CET_CHECK_EQUAL_COLLECTIONS will therefore cause
+// much woe since two calls will be made to Run::get.  The solution is
+// to make a copy (as is done in AGGREGATE_CHECK_EQUAL_COLLECTIONS).
+#define AGGREGATE_CHECK_EQUAL_COLLECTIONS(test, ref)                  \
+  auto t = test;                                                      \
+  CET_CHECK_EQUAL_COLLECTIONS(t, ref)
 
 namespace {
 
@@ -103,7 +107,7 @@ BOOST_AUTO_TEST_CASE (vector)
   r.put<nums_t>(nums_t{1,3,5});
   r.put<nums_t>(nums_t{2,4,6});
   auto ref = {1,3,5,2,4,6};
-  ART_CHECK_EQUAL_COLLECTIONS(r.get<nums_t>(), ref);
+  AGGREGATE_CHECK_EQUAL_COLLECTIONS(r.get<nums_t>(), ref);
 }
 
 BOOST_AUTO_TEST_CASE (list)
@@ -113,7 +117,7 @@ BOOST_AUTO_TEST_CASE (list)
   r.put<chars_t>(chars_t{'a','b','c'});
   r.put<chars_t>(chars_t{'y','z'});
   auto ref = {'a','b','c','y','z'};
-  ART_CHECK_EQUAL_COLLECTIONS(r.get<chars_t>(), ref);
+  AGGREGATE_CHECK_EQUAL_COLLECTIONS(r.get<chars_t>(), ref);
 }
 
 BOOST_AUTO_TEST_CASE (deque)
@@ -123,7 +127,7 @@ BOOST_AUTO_TEST_CASE (deque)
   r.put<nums_t>(nums_t{0,5,8});
   r.put<nums_t>(nums_t{1,2,4});
   std::initializer_list<unsigned> const ref {0u,5u,8u,1u,2u,4u};
-  ART_CHECK_EQUAL_COLLECTIONS(r.get<nums_t>(), ref);
+  AGGREGATE_CHECK_EQUAL_COLLECTIONS(r.get<nums_t>(), ref);
 }
 
 BOOST_AUTO_TEST_CASE (array)
@@ -133,7 +137,7 @@ BOOST_AUTO_TEST_CASE (array)
   r.put<histo_t>(histo_t{1,4,7});
   r.put<histo_t>(histo_t{-1,6,92});
   auto ref = {0,10,99};
-  ART_CHECK_EQUAL_COLLECTIONS(r.get<histo_t>(), ref);
+  AGGREGATE_CHECK_EQUAL_COLLECTIONS(r.get<histo_t>(), ref);
 }
 
 BOOST_AUTO_TEST_CASE (map)
@@ -159,7 +163,7 @@ BOOST_AUTO_TEST_CASE (map)
           {"Jennifer", 28},
             {"Josephine", 9}
   };
-  ART_CHECK_EQUAL_COLLECTIONS(r.get<map_t>(), people);
+  AGGREGATE_CHECK_EQUAL_COLLECTIONS(r.get<map_t>(), people);
 }
 
 BOOST_AUTO_TEST_CASE (multimap)
@@ -186,7 +190,7 @@ BOOST_AUTO_TEST_CASE (multimap)
             {"Jennifer", 28},
               {"Josephine", 9}
   };
-  ART_CHECK_EQUAL_COLLECTIONS(r.get<map_t>(), people);
+  AGGREGATE_CHECK_EQUAL_COLLECTIONS(r.get<map_t>(), people);
 }
 
 BOOST_AUTO_TEST_CASE (set)
@@ -196,7 +200,7 @@ BOOST_AUTO_TEST_CASE (set)
   r.put<set_t>(set_t{"Brahms","Beethoven"});
   r.put<set_t>(set_t{"Bach","Brahms"});
   set_t const composers {"Bach","Beethoven","Brahms"};
-  ART_CHECK_EQUAL_COLLECTIONS(r.get<set_t>(), composers);
+  AGGREGATE_CHECK_EQUAL_COLLECTIONS(r.get<set_t>(), composers);
 }
 
 BOOST_AUTO_TEST_CASE (pair)
@@ -248,7 +252,7 @@ BOOST_AUTO_TEST_CASE (map_vector)
   ref.push_back({key_type{11}, "eleven"});
   ref.push_back({key_type{13}, "thirteen"});
 
-  ART_CHECK_EQUAL_COLLECTIONS(r.get<mv_t>(), ref);
+  AGGREGATE_CHECK_EQUAL_COLLECTIONS(r.get<mv_t>(), ref);
 }
 
 BOOST_AUTO_TEST_CASE (string)

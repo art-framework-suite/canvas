@@ -8,6 +8,7 @@ set(canvas_Persistency_Common_sources
   RNGsnapshot.cc
   RefCore.cc
   RefCoreStreamer.cc
+  detail/aggregate.cc
   detail/maybeCastObj.cc
   detail/setPtrVectorBaseStreamer.cc
   traits.cc

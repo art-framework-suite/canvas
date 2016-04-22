@@ -42,7 +42,11 @@ namespace art {
     struct CanBeAggregated : std::false_type {
       static void aggregate(T&, T const&)
       {
-        throw std::runtime_error("Product cannot be aggregated.");
+        throw art::Exception(art::errors::ProductCannotBeAggregated)
+          << "Products of type \""
+          << cet::demangle_symbol(typeid(T).name())
+          << "\" cannot be aggregated.\n"
+          << "Please contact artists@fnal.gov.\n";
       }
     };
 
@@ -139,6 +143,7 @@ namespace art {
     struct CanBeAggregated<std::map<K,V>> : std::true_type {
       static void aggregate(std::map<K,V>& p, std::map<K,V> const& other)
       {
+        // Maybe throw exception if insert fails.
         p.insert(other.cbegin(), other.cend());
       }
     };
@@ -164,6 +169,7 @@ namespace art {
     struct CanBeAggregated<std::set<T>> : std::true_type {
       static void aggregate(std::set<T>& p, std::set<T> const& other)
       {
+        // Maybe throw exception if insert fails.
         p.insert(other.cbegin(), other.cend());
       }
     };
@@ -172,10 +178,12 @@ namespace art {
     struct CanBeAggregated<cet::map_vector<T>> : std::true_type {
       static void aggregate(cet::map_vector<T>& p, cet::map_vector<T> const& other)
       {
+        // Maybe throw exception if insert fails.
         p.insert(other.cbegin(), other.cend());
       }
     };
 
+    // Discuss with stakeholders
     template <>
     struct CanBeAggregated<std::string> : std::true_type {
       static void aggregate(std::string&, std::string const&)
@@ -193,50 +201,32 @@ namespace art {
 
     template <>
     struct CanBeAggregated<CLHEP::HepVector> : std::true_type {
-      static void aggregate(CLHEP::HepVector& p, CLHEP::HepVector const& other)
-      {
-        p += other;
-      }
+      static void aggregate(CLHEP::HepVector& p, CLHEP::HepVector const& other);
     };
 
     template <>
     struct CanBeAggregated<CLHEP::Hep2Vector> : std::true_type {
-      static void aggregate(CLHEP::Hep2Vector& p, CLHEP::Hep2Vector const& other)
-      {
-        p += other;
-      }
+      static void aggregate(CLHEP::Hep2Vector& p, CLHEP::Hep2Vector const& other);
     };
 
     template <>
     struct CanBeAggregated<CLHEP::Hep3Vector> : std::true_type {
-      static void aggregate(CLHEP::Hep3Vector& p, CLHEP::Hep3Vector const& other)
-      {
-        p += other;
-      }
+      static void aggregate(CLHEP::Hep3Vector& p, CLHEP::Hep3Vector const& other);
     };
 
     template <>
     struct CanBeAggregated<CLHEP::HepLorentzVector> : std::true_type {
-      static void aggregate(CLHEP::HepLorentzVector& p, CLHEP::HepLorentzVector const& other)
-      {
-        p += other;
-      }
+      static void aggregate(CLHEP::HepLorentzVector& p, CLHEP::HepLorentzVector const& other);
     };
 
     template <>
     struct CanBeAggregated<CLHEP::HepMatrix> : std::true_type {
-      static void aggregate(CLHEP::HepMatrix& p, CLHEP::HepMatrix const& other)
-      {
-        p += other;
-      }
+      static void aggregate(CLHEP::HepMatrix& p, CLHEP::HepMatrix const& other);
     };
 
     template <>
     struct CanBeAggregated<CLHEP::HepSymMatrix> : std::true_type {
-      static void aggregate(CLHEP::HepSymMatrix& p, CLHEP::HepSymMatrix const& other)
-      {
-        p += other;
-      }
+      static void aggregate(CLHEP::HepSymMatrix& p, CLHEP::HepSymMatrix const& other);
     };
 
   }
