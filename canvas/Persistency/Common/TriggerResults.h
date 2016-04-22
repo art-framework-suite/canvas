@@ -65,11 +65,6 @@ namespace art {
       return *this;
     }
 
-    void aggregate(TriggerResults const&)
-    {
-      detail::EventOnlyProduct(this);
-    }
-
   };  // TriggerResults
 
   // Free swap function

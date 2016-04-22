@@ -1,7 +1,20 @@
 #ifndef canvas_Persistency_Common_detail_aggregate_h
 #define canvas_Persistency_Common_detail_aggregate_h
 
+#include "canvas/Utilities/Exception.h"
+#include "canvas/Utilities/detail/metaprogramming.h"
+#include "cetlib/container_algorithms.h"
+#include "cetlib/demangle.h"
 #include "cetlib/map_vector.h"
+
+#include "CLHEP/Vector/TwoVector.h"
+#include "CLHEP/Vector/ThreeVector.h"
+#include "CLHEP/Vector/LorentzVector.h"
+#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Matrix/Vector.h"
+
+#include <typeinfo>
 
 #include <array>
 #include <deque>
@@ -11,135 +24,87 @@
 #include <utility>
 #include <vector>
 
-namespace CLHEP {
-  class HepVector;
-  class Hep2Vector;
-  class Hep3Vector;
-  class HepLorentzVector;
-  class HepMatrix;
-  class HepSymMatrix;
-}
-
 namespace art {
   namespace detail {
 
+    template<typename T, void(T::*)(T const&)>
+    struct aggregate_function;
+
+    template<typename T> no_tag  has_aggregate_function(...);
+    template<typename T> yes_tag has_aggregate_function(aggregate_function<T, &T::aggregate>*);
+
+    template<typename T>
+    struct user_defined {
+      static bool constexpr value = sizeof(has_aggregate_function<T>(0)) == sizeof(yes_tag);
+    };
+
+    template <typename T, typename Enable = void>
+    struct CanBeAggregated : std::false_type {
+      static void aggregate(T&, T const&)
+      {
+        throw std::runtime_error("Product cannot be aggregated.");
+      }
+    };
+
+    // Arithmetic
     template <typename T>
-    std::enable_if_t<!std::is_arithmetic<T>::value>
-    aggregate(T& p, T const& other);
+    struct CanBeAggregated<T, std::enable_if_t<std::is_arithmetic<T>::value>> : std::true_type {
+      static void aggregate(T& p, T const other)
+      {
+        p += other;
+      }
+    };
+
+    // User-defined
+    template <typename T>
+    struct CanBeAggregated<T, std::enable_if_t<user_defined<T>::value>> : std::true_type {
+      static void aggregate(T& p, T const& other)
+      {
+        p.aggregate(other);
+      }
+    };
+
 
     template <typename T>
-    std::enable_if_t<std::is_arithmetic<T>::value>
-    aggregate(T& p, T const& other);
+    struct CanBeAggregated<std::vector<T>> : std::true_type {
+      static void aggregate(std::vector<T>& p, std::vector<T> const& other)
+      {
+        p.insert(p.cend(), other.cbegin(), other.cend());
+      }
+    };
+
 
     template <typename T>
-    void aggregate(std::vector<T>& p, std::vector<T> const& other);
+    struct CanBeAggregated<std::list<T>> : std::true_type {
+      static void aggregate(std::list<T>& p, std::list<T> const& other)
+      {
+        p.insert(p.cend(), other.cbegin(), other.cend());
+      }
+    };
 
     template <typename T>
-    void aggregate(std::list<T>& p, std::list<T> const& other);
+    struct CanBeAggregated<std::deque<T>> : std::true_type {
+      static void aggregate(std::deque<T>& p, std::deque<T> const& other)
+      {
+        p.insert(p.cend(), other.cbegin(), other.cend());
+      }
+    };
 
-    template <typename T>
-    void aggregate(std::deque<T>& p, std::deque<T> const& other);
-
-    template <typename K, typename V>
-    void aggregate(std::map<K,V>& p, std::map<K,V> const& other);
-
-    template <typename K, typename V>
-    void aggregate(std::multimap<K,V>& p, std::multimap<K,V> const& other);
-
-    template <typename T>
-    void aggregate(std::set<T>& p, std::set<T> const& other);
-
-    template <typename F, typename S>
-    void aggregate(std::pair<F,S>&, std::pair<F,S> const&);
-
-    // std::array not supported by ROOT6
+    // std::array not currently supported by ROOT6
     template <typename T, size_t N>
-    void aggregate(std::array<T,N>& p, std::array<T,N> const& other);
+    struct CanBeAggregated<std::array<T,N>> : std::true_type {
+      static void aggregate(std::array<T,N>& p, std::array<T,N> const& other)
+      {
+        cet::transform_all( p, other,
+                            std::begin(p),
+                            [](T t1, T const& t2) {
+                              CanBeAggregated<T>::aggregate(t1, t2);
+                              return t1;
+                            } );
+      }
+    };
 
-    // std::tuple not supported by ROOT6
-    template <typename ... ARGS>
-    void aggregate(std::tuple<ARGS...>&, std::tuple<ARGS...> const&);
-
-    template <typename T>
-    void aggregate(cet::map_vector<T>&, cet::map_vector<T> const&);
-
-    [[noreturn]] void aggregate(std::string&, std::string const&);
-
-    void aggregate(CLHEP::HepVector& p, CLHEP::HepVector const& other);
-    void aggregate(CLHEP::Hep2Vector& p, CLHEP::Hep2Vector const& other);
-    void aggregate(CLHEP::Hep3Vector& p, CLHEP::Hep3Vector const& other);
-    void aggregate(CLHEP::HepLorentzVector& p, CLHEP::HepLorentzVector const& other);
-    void aggregate(CLHEP::HepMatrix& p, CLHEP::HepMatrix const& other);
-    void aggregate(CLHEP::HepSymMatrix& p, CLHEP::HepSymMatrix const& other);
-
-    template <typename T>
-    [[noreturn]] void EventOnlyProduct(T*);
-
-  }
-}
-
-//===========================================================================
-// Implementation below
-
-#include "canvas/Utilities/Exception.h"
-#include "cetlib/container_algorithms.h"
-#include "cetlib/demangle.h"
-
-#include <typeinfo>
-
-template <typename T>
-std::enable_if_t<!std::is_arithmetic<T>::value>
-art::detail::aggregate(T& p, T const& other)
-{
-  p.aggregate(other);
-}
-
-template <typename T>
-std::enable_if_t<std::is_arithmetic<T>::value>
-art::detail::aggregate(T& p, T const& other)
-{
-  p += other;
-}
-
-
-template <typename T>
-void
-art::detail::aggregate(std::vector<T>& p, std::vector<T> const& other)
-{
-  p.insert(p.cend(), other.cbegin(), other.cend());
-}
-
-
-template <typename T>
-void
-art::detail::aggregate(std::list<T>& p, std::list<T> const& other)
-{
-  p.insert(p.cend(), other.cbegin(), other.cend());
-}
-
-template <typename T>
-void
-art::detail::aggregate(std::deque<T>& p, std::deque<T> const& other)
-{
-  p.insert(p.cend(), other.cbegin(), other.cend());
-}
-
-// std::array not currently supported by ROOT6
-template <typename T, size_t N>
-void
-art::detail::aggregate(std::array<T,N>& p, std::array<T,N> const& other)
-{
-  cet::transform_all( p, other,
-                      std::begin(p),
-                      [](T t1, T const& t2) {
-                        aggregate(t1, t2);
-                        return t1;
-                      } );
-}
-
-namespace art {
-  namespace detail {
-
+    // Implementation details for Tuple
     template <std::size_t>
     struct AggregateTuple;
 
@@ -155,67 +120,126 @@ namespace art {
       template <typename Tuple>
       static void combine(Tuple& p, Tuple const& other)
       {
-        aggregate(std::get<I>(p), std::get<I>(other) );
+        using elem_type = std::tuple_element_t<I, Tuple>;
+        CanBeAggregated<elem_type>::aggregate(std::get<I>(p), std::get<I>(other) );
         AggregateTuple<I-1>::combine(p, other);
       }
     };
 
+    // std::tuple not currently supported by ROOT6
+    template <typename ... ARGS>
+    struct CanBeAggregated<std::tuple<ARGS...>> : std::true_type {
+      static void aggregate(std::tuple<ARGS...>& p, std::tuple<ARGS...> const& other)
+      {
+        AggregateTuple<sizeof...(ARGS)-1>::combine(p, other);
+      }
+    };
+
+    template <typename K, typename V>
+    struct CanBeAggregated<std::map<K,V>> : std::true_type {
+      static void aggregate(std::map<K,V>& p, std::map<K,V> const& other)
+      {
+        p.insert(other.cbegin(), other.cend());
+      }
+    };
+
+    template <typename K, typename V>
+    struct CanBeAggregated<std::pair<K,V>> : std::true_type {
+      static void aggregate(std::pair<K,V>& p, std::pair<K,V> const& other)
+      {
+        CanBeAggregated<K>::aggregate(p.first, other.first);
+        CanBeAggregated<V>::aggregate(p.second, other.second);
+      }
+    };
+
+    template <typename K, typename V>
+    struct CanBeAggregated<std::multimap<K,V>> : std::true_type {
+      static void aggregate(std::multimap<K,V>& p, std::multimap<K,V> const& other)
+      {
+        p.insert(other.cbegin(), other.cend());
+      }
+    };
+
+    template <typename T>
+    struct CanBeAggregated<std::set<T>> : std::true_type {
+      static void aggregate(std::set<T>& p, std::set<T> const& other)
+      {
+        p.insert(other.cbegin(), other.cend());
+      }
+    };
+
+    template <typename T>
+    struct CanBeAggregated<cet::map_vector<T>> : std::true_type {
+      static void aggregate(cet::map_vector<T>& p, cet::map_vector<T> const& other)
+      {
+        p.insert(other.cbegin(), other.cend());
+      }
+    };
+
+    template <>
+    struct CanBeAggregated<std::string> : std::true_type {
+      static void aggregate(std::string&, std::string const&)
+      {
+        throw art::Exception(art::errors::ProductCannotBeAggregated)
+          << "Products of type \""
+          << cet::demangle_symbol(typeid(std::string).name())
+          << "\" cannot be aggregated.\n"
+          << "Please contact artists@fnal.gov.\n";
+      }
+    };
+
+    //==============================================================
+    // CLHEP specializations
+
+    template <>
+    struct CanBeAggregated<CLHEP::HepVector> : std::true_type {
+      static void aggregate(CLHEP::HepVector& p, CLHEP::HepVector const& other)
+      {
+        p += other;
+      }
+    };
+
+    template <>
+    struct CanBeAggregated<CLHEP::Hep2Vector> : std::true_type {
+      static void aggregate(CLHEP::Hep2Vector& p, CLHEP::Hep2Vector const& other)
+      {
+        p += other;
+      }
+    };
+
+    template <>
+    struct CanBeAggregated<CLHEP::Hep3Vector> : std::true_type {
+      static void aggregate(CLHEP::Hep3Vector& p, CLHEP::Hep3Vector const& other)
+      {
+        p += other;
+      }
+    };
+
+    template <>
+    struct CanBeAggregated<CLHEP::HepLorentzVector> : std::true_type {
+      static void aggregate(CLHEP::HepLorentzVector& p, CLHEP::HepLorentzVector const& other)
+      {
+        p += other;
+      }
+    };
+
+    template <>
+    struct CanBeAggregated<CLHEP::HepMatrix> : std::true_type {
+      static void aggregate(CLHEP::HepMatrix& p, CLHEP::HepMatrix const& other)
+      {
+        p += other;
+      }
+    };
+
+    template <>
+    struct CanBeAggregated<CLHEP::HepSymMatrix> : std::true_type {
+      static void aggregate(CLHEP::HepSymMatrix& p, CLHEP::HepSymMatrix const& other)
+      {
+        p += other;
+      }
+    };
+
   }
-}
-
-// std::tuple not currently supported by ROOT6
-template <typename ... ARGS>
-void
-art::detail::aggregate(std::tuple<ARGS...>& p, std::tuple<ARGS...> const& other)
-{
-  AggregateTuple<sizeof...(ARGS)-1>::combine(p, other);
-}
-
-template <typename K, typename V>
-void
-art::detail::aggregate(std::map<K,V>& p, std::map<K,V> const& other)
-{
-  p.insert(other.cbegin(), other.cend());
-}
-
-template <typename K, typename V>
-void
-art::detail::aggregate(std::pair<K,V>& p, std::pair<K,V> const& other)
-{
-  aggregate(p.first, other.first);
-  aggregate(p.second, other.second);
-}
-
-template <typename K, typename V>
-void
-art::detail::aggregate(std::multimap<K,V>& p, std::multimap<K,V> const& other)
-{
-  p.insert(other.cbegin(), other.cend());
-}
-
-template <typename T>
-void
-art::detail::aggregate(std::set<T>& p, std::set<T> const& other)
-{
-  p.insert(other.cbegin(), other.cend());
-}
-
-template <typename T>
-void
-art::detail::aggregate(cet::map_vector<T>& p, cet::map_vector<T> const& other)
-{
-  p.insert(other.cbegin(), other.cend());
-}
-
-template <typename T>
-void
-art::detail::EventOnlyProduct(T*)
-{
-  throw art::Exception(art::errors::ProductCannotBeAggregated)
-    << "A product of type \""
-    << cet::demangle_symbol(typeid(T).name())
-    << "\" cannot be aggregated as it is an event-only product.\n"
-    << "Product aggregation is not supported for events.\n";
 }
 
 #endif

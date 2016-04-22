@@ -85,11 +85,6 @@ namespace art {
       return *this;
     }
 
-    void aggregate(HLTGlobalStatus const&) const
-    {
-      detail::EventOnlyProduct(this);
-    }
-
   private:
     // Global state variable calculated on the fly
     bool State(unsigned int icase) const {

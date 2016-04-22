@@ -127,7 +127,6 @@ public:
   // compatible ProductID.
 
   bool operator==(PtrVector const & other) const;
-  void aggregate(PtrVector const& other) const;
   void sort();
   template <class COMP> void sort(COMP comp);
   static short Class_Version() { return 11; }
@@ -142,7 +141,6 @@ private:
   mutable data_t ptrs_; //! transient
 }; // PtrVector<T>
 
-#include "canvas/Persistency/Common/detail/aggregate.h"
 #include <algorithm>
 #include <functional>
 #include <type_traits>
@@ -664,15 +662,6 @@ operator==(PtrVector const & other) const
 {
   return ptrs_ == other.ptrs_ &&
          this->PtrVectorBase::operator==(other);
-}
-
-template <typename T>
-inline
-void
-art::PtrVector<T>::
-aggregate(PtrVector const&) const
-{
-  detail::EventOnlyProduct(this);
 }
 
 template <typename T>

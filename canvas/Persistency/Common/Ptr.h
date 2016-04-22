@@ -139,7 +139,6 @@ public:
 
   explicit operator bool () const;
   EDProductGetter const * productGetter() const;
-  void aggregate(Ptr const&) const;
 
   // MUST UPDATE WHEN CLASS IS CHANGED!
   static short Class_Version() { return 10; }
@@ -241,8 +240,6 @@ operator()(cet::map_vector<T> const * product,
 
 ////////////////////////////////////
 // Ptr implementation.
-
-#include "canvas/Persistency/Common/detail/aggregate.h"
 
 template <typename T>
 inline
@@ -436,14 +433,6 @@ productGetter() const
 -> EDProductGetter const *
 {
   return core_.productGetter();
-}
-
-template <typename T>
-inline
-void
-art::Ptr<T>::aggregate(Ptr const&) const
-{
-  detail::EventOnlyProduct(this);
 }
 
 template <typename T>
