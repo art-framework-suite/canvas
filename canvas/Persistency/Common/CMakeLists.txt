@@ -18,6 +18,7 @@ cet_make(SUBDIRS detail
   canvas_Utilities
   ${ROOT_CORE}
   ${Boost_THREAD_LIBRARY}
+  ${CLHEP}
   NO_DICTIONARY
   )
 

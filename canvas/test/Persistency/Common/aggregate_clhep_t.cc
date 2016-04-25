@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE ( ClhepProduct aggregation Test )
 #include "boost/test/auto_unit_test.hpp"
-#include "test/Persistency/Common/MockRun.h"
+#include "canvas/test/Persistency/Common/MockRun.h"
 
 #include "CLHEP/Matrix/Vector.h"
 #include "CLHEP/Vector/TwoVector.h"
