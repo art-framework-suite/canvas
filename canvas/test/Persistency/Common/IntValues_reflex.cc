@@ -14,7 +14,7 @@
 #include "Reflex/Builder/ReflexBuilder.h"
 
 // user include files
-#include "test/Persistency/Common/IntValues.h"
+#include "canvas/test/Persistency/Common/IntValues.h"
 
 namespace {
   using namespace test_with_reflex;

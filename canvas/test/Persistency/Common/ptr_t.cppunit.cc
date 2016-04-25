@@ -18,7 +18,7 @@
 
 #include <iostream>
 
-#include "test/Persistency/Common/IntValues.h"
+#include "canvas/test/Persistency/Common/IntValues.h"
 #include <typeinfo>
 
 using namespace art;

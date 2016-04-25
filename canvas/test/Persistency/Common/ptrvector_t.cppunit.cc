@@ -2,7 +2,7 @@
 #include "art/Persistency/Common/TestHandle.h"
 #include "canvas/Persistency/Common/Wrapper.h"
 
-#include "test/Persistency/Common/IntValues.h"
+#include "canvas/test/Persistency/Common/IntValues.h"
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <algorithm>

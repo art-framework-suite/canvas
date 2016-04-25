@@ -1,4 +1,4 @@
-art_make(LIB_LIBRARIES
+cet_make(LIBRARIES
   MF_MessageLogger
   MF_Utilities
   fhiclcpp
@@ -12,7 +12,10 @@ art_make(LIB_LIBRARIES
   -lpthread
   ${CMAKE_DL_LIBS}
   SUBDIRS detail
+  NO_DICTIONARY
   )
+
+art_dictionary()
 
 install_headers(SUBDIRS detail)
 install_source(SUBDIRS detail)

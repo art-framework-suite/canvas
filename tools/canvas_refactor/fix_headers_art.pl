@@ -5,6 +5,11 @@ use vars qw(%header_list);
 
 # explicit headers to avoid conflicts with experiment code
 BEGIN { %header_list = (
+"art/Framework/Core/FindOne.h" => "canvas/Persistency/Common/FindOne.h",
+"art/Framework/Core/FindOneP.h" => "canvas/Persistency/Common/FindOneP.h",
+"art/Framework/Core/FindMany.h" => "canvas/Persistency/Common/FindMany.h",
+"art/Framework/Core/FindManyP.h" => "canvas/Persistency/Common/FindManyP.h",
+"art/Framework/Core/detail/IPRHelper.h" => "canvas/Persistency/Common/detail/IPRHelper.h",
 "art/Framework/IO/Root/RefCoreStreamer.h" => "canvas/Persistency/Common/RefCoreStreamer.h",
 "art/Framework/IO/Root/rootNames.h" => "canvas/Persistency/Provenance/rootNames.h",
 "art/Persistency/CLHEPDictionaries/classes.h" => "canvas/Persistency/CLHEPDictionaries/classes.h",

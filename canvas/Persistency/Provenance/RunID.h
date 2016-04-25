@@ -49,6 +49,7 @@ public:
   operator<<(std::ostream & os, RunID const & iID);
 
 private:
+
   struct FlushFlag {};
 
   explicit constexpr RunID(FlushFlag);

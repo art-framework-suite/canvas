@@ -245,8 +245,8 @@ public:
 private:
   friend class art::Assns<right_t, left_t, data_t>; // partner_t.
 
-  virtual void swap_(art::Assns<L, R, void> &other);
-  virtual std::unique_ptr<EDProduct> makePartner_() const;
+  void swap_(art::Assns<L, R, void> &other) override;
+  std::unique_ptr<EDProduct> makePartner_() const override;
 
   std::vector<data_t> data_;
 };
@@ -383,8 +383,8 @@ template <typename L, typename R>
 void
 art::Assns<L, R, void>::fill_transients()
 {
-  // Precondition: ptrs_ is empty.
   // Precondition: ptr_data_1_.size() = ptr_data_2_.size();
+  ptrs_.clear();
   ptrs_.reserve(ptr_data_1_.size());
   ptr_data_t & l_ref = left_first() ? ptr_data_1_ : ptr_data_2_;
   ptr_data_t & r_ref = left_first() ? ptr_data_2_ : ptr_data_1_;

@@ -422,7 +422,7 @@ operator==(BranchDescription const& a, BranchDescription const& b)
 
 class detail::BranchDescriptionStreamer : public TClassStreamer {
 public:
-  void operator()(TBuffer&, void* objp);
+  void operator()(TBuffer&, void* objp) override;
 };
 
 void

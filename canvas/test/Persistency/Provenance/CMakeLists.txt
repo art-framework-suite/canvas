@@ -36,7 +36,7 @@ endforeach()
 
 cet_test(RootClassMapping_t USE_BOOST_UNIT
   LIBRARIES
-  test_Persistency_Provenance_dict
+  canvas_test_Persistency_Provenance_dict
   ${ROOT_CINTEX}
   ${ROOT_TREE}
   ${ROOT_NET}
