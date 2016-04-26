@@ -49,7 +49,10 @@ BOOST_AUTO_TEST_CASE(type_of_template_arg)
 {
   TClass * wrapper(TClass::GetClass("art::Wrapper<std::vector<int>>"));
   BOOST_REQUIRE(wrapper);
-  TClass* arg(art::type_of_template_arg(wrapper, 0));
+  art::TypeWithDict ty;
+  bool ok = art::type_of_template_arg(wrapper, 0, ty);
+  BOOST_REQUIRE(ok);
+  TClass* arg(ty.tClass());
   BOOST_REQUIRE(arg);
   BOOST_REQUIRE_EQUAL(arg->GetName(), std::string("vector<int>"));
 }

@@ -37,8 +37,8 @@ reportFailedDictionaryChecks();
 void
 public_base_classes(TClass* cl, std::vector<TClass*>& baseTypes);
 
-TClass*
-type_of_template_arg(TClass* template_instance, size_t desired_arg);
+bool
+type_of_template_arg(TClass* template_instance, size_t desired_arg, TypeWithDict& found_type);
 
 bool
 is_instantiation_of(TClass* cl, std::string const& template_name);
