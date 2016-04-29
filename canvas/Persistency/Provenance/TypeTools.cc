@@ -9,14 +9,18 @@
 #include "cetlib/container_algorithms.h"
 #include "cetlib/demangle.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
+#include "ESTLType.h"
 #include "TBaseClass.h"
 #include "TClass.h"
 #include "TDataMember.h"
+#include "TDataType.h"
 #include "TDictAttributeMap.h"
 #include "TEnum.h"
 #include "THashTable.h"
+#include "TInterpreter.h"
 #include "TList.h"
 #include "TROOT.h"
+#include "TVirtualCollectionProxy.h"
 #include <algorithm>
 #include <iostream>
 #include <memory>
@@ -98,7 +102,7 @@ find_nested_type_named(string const& nested_type, TClass* const type_to_search,
     throw Exception(errors::NullPointerError, "find_nested_type_named: ")
         << "Null TClass pointer passed for type_to_search!\n";
   }
-  found_type = TypeWithDict(std::string(type_to_search->GetName()) + "::" +
+  found_type = TypeWithDict(string(type_to_search->GetName()) + "::" +
                             nested_type);
   return bool(found_type);
 }
@@ -106,13 +110,64 @@ find_nested_type_named(string const& nested_type, TClass* const type_to_search,
 bool
 value_type_of(TClass* const t, TypeWithDict& found_type)
 {
-  return find_nested_type_named("value_type", t, found_type);
+  if (t == nullptr) {
+    throw Exception(errors::NullPointerError, "value_type_of: ")
+        << "Null TClass pointer passed for type!\n";
+  }
+  ROOT::ESTLType stlty = t->GetCollectionType();
+  if ((stlty > ROOT::kNotSTL) && (stlty < ROOT::kSTLend)) {
+    TVirtualCollectionProxy* vcp = t->GetCollectionProxy();
+    TClass* vc = vcp->GetValueClass();
+    if (vc != nullptr) {
+      found_type = TypeWithDict(*vc->GetTypeInfo());
+      return bool(found_type);
+    }
+    auto vty = static_cast<int>(vcp->GetType());
+    found_type = TypeWithDict(getTypeID(vty));
+    return bool(found_type);
+  }
+  // Look for "value_type" attribute in TClass.
+  auto am = t->GetAttributeMap();
+  if (am && am->HasKey("value_type")) {
+    string vt_name(am->GetPropertyAsString("value_type"));
+    found_type = TypeWithDict(vt_name);
+    return bool(found_type);
+  }
+  return false;
 }
 
 bool
 mapped_type_of(TClass* const t, TypeWithDict& found_type)
 {
-  return find_nested_type_named("mapped_type", t, found_type);
+  if (t == nullptr) {
+    throw Exception(errors::NullPointerError, "mapped_type_of: ")
+        << "Null TClass pointer passed for type!\n";
+  }
+  ROOT::ESTLType stlty = t->GetCollectionType();
+  if ((stlty == ROOT::kSTLmap) ||
+      (stlty == ROOT::kSTLmultimap) ||
+      (stlty == ROOT::kSTLunorderedmap) ||
+      (stlty == ROOT::kSTLunorderedmultimap)) {
+    TVirtualCollectionProxy* vcp = t->GetCollectionProxy();
+    TClass* vc = vcp->GetValueClass();
+    if (vc != nullptr) {
+      string vcname(vc->GetName());
+      string mapped_type_name = template_arg_at(vcname, 1);
+      found_type = TypeWithDict(mapped_type_name);
+      return bool(found_type);
+    }
+    // This should be impossible.
+    throw Exception(errors::LogicError)
+        << "ROOT map type did not have a value class!\n";
+  }
+  // Look for "mapped_type" attribute in TClass.
+  auto am = t->GetAttributeMap();
+  if (am && am->HasKey("mapped_type")) {
+    string mt_name(am->GetPropertyAsString("mapped_type"));
+    found_type = TypeWithDict(mt_name);
+    return bool(found_type);
+  }
+  return false;
 }
 
 void
@@ -227,13 +282,13 @@ checkDictionaries(string const& name_orig, bool recursive/*=false*/,
   {
     auto am = cl->GetAttributeMap();
     if (am && am->HasKey("persistent") &&
-        am->GetPropertyAsString("persistent") == std::string("false")) {
+        am->GetPropertyAsString("persistent") == string("false")) {
       // Marked transient in the selection xml.
       //cout << indent << "class marked not persistent in selection xml" << endl;
       return;
     }
     if (am && am->HasKey("transient") &&
-        am->GetPropertyAsString("transient") == std::string("true")) {
+        am->GetPropertyAsString("transient") == string("true")) {
       // Marked transient in the selection xml.
       //cout << indent << "class marked transient in selection xml" << endl;
       return;
@@ -245,7 +300,7 @@ checkDictionaries(string const& name_orig, bool recursive/*=false*/,
     cl->GetMissingDictionaries(missing, recursive);
     TClass::GetClass(name.c_str())->GetMissingDictionaries(missing, recursive);
     if (missing.GetEntries()) {
-      std::transform(missing.begin(), missing.end(), std::inserter(missingTypes(),
+      transform(missing.begin(), missing.end(), inserter(missingTypes(),
       missingTypes().begin()), [](TObject * obj) {
         return dynamic_cast<TClass*>(obj)->GetName();
       });
@@ -253,8 +308,8 @@ checkDictionaries(string const& name_orig, bool recursive/*=false*/,
   }
 #endif // 0
   {
-    static std::regex const reNoSplit("^(art::PtrVector(<|Base$)|art::Assns<)");
-    if (std::regex_search(name, reNoSplit)) {
+    static regex const reNoSplit("^(art::PtrVector(<|Base$)|art::Assns<)");
+    if (regex_search(name, reNoSplit)) {
       FDEBUG(1)
           << "Setting NoSplit on class "
           << name
@@ -536,13 +591,13 @@ checkDictionaries(string const& name_orig, bool recursive/*=false*/,
     }
     auto am = dm->GetAttributeMap();
     if (am && am->HasKey("persistent") &&
-        am->GetPropertyAsString("persistent") == std::string("false")) {
+        am->GetPropertyAsString("persistent") == string("false")) {
       // Marked transient in the selection xml.
       //cout << indent << "  marked not persistent in selection xml" << endl;
       continue;
     }
     if (am && am->HasKey("transient") &&
-        am->GetPropertyAsString("transient") == std::string("true")) {
+        am->GetPropertyAsString("transient") == string("true")) {
       // Marked transient in the selection xml.
       //cout << indent << "  marked transient in selection xml" << endl;
       continue;
@@ -602,21 +657,21 @@ public_base_classes(TClass* const cl, vector<TClass*>& baseTypes)
   }
 }
 
-TClass*
-type_of_template_arg(TClass* template_instance, size_t desired_arg)
+bool
+type_of_template_arg(TClass* template_instance, size_t desired_arg,
+                     TypeWithDict& found_type)
 {
   if (template_instance == nullptr) {
     throw Exception(errors::NullPointerError, "type_of_template_arg: ")
         << "Null TClass pointer passed!\n";
   }
-  TClass* result = nullptr;
-  std::string ti_name(template_instance->GetName());
+  string ti_name(template_instance->GetName());
   auto comma_count = 0ul;
   auto template_level = 0ul;
-  auto arg_start = std::string::npos;
+  auto arg_start = string::npos;
   auto pos = 0ul;
   pos = ti_name.find_first_of("<>,", pos);
-  while (pos != std::string::npos) {
+  while (pos != string::npos) {
     switch (ti_name[pos]) {
       case '<':
         ++template_level;
@@ -630,16 +685,8 @@ type_of_template_arg(TClass* template_instance, size_t desired_arg)
         if ((desired_arg == comma_count) && (template_level == 0ul)) {
           // Found the end of the desired template arg.
           auto type_result = ti_name.substr(arg_start, pos - arg_start);
-          result = TClass::GetClass(type_result.c_str());
-          //Note: A nullptr result is allowed now.
-          //if (result == nullptr) {
-          //  throw Exception(errors::DictionaryNotFound,
-          //                  "type_of_template_arg: ")
-          //    << "Could not get TClass for template parameter: "
-          //    << type_result
-          //    << '\n';
-          //}
-          return result;
+          found_type = TypeWithDict(type_result);
+          return bool(found_type);
         }
         break;
       case ',':
@@ -650,16 +697,8 @@ type_of_template_arg(TClass* template_instance, size_t desired_arg)
         if (comma_count == desired_arg) {
           // Found the end of the desired template arg.
           auto type_result = ti_name.substr(arg_start, pos - arg_start);
-          result = TClass::GetClass(type_result.c_str());
-          //Note: A nullptr result is allowed now.
-          //if (result == nullptr) {
-          //  throw Exception(errors::DictionaryNotFound,
-          //                  "type_of_template_arg: ")
-          //    << "Could not get TClass for template parameter: "
-          //    << type_result
-          //    << '\n';
-          //}
-          return result;
+          found_type = TypeWithDict(type_result);
+          return bool(found_type);
         }
         ++comma_count;
         if (comma_count == desired_arg) {
@@ -671,17 +710,17 @@ type_of_template_arg(TClass* template_instance, size_t desired_arg)
     ++pos;
     pos = ti_name.find_first_of("<>,", pos);
   }
-  return result;
+  return false;
 }
 
 bool
-is_instantiation_of(TClass* const cl, std::string const& template_name)
+is_instantiation_of(TClass* const cl, string const& template_name)
 {
   if (cl == nullptr) {
     throw Exception(errors::NullPointerError, "is_instantiation_of: ")
         << "Null TClass pointer passed!\n";
   }
-  return std::string(cl->GetName()).find(template_name + "<") == 0ul;
+  return string(cl->GetName()).find(template_name + "<") == 0ul;
 }
 
 } // namespace art

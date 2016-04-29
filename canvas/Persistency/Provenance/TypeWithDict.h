@@ -14,6 +14,9 @@ class TEnum;
 
 namespace art {
 
+TypeID
+getTypeID(int);
+
 /// \class TypeWithDict
 ///
 /// \brief Type information using ROOT dictionaries.
@@ -161,6 +164,14 @@ std::ostream&
 operator<<(std::ostream& os, TypeWithDict::Category category)
 {
   os << to_string(category);
+  return os;
+}
+
+inline
+std::ostream&
+operator<<(std::ostream& os, TypeWithDict const& ty)
+{
+  ty.print(os);
   return os;
 }
 
