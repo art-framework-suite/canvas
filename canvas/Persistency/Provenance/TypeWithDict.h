@@ -81,7 +81,7 @@ public:
   explicit
   operator bool() const
   {
-    return (category_ == Category::ENUMTYPE) || bool(id_);
+    return (category_ == Category::ENUMTYPE) || id_;
   }
 
   /// \name non-ROOT information access.

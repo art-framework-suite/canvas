@@ -63,10 +63,6 @@ public:
 
 private:
 
-  struct Def {};
-
-private:
-
   // NOTE: since (a) the compiler generates the type_infos, and
   // (b) they have a lifetime good for the entire application,
   // we do not have to delete it.
@@ -77,7 +73,7 @@ private:
 
 inline
 art::TypeID::TypeID()
-  : ti_(&typeid(Def))
+  : ti_()
 {
 }
 
@@ -124,7 +120,7 @@ art::TypeID::operator == (TypeID const & rhs) const
 inline
 art::TypeID::operator bool() const
 {
-  return ti_ != &typeid(Def);
+  return ti_ != nullptr;
 }
 
 inline

@@ -16,34 +16,69 @@
 
 namespace art {
 
-bool
-find_nested_type_named(std::string const& nested_type,
-                       TClass* const type_to_search,
-                       TypeWithDict& found_type);
+  TypeWithDict
+  find_nested_type_named(std::string const& nested_type,
+                         TClass* const type_to_search);
 
-bool
-value_type_of(TClass* t, TypeWithDict& found_type);
+  TypeWithDict
+  value_type_of(TClass* t);
 
-bool
-mapped_type_of(TClass* t, TypeWithDict& found_type);
+  TypeWithDict
+  mapped_type_of(TClass* t);
 
-void
-checkDictionaries(std::string const& name, bool recursive = false,
-                  int level = 0);
+  void
+  checkDictionaries(std::string const& name, bool recursive = false,
+                    int level = 0);
 
-void
-reportFailedDictionaryChecks();
+  void
+  reportFailedDictionaryChecks();
 
-void
-public_base_classes(TClass* cl, std::vector<TClass*>& baseTypes);
+  void
+  public_base_classes(TClass* cl, std::vector<TClass*>& baseTypes);
 
-bool
-type_of_template_arg(TClass* template_instance, size_t desired_arg, TypeWithDict& found_type);
+  std::string
+  name_of_template_arg(std::string const & template_instance,
+                       size_t desired_arg);
 
-bool
-is_instantiation_of(TClass* cl, std::string const& template_name);
+  TypeWithDict
+  type_of_template_arg(TClass* template_instance, size_t desired_arg);
+
+  TypeWithDict
+  type_of_template_arg(std::string const & template_instance,
+                       size_t desired_arg);
+
+  std::string
+  name_of_assns_partner(std::string assns_type_name);
+
+  TypeWithDict
+  type_of_assns_partner(std::string assns_type_name);
+
+  bool
+  is_instantiation_of(TClass* cl, std::string const& template_name);
+
+  void
+  throwLateDictionaryError(std::string const & className);
 
 } // namespace art
+
+inline
+art::TypeWithDict
+art::type_of_template_arg(std::string const & template_instance,
+                          size_t desired_arg)
+{
+  TypeWithDict found_type(name_of_template_arg(template_instance, desired_arg));
+  return found_type;
+}
+
+inline
+art::TypeWithDict
+art::type_of_assns_partner(std::string assns_type_name)
+{
+  TypeWithDict result(name_of_assns_partner(assns_type_name));
+  return result;
+}
+
+
 
 // Local Variables:
 // mode: c++
