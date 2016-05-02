@@ -104,7 +104,7 @@ private:
   typedef typename std::conditional<std::is_void<Data>::value, IPRHelperDef, DATACOLL>::type dataColl_t;
 
 public:
-  typedef std::shared_ptr<cet::exception const> shared_exception_t;
+  typedef std::shared_ptr<art::Exception const> shared_exception_t;
 
   IPRHelper(EVENT const & e, InputTag const & tag) : event_(e), assnsTag_(tag) { }
 
