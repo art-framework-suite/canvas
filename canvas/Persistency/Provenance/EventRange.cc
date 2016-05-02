@@ -38,7 +38,7 @@ EventRange::forSubRun(SubRunNumber_t const s)
 EventRange::EventRange(SubRunNumber_t const s,
                        EventNumber_t const b,
                        EventNumber_t const e)
-  : subrun_{s}
+  : subRun_{s}
   , begin_{b}
   , end_{e}
 {
@@ -48,7 +48,7 @@ EventRange::EventRange(SubRunNumber_t const s,
 bool
 EventRange::merge(EventRange const& other)
 {
-  require_not_full_subrun();
+  require_not_full_SubRun();
   if (!are_valid(*this, other)) return false;
 
   bool const mergeable = is_adjacent(other);
@@ -60,7 +60,7 @@ EventRange::merge(EventRange const& other)
 bool
 EventRange::operator<(EventRange const& other) const
 {
-  if (subrun_ == other.subrun_) {
+  if (subRun_ == other.subRun_) {
     if (begin_ == other.begin_) {
       return end_ < other.end_;
     }
@@ -69,14 +69,14 @@ EventRange::operator<(EventRange const& other) const
     }
   }
   else {
-    return subrun_ < other.subrun_;
+    return subRun_ < other.subRun_;
   }
 }
 
 bool
 EventRange::operator==(EventRange const& other) const
 {
-  return subrun_ == other.subrun_ && begin_ == other.begin_ && end_ == other.end_;
+  return subRun_ == other.subRun_ && begin_ == other.begin_ && end_ == other.end_;
 }
 
 bool
@@ -88,7 +88,7 @@ EventRange::operator!=(EventRange const& other) const
 void
 EventRange::set_end(EventNumber_t const e)
 {
-  require_not_full_subrun();
+  require_not_full_SubRun();
   require_ordering(begin_,e);
   end_ = e;
 }
@@ -96,7 +96,7 @@ EventRange::set_end(EventNumber_t const e)
 bool
 EventRange::contains(SubRunNumber_t const s, EventNumber_t const e) const
 {
-  return subrun_ == s && e >= begin_ && e < end_;
+  return subRun_ == s && e >= begin_ && e < end_;
 }
 
 bool
@@ -108,27 +108,27 @@ EventRange::are_valid(EventRange const& l, EventRange const& r)
 bool
 EventRange::is_valid() const
 {
-  return art::is_valid(subrun_) && ordered(begin_,end_);
+  return art::is_valid(subRun_) && ordered(begin_,end_);
 }
 
 bool
-EventRange::is_full_subrun() const
+EventRange::is_full_SubRun() const
 {
-  return art::is_valid(subrun_) && begin_ == 0 && end_ == IDNumber<Level::Event>::invalid();
+  return art::is_valid(subRun_) && begin_ == 0 && end_ == IDNumber<Level::Event>::invalid();
 }
 
 bool
 EventRange::is_adjacent(EventRange const& other) const
 {
   if (!are_valid(*this, other)) return false;
-  return subrun_ == other.subrun_ && end_ == other.begin_;
+  return subRun_ == other.subRun_ && end_ == other.begin_;
 }
 
 bool
 EventRange::is_disjoint(EventRange const& other) const
 {
   if (!are_valid(*this, other)) return false;
-  return (subrun_ == other.subrun_) ? end_ <= other.begin_ : true;
+  return (subRun_ == other.subRun_) ? end_ <= other.begin_ : true;
 }
 
 bool
@@ -142,14 +142,14 @@ bool
 EventRange::is_subset(EventRange const& other) const
 {
   if (!are_valid(*this, other)) return false;
-  return subrun_ == other.subrun_ && begin_ >= other.begin_ && end_ <= other.end_;
+  return subRun_ == other.subRun_ && begin_ >= other.begin_ && end_ <= other.end_;
 }
 
 bool
 EventRange::is_superset(EventRange const& other) const
 {
   if (!are_valid(*this, other)) return false;
-  return subrun_ == other.subrun_ && begin_ <= other.begin_ && end_ >= other.end_;
+  return subRun_ == other.subRun_ && begin_ <= other.begin_ && end_ >= other.end_;
 }
 
 bool

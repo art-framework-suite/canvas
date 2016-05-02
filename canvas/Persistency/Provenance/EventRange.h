@@ -29,7 +29,7 @@ namespace art {
     bool operator==(EventRange const& other) const;
     bool operator!=(EventRange const& other) const;
 
-    auto subrun() const { return subrun_; }
+    auto subRun() const { return subRun_; }
     bool empty() const { return begin_ == end_; }
     auto begin() const { return begin_; }
     auto end()   const { return end_; }
@@ -38,7 +38,7 @@ namespace art {
     static bool are_valid(EventRange const& l, EventRange const& r);
 
     bool is_valid() const;
-    bool is_full_subrun() const;
+    bool is_full_SubRun() const;
     bool contains(SubRunNumber_t s, EventNumber_t e) const;
 
     // is_same(other) == true:
@@ -56,21 +56,21 @@ namespace art {
 
   private:
 
-    void require_not_full_subrun()
+    void require_not_full_SubRun()
     {
-      if (is_full_subrun())
+      if (is_full_SubRun())
         throw art::Exception{art::errors::LogicError}
         << "\nAn EventRange created using EventRange::forSubRun cannot be modified.\n";
     }
 
-    SubRunNumber_t subrun_ { IDNumber<Level::SubRun>::invalid() };
+    SubRunNumber_t subRun_ { IDNumber<Level::SubRun>::invalid() };
     EventNumber_t begin_ { IDNumber<Level::Event>::invalid() };
     EventNumber_t end_ { IDNumber<Level::Event>::invalid() };
   };
 
   inline std::ostream& operator<<(std::ostream& os, EventRange const& r)
   {
-    os << "SubRun: " << r.subrun() << " Event range: [" << r.begin() << ',' << r.end() << ')';
+    os << "SubRun: " << r.subRun() << " Event range: [" << r.begin() << ',' << r.end() << ')';
     return os;
   }
 

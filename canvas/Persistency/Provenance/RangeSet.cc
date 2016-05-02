@@ -196,7 +196,7 @@ RangeSet::to_compact_string() const
   if (!ranges_.empty())
     s += ":";
   for (auto const& r: ranges_) {
-    s += to_string(r.subrun());
+    s += to_string(r.subRun());
     s += "[";
     s += to_string(r.begin());
     s += ",";

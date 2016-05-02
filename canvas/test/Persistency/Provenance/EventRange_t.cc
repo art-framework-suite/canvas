@@ -12,8 +12,8 @@ BOOST_AUTO_TEST_CASE(fullSubRun)
 {
   auto er = EventRange::forSubRun(134);
   BOOST_CHECK(er.is_valid());
-  BOOST_CHECK(er.is_full_subrun());
-  BOOST_CHECK(er.contains(er.subrun(), 17));
+  BOOST_CHECK(er.is_full_SubRun());
+  BOOST_CHECK(er.contains(er.subRun(), 17));
 }
 
 BOOST_AUTO_TEST_CASE(merge1)
@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(merge1)
   BOOST_CHECK(!er1.merge(er2));
   BOOST_CHECK(!er1.is_disjoint(er2));
   BOOST_CHECK(er1.is_valid());
-  BOOST_CHECK(!er1.is_full_subrun());
+  BOOST_CHECK(!er1.is_full_SubRun());
 }
 
 BOOST_AUTO_TEST_CASE(merge2)
