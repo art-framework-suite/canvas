@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_BranchDescription_h
-#define art_Persistency_Provenance_BranchDescription_h
+#ifndef canvas_Persistency_Provenance_BranchDescription_h
+#define canvas_Persistency_Provenance_BranchDescription_h
 
 /*----------------------------------------------------------------------
 
@@ -182,7 +182,7 @@ namespace art {
                     BranchDescription::MatchMode m);
 }
 
-#endif /* art_Persistency_Provenance_BranchDescription_h */
+#endif /* canvas_Persistency_Provenance_BranchDescription_h */
 
 // Local Variables:
 // mode: c++

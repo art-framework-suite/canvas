@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ParentageRegistry_h
-#define art_Persistency_Provenance_ParentageRegistry_h
+#ifndef canvas_Persistency_Provenance_ParentageRegistry_h
+#define canvas_Persistency_Provenance_ParentageRegistry_h
 
 // ======================================================================
 //
@@ -24,7 +24,7 @@ namespace art {
 
 // ======================================================================
 
-#endif /* art_Persistency_Provenance_ParentageRegistry_h */
+#endif /* canvas_Persistency_Provenance_ParentageRegistry_h */
 
 // Local Variables:
 // mode: c++

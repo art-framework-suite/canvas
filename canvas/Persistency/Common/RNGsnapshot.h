@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_RNGsnapshot_h
-#define art_Persistency_Common_RNGsnapshot_h
+#ifndef canvas_Persistency_Common_RNGsnapshot_h
+#define canvas_Persistency_Common_RNGsnapshot_h
 
 // ======================================================================
 //
@@ -75,7 +75,7 @@ namespace art {
 
 // ======================================================================
 
-#endif /* art_Persistency_Common_RNGsnapshot_h */
+#endif /* canvas_Persistency_Common_RNGsnapshot_h */
 
 // Local Variables:
 // mode: c++

@@ -1,5 +1,5 @@
-#ifndef art_Utilities_ensurePointer_h
-#define art_Utilities_ensurePointer_h
+#ifndef canvas_Utilities_ensurePointer_h
+#define canvas_Utilities_ensurePointer_h
 
 // Ensure we can get a desired pointer type from a compatible iterator.
 
@@ -70,7 +70,7 @@ catch (std::bad_cast &)
       << cet::demangle_symbol(typeid(WANTED_POINTER).name())
       << " are incompatible.\n";
 }
-#endif /* art_Utilities_ensurePointer_h */
+#endif /* canvas_Utilities_ensurePointer_h */
 
 // Local Variables:
 // mode: c++

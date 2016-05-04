@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_EventSelectionID_h
-#define art_Persistency_Provenance_EventSelectionID_h
+#ifndef canvas_Persistency_Provenance_EventSelectionID_h
+#define canvas_Persistency_Provenance_EventSelectionID_h
 
 // ======================================================================
 //
@@ -21,7 +21,7 @@ namespace art {
 
 // ======================================================================
 
-#endif /* art_Persistency_Provenance_EventSelectionID_h */
+#endif /* canvas_Persistency_Provenance_EventSelectionID_h */
 
 // Local Variables:
 // mode: c++

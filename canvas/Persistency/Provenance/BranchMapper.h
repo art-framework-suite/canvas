@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_BranchMapper_h
-#define art_Persistency_Provenance_BranchMapper_h
+#ifndef canvas_Persistency_Provenance_BranchMapper_h
+#define canvas_Persistency_Provenance_BranchMapper_h
 
 // ======================================================================
 //
@@ -68,7 +68,7 @@ art::operator << (std::ostream &os, BranchMapper const &p)
 
 // ======================================================================
 
-#endif /* art_Persistency_Provenance_BranchMapper_h */
+#endif /* canvas_Persistency_Provenance_BranchMapper_h */
 
 // Local Variables:
 // mode: c++

@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_detail_maybeCastObj_h
-#define art_Persistency_Common_detail_maybeCastObj_h
+#ifndef canvas_Persistency_Common_detail_maybeCastObj_h
+#define canvas_Persistency_Common_detail_maybeCastObj_h
 
 #include <typeinfo>
 
@@ -26,7 +26,7 @@ art::detail::maybeCastObj(element_type const * address,
   return maybeCastObj(address, tiFrom, tiTo);
 }
 
-#endif /* art_Persistency_Common_detail_maybeCastObj_h */
+#endif /* canvas_Persistency_Common_detail_maybeCastObj_h */
 
 // Local Variables:
 // mode: c++

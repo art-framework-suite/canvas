@@ -1,5 +1,5 @@
-#ifndef art_Utilities_TypeID_h
-#define art_Utilities_TypeID_h
+#ifndef canvas_Utilities_TypeID_h
+#define canvas_Utilities_TypeID_h
 // vim: set sw=2:
 
 //
@@ -147,4 +147,4 @@ art::operator != (TypeID const & a, TypeID const & b)
 // Local Variables:
 // mode: c++
 // End:
-#endif // art_Utilities_TypeID_h
+#endif /* canvas_Utilities_TypeID_h */

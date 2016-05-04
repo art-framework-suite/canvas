@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_detail_setPtrVectorBaseStreamer_h
-#define art_Persistency_Common_detail_setPtrVectorBaseStreamer_h
+#ifndef canvas_Persistency_Common_detail_setPtrVectorBaseStreamer_h
+#define canvas_Persistency_Common_detail_setPtrVectorBaseStreamer_h
 
 namespace art {
   namespace detail {
@@ -17,7 +17,7 @@ public:
   void operator()(TBuffer &R_b, void *objp) override;
 };
 
-#endif /* art_Persistency_Common_detail_setPtrVectorBaseStreamer_h */
+#endif /* canvas_Persistency_Common_detail_setPtrVectorBaseStreamer_h */
 
 // Local Variables:
 // mode: c++

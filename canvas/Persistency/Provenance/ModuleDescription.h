@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ModuleDescription_h
-#define art_Persistency_Provenance_ModuleDescription_h
+#ifndef canvas_Persistency_Provenance_ModuleDescription_h
+#define canvas_Persistency_Provenance_ModuleDescription_h
 
 /*----------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ private:
 
 // ======================================================================
 
-#endif /* art_Persistency_Provenance_ModuleDescription_h */
+#endif /* canvas_Persistency_Provenance_ModuleDescription_h */
 
 // Local Variables:
 // mode: c++

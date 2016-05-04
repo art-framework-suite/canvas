@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_TypeTools_h
-#define art_Persistency_Provenance_TypeTools_h
+#ifndef canvas_Persistency_Provenance_TypeTools_h
+#define canvas_Persistency_Provenance_TypeTools_h
 // vim: set sw=2:
 
 //
@@ -76,4 +76,4 @@ art::type_of_assns_partner(std::string assns_type_name)
 // Local Variables:
 // mode: c++
 // End:
-#endif // art_Persistency_Provenance_TypeTools_h
+#endif /* canvas_Persistency_Provenance_TypeTools_h */

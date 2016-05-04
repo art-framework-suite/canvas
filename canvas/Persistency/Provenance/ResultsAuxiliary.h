@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ResultsAuxiliary_h
-#define art_Persistency_Provenance_ResultsAuxiliary_h
+#ifndef canvas_Persistency_Provenance_ResultsAuxiliary_h
+#define canvas_Persistency_Provenance_ResultsAuxiliary_h
 ////////////////////////////////////////////////////////////////////////
 // ResultsAuxiliary
 //
@@ -53,7 +53,7 @@ operator<<(std::ostream& os, const art::ResultsAuxiliary &p) {
    return os;
 }
 
-#endif /* art_Persistency_Provenance_ResultsAuxiliary_h */
+#endif /* canvas_Persistency_Provenance_ResultsAuxiliary_h */
 
 // Local Variables:
 // mode: c++

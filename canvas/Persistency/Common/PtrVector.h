@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_PtrVector_h
-#define art_Persistency_Common_PtrVector_h
+#ifndef canvas_Persistency_Common_PtrVector_h
+#define canvas_Persistency_Common_PtrVector_h
 
 // ======================================================================
 //
@@ -757,7 +757,7 @@ art::swap(PtrVector<T> & lhs, PtrVector<T> & rhs)
 #endif // __GCCXML__
 
 #undef PV_INSERT_POSITION_TYPE
-#endif /* art_Persistency_Common_PtrVector_h */
+#endif /* canvas_Persistency_Common_PtrVector_h */
 
 // Local Variables:
 // mode: c++

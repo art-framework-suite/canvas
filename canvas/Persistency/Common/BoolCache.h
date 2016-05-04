@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_BoolCache_h
-#define art_Persistency_Common_BoolCache_h
+#ifndef canvas_Persistency_Common_BoolCache_h
+#define canvas_Persistency_Common_BoolCache_h
 // -*- C++ -*-
 //
 // Package:     Common
@@ -38,7 +38,7 @@ private:
 };
 
 }
-#endif /* art_Persistency_Common_BoolCache_h */
+#endif /* canvas_Persistency_Common_BoolCache_h */
 
 // Local Variables:
 // mode: c++

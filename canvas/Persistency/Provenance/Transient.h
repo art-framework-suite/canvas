@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_Transient_h
-#define art_Persistency_Provenance_Transient_h
+#ifndef canvas_Persistency_Provenance_Transient_h
+#define canvas_Persistency_Provenance_Transient_h
 // -*- C++ -*-
 //
 // Package:     Provenance
@@ -41,7 +41,7 @@ private:
   T value_;
 };
 }
-#endif /* art_Persistency_Provenance_Transient_h */
+#endif /* canvas_Persistency_Provenance_Transient_h */
 
 // Local Variables:
 // mode: c++

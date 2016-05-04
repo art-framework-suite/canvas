@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_traits_h
-#define art_Persistency_Common_traits_h
+#ifndef canvas_Persistency_Common_traits_h
+#define canvas_Persistency_Common_traits_h
 
 /*----------------------------------------------------------------------
 
@@ -192,7 +192,7 @@ namespace art
   };
 }
 
-#endif /* art_Persistency_Common_traits_h */
+#endif /* canvas_Persistency_Common_traits_h */
 
 // Local Variables:
 // mode: c++

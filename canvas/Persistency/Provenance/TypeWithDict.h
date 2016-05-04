@@ -1,5 +1,5 @@
-#ifndef ART_PERSISTENCY_PROVENANCE_TYPEWITHDICT_H
-#define ART_PERSISTENCY_PROVENANCE_TYPEWITHDICT_H
+#ifndef canvas_Persistency_Provenance_TypeWithDict_h
+#define canvas_Persistency_Provenance_TypeWithDict_h
 // vim: set sw=2:
 
 #include "canvas/Utilities/TypeID.h"
@@ -180,4 +180,4 @@ operator<<(std::ostream& os, TypeWithDict const& ty)
 // Local Variables:
 // mode: c++
 // End:
-#endif // ART_PERSISTENCY_PROVENANCE_TYPEWITHDICT_H
+#endif /* canvas_Persistency_Provenance_TypeWithDict_h */

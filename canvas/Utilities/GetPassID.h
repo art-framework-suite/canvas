@@ -1,5 +1,5 @@
-#ifndef art_Utilities_GetPassID_h
-#define art_Utilities_GetPassID_h
+#ifndef canvas_Utilities_GetPassID_h
+#define canvas_Utilities_GetPassID_h
 
 #include <string>
 
@@ -13,7 +13,7 @@ namespace art {
   }
 
 }
-#endif /* art_Utilities_GetPassID_h */
+#endif /* canvas_Utilities_GetPassID_h */
 
 // Local Variables:
 // mode: c++

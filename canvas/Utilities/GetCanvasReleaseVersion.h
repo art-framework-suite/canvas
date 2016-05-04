@@ -1,7 +1,7 @@
-#ifndef canvas_Utilities_GetReleaseVersion_h
-#define canvas_Utilities_GetReleaseVersion_h
+#ifndef canvas_Utilities_GetCanvasReleaseVersion_h
+#define canvas_Utilities_GetCanvasReleaseVersion_h
 #include "canvas/Version/GetReleaseVersion.h"
-#endif /* canvas_Utilities_GetReleaseVersion_h */
+#endif /* canvas_Utilities_GetCanvasReleaseVersion_h */
 
 // Local Variables:
 // mode: c++

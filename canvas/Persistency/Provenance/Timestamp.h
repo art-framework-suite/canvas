@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_Timestamp_h
-#define art_Persistency_Provenance_Timestamp_h
+#ifndef canvas_Persistency_Provenance_Timestamp_h
+#define canvas_Persistency_Provenance_Timestamp_h
 
 #include <cstdint>
 
@@ -96,7 +96,7 @@ private:
       return s_lowMask;
    }
 };
-#endif /* art_Persistency_Provenance_Timestamp_h */
+#endif /* canvas_Persistency_Provenance_Timestamp_h */
 
 // Local Variables:
 // mode: c++
