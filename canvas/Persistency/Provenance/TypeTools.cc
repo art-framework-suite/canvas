@@ -140,8 +140,10 @@ name_of_template_arg(std::string const & template_instance,
         --template_level;
         if ((desired_arg == comma_count) && (template_level == 0ul)) {
           // Found the end of the desired template arg -- trim trailing whitespace
-          pos = template_instance.find_last_not_of(" \t", pos - 1) + 1;
-          result = template_instance.substr(arg_start, pos - arg_start);
+          auto const arg_end = template_instance.find_last_not_of(" \t", pos - 1) + 1;
+          result =
+            template_instance.substr(arg_start,
+                                     arg_end - arg_start);
           return result;
         }
         break;
