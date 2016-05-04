@@ -27,13 +27,6 @@ namespace art {
   mapped_type_of(TClass* t);
 
   void
-  checkDictionaries(std::string const& name, bool recursive = false,
-                    int level = 0);
-
-  void
-  reportFailedDictionaryChecks();
-
-  void
   public_base_classes(TClass* cl, std::vector<TClass*>& baseTypes);
 
   std::string
