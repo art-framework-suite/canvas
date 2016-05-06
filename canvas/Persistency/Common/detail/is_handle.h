@@ -11,7 +11,12 @@ namespace art {
     struct is_handle : std::false_type {};
 
     template <class T>
-    struct is_handle<T, typename enable_if_type<typename T::HandleTag>::type> : std::true_type { };
+    struct is_handle<T, enable_if_type_t<typename T::HandleTag>> : std::true_type { };
+
+    template <class T, class U>
+    struct are_handles {
+      static constexpr bool value {detail::is_handle<T>::value && detail::is_handle<U>::value};
+    };
   }
 }
 #endif /* canvas_Persistency_Common_detail_is_handle_h */
