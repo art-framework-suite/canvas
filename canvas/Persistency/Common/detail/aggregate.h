@@ -23,6 +23,8 @@
 #include <utility>
 #include <vector>
 
+#include "TH1.h"
+
 namespace art {
   namespace detail {
 
@@ -222,6 +224,17 @@ namespace art {
     template <>
     struct CanBeAggregated<CLHEP::HepSymMatrix> : std::true_type {
       static void aggregate(CLHEP::HepSymMatrix& p, CLHEP::HepSymMatrix const& other);
+    };
+
+    //==============================================================
+    // ROOT-TH1 specializations
+
+    template <typename T>
+    struct CanBeAggregated<T, std::enable_if_t<std::is_base_of<TH1,T>::value>> : std::true_type {
+      static void aggregate(T& p, T const& other)
+      {
+        p.Add(&other);
+      }
     };
 
   }
