@@ -23,16 +23,18 @@ namespace art {
   public:
 
     static RangeSet invalid();
-    static RangeSet forRun(RunID const rid);
-    static RangeSet forSubRun(SubRunID const srid);
+    static RangeSet forRun(RunID);
+    static RangeSet forSubRun(SubRunID);
 
-    explicit RangeSet(RunNumber_t const r);
-    explicit RangeSet(RunNumber_t const r, std::vector<EventRange> const& eventRanges);
+    explicit RangeSet(RunNumber_t);
+    explicit RangeSet(RunNumber_t, std::vector<EventRange> const& eventRanges);
 
     using const_iterator = std::vector<EventRange>::const_iterator;
 
     RunNumber_t run() const { return run_; }
     std::vector<EventRange> const& ranges() const { return ranges_; }
+    bool contains(RunNumber_t, SubRunNumber_t, EventNumber_t) const;
+
     bool is_valid() const;
     bool is_full_run() const { return fullRun_; }
     bool is_sorted() const;
@@ -52,12 +54,11 @@ namespace art {
     void assign_ranges(const_iterator b, const_iterator e);
 
     template <typename ... ARGS>
-    void emplace_range(ARGS&& ... args);
+    void emplace_range(ARGS&& ...);
 
     RangeSet& collapse();
     RangeSet& merge(RangeSet const& other);
-    const_iterator split_range(SubRunNumber_t s,
-                               EventNumber_t e);
+    const_iterator split_range(SubRunNumber_t, EventNumber_t);
     void set_run(RunNumber_t const r) { run_ = r; }
 
     void sort() { cet::sort_all(ranges_); }
@@ -86,31 +87,20 @@ namespace art {
     unsigned checksum_ {invalidChecksum()};
   };
 
-  inline std::ostream& operator<<(std::ostream& os, RangeSet const& rs)
-  {
-    os << " Run: " << rs.run();
-    for (auto const& er : rs.ranges()) {
-      os << "\n  " << er;
-    }
-    return os;
-  }
+  //==========================================================
+  // Non-member functions
 
-  inline bool operator==(RangeSet const& l,
-                         RangeSet const& r)
-  {
-    return l.run() == r.run() && l.ranges() == r.ranges();
-  }
-
-  inline bool same_ranges(RangeSet const& l,
-                          RangeSet const& r)
-  {
-    return l == r;
-  }
-
+  bool operator==(RangeSet const& l, RangeSet const& r);
+  bool same_ranges(RangeSet const& l, RangeSet const& r);
   bool disjoint_ranges(RangeSet const& l, RangeSet const& r);
 
+  // If one range-set is a superset of the other, the return value is
+  // 'true'.
+  bool overlapping_ranges(RangeSet const& l, RangeSet const& r);
+  std::ostream& operator<<(std::ostream& os, RangeSet const& rs);
+
   //==========================================================
-  // Implementation details
+  // RangeSet implementation details
 
   template <typename ... ARGS>
   void

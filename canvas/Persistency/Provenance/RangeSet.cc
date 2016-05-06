@@ -10,9 +10,15 @@ namespace {
     return cet::crc32{compact_string}.digest();
   }
 
+  bool both_valid(art::RangeSet const& l,
+                  art::RangeSet const& r)
+  {
+    return l.is_valid() && r.is_valid();
+  }
+
   bool disjoint(std::vector<art::EventRange> const& ranges)
   {
-    if ( ranges.size() < 2ull )
+    if (ranges.size() < 2ull)
       return true;
 
     auto it = ranges.cbegin();
@@ -177,6 +183,20 @@ RangeSet::has_disjoint_ranges() const
 }
 
 bool
+RangeSet::contains(RunNumber_t const r,
+                   SubRunNumber_t const s,
+                   EventNumber_t const e) const
+{
+  if (run_ != r) return false;
+
+  for (auto const& range: ranges_) {
+    if (range.contains(s,e)) return true;
+  }
+
+  return false;
+}
+
+bool
 RangeSet::is_valid() const
 {
   return run_ != IDNumber<Level::Run>::invalid();
@@ -216,13 +236,31 @@ RangeSet::RangeSet(RunNumber_t const r,
 {}
 
 bool
+art::operator==(RangeSet const& l, RangeSet const& r)
+{
+  if(!both_valid(l,r)) return false;
+  return l.run() == r.run() && l.ranges() == r.ranges();
+}
+
+bool
+art::same_ranges(RangeSet const& l, RangeSet const& r)
+{
+  return l == r;
+}
+
+bool
 art::disjoint_ranges(RangeSet const& l, RangeSet const& r)
 {
+  if (!both_valid(l,r)) return false;
+
+  if (l == r) return false;
+
   // If either RangeSet by itself is not disjoint, return false
   if (!l.has_disjoint_ranges() || !r.has_disjoint_ranges()) return false;
 
   if (l.run() != r.run()) return true; // Can't imagine that anyone would be presented with
                                        // two RangeSets from different runs.  But just in case....
+
   RangeSet ltmp {l};
   RangeSet rtmp {r};
   auto const& lranges = ltmp.collapse().ranges();
@@ -234,4 +272,21 @@ art::disjoint_ranges(RangeSet const& l, RangeSet const& r)
              std::back_inserter(merged));
 
   return disjoint(merged);
+}
+
+bool
+art::overlapping_ranges(RangeSet const& l, RangeSet const& r)
+{
+  if (!both_valid(l,r)) return false;
+  return !same_ranges(l,r) && !disjoint_ranges(l,r);
+}
+
+std::ostream&
+art::operator<<(std::ostream& os, RangeSet const& rs)
+{
+  os << " Run: " << rs.run();
+  for (auto const& er : rs.ranges()) {
+    os << "\n  " << er;
+  }
+  return os;
 }

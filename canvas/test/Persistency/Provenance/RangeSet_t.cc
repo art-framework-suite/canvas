@@ -228,4 +228,30 @@ BOOST_AUTO_TEST_CASE(merging3)
   BOOST_CHECK_EQUAL(rs1, ref);
 }
 
+BOOST_AUTO_TEST_CASE(overlapping_ranges)
+{
+  RangeSet rs1 {2};
+  rs1.emplace_range(1,1,3);
+  rs1.emplace_range(1,4,8);
+  rs1.emplace_range(2,3,17);
+  rs1.collapse();
+
+  RangeSet rs2 {2};
+  rs2.emplace_range(1,4,8);
+  rs2.emplace_range(2,7,9);
+  rs2.collapse();
+
+  BOOST_CHECK(art::overlapping_ranges(rs1,rs2));
+  BOOST_CHECK(art::overlapping_ranges(rs2,rs1));
+}
+
+BOOST_AUTO_TEST_CASE(invalid)
+{
+  auto const rs1 = RangeSet::invalid();
+  auto const rs2 = RangeSet::invalid();
+  BOOST_CHECK(!art::overlapping_ranges(rs1,rs2));
+  BOOST_CHECK(!art::same_ranges(rs1,rs2));
+  BOOST_CHECK(!art::disjoint_ranges(rs1,rs2));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
