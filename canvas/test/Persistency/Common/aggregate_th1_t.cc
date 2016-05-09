@@ -145,8 +145,8 @@ BOOST_AUTO_TEST_CASE (th2f)
   BOOST_REQUIRE_EQUAL(nBinsX, h3.GetNbinsX());
   BOOST_REQUIRE_EQUAL(nBinsY, h3.GetNbinsY());
 
-  for (std::size_t i{0} ; i != nBinsX ; ++i){
-    for (std::size_t j{0} ; j != nBinsY ; ++j){
+  for (std::size_t i{0} ; i != nBinsX ; ++i) {
+    for (std::size_t j{0} ; j != nBinsY ; ++j) {
       BOOST_CHECK_CLOSE_FRACTION( h3.GetBinContent(i+1,j+1), h3d[i][j], tolerance );
       BOOST_CHECK_CLOSE_FRACTION( h3.GetBinError(i+1,j+1), h3err[i][j], tolerance );
     }
