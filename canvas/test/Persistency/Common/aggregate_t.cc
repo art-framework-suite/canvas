@@ -254,7 +254,7 @@ BOOST_AUTO_TEST_CASE (map_vector)
   AGGREGATE_CHECK_EQUAL_COLLECTIONS(r.get<mv_t>(), ref);
 }
 
-BOOST_AUTO_TEST_CASE (string)
+BOOST_AUTO_TEST_CASE (string1)
 {
   MockRun r;
   r.put<std::string>("howdy");
@@ -265,6 +265,14 @@ BOOST_AUTO_TEST_CASE (string)
                           {
                             return e.categoryCode() == art::errors::ProductCannotBeAggregated;
                           });
+}
+
+BOOST_AUTO_TEST_CASE (string2)
+{
+  MockRun r;
+  r.put<std::string>("howdy");
+  r.put<std::string>("howdy");
+  BOOST_CHECK_EQUAL(r.get<std::string>(), "howdy");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

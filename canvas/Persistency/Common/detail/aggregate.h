@@ -183,13 +183,14 @@ namespace art {
     // Discuss with stakeholders
     template <>
     struct CanBeAggregated<std::string> : std::true_type {
-      static void aggregate(std::string&, std::string const&)
+      static void aggregate(std::string& p, std::string const& other)
       {
-        throw art::Exception(art::errors::ProductCannotBeAggregated)
-          << "Products of type \""
-          << cet::demangle_symbol(typeid(std::string).name())
-          << "\" cannot be aggregated.\n"
-          << "Please contact artists@fnal.gov.\n";
+        if (p != other)
+          throw art::Exception(art::errors::ProductCannotBeAggregated)
+            << "Products of type \""
+            << cet::demangle_symbol(typeid(std::string).name())
+            << "\" cannot be aggregated unless their values are the same.\n"
+            << "Values presented were: \"" << p << "\" and \"" << other << '\n';
       }
     };
 
