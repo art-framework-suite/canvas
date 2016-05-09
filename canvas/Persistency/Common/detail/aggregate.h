@@ -190,7 +190,7 @@ namespace art {
             << "Products of type \""
             << cet::demangle_symbol(typeid(std::string).name())
             << "\" cannot be aggregated unless their values are the same.\n"
-            << "Values presented were: \"" << p << "\" and \"" << other << '\n';
+            << "Values presented were: \"" << p << "\" and \"" << other << "\".\n";
       }
     };
 
