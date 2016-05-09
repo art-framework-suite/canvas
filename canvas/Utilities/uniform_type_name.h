@@ -1,5 +1,5 @@
-#ifndef art_Utilities_uniform_type_name_h
-#define art_Utilities_uniform_type_name_h
+#ifndef canvas_Utilities_uniform_type_name_h
+#define canvas_Utilities_uniform_type_name_h
 
 #include "cetlib/demangle.h"
 
@@ -39,7 +39,7 @@ art::uniform_type_name(std::type_info const & tid)
   return uniform_type_name(cet::demangle_symbol(tid.name()));
 }
 
-#endif /* art_Utilities_uniform_type_name_h */
+#endif /* canvas_Utilities_uniform_type_name_h */
 
 // Local variables:
 // mode:c++

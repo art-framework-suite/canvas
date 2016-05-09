@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ProcessHistory_h
-#define art_Persistency_Provenance_ProcessHistory_h
+#ifndef canvas_Persistency_Provenance_ProcessHistory_h
+#define canvas_Persistency_Provenance_ProcessHistory_h
 
 #include "canvas/Persistency/Provenance/ProcessConfiguration.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
@@ -192,7 +192,7 @@ art::ProcessHistory::reserve(size_type n)
   data_.reserve(n);
 }
 
-#endif /* art_Persistency_Provenance_ProcessHistory_h */
+#endif /* canvas_Persistency_Provenance_ProcessHistory_h */
 
 // Local Variables:
 // mode: c++

@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_BranchChildren_h
-#define art_Persistency_Provenance_BranchChildren_h
+#ifndef canvas_Persistency_Provenance_BranchChildren_h
+#define canvas_Persistency_Provenance_BranchChildren_h
 
 /*----------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ namespace art {
   };
 
 }
-#endif /* art_Persistency_Provenance_BranchChildren_h */
+#endif /* canvas_Persistency_Provenance_BranchChildren_h */
 
 // Local Variables:
 // mode: c++

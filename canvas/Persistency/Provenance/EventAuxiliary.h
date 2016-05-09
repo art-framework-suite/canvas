@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_EventAuxiliary_h
-#define art_Persistency_Provenance_EventAuxiliary_h
+#ifndef canvas_Persistency_Provenance_EventAuxiliary_h
+#define canvas_Persistency_Provenance_EventAuxiliary_h
 
 #include <iosfwd>
 
@@ -90,7 +90,7 @@ operator<<(std::ostream& os, const art::EventAuxiliary& p) {
    return os;
 }
 
-#endif /* art_Persistency_Provenance_EventAuxiliary_h */
+#endif /* canvas_Persistency_Provenance_EventAuxiliary_h */
 
 // Local Variables:
 // mode: c++

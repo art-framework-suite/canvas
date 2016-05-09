@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_TriggerResults_h
-#define art_Persistency_Common_TriggerResults_h
+#ifndef canvas_Persistency_Common_TriggerResults_h
+#define canvas_Persistency_Common_TriggerResults_h
 
 // ======================================================================
 //
@@ -78,7 +78,7 @@ namespace art {
 
 // ======================================================================
 
-#endif /* art_Persistency_Common_TriggerResults_h */
+#endif /* canvas_Persistency_Common_TriggerResults_h */
 
 // Local Variables:
 // mode: c++

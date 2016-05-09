@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_EventID_h
-#define art_Persistency_Provenance_EventID_h
+#ifndef canvas_Persistency_Provenance_EventID_h
+#define canvas_Persistency_Provenance_EventID_h
 
 // An EventID labels an unique readout of the data acquisition system,
 // which we call an "event".
@@ -400,7 +400,7 @@ inRangeOrInvalid(EventNumber_t e)
   }
 }
 
-#endif /* art_Persistency_Provenance_EventID_h */
+#endif /* canvas_Persistency_Provenance_EventID_h */
 
 // Local Variables:
 // mode: c++

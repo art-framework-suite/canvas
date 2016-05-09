@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ProductProvenance_h
-#define art_Persistency_Provenance_ProductProvenance_h
+#ifndef canvas_Persistency_Provenance_ProductProvenance_h
+#define canvas_Persistency_Provenance_ProductProvenance_h
 
 /*----------------------------------------------------------------------
 
@@ -97,7 +97,7 @@ art::operator<<(std::ostream& os, ProductProvenance const& p) {
 
 inline bool art::operator!=(ProductProvenance const& a, ProductProvenance const& b) { return !(a==b); }
 
-#endif /* art_Persistency_Provenance_ProductProvenance_h */
+#endif /* canvas_Persistency_Provenance_ProductProvenance_h */
 
 // Local Variables:
 // mode: c++

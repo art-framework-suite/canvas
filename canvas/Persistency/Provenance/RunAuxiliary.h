@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_RunAuxiliary_h
-#define art_Persistency_Provenance_RunAuxiliary_h
+#ifndef canvas_Persistency_Provenance_RunAuxiliary_h
+#define canvas_Persistency_Provenance_RunAuxiliary_h
 
 #include <iosfwd>
 #include <set>
@@ -106,7 +106,7 @@ operator<<(std::ostream& os, const art::RunAuxiliary &p) {
   return os;
 }
 
-#endif /* art_Persistency_Provenance_RunAuxiliary_h */
+#endif /* canvas_Persistency_Provenance_RunAuxiliary_h */
 
 // Local Variables:
 // mode: c++

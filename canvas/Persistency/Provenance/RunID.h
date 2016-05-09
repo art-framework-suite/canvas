@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_RunID_h
-#define art_Persistency_Provenance_RunID_h
+#ifndef canvas_Persistency_Provenance_RunID_h
+#define canvas_Persistency_Provenance_RunID_h
 
 //
 // A RunID represents a unique period of operation of the data
@@ -235,7 +235,7 @@ RunID(FlushFlag)
   run_{IDNumber<Level::Run>::flush_value()}
 {}
 
-#endif /* art_Persistency_Provenance_RunID_h */
+#endif /* canvas_Persistency_Provenance_RunID_h */
 
 // Local Variables:
 // mode: c++

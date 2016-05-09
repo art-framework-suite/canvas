@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ProductID_h
-#define art_Persistency_Provenance_ProductID_h
+#ifndef canvas_Persistency_Provenance_ProductID_h
+#define canvas_Persistency_Provenance_ProductID_h
 
 /*----------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ namespace art {
   std::ostream&
   operator<<(std::ostream& os, ProductID const& id);
 }
-#endif /* art_Persistency_Provenance_ProductID_h */
+#endif /* canvas_Persistency_Provenance_ProductID_h */
 
 // Local Variables:
 // mode: c++

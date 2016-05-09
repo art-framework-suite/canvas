@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_Wrapper_h
-#define art_Persistency_Common_Wrapper_h
+#ifndef canvas_Persistency_Common_Wrapper_h
+#define canvas_Persistency_Common_Wrapper_h
 // vim: set sw=2:
 
 ////////////////////////////////////////////////////////////////////////
@@ -535,7 +535,7 @@ namespace art {
 
 }
 
-#endif /* art_Persistency_Common_Wrapper_h */
+#endif /* canvas_Persistency_Common_Wrapper_h */
 
 // Local Variables:
 // mode: c++

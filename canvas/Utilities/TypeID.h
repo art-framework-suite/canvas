@@ -1,5 +1,5 @@
-#ifndef art_Utilities_TypeID_h
-#define art_Utilities_TypeID_h
+#ifndef canvas_Utilities_TypeID_h
+#define canvas_Utilities_TypeID_h
 // vim: set sw=2:
 
 //
@@ -63,10 +63,6 @@ public:
 
 private:
 
-  struct Def {};
-
-private:
-
   // NOTE: since (a) the compiler generates the type_infos, and
   // (b) they have a lifetime good for the entire application,
   // we do not have to delete it.
@@ -77,7 +73,7 @@ private:
 
 inline
 art::TypeID::TypeID()
-  : ti_(&typeid(Def))
+  : ti_()
 {
 }
 
@@ -124,7 +120,7 @@ art::TypeID::operator == (TypeID const & rhs) const
 inline
 art::TypeID::operator bool() const
 {
-  return ti_ != &typeid(Def);
+  return ti_ != nullptr;
 }
 
 inline
@@ -151,4 +147,4 @@ art::operator != (TypeID const & a, TypeID const & b)
 // Local Variables:
 // mode: c++
 // End:
-#endif // art_Utilities_TypeID_h
+#endif /* canvas_Utilities_TypeID_h */

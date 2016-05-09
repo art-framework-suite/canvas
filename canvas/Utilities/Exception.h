@@ -1,5 +1,5 @@
-#ifndef art_Utilities_Exception_h
-#define art_Utilities_Exception_h
+#ifndef canvas_Utilities_Exception_h
+#define canvas_Utilities_Exception_h
 
 // ======================================================================
 //
@@ -67,7 +67,7 @@ namespace art {
 
 // ======================================================================
 
-#endif /* art_Utilities_Exception_h */
+#endif /* canvas_Utilities_Exception_h */
 
 // Local Variables:
 // mode: c++

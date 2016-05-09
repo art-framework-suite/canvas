@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_EDProductGetter_h
-#define art_Persistency_Common_EDProductGetter_h
+#ifndef canvas_Persistency_Common_EDProductGetter_h
+#define canvas_Persistency_Common_EDProductGetter_h
 
 #include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Utilities/fwd.h"
@@ -39,7 +39,7 @@ public:
                                          TypeID const &) const = 0;
 };  // EDProductGetter
 
-#endif /* art_Persistency_Common_EDProductGetter_h */
+#endif /* canvas_Persistency_Common_EDProductGetter_h */
 
 // Local Variables:
 // mode: c++

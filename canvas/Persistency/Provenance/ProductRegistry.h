@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ProductRegistry_h
-#define art_Persistency_Provenance_ProductRegistry_h
+#ifndef canvas_Persistency_Provenance_ProductRegistry_h
+#define canvas_Persistency_Provenance_ProductRegistry_h
 #include "canvas/Persistency/Provenance/ProductList.h"
 
 // Class solely to permit schema evolution from the old ProductRegistry
@@ -15,7 +15,7 @@ struct art::ProductRegistry {
 
   ProductList productList_;
 };
-#endif /* art_Persistency_Provenance_ProductRegistry_h */
+#endif /* canvas_Persistency_Provenance_ProductRegistry_h */
 
 // Local Variables:
 // mode: c++

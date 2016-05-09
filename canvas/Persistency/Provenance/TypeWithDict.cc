@@ -147,7 +147,7 @@ print(ostream& os) const
          << dynamic_cast<TEnum*>(tDict_)->GetName();
       break;
     default:
-      if (!bool(id_)) {
+      if (!id_) {
         throw Exception(errors::LogicError)
             << "No typeid information for type of category "
             << to_string(category_)
@@ -169,7 +169,7 @@ name() const
     case Category::ENUMTYPE:
       break;
     default:
-      if (!bool(id_)) {
+      if (!id_) {
         throw Exception(errors::LogicError)
             << "No typeid information for type of category "
             << to_string(category_)
@@ -194,7 +194,7 @@ className() const
       result = dynamic_cast<TEnum*>(tDict_)->GetName();
       break;
     default:
-      if (!bool(id_)) {
+      if (!id_) {
         throw Exception(errors::LogicError)
             << "No typeid information for type of category "
             << to_string(category_)

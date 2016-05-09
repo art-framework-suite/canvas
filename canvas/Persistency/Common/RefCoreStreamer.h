@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_RefCoreStreamer_h
-#define art_Persistency_Common_RefCoreStreamer_h
+#ifndef canvas_Persistency_Common_RefCoreStreamer_h
+#define canvas_Persistency_Common_RefCoreStreamer_h
 
 #include "cetlib/exempt_ptr.h"
 
@@ -33,7 +33,7 @@ namespace art {
     cet::exempt_ptr<EDProductGetterFinder const> finder_;
   };
 }
-#endif /* art_Persistency_Common_RefCoreStreamer_h */
+#endif /* canvas_Persistency_Common_RefCoreStreamer_h */
 
 // Local Variables:
 // mode: c++

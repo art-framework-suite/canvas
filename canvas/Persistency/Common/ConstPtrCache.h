@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_ConstPtrCache_h
-#define art_Persistency_Common_ConstPtrCache_h
+#ifndef canvas_Persistency_Common_ConstPtrCache_h
+#define canvas_Persistency_Common_ConstPtrCache_h
 // -*- C++ -*-
 //
 // Package:     Common
@@ -37,7 +37,7 @@ class ConstPtrCache
 };
 
 }
-#endif /* art_Persistency_Common_ConstPtrCache_h */
+#endif /* canvas_Persistency_Common_ConstPtrCache_h */
 
 // Local Variables:
 // mode: c++

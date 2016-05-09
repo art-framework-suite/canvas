@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_FileFormatVersion_h
-#define art_Persistency_Provenance_FileFormatVersion_h
+#ifndef canvas_Persistency_Provenance_FileFormatVersion_h
+#define canvas_Persistency_Provenance_FileFormatVersion_h
 
 #include <iosfwd>
 #include <string>
@@ -41,7 +41,7 @@ std::ostream&
 operator<< (std::ostream& os,
             art::FileFormatVersion const& ff);
 
-#endif /* art_Persistency_Provenance_FileFormatVersion_h */
+#endif /* canvas_Persistency_Provenance_FileFormatVersion_h */
 
 // Local Variables:
 // mode: c++

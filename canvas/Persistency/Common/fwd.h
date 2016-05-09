@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_fwd_h
-#define art_Persistency_Common_fwd_h
+#ifndef canvas_Persistency_Common_fwd_h
+#define canvas_Persistency_Common_fwd_h
 
 // ======================================================================
 //
@@ -30,7 +30,7 @@ namespace art {
 
 // ======================================================================
 
-#endif /* art_Persistency_Common_fwd_h */
+#endif /* canvas_Persistency_Common_fwd_h */
 
 // Local Variables:
 // mode: c++

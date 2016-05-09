@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_Assns_h
-#define art_Persistency_Common_Assns_h
+#ifndef canvas_Persistency_Common_Assns_h
+#define canvas_Persistency_Common_Assns_h
 // vim: set sw=2:
 ////////////////////////////////////////////////////////////////////////
 // Assns
@@ -522,7 +522,7 @@ art::Assns<L, R, D>::makePartner_() const
   std::unique_ptr<art::EDProduct> retval = std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
   return retval;
 }
-#endif /* art_Persistency_Common_Assns_h */
+#endif /* canvas_Persistency_Common_Assns_h */
 
 // Local Variables:
 // mode: c++

@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_PtrVectorBase_h
-#define art_Persistency_Common_PtrVectorBase_h
+#ifndef canvas_Persistency_Common_PtrVectorBase_h
+#define canvas_Persistency_Common_PtrVectorBase_h
 
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/RefCore.h"
@@ -141,7 +141,7 @@ operator==(PtrVectorBase const &other) const {
 }
 
 #endif /* __GCCXML__ */
-#endif /* art_Persistency_Common_PtrVectorBase_h */
+#endif /* canvas_Persistency_Common_PtrVectorBase_h */
 
 // Local Variables:
 // mode: c++

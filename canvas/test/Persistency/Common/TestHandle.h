@@ -1,7 +1,7 @@
-#ifndef test_Persistency_Common_TestHandle_h
-#define test_Persistency_Common_TestHandle_h
+#ifndef canvas_test_Persistency_Common_TestHandle_h
+#define canvas_test_Persistency_Common_TestHandle_h
 #include "art/Persistency/Common/TestHandle.h"
-#endif /* test_Persistency_Common_TestHandle_h */
+#endif /* canvas_test_Persistency_Common_TestHandle_h */
 
 // Local Variables:
 // mode: c++

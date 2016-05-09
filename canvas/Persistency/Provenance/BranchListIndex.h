@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_BranchListIndex_h
-#define art_Persistency_Provenance_BranchListIndex_h
+#ifndef canvas_Persistency_Provenance_BranchListIndex_h
+#define canvas_Persistency_Provenance_BranchListIndex_h
 
 // ======================================================================
 //
@@ -14,7 +14,7 @@ namespace art {
   typedef std::vector<BranchListIndex> BranchListIndexes;
 }
 
-#endif /* art_Persistency_Provenance_BranchListIndex_h */
+#endif /* canvas_Persistency_Provenance_BranchListIndex_h */
 
 // Local Variables:
 // mode: c++

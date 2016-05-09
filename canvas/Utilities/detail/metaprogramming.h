@@ -1,5 +1,5 @@
-#ifndef art_Utilities_detail_metaprogramming_h
-#define art_Utilities_detail_metaprogramming_h
+#ifndef canvas_Utilities_detail_metaprogramming_h
+#define canvas_Utilities_detail_metaprogramming_h
 // Common metaprogramming utilities.
 
 namespace art {
@@ -15,7 +15,7 @@ namespace art {
     using enable_if_type_t = typename enable_if_type<T>::type;
   }
 }
-#endif /* art_Utilities_detail_metaprogramming_h */
+#endif /* canvas_Utilities_detail_metaprogramming_h */
 
 // Local Variables:
 // mode: c++

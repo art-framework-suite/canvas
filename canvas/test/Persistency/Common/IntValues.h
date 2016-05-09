@@ -1,5 +1,5 @@
-#ifndef test_Persistency_Common_IntValues_h
-#define test_Persistency_Common_IntValues_h
+#ifndef canvas_test_Persistency_Common_IntValues_h
+#define canvas_test_Persistency_Common_IntValues_h
 // -*- C++ -*-
 //
 // Package:     Common
@@ -35,7 +35,7 @@ namespace test_with_reflex {
   };
 }
 
-#endif /* test_Persistency_Common_IntValues_h */
+#endif /* canvas_test_Persistency_Common_IntValues_h */
 
 // Local Variables:
 // mode: c++
