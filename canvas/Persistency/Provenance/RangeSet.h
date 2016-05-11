@@ -58,7 +58,10 @@ namespace art {
 
     RangeSet& collapse();
     RangeSet& merge(RangeSet const& other);
-    const_iterator split_range(SubRunNumber_t, EventNumber_t);
+
+    // For a range [1,6) split into [1,3) and [3,6) the specified
+    // event number is the new 'end' of the left range (3).
+    std::pair<const_iterator,bool> split_range(SubRunNumber_t, EventNumber_t);
     void set_run(RunNumber_t const r) { run_ = r; }
 
     void sort() { cet::sort_all(ranges_); }

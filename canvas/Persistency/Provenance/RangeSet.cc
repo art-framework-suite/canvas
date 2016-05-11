@@ -121,8 +121,6 @@ RangeSet::assign_ranges(RangeSet::const_iterator const b,
 RangeSet&
 RangeSet::merge(RangeSet const& other)
 {
-  require_not_full_run();
-
   if (!other.is_valid())
     return *this;
 
@@ -140,11 +138,12 @@ RangeSet::merge(RangeSet const& other)
   return *this;
 }
 
-RangeSet::const_iterator
+std::pair<RangeSet::const_iterator,bool>
 RangeSet::split_range(SubRunNumber_t const s,
                       EventNumber_t const e)
 {
   require_not_full_run();
+  bool did_split {false};
   auto result = ranges_.end();
   auto foundRange = std::find_if(ranges_.cbegin(), ranges_.cend(),
                                  [s,e](auto const& r) {
@@ -164,9 +163,10 @@ RangeSet::split_range(SubRunNumber_t const s,
     result = std::next(leftIt);
     EventRange right {s, e, end};
     std::swap(*result, right);
+    did_split = true;
   }
   checksum_ = ::checksum(to_compact_string());
-  return result;
+  return std::make_pair(result, did_split);
 }
 
 bool
