@@ -2,6 +2,7 @@
 #define canvas_Persistency_Common_detail_aggregate_h
 
 #include "canvas/Utilities/Exception.h"
+#include "canvas/Utilities/detail/metaprogramming.h"
 #include "cetlib/container_algorithms.h"
 #include "cetlib/demangle.h"
 #include "cetlib/map_vector.h"
@@ -29,10 +30,13 @@ namespace art {
   namespace detail {
 
     template <typename T, typename = void>
-    struct user_defined : std::false_type {};
+    struct has_aggregate : std::false_type {};
 
     template <typename T>
-    struct user_defined<T, decltype(std::declval<T>().aggregate(std::declval<T const&>()))> : std::true_type {};
+    struct has_aggregate<T, enable_if_function_exists_t<void(T::*)(T const&), &T::aggregate>> : std::true_type {};
+
+    template <typename T>
+    struct has_aggregate<T, enable_if_function_exists_t<void(T::*)(T), &T::aggregate>> : std::true_type {};
 
 
     template <typename T, typename Enable = void>
@@ -58,7 +62,7 @@ namespace art {
 
     // User-defined
     template <typename T>
-    struct CanBeAggregated<T, std::enable_if_t<user_defined<T>::value>> : std::true_type {
+    struct CanBeAggregated<T, std::enable_if_t<has_aggregate<T>::value>> : std::true_type {
       static void aggregate(T& p, T const& other)
       {
         p.aggregate(other);

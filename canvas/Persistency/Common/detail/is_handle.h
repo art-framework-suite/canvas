@@ -11,7 +11,7 @@ namespace art {
     struct is_handle : std::false_type {};
 
     template <class T>
-    struct is_handle<T, enable_if_type_t<typename T::HandleTag>> : std::true_type { };
+    struct is_handle<T, enable_if_type_exists_t<typename T::HandleTag>> : std::true_type { };
 
     template <class T, class U>
     struct are_handles {
