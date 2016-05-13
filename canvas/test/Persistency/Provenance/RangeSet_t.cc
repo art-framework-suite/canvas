@@ -21,6 +21,9 @@ BOOST_AUTO_TEST_CASE(empty)
   BOOST_CHECK(rs.is_collapsed());
   BOOST_CHECK(rs.is_full_run());
   BOOST_CHECK_EQUAL(rs.to_compact_string(),"72"s);
+  std::ostringstream oss;
+  oss << rs;
+  BOOST_CHECK_EQUAL(oss.str(), " Run: 72 (full run)"s);
 }
 
 BOOST_AUTO_TEST_CASE(disjoint1)

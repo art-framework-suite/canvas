@@ -3,8 +3,11 @@
 #include "cetlib/quiet_unit_test.hpp"
 
 #include <iostream>
+#include <sstream>
+#include <string>
 
 using art::EventRange;
+using namespace std::string_literals;
 
 BOOST_AUTO_TEST_SUITE(EventRange_t)
 
@@ -14,6 +17,9 @@ BOOST_AUTO_TEST_CASE(fullSubRun)
   BOOST_CHECK(er.is_valid());
   BOOST_CHECK(er.is_full_SubRun());
   BOOST_CHECK(er.contains(er.subRun(), 17));
+  std::ostringstream oss;
+  oss << er;
+  BOOST_CHECK_EQUAL(oss.str(), "SubRun: 134 (full sub-run)"s);
 }
 
 BOOST_AUTO_TEST_CASE(merge1)
@@ -36,6 +42,10 @@ BOOST_AUTO_TEST_CASE(merge2)
 
   EventRange const ref {1,2,6};
   BOOST_CHECK_EQUAL(er1, ref);
+  std::ostringstream oss;
+  oss << ref;
+  BOOST_CHECK_EQUAL(oss.str(), "SubRun: 1 Event range: [2,6)"s);
+
   BOOST_CHECK(er1.contains(1,2));
   BOOST_CHECK(er1.contains(1,4));
   BOOST_CHECK(!er1.contains(1,6));

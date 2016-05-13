@@ -158,3 +158,13 @@ EventRange::is_overlapping(EventRange const& other) const
   if (!are_valid(*this, other)) return false;
   return !is_disjoint(other) && !is_subset(other) && !is_superset(other);
 }
+
+std::ostream& art::operator<<(std::ostream& os, EventRange const& r)
+{
+  os << "SubRun: " << r.subRun();
+  if (r.is_full_SubRun())
+    os << " (full sub-run)";
+  else
+    os << " Event range: [" << r.begin() << ',' << r.end() << ')';
+  return os;
+}

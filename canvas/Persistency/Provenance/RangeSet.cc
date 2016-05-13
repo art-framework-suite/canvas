@@ -285,6 +285,8 @@ std::ostream&
 art::operator<<(std::ostream& os, RangeSet const& rs)
 {
   os << " Run: " << rs.run();
+  if (rs.is_full_run() )
+    os << " (full run)";
   for (auto const& er : rs.ranges()) {
     os << "\n  " << er;
   }

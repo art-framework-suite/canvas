@@ -68,11 +68,7 @@ namespace art {
     EventNumber_t end_ { IDNumber<Level::Event>::invalid() };
   };
 
-  inline std::ostream& operator<<(std::ostream& os, EventRange const& r)
-  {
-    os << "SubRun: " << r.subRun() << " Event range: [" << r.begin() << ',' << r.end() << ')';
-    return os;
-  }
+  std::ostream& operator<<(std::ostream& os, EventRange const& r);
 
 }
 
