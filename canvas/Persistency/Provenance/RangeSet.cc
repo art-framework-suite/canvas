@@ -203,6 +203,12 @@ RangeSet::is_valid() const
 }
 
 bool
+RangeSet::is_full_subRun() const
+{
+  return ranges_.size() == 1ull && ranges_.front().is_full_subRun();
+}
+
+bool
 RangeSet::is_sorted() const
 {
   return std::is_sorted(ranges_.cbegin(), ranges_.cend());

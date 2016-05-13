@@ -38,7 +38,7 @@ namespace art {
     static bool are_valid(EventRange const& l, EventRange const& r);
 
     bool is_valid() const;
-    bool is_full_SubRun() const;
+    bool is_full_subRun() const;
     bool contains(SubRunNumber_t s, EventNumber_t e) const;
 
     // is_same(other) == true:
@@ -58,7 +58,7 @@ namespace art {
 
     void require_not_full_SubRun()
     {
-      if (is_full_SubRun())
+      if (is_full_subRun())
         throw art::Exception{art::errors::LogicError}
         << "\nAn EventRange created using EventRange::forSubRun cannot be modified.\n";
     }

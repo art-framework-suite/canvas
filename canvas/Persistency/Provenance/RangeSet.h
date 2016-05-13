@@ -37,6 +37,7 @@ namespace art {
 
     bool is_valid() const;
     bool is_full_run() const { return fullRun_; }
+    bool is_full_subRun() const;
     bool is_sorted() const;
     bool is_collapsed() const { return isCollapsed_; }
     std::string to_compact_string() const;

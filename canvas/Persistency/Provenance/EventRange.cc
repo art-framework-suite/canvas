@@ -112,7 +112,7 @@ EventRange::is_valid() const
 }
 
 bool
-EventRange::is_full_SubRun() const
+EventRange::is_full_subRun() const
 {
   return art::is_valid(subRun_) && begin_ == 0 && end_ == IDNumber<Level::Event>::invalid();
 }
@@ -162,7 +162,7 @@ EventRange::is_overlapping(EventRange const& other) const
 std::ostream& art::operator<<(std::ostream& os, EventRange const& r)
 {
   os << "SubRun: " << r.subRun();
-  if (r.is_full_SubRun())
+  if (r.is_full_subRun())
     os << " (full sub-run)";
   else
     os << " Event range: [" << r.begin() << ',' << r.end() << ')';
