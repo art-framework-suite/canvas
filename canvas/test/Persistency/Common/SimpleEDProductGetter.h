@@ -1,5 +1,5 @@
-#ifndef test_Persistency_Common_SimpleEDProductGetter_h
-#define test_Persistency_Common_SimpleEDProductGetter_h
+#ifndef canvas_test_Persistency_Common_SimpleEDProductGetter_h
+#define canvas_test_Persistency_Common_SimpleEDProductGetter_h
 
 #include "canvas/Persistency/Common/EDProduct.h"
 #include "canvas/Persistency/Common/EDProductGetter.h"
@@ -41,7 +41,7 @@ class SimpleEDProductGetter : public art::EDProductGetter
   map_t database;
 };
 
-#endif /* test_Persistency_Common_SimpleEDProductGetter_h */
+#endif /* canvas_test_Persistency_Common_SimpleEDProductGetter_h */
 
 // Local Variables:
 // mode: c++

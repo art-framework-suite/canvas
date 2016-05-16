@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_getElementAddresses_h
-#define art_Persistency_Common_getElementAddresses_h
+#ifndef canvas_Persistency_Common_getElementAddresses_h
+#define canvas_Persistency_Common_getElementAddresses_h
 
 #include "canvas/Persistency/Common/detail/maybeCastObj.h"
 
@@ -112,7 +112,7 @@ art::getElementAddresses(cet::map_vector<T> const & obj,
   }
 }
 
-#endif /* art_Persistency_Common_getElementAddresses_h */
+#endif /* canvas_Persistency_Common_getElementAddresses_h */
 
 // Local Variables:
 // mode: c++

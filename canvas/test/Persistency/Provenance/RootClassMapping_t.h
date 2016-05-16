@@ -1,5 +1,5 @@
-#ifndef test_Persistency_Provenance_RootClassMapping_t_h
-#define test_Persistency_Provenance_RootClassMapping_t_h
+#ifndef canvas_test_Persistency_Provenance_RootClassMapping_t_h
+#define canvas_test_Persistency_Provenance_RootClassMapping_t_h
 
 #include <ostream>
 
@@ -48,7 +48,7 @@ private:
   std::ostream & os_;
 };
 
-#endif /* test_Persistency_Provenance_RootClassMapping_t_h */
+#endif /* canvas_test_Persistency_Provenance_RootClassMapping_t_h */
 
 // Local Variables:
 // mode: c++

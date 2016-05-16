@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_HLTenums_h
-#define art_Persistency_Common_HLTenums_h
+#ifndef canvas_Persistency_Common_HLTenums_h
+#define canvas_Persistency_Common_HLTenums_h
 
 /** \brief HLT enums
  *
@@ -25,7 +25,7 @@ namespace art
 
 // ======================================================================
 
-#endif /* art_Persistency_Common_HLTenums_h */
+#endif /* canvas_Persistency_Common_HLTenums_h */
 
 // Local Variables:
 // mode: c++

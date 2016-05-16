@@ -1,5 +1,5 @@
-#ifndef test_Utilities_TypeNameBranchName_t_h
-#define test_Utilities_TypeNameBranchName_t_h
+#ifndef canvas_test_Utilities_TypeNameBranchName_t_h
+#define canvas_test_Utilities_TypeNameBranchName_t_h
 
 #include "cetlib/map_vector.h"
 
@@ -19,7 +19,7 @@ namespace arttest {
   };
 }
 
-#endif /* test_Utilities_TypeNameBranchName_t_h */
+#endif /* canvas_test_Utilities_TypeNameBranchName_t_h */
 
 // Local Variables:
 // mode: c++

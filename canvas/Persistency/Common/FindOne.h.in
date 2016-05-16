@@ -200,12 +200,12 @@ protected:
   @ART_IPR_CLASS_NAME@() : bCollection_() { }
   bColl_t & bCollection() { return bCollection_; }
 
-  void setStoredException(std::shared_ptr<cet::exception const> && e);
+  void setStoredException(std::shared_ptr<art::Exception const> && e);
   void throwIfInvalid() const;
 
 private:
   bColl_t bCollection_;
-  std::shared_ptr<cet::exception const> storedException_;
+  std::shared_ptr<art::Exception const> storedException_;
 };
 
 template <typename ProdB, typename Data>
@@ -418,7 +418,7 @@ template <typename ProdB>
 inline
 void
 art::@ART_IPR_CLASS_NAME@<ProdB, void>::
-setStoredException(std::shared_ptr<cet::exception const> && e)
+setStoredException(std::shared_ptr<art::Exception const> && e)
 {
   storedException_ = std::move(e);
 }

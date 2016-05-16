@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_FileIndex_h
-#define art_Persistency_Provenance_FileIndex_h
+#ifndef canvas_Persistency_Provenance_FileIndex_h
+#define canvas_Persistency_Provenance_FileIndex_h
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -172,7 +172,7 @@ namespace art {
   operator<< (std::ostream& os, FileIndex const& fileIndex);
 }
 
-#endif /* art_Persistency_Provenance_FileIndex_h */
+#endif /* canvas_Persistency_Provenance_FileIndex_h */
 
 // Local Variables:
 // mode: c++

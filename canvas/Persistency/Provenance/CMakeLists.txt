@@ -1,16 +1,12 @@
-set( canvas_Persistency_Provenance_libraries
+cet_make(SUBDIRS detail
+  LIBRARIES
   canvas_Utilities
   MF_MessageLogger
-  ${ROOT_CORE}
   ${Boost_THREAD_LIBRARY}
+  NO_DICTIONARY
   )
 
-art_make(SUBDIRS detail
-  LIB_LIBRARIES
-  canvas_Utilities
-  ${Boost_THREAD_LIBRARY}
-  MF_MessageLogger
-        )
+art_dictionary()
 
 install_headers(SUBDIRS detail)
 install_source(SUBDIRS detail)

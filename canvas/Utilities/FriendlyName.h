@@ -1,5 +1,5 @@
-#ifndef art_Utilities_FriendlyName_h
-#define art_Utilities_FriendlyName_h
+#ifndef canvas_Utilities_FriendlyName_h
+#define canvas_Utilities_FriendlyName_h
 ////////////////////////////////////////////////////////////////////////
 // friendlyName(): a free function to generate a friendly name for a
 // type.
@@ -13,7 +13,7 @@ namespace art {
     std::string friendlyName(std::string const& iFullName);
   }
 }
-#endif /* art_Utilities_FriendlyName_h */
+#endif /* canvas_Utilities_FriendlyName_h */
 
 // Local Variables:
 // mode: c++

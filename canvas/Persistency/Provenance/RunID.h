@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_RunID_h
-#define art_Persistency_Provenance_RunID_h
+#ifndef canvas_Persistency_Provenance_RunID_h
+#define canvas_Persistency_Provenance_RunID_h
 
 //
 // A RunID represents a unique period of operation of the data
@@ -280,7 +280,7 @@ FIRST_RUN_NUMBER()
   return 1;
 }
 
-#endif /* art_Persistency_Provenance_RunID_h */
+#endif /* canvas_Persistency_Provenance_RunID_h */
 
 // Local Variables:
 // mode: c++

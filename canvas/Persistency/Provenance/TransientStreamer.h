@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_TransientStreamer_h
-#define art_Persistency_Provenance_TransientStreamer_h
+#ifndef canvas_Persistency_Provenance_TransientStreamer_h
+#define canvas_Persistency_Provenance_TransientStreamer_h
 
 #include "TClassRef.h"
 #include "TClassStreamer.h"
@@ -69,7 +69,7 @@ art::detail::SetTransientStreamer(T const&) {
 }
 
 
-#endif /* art_Persistency_Provenance_TransientStreamer_h */
+#endif /* canvas_Persistency_Provenance_TransientStreamer_h */
 
 // Local Variables:
 // mode: c++

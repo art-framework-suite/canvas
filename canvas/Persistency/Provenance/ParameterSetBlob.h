@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_ParameterSetBlob_h
-#define art_Persistency_Provenance_ParameterSetBlob_h
+#ifndef canvas_Persistency_Provenance_ParameterSetBlob_h
+#define canvas_Persistency_Provenance_ParameterSetBlob_h
 
 /*----------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ namespace art {
 
 // ======================================================================
 
-#endif /* art_Persistency_Provenance_ParameterSetBlob_h */
+#endif /* canvas_Persistency_Provenance_ParameterSetBlob_h */
 
 // Local Variables:
 // mode: c++

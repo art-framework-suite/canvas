@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_TypeLabel_h
-#define art_Persistency_Provenance_TypeLabel_h
+#ifndef canvas_Persistency_Provenance_TypeLabel_h
+#define canvas_Persistency_Provenance_TypeLabel_h
 
 #include <string>
 #include "canvas/Utilities/TypeID.h"
@@ -42,7 +42,7 @@ namespace art
 
 
 
-#endif /* art_Persistency_Provenance_TypeLabel_h */
+#endif /* canvas_Persistency_Provenance_TypeLabel_h */
 
 // Local Variables:
 // mode: c++

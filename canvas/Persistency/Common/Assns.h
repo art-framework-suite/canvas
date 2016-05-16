@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_Assns_h
-#define art_Persistency_Common_Assns_h
+#ifndef canvas_Persistency_Common_Assns_h
+#define canvas_Persistency_Common_Assns_h
 // vim: set sw=2:
 ////////////////////////////////////////////////////////////////////////
 // Assns
@@ -677,7 +677,7 @@ art::Assns<L, R, D>::makePartner_() const
   return retval;
 }
 #endif /* __GCCXML__ */
-#endif /* art_Persistency_Common_Assns_h */
+#endif /* canvas_Persistency_Common_Assns_h */
 
 // Local Variables:
 // mode: c++

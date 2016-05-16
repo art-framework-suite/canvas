@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_SubRunID_h
-#define art_Persistency_Provenance_SubRunID_h
+#ifndef canvas_Persistency_Provenance_SubRunID_h
+#define canvas_Persistency_Provenance_SubRunID_h
 
 // A SubRunID represents a unique period within a run.
 
@@ -381,7 +381,7 @@ FIRST_SUBRUN_NUMBER()
   return 0;
 }
 
-#endif /* art_Persistency_Provenance_SubRunID_h */
+#endif /* canvas_Persistency_Provenance_SubRunID_h */
 
 // Local Variables:
 // mode: c++

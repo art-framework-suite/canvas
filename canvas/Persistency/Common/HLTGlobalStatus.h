@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_HLTGlobalStatus_h
-#define art_Persistency_Common_HLTGlobalStatus_h
+#ifndef canvas_Persistency_Common_HLTGlobalStatus_h
+#define canvas_Persistency_Common_HLTGlobalStatus_h
 
 /** \class art::HLTGlobalStatus
  *
@@ -146,7 +146,7 @@ namespace std {
 
 // ======================================================================
 
-#endif /* art_Persistency_Common_HLTGlobalStatus_h */
+#endif /* canvas_Persistency_Common_HLTGlobalStatus_h */
 
 // Local Variables:
 // mode: c++

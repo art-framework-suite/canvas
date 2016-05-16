@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Provenance_BranchIDList_h
-#define art_Persistency_Provenance_BranchIDList_h
+#ifndef canvas_Persistency_Provenance_BranchIDList_h
+#define canvas_Persistency_Provenance_BranchIDList_h
 
 /*----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ namespace art {
   typedef std::vector<BranchID::value_type> BranchIDList;
   typedef std::vector<BranchIDList> BranchIDLists;
 }
-#endif /* art_Persistency_Provenance_BranchIDList_h */
+#endif /* canvas_Persistency_Provenance_BranchIDList_h */
 
 // Local Variables:
 // mode: c++

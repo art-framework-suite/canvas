@@ -104,12 +104,12 @@ private:
   typedef typename std::conditional<std::is_void<Data>::value, IPRHelperDef, DATACOLL>::type dataColl_t;
 
 public:
-  typedef std::shared_ptr<cet::exception const> shared_exception_t;
+  typedef std::shared_ptr<art::Exception const> shared_exception_t;
 
   IPRHelper(EVENT const & e, InputTag const & tag) : event_(e), assnsTag_(tag) { }
 
   // template <typename A, typename B> shared_exception_t operator()(A const& a, B const& b) const
-  //  (1) fills in b, and 
+  //  (1) fills in b, and
   //  (2) returns a (shared pointer to) an exception. The pointer is
   //  non-null on failure. Note that the returned 'b' might be empty.
   //
@@ -240,7 +240,6 @@ fill(ptrdiff_t assns_index,
      size_t data_index,
      std::vector<DATA const *> & data) const
 {
-  // Check not necessary as this always occurs after bColl filling, which is checked.
   data[data_index] = &assns.data(assns_index);
 }
 
@@ -264,9 +263,7 @@ fill(ptrdiff_t assns_index,
      size_t data_index,
      std::vector<std::vector<DATA const *> > & data) const
 {
- if (&assns.data(assns_index)) {
-    data[data_index].push_back(&assns.data(assns_index));
- }
+  data[data_index].push_back(&assns.data(assns_index));
 }
 
 template <typename DATA>

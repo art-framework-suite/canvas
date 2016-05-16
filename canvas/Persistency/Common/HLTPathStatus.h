@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_HLTPathStatus_h
-#define art_Persistency_Common_HLTPathStatus_h
+#ifndef canvas_Persistency_Common_HLTPathStatus_h
+#define canvas_Persistency_Common_HLTPathStatus_h
 
 /** \class art::HLTPathStatus
  *
@@ -67,7 +67,7 @@ namespace art
 
 // ======================================================================
 
-#endif /* art_Persistency_Common_HLTPathStatus_h */
+#endif /* canvas_Persistency_Common_HLTPathStatus_h */
 
 // Local Variables:
 // mode: c++

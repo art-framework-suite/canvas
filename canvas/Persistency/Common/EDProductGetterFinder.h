@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_EDProductGetterFinder_h
-#define art_Persistency_Common_EDProductGetterFinder_h
+#ifndef canvas_Persistency_Common_EDProductGetterFinder_h
+#define canvas_Persistency_Common_EDProductGetterFinder_h
 
 // The RefCoreStreamer uses the interface defined here
 // to find the EDProductGetter corresponding to the
@@ -32,7 +32,7 @@ namespace art {
   };
 }
 
-#endif /* art_Persistency_Common_EDProductGetterFinder_h */
+#endif /* canvas_Persistency_Common_EDProductGetterFinder_h */
 
 // Local Variables:
 // mode: c++

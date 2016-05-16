@@ -55,6 +55,85 @@ throwIfUnsupportedType(string const& uname)
 
 namespace art {
 
+TypeID
+getTypeID(int type)
+{
+  TypeID result;
+  type_info const* t = nullptr;
+  if ((type == kOther_t/*-1*/) || (type == kNoType_t/*0*/) ||
+      (type == kCounter/*6*/) || (type == kBits/*15*/) ||
+      (type >= kNumDataTypes/*23*/)) {
+    throw Exception(errors::LogicError, "getTypeID: ")
+        << "INTERNAL ERROR: encountered invalid type code "
+        << type
+        << ".\n";
+  }
+  switch (type) {
+    case kChar_t: // 1
+      t = &typeid(char);
+      break;
+    case kShort_t: // 2
+      t = &typeid(short);
+      break;
+    case kInt_t: // 3
+      t = &typeid(int);
+      break;
+    case kLong_t: // 4
+      t = &typeid(long);
+      break;
+    case kFloat_t: // 5
+      t = &typeid(float);
+      break;
+    case kCharStar: // 7
+      t = &typeid(char*);
+      break;
+    case kDouble_t: // 8
+      t = &typeid(double);
+      break;
+    case kDouble32_t: // 9
+      t = &typeid(Double32_t);
+      break;
+    case kchar: // 10
+      t = &typeid(char);
+      break;
+    case kUChar_t: // 11
+      t = &typeid(unsigned char);
+      break;
+    case kUShort_t: // 12
+      t = &typeid(unsigned short);
+      break;
+    case kUInt_t: // 13
+      t = &typeid(unsigned int);
+      break;
+    case kULong_t: // 14
+      t = &typeid(unsigned long);
+      break;
+    case kLong64_t: // 16
+      t = &typeid(long long);
+      break;
+    case kULong64_t: // 17
+      t = &typeid(unsigned long long);
+      break;
+    case kBool_t: // 18
+      t = &typeid(bool);
+      break;
+    case kFloat16_t: // 19
+      t = &typeid(Float16_t);
+      break;
+    case kVoid_t: // 20
+      t = &typeid(void);
+      break;
+    case kDataTypeAliasUnsigned_t: // 21
+      t = &typeid(unsigned int);
+      break;
+    case kDataTypeAliasSignedChar_t: // 22
+      t = &typeid(signed char);
+      break;
+  }
+  result = TypeID(*t);
+  return result;
+}
+
 void
 TypeWithDict::
 print(ostream& os) const
@@ -68,7 +147,7 @@ print(ostream& os) const
          << dynamic_cast<TEnum*>(tDict_)->GetName();
       break;
     default:
-      if (!bool(id_)) {
+      if (!id_) {
         throw Exception(errors::LogicError)
             << "No typeid information for type of category "
             << to_string(category_)
@@ -90,7 +169,7 @@ name() const
     case Category::ENUMTYPE:
       break;
     default:
-      if (!bool(id_)) {
+      if (!id_) {
         throw Exception(errors::LogicError)
             << "No typeid information for type of category "
             << to_string(category_)
@@ -115,7 +194,7 @@ className() const
       result = dynamic_cast<TEnum*>(tDict_)->GetName();
       break;
     default:
-      if (!bool(id_)) {
+      if (!id_) {
         throw Exception(errors::LogicError)
             << "No typeid information for type of category "
             << to_string(category_)
@@ -305,83 +384,13 @@ typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
     return result;
   }
   if (category == Category::BASICTYPE) {
-    type_info const* t = nullptr;
     auto type = dynamic_cast<TDataType*>(tDict)->GetType();
-    if ((type == kOther_t/*-1*/) || (type == kNoType_t/*0*/) ||
-        (type == kCounter/*6*/) || (type == kBits/*15*/) ||
-        (type >= kNumDataTypes/*23*/)) {
-      throw Exception(errors::LogicError)
-          << "INTERNAL ERROR: TypeWithDict::typeIDFromDictAndCategory_ "
-          << "encountered unknown type "
-          << type
-          << " corresponding to a "
-          << dynamic_cast<TDataType*>(tDict)->GetTypeName()
-          << ".\n";
+    if ((type == kOther_t/*-1*/) &&
+        (string(dynamic_cast<TDataType*>(tDict)->GetName()) == "void")) {
+      // Compensate for bug in TDataType::SetType(name) for void.
+      type = kVoid_t/*20*/;
     }
-    switch (type) {
-      case kChar_t: // 1
-        t = &typeid(char);
-        break;
-      case kShort_t: // 2
-        t = &typeid(short);
-        break;
-      case kInt_t: // 3
-        t = &typeid(int);
-        break;
-      case kLong_t: // 4
-        t = &typeid(long);
-        break;
-      case kFloat_t: // 5
-        t = &typeid(float);
-        break;
-      case kCharStar: // 7
-        t = &typeid(char*);
-        break;
-      case kDouble_t: // 8
-        t = &typeid(double);
-        break;
-      case kDouble32_t: // 9
-        t = &typeid(Double32_t);
-        break;
-      case kchar: // 10
-        t = &typeid(char);
-        break;
-      case kUChar_t: // 11
-        t = &typeid(unsigned char);
-        break;
-      case kUShort_t: // 12
-        t = &typeid(unsigned short);
-        break;
-      case kUInt_t: // 13
-        t = &typeid(unsigned int);
-        break;
-      case kULong_t: // 14
-        t = &typeid(unsigned long);
-        break;
-      case kLong64_t: // 16
-        t = &typeid(long long);
-        break;
-      case kULong64_t: // 17
-        t = &typeid(unsigned long long);
-        break;
-      case kBool_t: // 18
-        t = &typeid(bool);
-        break;
-      case kFloat16_t: // 19
-        t = &typeid(Float16_t);
-        break;
-      case kVoid_t: // 20
-        t = &typeid(void);
-        break;
-      case kDataTypeAliasUnsigned_t: // 21
-        t = &typeid(unsigned int);
-        break;
-      case kDataTypeAliasSignedChar_t: // 22
-        t = &typeid(signed char);
-        break;
-    }
-    result = TypeID(*t);
-    return result;
+    return getTypeID(type);
   }
   throw Exception(errors::LogicError)
       << "INTERNAL ERROR: typeIDFromDictAndCategory_: "
@@ -392,7 +401,7 @@ typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
       << ").\n";
 }
 
-std::type_info const&
+type_info const&
 TypeWithDict::
 typeInfo() const
 {

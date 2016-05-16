@@ -1,5 +1,5 @@
-#ifndef art_Utilities_InputTag_h
-#define art_Utilities_InputTag_h
+#ifndef canvas_Utilities_InputTag_h
+#define canvas_Utilities_InputTag_h
 
 #include <iosfwd>
 #include <string>
@@ -146,7 +146,7 @@ namespace art {
   void decode( boost::any const & a, InputTag & tag );
 }
 
-#endif /* art_Utilities_InputTag_h */
+#endif /* canvas_Utilities_InputTag_h */
 
 // Local Variables:
 // mode: c++

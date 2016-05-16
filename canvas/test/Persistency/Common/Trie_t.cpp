@@ -19,7 +19,7 @@
 **   modified by Vincenzo Innocente on 15/08/2007
 */
 
-#include "test/CppUnit_testdriver.icpp"
+#include "canvas/test/CppUnit_testdriver.icpp"
 #include <cppunit/extensions/HelperMacros.h>
 
   /**

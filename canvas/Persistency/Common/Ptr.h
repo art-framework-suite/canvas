@@ -1,5 +1,5 @@
-#ifndef art_Persistency_Common_Ptr_h
-#define art_Persistency_Common_Ptr_h
+#ifndef canvas_Persistency_Common_Ptr_h
+#define canvas_Persistency_Common_Ptr_h
 
 ////////////////////////////////////////////////////////////////////////
 // Ptr and related functions.
@@ -551,7 +551,7 @@ std::ostream & art::operator << (std::ostream & os, Ptr<T> const & p)
 #endif /* __GCCXML */
 
 
-#endif /* art_Persistency_Common_Ptr_h */
+#endif /* canvas_Persistency_Common_Ptr_h */
 
 // Local Variables:
 // mode: c++
