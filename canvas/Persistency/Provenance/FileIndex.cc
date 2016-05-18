@@ -25,28 +25,15 @@ namespace {
 
 namespace art {
 
-  art::FileIndex::EntryNumber_t const art::FileIndex::Element::invalidEntry = -1;
-
-  FileIndex::FileIndex() : entries_(), transients_() {}
-
-  // The default value for sortState_ reflects the fact that
-  // the index is always sorted using Run, SubRun, and Event
-  // number by the RootOutput before being written out.
-  // In the other case when we create a new FileIndex, the
-  // vector is empty, which is consistent with it having been
-  // sorted.
-
-  FileIndex::Transients::Transients() : allInEntryOrder_(false), resultCached_(false), sortState_(kSorted_Run_SubRun_Event) {}
-
   void
-  FileIndex::addEntry(EventID const &eID, EntryNumber_t entry) {
+  FileIndex::addEntry(EventID const &eID, EntryNumber_t const entry) {
     entries_.emplace_back(eID, entry);
     resultCached() = false;
     sortState() = kNotSorted;
   }
 
   void
-  FileIndex::addEntryOnLoad(EventID const &eID, EntryNumber_t entry) {
+  FileIndex::addEntryOnLoad(EventID const &eID, EntryNumber_t const entry) {
     entries_.emplace_back(eID, entry);
     resultCached() = false;
   }
@@ -66,14 +53,14 @@ namespace art {
   bool FileIndex::allEventsInEntryOrder() const {
     if (!resultCached()) {
       resultCached() = true;
-      EntryNumber_t maxEntry = Element::invalidEntry;
-      for (vector<FileIndex::Element>::const_iterator it = entries_.begin(), itEnd = entries_.end(); it != itEnd; ++it) {
-        if (it->getEntryType() == kEvent) {
-          if (it->entry_ < maxEntry) {
+      EntryNumber_t maxEntry {Element::invalidEntry};
+      for (auto const& e : entries_) {
+        if (e.getEntryType() == kEvent) {
+          if (e.entry_ < maxEntry) {
             allInEntryOrder() = false;
             return false;
           }
-          maxEntry = it->entry_;
+          maxEntry = e.entry_;
         }
       }
       allInEntryOrder() = true;
@@ -122,7 +109,7 @@ namespace art {
 
     assert(sortState() == kSorted_Run_SubRun_Event);
 
-    Element el(eID);
+    Element el {eID};
     return lower_bound_all(entries_, el);
   }
 
@@ -152,13 +139,13 @@ namespace art {
     assert(sortState() != kNotSorted);
     const_iterator it;
     if (sortState() == kSorted_Run_SubRun_EventEntry) {
-      Element el(EventID::invalidEvent(srID));
+      Element el {EventID::invalidEvent(srID)};
       it = lower_bound_all(entries_, el, Compare_Run_SubRun_EventEntry());
     }
     else {
       it = findPosition(EventID::invalidEvent(srID));
     }
-    const_iterator itEnd = entries_.end();
+    auto const itEnd = entries_.cend();
     while (it != itEnd && it->getEntryType() != FileIndex::kSubRun) {
       ++it;
     }
@@ -173,13 +160,13 @@ namespace art {
     assert(sortState() != kNotSorted);
     const_iterator it;
     if (sortState() == kSorted_Run_SubRun_EventEntry) {
-      Element el(EventID::invalidEvent(rID));
+      Element el {EventID::invalidEvent(rID)};
       it = lower_bound_all(entries_, el, Compare_Run_SubRun_EventEntry());
     }
     else {
       it = findPosition(EventID::invalidEvent(rID));
     }
-    const_iterator itEnd = entries_.end();
+    auto const itEnd = entries_.cend();
     while (it != itEnd && it->getEntryType() != FileIndex::kRun) {
       ++it;
     }
@@ -193,13 +180,13 @@ namespace art {
     assert(sortState() != kNotSorted);
     const_iterator it;
     if (sortState() == kSorted_Run_SubRun_EventEntry) {
-      Element el(EventID::invalidEvent(srID));
+      Element el {EventID::invalidEvent(srID)};
       it = lower_bound_all(entries_, el, Compare_Run_SubRun_EventEntry());
     }
     else {
       it = findPosition(EventID::invalidEvent(srID));
     }
-    const_iterator itEnd = entries_.end();
+    auto const itEnd = entries_.cend();
     while (it != itEnd && it->getEntryType() != FileIndex::kSubRun && it->getEntryType() != FileIndex::kRun) {
       ++it;
     }
@@ -207,7 +194,7 @@ namespace art {
   }
 
   bool operator<(FileIndex::Element const& lh, FileIndex::Element const& rh) {
-    bool result = lh.eventID_ < rh.eventID_;
+    bool const result = lh.eventID_ < rh.eventID_;
     return result;
   }
 
@@ -243,29 +230,26 @@ namespace art {
        << setw(15) << "Event"
        << setw(15) << "TTree Entry"
        << "\n";
-    for ( auto it = fileIndex.cbegin(),
-            itEnd = fileIndex.cend();
-          it != itEnd;
-          ++it) {
-      if (it->getEntryType() == FileIndex::kEvent) {
-        os << setw(15) << it->eventID_.run()
-           << setw(15) << it ->eventID_.subRun()
-           << setw(15) << it->eventID_.event()
-           << setw(15) << it->entry_
+    for (auto const& e : fileIndex) {
+      if (e.getEntryType() == FileIndex::kEvent) {
+        os << setw(15) << e.eventID_.run()
+           << setw(15) << e.eventID_.subRun()
+           << setw(15) << e.eventID_.event()
+           << setw(15) << e.entry_
            << "\n";
       }
-      else if (it->getEntryType() == FileIndex::kSubRun) {
-        os << setw(15) << it->eventID_.run()
-           << setw(15) << it ->eventID_.subRun()
+      else if (e.getEntryType() == FileIndex::kSubRun) {
+        os << setw(15) << e.eventID_.run()
+           << setw(15) << e.eventID_.subRun()
            << setw(15) << " "
-           << setw(15) << it->entry_ << "  (SubRun)"
+           << setw(15) << e.entry_ << "  (SubRun)"
            << "\n";
       }
-      else if (it->getEntryType() == FileIndex::kRun) {
-        os << setw(15) << it->eventID_.run()
+      else if (e.getEntryType() == FileIndex::kRun) {
+        os << setw(15) << e.eventID_.run()
            << setw(15) << " "
            << setw(15) << " "
-           << setw(15) << it->entry_ << "  (Run)"
+           << setw(15) << e.entry_ << "  (Run)"
            << "\n";
       }
     }
@@ -281,10 +265,8 @@ namespace art {
     SubRunID last_subRunID;
 
     // Try to find the event.
-    const_iterator const firstEvent = findPosition
-      (EventID::firstEvent
-       (SubRunID::firstSubRun(runID)),
-       false);
+    auto const firstEvent = findPosition(EventID::firstEvent(SubRunID::firstSubRun(runID)),
+                                         false);
     const_iterator it = firstEvent;
     const_iterator const itEnd = entries_.end();
     if (it == itEnd) return it;
@@ -325,10 +307,10 @@ namespace art {
         << "and the\n"
         << "      lowest subrun number: any others are inaccessible via this "
         << "method.";
-      SubRunID trySubRun(SubRunID::firstSubRun(runID));
+      SubRunID trySubRun {SubRunID::firstSubRun(runID)};
       // Try to find the highest subrun number in this run.
       const_iterator findIt(firstEvent);
-      SubRunID lastSubRunInRun(trySubRun);
+      SubRunID lastSubRunInRun {trySubRun};
       for (;
            findIt != itEnd && findIt->eventID_.runID() == runID;
            findIt =

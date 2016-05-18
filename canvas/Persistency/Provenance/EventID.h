@@ -46,7 +46,7 @@ public:
   static EventID maxEvent();
   static EventID firstEvent();
   static EventID firstEvent(SubRunID const & srID);
-  static EventID invalidEvent();
+  static constexpr EventID invalidEvent();
   static EventID invalidEvent(RunID rID);
   static EventID invalidEvent(SubRunID const & srID);
   static constexpr EventID flushEvent();
@@ -251,6 +251,7 @@ firstEvent(SubRunID const & srID)
 }
 
 inline
+constexpr
 art::EventID
 art::EventID::
 invalidEvent()

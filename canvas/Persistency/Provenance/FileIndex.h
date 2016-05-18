@@ -43,11 +43,9 @@ namespace art {
 class art::FileIndex {
 
 public:
-  typedef long long EntryNumber_t;
+  using EntryNumber_t = long long;
 
-  FileIndex();
-
-  // use compiler-generated copy c'tor, copy assignment, and d'tor
+  FileIndex() = default; // Necessary for ROOT
 
   void addEntry(EventID const &eID, EntryNumber_t entry);
 
@@ -57,21 +55,21 @@ public:
 
   class Element {
   public:
-    static EntryNumber_t const invalidEntry;
-    Element() : eventID_(), entry_(invalidEntry) {
-    }
-    Element(EventID const &eID, EntryNumber_t entry = invalidEntry) :
-      eventID_(eID), entry_(entry) {
+    static EntryNumber_t constexpr invalidEntry {-1};
+    Element() = default;
+    Element(EventID const& eID) : Element(eID, invalidEntry) {}
+    Element(EventID const &eID, EntryNumber_t const entry) :
+      eventID_{eID}, entry_{entry} {
     }
     EntryType getEntryType() const {
       return eventID_.isValid()?kEvent:(eventID_.subRunID().isValid()?kSubRun:kRun);
     }
-    EventID eventID_;
-    EntryNumber_t entry_;
+    EventID eventID_ {};
+    EntryNumber_t entry_ {invalidEntry};
   };
 
-  typedef std::vector<Element>::const_iterator const_iterator;
-  typedef std::vector<Element>::iterator iterator;
+  using const_iterator = std::vector<Element>::const_iterator;
+  using iterator = std::vector<Element>::iterator;
 
   void sortBy_Run_SubRun_Event();
   void sortBy_Run_SubRun_EventEntry();
@@ -92,9 +90,11 @@ public:
   }
 
   iterator begin() {return entries_.begin();}
+  const_iterator begin() const {return entries_.begin();}
   const_iterator cbegin() const { return entries_.begin();}
 
   iterator end() {return entries_.end();}
+  const_iterator end() const {return entries_.end();}
   const_iterator cend() const { return entries_.end();}
 
   std::vector<Element>::size_type size() const {return entries_.size();}
@@ -106,12 +106,16 @@ public:
   bool eventsUniqueAndOrdered() const;
 
   enum SortState { kNotSorted, kSorted_Run_SubRun_Event, kSorted_Run_SubRun_EventEntry};
-
   struct Transients {
-    Transients();
-    bool allInEntryOrder_;
-    bool resultCached_;
-    SortState sortState_;
+    bool allInEntryOrder_ {false};
+    bool resultCached_ {false};
+    // The default value for sortState_ reflects the fact that
+    // the index is always sorted using Run, SubRun, and Event
+    // number by the RootOutput before being written out.
+    // In the other case when we create a new FileIndex, the
+    // vector is empty, which is consistent with it having been
+    // sorted.
+    SortState sortState_ {kSorted_Run_SubRun_Event};
   };
 
 private:
@@ -123,8 +127,8 @@ private:
   const_iterator
   findEventForUnspecifiedSubRun(EventID const &eID, bool exact) const;
 
-  std::vector<Element> entries_;
-  mutable Transient<Transients> transients_;
+  std::vector<Element> entries_ {};
+  mutable Transient<Transients> transients_ {};
 };
 
 namespace art {
