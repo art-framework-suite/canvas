@@ -60,7 +60,7 @@ include(ArtDictionary)
 
 # source
 add_subdirectory (canvas)
-
+add_subdirectory (tools)
 
 # ups - table and config files
 add_subdirectory(ups)
