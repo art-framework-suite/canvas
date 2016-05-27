@@ -314,7 +314,14 @@ art::SubRunID::
 inRangeOrInvalid(SubRunNumber_t sr)
 {
   if (sr == IDNumber<Level::SubRun>::invalid() ||
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wtautological-compare"
+#endif
       (sr >= IDNumber<Level::SubRun>::first() &&
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
        sr <= IDNumber<Level::SubRun>::max_natural())) {
     return sr;
   }
