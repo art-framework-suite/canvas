@@ -99,7 +99,8 @@ BEGIN { %header_list = (
 "art/Utilities/WrappedClassName.h" => "canvas/Utilities/WrappedClassName.h",
 "art/Utilities/detail/metaprogramming.h" => "canvas/Utilities/detail/metaprogramming.h",
 "art/Utilities/ensurePointer.h" => "canvas/Utilities/ensurePointer.h",
-"art/Utilities/uniform_type_name.h" => "canvas/Utilities/uniform_type_name.h"
+"art/Utilities/uniform_type_name.h" => "canvas/Utilities/uniform_type_name.h",
+"boost/test/auto_unit_test.hpp" => "cetlib/quiet_unit_test.hpp"
 		       ); }
 
 foreach my $inc (sort keys %header_list) {
