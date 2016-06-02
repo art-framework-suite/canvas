@@ -105,6 +105,8 @@ public:
 
   bool eventsUniqueAndOrdered() const;
 
+  void print_event_list(std::ostream& os) const;
+
   enum SortState { kNotSorted, kSorted_Run_SubRun_Event, kSorted_Run_SubRun_EventEntry};
   struct Transients {
     bool allInEntryOrder_ {false};

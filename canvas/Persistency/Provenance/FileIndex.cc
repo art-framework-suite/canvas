@@ -220,6 +220,36 @@ namespace art {
     return os;
   }
 
+  void
+  FileIndex::print_event_list(ostream& os) const
+  {
+    os << "\nPrinting the list of Runs, SubRuns, and Events stored in the root file.\n\n";
+    os << setw(15) << "Run"
+       << setw(15) << "SubRun"
+       << setw(15) << "Event"
+       << "\n";
+    for (auto const& e : entries_) {
+      if (e.getEntryType() == FileIndex::kEvent) {
+        os << setw(15) << e.eventID_.run()
+           << setw(15) << e.eventID_.subRun()
+           << setw(15) << e.eventID_.event()
+           << "\n";
+      }
+      else if (e.getEntryType() == FileIndex::kSubRun) {
+        os << setw(15) << e.eventID_.run()
+           << setw(15) << e.eventID_.subRun()
+           << setw(15) << " "
+           << "\n";
+      }
+      else if (e.getEntryType() == FileIndex::kRun) {
+        os << setw(15) << e.eventID_.run()
+           << setw(15) << " "
+           << setw(15) << " "
+           << "\n";
+      }
+    }
+  }
+
   ostream&
   operator<< (ostream& os, FileIndex const& fileIndex) {
 
