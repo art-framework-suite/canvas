@@ -126,4 +126,7 @@
   <class name="art::ParameterSetMap"/>
   <class name="std::pair<fhicl::ParameterSetID, art::ParameterSetBlob>"/>
   <class name="art::ProductID"/>
+  <class name="art::DictionaryChecker" ClassVersion="0"/>
+  <function name="art::name_of_assns_partner"/>
+  <function name="art::wrappedClassName"/>
 </lcgdict>

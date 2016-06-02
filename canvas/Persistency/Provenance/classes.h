@@ -15,6 +15,9 @@
 #include "canvas/Persistency/Provenance/RunAuxiliary.h"
 #include "canvas/Persistency/Provenance/SubRunAuxiliary.h"
 #include "canvas/Persistency/Provenance/ResultsAuxiliary.h"
+#include "canvas/Persistency/Provenance/DictionaryChecker.h"
+#include "canvas/Persistency/Provenance/TypeTools.h"
+#include "canvas/Utilities/WrappedClassName.h"
 
 template class std::vector<art::ProductProvenance>;
 //template class art::ProcessHistory::collection_type;

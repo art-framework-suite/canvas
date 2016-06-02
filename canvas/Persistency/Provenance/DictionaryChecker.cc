@@ -7,12 +7,14 @@
 
 #include "TBaseClass.h"
 #include "TClass.h"
+#include "TClassEdit.h"
 #include "TDataMember.h"
 #include "TDataType.h"
 #include "TDictAttributeMap.h"
 #include "TEnum.h"
 #include "TList.h"
 
+#include <algorithm>
 #include <regex>
 #include <sstream>
 
@@ -23,9 +25,10 @@ checkDictionaries(std::string const & name_orig,
                   int level)
 {
   using namespace std;
-  //string indent(level * 2, ' ');
-  string name(name_orig);
-  //cout << indent << "Checking dictionary for: " << name << endl;
+  //string const indent(level * 2, ' ');
+  string name;
+  TClassEdit::GetNormalizedName(name, name_orig);
+  //cerr << indent << "Checking dictionary for: " << name << " (normalized from " << name_orig << ")\n";
   // Strip leading const.
   if (name.size() > 6) {
     if (!name.compare(0, 6, "const ")) {
@@ -80,41 +83,41 @@ checkDictionaries(std::string const & name_orig,
     auto I = checked_names_.find(name);
     if (I != checked_names_.end()) {
       // Already checked this name.
-      //cout << indent << "type already checked" << endl;
+      //cerr << indent << "type already checked" << "\n";
       return;
     }
     checked_names_.insert(name);
   }
   if (!name.compare("void")) {
-    //cout << indent << "type is void" << endl;
+    //cerr << indent << "type is void" << "\n";
     return;
   }
   if (name.size() > 12) {
     if (!name.compare(name.size() - 13, 13, "::(anonymous)")) {
-      //cout << indent << "type is actually an anonymous namespace name" << endl;
+      //cerr << indent << "type is actually an anonymous namespace name" << "\n";
       return;
     }
   }
   TypeWithDict ty(name);
   if (ty) {
     if (ty.category() == TypeWithDict::Category::NONE) {
-      //cout << "category: " << "NONE" << endl;
+      //cerr << "category: " << "NONE" << "\n";
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Type category of name is NONE: "
           << name
           << 'n';
     }
     if (ty.category() == TypeWithDict::Category::CLASSTYPE) {
-      //cout << "category: " << "CLASSTYPE" << endl;
+      //cerr << indent << "category: " << "CLASSTYPE" << "\n";
     }
     if (ty.category() == TypeWithDict::Category::ENUMTYPE) {
-      //cout << "category: " << "ENUMTYPE" << endl;
-      //cout << indent << "type is an enumeration" << endl;
+      //cerr << indent << "category: " << "ENUMTYPE" << "\n";
+      //cerr << indent << "type is an enumeration" << "\n";
       return;
     }
     if (ty.category() == TypeWithDict::Category::BASICTYPE) {
-      //cout << "category: " << "BASICTYPE" << endl;
-      //cout << indent << "type is basic" << endl;
+      //cerr << indent << "category: " << "BASICTYPE" << "\n";
+      //cerr << indent << "type is basic" << "\n";
       return;
     }
   }
@@ -132,13 +135,13 @@ checkDictionaries(std::string const & name_orig,
     if (am && am->HasKey("persistent") &&
         am->GetPropertyAsString("persistent") == string("false")) {
       // Marked transient in the selection xml.
-      //cout << indent << "class marked not persistent in selection xml" << endl;
+      //cerr << indent << "class marked not persistent in selection xml" << "\n";
       return;
     }
     if (am && am->HasKey("transient") &&
         am->GetPropertyAsString("transient") == string("true")) {
       // Marked transient in the selection xml.
-      //cout << indent << "class marked transient in selection xml" << endl;
+      //cerr << indent << "class marked transient in selection xml" << "\n";
       return;
     }
   }
@@ -162,7 +165,7 @@ checkDictionaries(std::string const & name_orig,
           << "Setting NoSplit on class "
           << name
           << "\n";
-      //cout << indent << "Setting NoSplit on class " << cl->GetName() << endl;
+      //cerr << indent << "Setting NoSplit on class " << cl->GetName() << "\n";
       cl->SetCanSplit(0);
     }
   }
@@ -170,47 +173,50 @@ checkDictionaries(std::string const & name_orig,
     return;
   }
   if (!name.compare(0, 6, "array<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
-    name = arg0;
+    //cerr << indent << name << " (array) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     return;
   }
   if (!name.compare(0, 6, "deque<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (deque) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     return;
   }
   if (!name.compare(0, 13, "forward_list<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (forward_list) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     return;
   }
   if (!name.compare(0, 5, "list<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (list) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     return;
   }
@@ -234,230 +240,261 @@ checkDictionaries(std::string const & name_orig,
     return;
   }
   if (!name.compare(0, 13, "basic_string<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (basic_string) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     return;
   }
   if (!name.compare(0, 7, "vector<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (vector) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     return;
   }
   if (!name.compare(0, 4, "map<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (map) -> " << arg0 << " (key)\n";
     checkDictionaries(arg0, true, level + 2);
-    auto arg1 = name_of_template_arg(name, 1);
+    auto const arg1 = name_of_template_arg(name, 1);
     if (arg1.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get second template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (map) -> " << arg1 << " (value)\n";
     checkDictionaries(arg1, true, level + 2);
     //FIXME: Should check Compare, and Allocator too!
     return;
   }
   if (!name.compare(0, 9, "multimap<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (multimap) -> " << arg0 << " (key)\n";
     checkDictionaries(arg0, true, level + 2);
-    auto arg1 = name_of_template_arg(name, 1);
+    auto const arg1 = name_of_template_arg(name, 1);
     if (arg1.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get second template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (multimap) -> " << arg1 << " (key)\n";
     checkDictionaries(arg1, true, level + 2);
     //FIXME: Should check Compare, and Allocator too!
     return;
   }
   if (!name.compare(0, 14, "unordered_map<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (unordered_map) -> " << arg0 << " (key)\n";
     checkDictionaries(arg0, true, level + 2);
-    auto arg1 = name_of_template_arg(name, 1);
+    auto const arg1 = name_of_template_arg(name, 1);
     if (arg1.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get second template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (unordered_map) -> " << arg1 << " (key)\n";
     checkDictionaries(arg1, true, level + 2);
     //FIXME: Should check Hash, Pred, and Allocator too!
     return;
   }
   if (!name.compare(0, 19, "unordered_multimap<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (unordered_multimap) -> " << arg0 << " (key)\n";
     checkDictionaries(arg0, true, level + 2);
-    auto arg1 = name_of_template_arg(name, 1);
+    auto const arg1 = name_of_template_arg(name, 1);
     if (arg1.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get second template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (unordered_multimap) -> " << arg1 << " (key)\n";
     checkDictionaries(arg1, true, level + 2);
     //FIXME: Should check Hash, Pred, and Allocator too!
     return;
   }
   if (!name.compare(0, 4, "set<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (set) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     //FIXME: Should check Compare, and Allocator too!
     return;
   }
   if (!name.compare(0, 9, "multiset<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (multiset) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     //FIXME: Should check Compare, and Allocator too!
     return;
   }
   if (!name.compare(0, 14, "unordered_set<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (unordered_set) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     //FIXME: Should check Hash, Pred, and Allocator too!
     return;
   }
   if (!name.compare(0, 19, "unordered_multiset<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (unordered_multiset) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     //FIXME: Should check Hash, Pred, and Allocator too!
     return;
   }
   if (!name.compare(0, 6, "queue<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (queue) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     //FIXME: Should check Container too!
     return;
   }
   if (!name.compare(0, 15, "priority_queue<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (priority_queue) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     //FIXME: Should check Container, and Compare too!
     return;
   }
   if (!name.compare(0, 6, "stack<")) {
-    auto arg0 = name_of_template_arg(name, 0);
+    auto const arg0 = name_of_template_arg(name, 0);
     if (arg0.empty()) {
       throw Exception(errors::LogicError, "checkDictionaries: ")
           << "Could not get first template arg from: "
           << name
           << '\n';
     }
+    //cerr << indent << name << " (stack) -> " << arg0 << "\n";
     checkDictionaries(arg0, true, level + 2);
     //FIXME: Should check Container too!
     return;
   }
   for (auto obj : *cl->GetListOfBases()) {
     auto bc = dynamic_cast<TBaseClass*>(obj);
-    //cout << indent << "  Base class: " << bc->GetName() << endl;
+    //cerr << indent << name << " -> " << bc->GetName() << " (base)\n";
     checkDictionaries(bc->GetName(), true, level + 2);
   }
   for (auto obj : *cl->GetListOfDataMembers()) {
     auto dm = dynamic_cast<TDataMember*>(obj);
-    //cout << indent << "  Data member: " << dm->GetName() << endl;
+    //cerr << indent << name << " -> " << dm->GetName() << " (member)\n";
     if (!dm->IsPersistent()) {
       // The data member comment in the header file starts with '!'.
-      //cout << indent << "  marked not persistent in header file" << endl;
+      //cerr << indent << "  marked not persistent in header file" << "\n";
       continue;
     }
     if (dm->Property() & kIsStatic) {
       // Static data member.
-      //cout << indent << "  static" << endl;
+      //cerr << indent << "  static" << "\n";
       continue;
     }
     auto am = dm->GetAttributeMap();
     if (am && am->HasKey("persistent") &&
         am->GetPropertyAsString("persistent") == string("false")) {
       // Marked transient in the selection xml.
-      //cout << indent << "  marked not persistent in selection xml" << endl;
+      //cerr << indent << "  marked not persistent in selection xml" << "\n";
       continue;
     }
     if (am && am->HasKey("transient") &&
         am->GetPropertyAsString("transient") == string("true")) {
       // Marked transient in the selection xml.
-      //cout << indent << "  marked transient in selection xml" << endl;
+      //cerr << indent << "  marked transient in selection xml" << "\n";
       continue;
     }
     if (am && am->HasKey("comment") &&
         (am->GetPropertyAsString("comment")[0] == '!')) {
       // Marked transient in the selection xml.
-      //cout << indent << "  commented transient in selection xml" << endl;
+      //cerr << indent << "  commented transient in selection xml" << "\n";
       continue;
     }
+    //cerr << indent << name << " -> " << dm->GetTrueTypeName() << " (member)\n";
     checkDictionaries(dm->GetTrueTypeName(), true, level + 2);
   }
+}
+
+std::vector<std::string>
+art::DictionaryChecker::
+typesMissingDictionaries()
+{
+  std::vector<std::string> result;
+  for (auto const & mt : missing_types_) {
+    result.emplace_back(cet::demangle_symbol(mt));
+  }
+  resetMissingTypes_();
+  std::sort(result.begin(), result.end());
+  return result;
 }
 
 void
@@ -469,11 +506,9 @@ reportMissingDictionaries()
     return;
   }
   ostringstream ostr;
-  for (auto I = missing_types_.cbegin(), E = missing_types_.cend();
-       I != E; ++I) {
-    ostr << "     " << cet::demangle_symbol(*I) << "\n";
+  for (auto const & mt : typesMissingDictionaries()) {
+    ostr << "     " << mt << "\n";
   }
-  resetMissingTypes_();
   throw Exception(errors::DictionaryNotFound)
       << "No dictionary found for the following classes:\n\n"
       << ostr.str()

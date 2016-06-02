@@ -41,10 +41,15 @@
 # USE_PRODUCT_NAME
 #   Passed through to build_dictionary.
 #
+# RECURSIVE
+#   Passed through to build_dictionary.
+#
+# NO_RECURSIVE
+#   Passed through to build_dictionary.
+#
 #########################################################################
 include(BuildDictionary)
 include(CMakeParseArguments)
-include(CheckClassVersion)
 
 function(art_dictionary)
   check_ups_version(cetbuildtools ${cetbuildtools_UPS_VERSION} v5_0_0
