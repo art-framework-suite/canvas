@@ -2,6 +2,7 @@
 #define canvas_Persistency_Provenance_DictionaryChecker_h
 #include <set>
 #include <string>
+#include <vector>
 
 namespace art {
   class DictionaryChecker;
@@ -15,6 +16,9 @@ public:
   void checkDictionaries(std::string const & name_orig,
                          bool recursive = false,
                          int level = 0);
+
+  /// Return the sequence of (demangled) types missing dictionaries.
+  std::vector<std::string> typesMissingDictionaries();
 
   /// Report (throwing exception) on all missing dictionaries.
   void reportMissingDictionaries();

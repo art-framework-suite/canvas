@@ -49,11 +49,29 @@ public:
   makePartner(std::type_info const &wanted_type) const
   { return do_makePartner(wanted_type); }
 
+  unsigned getRangeSetID() const {
+    return do_getRangeSetID();
+  }
+
+  void setRangeSetID(unsigned const id)
+  {
+    do_setRangeSetID(id);
+  }
+
+  void combine(EDProduct* p)
+  {
+    do_combine(p);
+  }
+
 protected:
 
   virtual
   std::unique_ptr<EDProduct>
   do_makePartner(std::type_info const &wanted_type) const = 0;
+
+  virtual void do_combine(EDProduct*) = 0;
+  virtual void do_setRangeSetID(unsigned) = 0;
+  virtual unsigned do_getRangeSetID() const = 0;
 
   virtual void do_setPtr(std::type_info const &toType,
                          unsigned long index,

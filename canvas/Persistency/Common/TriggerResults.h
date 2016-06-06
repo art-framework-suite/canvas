@@ -18,6 +18,7 @@
 // ======================================================================
 
 #include "canvas/Persistency/Common/HLTGlobalStatus.h"
+#include "canvas/Persistency/Common/detail/aggregate.h"
 #include "canvas/Persistency/Common/traits.h"
 #include "fhiclcpp/ParameterSetID.h"
 

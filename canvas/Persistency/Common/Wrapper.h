@@ -8,10 +8,10 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "canvas/Persistency/Common/EDProduct.h"
+#include "canvas/Persistency/Common/detail/aggregate.h"
 #include "canvas/Utilities/DebugMacros.h"
 #include "cetlib/demangle.h"
 
-#include <iostream>
 #include <memory>
 
 // Required for specializations of has_size_member<T>, below.
@@ -82,9 +82,14 @@ public:
   std::string productSize() const override;
 
   // MUST UPDATE WHEN CLASS IS CHANGED!
-  static short Class_Version() { return 10; }
+  static short Class_Version() { return 11; }
 
 private:
+
+  void do_combine(EDProduct* product) override;
+
+  void do_setRangeSetID(unsigned) override;
+  unsigned do_getRangeSetID() const override;
 
   std::unique_ptr<EDProduct>
   do_makePartner(std::type_info const & wanted_type) const override;
@@ -102,7 +107,7 @@ private:
   T && refOrThrow(T * ptr);
 
   bool present;
-  //   T const obj;
+  unsigned rangeSetID;
   T obj;
 
 };  // Wrapper<>
@@ -135,8 +140,9 @@ template <typename T>
 art::Wrapper<T>::
 Wrapper()
   :
-  EDProduct(),
-  present(false),
+  EDProduct{},
+  present{false},
+  rangeSetID{-1u},
   obj()
 {
 }
@@ -144,8 +150,9 @@ Wrapper()
 template <typename T>
 art::Wrapper<T>::
 Wrapper(std::unique_ptr<T> ptr) :
-  EDProduct(),
-  present(ptr.get() != 0),
+  EDProduct{},
+  present{ptr.get() != 0},
+  rangeSetID{-1u},
   obj(refOrThrow(ptr.get()))
 {
 }
@@ -183,37 +190,45 @@ productSize() const
 }
 
 template <typename T>
+void
+art::Wrapper<T>::
+do_combine(art::EDProduct* p)
+{
+  if (!p->isPresent()) return;
+
+  auto wp = static_cast<Wrapper<T>*>(p);
+  detail::CanBeAggregated<T>::aggregate(obj, *wp->product());
+
+  // The presence for the combined product is 'true', if we get this
+  // far.
+  present = true;
+}
+
+template <typename T>
+void
+art::Wrapper<T>::do_setRangeSetID(unsigned const id)
+{
+  rangeSetID = id;
+}
+
+template <typename T>
+unsigned
+art::Wrapper<T>::
+do_getRangeSetID() const
+{
+  return rangeSetID;
+}
+
+template <typename T>
 std::unique_ptr<art::EDProduct>
 art::Wrapper<T>::
 do_makePartner(std::type_info const & wanted_wrapper) const
 {
-  //std::cout
-  //    << "-----> Begin Wrapper<"
-  //    << cet::demangle_symbol(typeid(T).name())
-  //    << ">::do_makePartner(std::type_info const&)"
-  //    << std::endl;
   std::unique_ptr<art::EDProduct> retval;
-  typename std::conditional<detail::has_makePartner_member<T>::value,
-                            DoMakePartner<T>,
-                            DoNotMakePartner<T>>::type maybe_maker;
-  //std::cout
-  //    << "calling "
-  //    << cet::demangle_symbol(typeid(maybe_maker).name())
-  //    << "("
-  //    << &obj
-  //    << ", "
-  //    << cet::demangle_symbol(wanted_wrapper.name())
-  //    << std::endl;
+  std::conditional_t<detail::has_makePartner_member<T>::value,
+                     DoMakePartner<T>,
+                     DoNotMakePartner<T>> maybe_maker;
   retval = maybe_maker(obj, wanted_wrapper);
-  //std::cout
-  //    << "returning "
-  //    << retval.get()
-  //    << std::endl;
-  //std::cout
-  //    << "-----> End   Wrapper<"
-  //    << cet::demangle_symbol(typeid(T).name())
-  //    << ">::do_makePartner(std::type_info const&)"
-  //    << std::endl;
   return retval;
 }
 
@@ -225,7 +240,7 @@ do_setPtr(std::type_info const & toType,
           unsigned long index,
           void const*& ptr) const
 {
-  typename std::conditional < has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T> >::type maybe_filler;
+  std::conditional_t< has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T> > maybe_filler;
   maybe_filler(this->obj, toType, index, ptr);
 }
 
@@ -237,7 +252,7 @@ do_getElementAddresses(std::type_info const & toType,
                        std::vector<unsigned long> const & indices,
                        std::vector<void const *>& ptrs) const
 {
-  typename std::conditional < has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T> >::type maybe_filler;
+  std::conditional_t < has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T> > maybe_filler;
   maybe_filler(this->obj, toType, indices, ptrs);
 }
 
@@ -280,13 +295,13 @@ namespace art {
 
 template< typename T >
 struct art::detail::has_fillView_member {
-  static bool const value =
+  static bool constexpr value =
     sizeof(has_fillView_helper<T>(0)) == sizeof(yes_tag);
 };
 
 template< typename T >
 struct art::detail::has_size_member {
-  static bool const value =
+  static bool constexpr value =
     sizeof(has_size_helper<T>(0)) == sizeof(yes_tag);
 };
 
@@ -294,18 +309,18 @@ struct art::detail::has_size_member {
 // and therefore require specializations to avoid problems.
 template<>
 struct art::detail::has_size_member<CLHEP::HepMatrix> {
-  static bool const value = false;
+  static bool constexpr value = false;
 };
 
 template<>
 struct art::detail::has_size_member<CLHEP::HepSymMatrix> {
-  static bool const value = false;
+  static bool constexpr value = false;
 };
 
 
 template <typename T>
 struct art::detail::has_makePartner_member {
-  static bool const value =
+  static bool constexpr value =
     sizeof(has_makePartner_helper<T>(0)) == sizeof(yes_tag);
 };
 
@@ -334,7 +349,7 @@ namespace art {
     void operator()(std::vector<bool> const &,
                     std::vector<void const *> &) {
       throw Exception(errors::ProductDoesNotSupportViews)
-          << "Product type std::vector<bool> has no fillView() capability.\n";
+        << "Product type std::vector<bool> has no fillView() capability.\n";
     }
   };  // fillView<vector<bool>>
 
@@ -342,7 +357,7 @@ namespace art {
   struct fillView< std::vector<E>, false > {
     void operator()(std::vector<E> const & product,
                     std::vector<void const *> & view) {
-    for (auto const & p : product) {
+      for (auto const & p : product) {
         view.push_back(&p);
       }
     }
@@ -352,7 +367,7 @@ namespace art {
   struct fillView< std::list<E>, false > {
     void operator()(std::list<E> const & product,
                     std::vector<void const *> & view) {
-    for (auto const & p : product) {
+      for (auto const & p : product) {
         view.push_back(&p);
       }
     }
@@ -382,11 +397,11 @@ namespace art {
   struct fillView<cet::map_vector<E>, false> {
     void operator() (cet::map_vector<E> const & product,
                      std::vector<void const *> & view)
-      {
-        for (auto const & p : product) {
-          view.push_back(&p.second);
-        }
+    {
+      for (auto const & p : product) {
+        view.push_back(&p.second);
       }
+    }
   }; // fillView<cet::map_vector<E>>
 
   template <typename T >
@@ -406,27 +421,27 @@ namespace art {
 
   template <class E >
   struct productSize<std::vector<E>, false>
-      : public productSize<std::vector<E>, true>
+    : public productSize<std::vector<E>, true>
   { };
 
   template <class E >
   struct productSize<std::list<E>, false>
-      : public productSize<std::list<E>, true>
+    : public productSize<std::list<E>, true>
   { };
 
   template <class E >
   struct productSize<std::deque<E>, false>
-      : public productSize<std::deque<E>, true>
+    : public productSize<std::deque<E>, true>
   { };
 
   template <class E >
   struct productSize<std::set<E>, false>
-      : public productSize<std::set<E>, true>
+    : public productSize<std::set<E>, true>
   { };
 
   template <class E >
   struct productSize<PtrVector<E>, false>
-      : public productSize<PtrVector<E>, true>
+    : public productSize<PtrVector<E>, true>
   { };
 
   template <class E >
@@ -439,22 +454,12 @@ namespace art {
     std::unique_ptr<EDProduct>
     operator()(T const & obj,
                std::type_info const & wanted_wrapper_type) const {
-      //std::cout
-      //    << "-----> Begin DoMakePartner::operator()("
-      //    << cet::demangle_symbol(typeid(T).name())
-      //    << " const&, std::type_info const&)"
-      //    << std::endl;
       if (typeid(Wrapper<typename T::partner_t>) == wanted_wrapper_type) {
-        //std::cout
-        //    << "-----> End   DoMakePartner::operator()("
-        //    << cet::demangle_symbol(typeid(T).name())
-        //    << " const&, std::type_info const&)"
-        //    << std::endl;
         return obj.makePartner();
       }
       throw Exception(errors::LogicError, "makePartner")
-          << "Attempted to make partner with inconsistent type information:\n"
-          << "Please report to the ART framework developers.\n";
+        << "Attempted to make partner with inconsistent type information:\n"
+        << "Please report to the ART framework developers.\n";
     }
   };
 
@@ -463,14 +468,9 @@ namespace art {
     std::unique_ptr<EDProduct>
     operator()(T const &,
                std::type_info const &) const {
-      //std::cout
-      //    << "-----> Begin DoNotMakePartner::operator()("
-      //    << cet::demangle_symbol(typeid(T).name())
-      //    << " const&, std::type_info const&)"
-      //    << std::endl;
       throw Exception(errors::LogicError, "makePartner")
-          << "Attempted to make partner of a product that does not know how!\n"
-          << "Please report to the ART framework developers.\n";
+        << "Attempted to make partner of a product that does not know how!\n"
+        << "Please report to the ART framework developers.\n";
     }
   };
 
@@ -492,9 +492,9 @@ namespace art {
                     unsigned long,
                     void const* &) const {
       throw Exception(errors::ProductDoesNotSupportPtr)
-          << "The product type "
-          << cet::demangle_symbol(typeid(T).name())
-          << "\ndoes not support art::Ptr\n";
+        << "The product type "
+        << cet::demangle_symbol(typeid(T).name())
+        << "\ndoes not support art::Ptr\n";
     }
 
     void operator()(T const &,
@@ -502,9 +502,9 @@ namespace art {
                     const std::vector<unsigned long>&,
                     std::vector<void const *>&) const {
       throw Exception(errors::ProductDoesNotSupportPtr)
-          << "The product type "
-          << cet::demangle_symbol(typeid(T).name())
-          << "\ndoes not support art::PtrVector\n";
+        << "The product type "
+        << cet::demangle_symbol(typeid(T).name())
+        << "\ndoes not support art::PtrVector\n";
     }
   };
 

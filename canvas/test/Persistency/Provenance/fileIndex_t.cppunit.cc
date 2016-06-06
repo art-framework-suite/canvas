@@ -194,47 +194,47 @@ void testFileIndex::eventSortAndSearchTest()
  iter = fileIndex.findPosition(art::EventID(3, 0, 3));
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 7);
 
- iter = fileIndex.findEventPosition(art::EventID(3, 3, 2), true);
+ iter = fileIndex.findPosition(art::EventID(3, 3, 2), true);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 12);
- CPPUNIT_ASSERT(fileIndex.containsEvent(art::EventID(3, 3, 2), true));
+ CPPUNIT_ASSERT(fileIndex.contains(art::EventID(3, 3, 2), true));
 
- iter = fileIndex.findEventPosition(art::EventID(1, 2, 3), true);
+ iter = fileIndex.findPosition(art::EventID(1, 2, 3), true);
  CPPUNIT_ASSERT(iter == fileIndex.end());
- CPPUNIT_ASSERT(!fileIndex.containsEvent(art::EventID(1, 2, 3), true));
+ CPPUNIT_ASSERT(!fileIndex.contains(art::EventID(1, 2, 3), true));
 
- iter = fileIndex.findEventPosition(art::EventID(1, 2, 3), false);
+ iter = fileIndex.findPosition(art::EventID(1, 2, 3), false);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 4);
- CPPUNIT_ASSERT(fileIndex.containsEvent(art::EventID(1, 2, 3), false));
+ CPPUNIT_ASSERT(fileIndex.contains(art::EventID(1, 2, 3), false));
 
- iter = fileIndex.findEventPosition(art::EventID(3, 0, 1), true);
+ iter = fileIndex.findPosition(art::EventID(3, 0, 1), true);
  CPPUNIT_ASSERT(iter == fileIndex.end());
 
- iter = fileIndex.findSubRunPosition(art::SubRunID(3, 1), true);
+ iter = fileIndex.findPosition(art::SubRunID(3, 1), true);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 7);
 
- iter = fileIndex.findSubRunPosition(art::SubRunID(3, 2), true);
+ iter = fileIndex.findPosition(art::SubRunID(3, 2), true);
  CPPUNIT_ASSERT(iter == fileIndex.end());
 
- iter = fileIndex.findSubRunPosition(art::SubRunID(3, 1), false);
+ iter = fileIndex.findPosition(art::SubRunID(3, 1), false);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 7);
 
- iter = fileIndex.findSubRunPosition(art::SubRunID(3, 2), false);
+ iter = fileIndex.findPosition(art::SubRunID(3, 2), false);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 8);
 
- CPPUNIT_ASSERT(fileIndex.containsSubRun(art::SubRunID(3, 3), true));
- CPPUNIT_ASSERT(!fileIndex.containsSubRun(art::SubRunID(2, 3), true));
+ CPPUNIT_ASSERT(fileIndex.contains(art::SubRunID(3, 3), true));
+ CPPUNIT_ASSERT(!fileIndex.contains(art::SubRunID(2, 3), true));
 
- iter = fileIndex.findRunPosition(art::RunID(3), true);
+ iter = fileIndex.findPosition(art::RunID(3), true);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 5);
 
- iter = fileIndex.findRunPosition(art::RunID(2), true);
+ iter = fileIndex.findPosition(art::RunID(2), true);
  CPPUNIT_ASSERT(iter == fileIndex.end());
 
- iter = fileIndex.findRunPosition(art::RunID(2), false);
+ iter = fileIndex.findPosition(art::RunID(2), false);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 5);
 
- CPPUNIT_ASSERT(fileIndex.containsRun(art::RunID(3), true));
- CPPUNIT_ASSERT(!fileIndex.containsRun(art::RunID(2), true));
+ CPPUNIT_ASSERT(fileIndex.contains(art::RunID(3), true));
+ CPPUNIT_ASSERT(!fileIndex.contains(art::RunID(2), true));
 
  iter = fileIndex.findSubRunOrRunPosition(art::SubRunID(1, 2));
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 1);
@@ -252,22 +252,22 @@ void testFileIndex::eventSortAndSearchTest()
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 5);
 
  // Search for event without using subrun number.
- iter = fileIndex.findEventPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(1)), 4), true);
+ iter = fileIndex.findPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(1)), 4), true);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 4);
 
- iter = fileIndex.findEventPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(1)), 5), true);
+ iter = fileIndex.findPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(1)), 5), true);
  CPPUNIT_ASSERT(iter == fileIndex.end());
 
- iter = fileIndex.findEventPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(1)), 5), false);
+ iter = fileIndex.findPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(1)), 5), false);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 10);
 
- iter = fileIndex.findEventPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(6)), 4), false);
+ iter = fileIndex.findPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(6)), 4), false);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 16);
 
- iter = fileIndex.findEventPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(6)), 8), false);
+ iter = fileIndex.findPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(6)), 8), false);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 22);
 
- iter = fileIndex.findEventPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(6)), 25), false);
+ iter = fileIndex.findPosition(art::EventID(art::SubRunID::invalidSubRun(art::RunID(6)), 25), false);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 31);
 }
 
@@ -316,25 +316,25 @@ void testFileIndex::eventEntrySortAndSearchTest()
 
  CPPUNIT_ASSERT(areEntryVectorsTheSame(fileIndex, shouldBe));
 
- art::FileIndex::const_iterator iter = fileIndex.findSubRunPosition(art::SubRunID(3, 1), true);
+ art::FileIndex::const_iterator iter = fileIndex.findPosition(art::SubRunID(3, 1), true);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 7);
 
- iter = fileIndex.findSubRunPosition(art::SubRunID(3, 2), true);
+ iter = fileIndex.findPosition(art::SubRunID(3, 2), true);
  CPPUNIT_ASSERT(iter == fileIndex.end());
 
- iter = fileIndex.findSubRunPosition(art::SubRunID(3, 1), false);
+ iter = fileIndex.findPosition(art::SubRunID(3, 1), false);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 7);
 
- iter = fileIndex.findSubRunPosition(art::SubRunID(3, 2), false);
+ iter = fileIndex.findPosition(art::SubRunID(3, 2), false);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 8);
 
- iter = fileIndex.findRunPosition(art::RunID(3), true);
+ iter = fileIndex.findPosition(art::RunID(3), true);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 5);
 
- iter = fileIndex.findRunPosition(art::RunID(2), true);
+ iter = fileIndex.findPosition(art::RunID(2), true);
  CPPUNIT_ASSERT(iter == fileIndex.end());
 
- iter = fileIndex.findRunPosition(art::RunID(2), false);
+ iter = fileIndex.findPosition(art::RunID(2), false);
  CPPUNIT_ASSERT((iter - fileIndex.begin()) == 5);
 
  iter = fileIndex.findSubRunOrRunPosition(art::SubRunID(1, 2));

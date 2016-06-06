@@ -12,7 +12,6 @@
 #include <iosfwd>
 
 namespace art {
-  typedef std::uint32_t EventNumber_t;
   class EventID;
 
   std::ostream &
@@ -38,7 +37,7 @@ public:
   bool isFlush() const;
 
   EventID next() const;
-  EventID nextSubRun(EventNumber_t first = FIRST_EVENT_NUMBER()) const;
+  EventID nextSubRun(EventNumber_t first = IDNumber<Level::Event>::first()) const;
   EventID nextRun() const;
   EventID previous() const;
   EventID previousSubRun() const;
@@ -47,10 +46,10 @@ public:
   static EventID maxEvent();
   static EventID firstEvent();
   static EventID firstEvent(SubRunID const & srID);
-  static EventID invalidEvent();
+  static constexpr EventID invalidEvent();
   static EventID invalidEvent(RunID rID);
   static EventID invalidEvent(SubRunID const & srID);
-  static EventID flushEvent();
+  static constexpr EventID flushEvent();
   static EventID flushEvent(RunID rID);
   static EventID flushEvent(SubRunID srID);
 
@@ -68,30 +67,23 @@ public:
 private:
   struct FlushFlag { };
 
-  explicit EventID(FlushFlag);
+  explicit constexpr EventID(FlushFlag);
   EventID(RunID rID, FlushFlag);
   EventID(SubRunID srID, FlushFlag);
 
   EventNumber_t inRangeOrInvalid(EventNumber_t e);
 
-  static constexpr EventNumber_t INVALID_EVENT_NUMBER();
-  static constexpr EventNumber_t MAX_VALID_EVENT_NUMBER();
-  static constexpr EventNumber_t FLUSH_EVENT_NUMBER();
-  static constexpr EventNumber_t MAX_NATURAL_EVENT_NUMBER();
-  static constexpr EventNumber_t FIRST_EVENT_NUMBER();
-
   SubRunID subRun_;
   EventNumber_t event_;
 };
 
-#ifndef __GCCXML__
 inline
 constexpr
 art::EventID::
 EventID()
   :
   subRun_(),
-  event_(INVALID_EVENT_NUMBER())
+  event_(IDNumber<Level::Event>::invalid())
 {
 }
 
@@ -158,7 +150,7 @@ bool
 art::EventID::
 isValid() const
 {
-  return (event_ != INVALID_EVENT_NUMBER()) && subRun_.isValid();
+  return (event_ != IDNumber<Level::Event>::invalid()) && subRun_.isValid();
 }
 
 inline
@@ -166,7 +158,7 @@ bool
 art::EventID::
 isFlush() const
 {
-  return (event_ == FLUSH_EVENT_NUMBER());
+  return event_ == IDNumber<Level::Event>::flush_value();
 }
 
 inline
@@ -174,14 +166,14 @@ art::EventID
 art::EventID::next() const
 {
   if (!isValid()) {
-    throw art::Exception(art::errors::InvalidNumber)
-        << "cannot increment invalid event number.";
+    throw art::Exception{art::errors::InvalidNumber}
+        << "Cannot increment invalid event number.\n";
   }
-  else if (event_ == MAX_NATURAL_EVENT_NUMBER()) {
+  else if (event_ == IDNumber<Level::Event>::max_natural()) {
     return nextSubRun();
   }
   else {
-    return EventID(subRun_, event_ + 1u);
+    return EventID{subRun_, event_ + 1u};
   }
 }
 
@@ -190,7 +182,7 @@ art::EventID
 art::EventID::
 nextSubRun(EventNumber_t first) const
 {
-  return EventID(subRun_.next(), first);
+  return EventID{subRun_.next(), first};
 }
 
 inline
@@ -198,7 +190,7 @@ art::EventID
 art::EventID::
 nextRun() const
 {
-  return EventID(subRun_.nextRun(), FIRST_EVENT_NUMBER());
+  return EventID{subRun_.nextRun(), IDNumber<Level::Event>::first()};
 }
 
 inline
@@ -210,11 +202,11 @@ previous() const
     throw art::Exception(art::errors::InvalidNumber)
         << "cannot decrement invalid event number.";
   }
-  else if (event_ == FIRST_EVENT_NUMBER()) {
+  else if (event_ == IDNumber<Level::Event>::first()) {
     return previousSubRun();
   }
   else {
-    return EventID(subRun_, event_ - 1u);
+    return EventID{subRun_, event_ - 1u};
   }
 }
 
@@ -223,7 +215,7 @@ art::EventID
 art::EventID::
 previousSubRun() const
 {
-  return EventID(subRun_.previous(), MAX_NATURAL_EVENT_NUMBER());
+  return EventID{subRun_.previous(), IDNumber<Level::Event>::max_natural()};
 }
 
 inline
@@ -231,7 +223,7 @@ art::EventID
 art::EventID::
 previousRun() const
 {
-  return EventID(subRun_.previousRun(), MAX_NATURAL_EVENT_NUMBER());
+  return EventID{subRun_.previousRun(), IDNumber<Level::Event>::max_natural()};
 }
 
 inline
@@ -239,7 +231,7 @@ art::EventID
 art::EventID::
 maxEvent()
 {
-  return EventID(SubRunID::maxSubRun(), MAX_NATURAL_EVENT_NUMBER());
+  return EventID{SubRunID::maxSubRun(), IDNumber<Level::Event>::max_natural()};
 }
 
 inline
@@ -247,7 +239,7 @@ art::EventID
 art::EventID::
 firstEvent()
 {
-  return EventID(SubRunID::firstSubRun(), FIRST_EVENT_NUMBER());
+  return EventID{SubRunID::firstSubRun(), IDNumber<Level::Event>::first()};
 }
 
 inline
@@ -255,15 +247,16 @@ art::EventID
 art::EventID::
 firstEvent(SubRunID const & srID)
 {
-  return EventID(srID, FIRST_EVENT_NUMBER());
+  return EventID{srID, IDNumber<Level::Event>::first()};
 }
 
 inline
+constexpr
 art::EventID
 art::EventID::
 invalidEvent()
 {
-  return EventID();
+  return EventID{};
 }
 
 inline
@@ -271,7 +264,7 @@ art::EventID
 art::EventID::
 invalidEvent(RunID rID)
 {
-  return EventID(SubRunID::invalidSubRun(rID), INVALID_EVENT_NUMBER());
+  return EventID{SubRunID::invalidSubRun(rID), IDNumber<Level::Event>::invalid()};
 }
 
 inline
@@ -279,15 +272,16 @@ art::EventID
 art::EventID::
 invalidEvent(SubRunID const & srID)
 {
-  return EventID(srID, INVALID_EVENT_NUMBER());
+  return EventID{srID, IDNumber<Level::Event>::invalid()};
 }
 
 inline
+constexpr
 art::EventID
 art::EventID::
 flushEvent()
 {
-  return EventID(FlushFlag());
+  return EventID{FlushFlag()};
 }
 
 inline
@@ -295,7 +289,7 @@ art::EventID
 art::EventID::
 flushEvent(RunID rID)
 {
-  return EventID(rID, FlushFlag());
+  return EventID{rID, FlushFlag()};
 }
 
 inline
@@ -303,7 +297,7 @@ art::EventID
 art::EventID::
 flushEvent(SubRunID srID)
 {
-  return EventID(srID, FlushFlag());
+  return EventID{srID, FlushFlag()};
 }
 
 // Comparison operators.
@@ -330,7 +324,7 @@ bool
 art::EventID::
 operator<(EventID const & other) const
 {
-  static SortInvalidFirst<EventNumber_t> op(INVALID_EVENT_NUMBER());
+  static SortInvalidFirst<EventNumber_t> op(IDNumber<Level::Event>::invalid());
   if (subRun_ == other.subRun_) {
     return op(event_, other.event_);
   }
@@ -364,11 +358,12 @@ operator>=(EventID const & other) const
 }
 
 inline
+constexpr
 art::EventID::
 EventID(FlushFlag)
   :
   subRun_(SubRunID::flushSubRun()),
-  event_(FLUSH_EVENT_NUMBER())
+  event_(IDNumber<Level::Event>::flush_value())
 {
 }
 
@@ -377,7 +372,7 @@ art::EventID::
 EventID(RunID rID, FlushFlag)
   :
   subRun_(SubRunID::flushSubRun(rID)),
-  event_(FLUSH_EVENT_NUMBER())
+  event_(IDNumber<Level::Event>::flush_value())
 {
 }
 
@@ -386,7 +381,7 @@ art::EventID::
 EventID(SubRunID srID, FlushFlag)
   :
   subRun_(std::move(srID)),
-  event_(FLUSH_EVENT_NUMBER())
+  event_(IDNumber<Level::Event>::flush_value())
 {
 }
 
@@ -395,8 +390,8 @@ art::EventNumber_t
 art::EventID::
 inRangeOrInvalid(EventNumber_t e)
 {
-  if (e == INVALID_EVENT_NUMBER() ||
-      e <= MAX_NATURAL_EVENT_NUMBER()) {
+  if (e == IDNumber<Level::Event>::invalid() ||
+      e <= IDNumber<Level::Event>::max_natural()) {
     return e;
   }
   else {
@@ -405,47 +400,6 @@ inRangeOrInvalid(EventNumber_t e)
       << "Maybe you want EventID::flushEvent()?\n";
   }
 }
-
-constexpr
-art::EventNumber_t
-art::EventID::
-INVALID_EVENT_NUMBER()
-{
-  return -1;
-}
-
-constexpr
-art::EventNumber_t
-art::EventID::
-MAX_VALID_EVENT_NUMBER()
-{
-  return INVALID_EVENT_NUMBER() - 1u;
-}
-
-constexpr
-art::EventNumber_t
-art::EventID::
-FLUSH_EVENT_NUMBER()
-{
-  return MAX_VALID_EVENT_NUMBER();
-}
-
-constexpr
-art::EventNumber_t
-art::EventID::
-MAX_NATURAL_EVENT_NUMBER()
-{
-  return FLUSH_EVENT_NUMBER() - 1u;
-}
-
-constexpr
-art::EventNumber_t
-art::EventID::
-FIRST_EVENT_NUMBER()
-{
-  return 1u;
-}
-#endif /* __GCCXML__ */
 
 #endif /* canvas_Persistency_Provenance_EventID_h */
 

@@ -3,6 +3,7 @@
 
 #include <iosfwd>
 
+#include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/EventID.h"
 #include "canvas/Persistency/Provenance/Timestamp.h"
@@ -15,6 +16,9 @@ namespace art {
 
 class art::EventAuxiliary {
 public:
+
+  static constexpr BranchType branch_type = InEvent;
+
    // These types are very tentative for now
    enum ExperimentType {
       Any = 0,

@@ -10,6 +10,7 @@
 #include <iosfwd>
 #include <set>
 
+#include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/RunID.h"
 #include "canvas/Persistency/Provenance/Timestamp.h"
@@ -22,7 +23,10 @@ namespace art {
 
 class art::ResultsAuxiliary {
 public:
-   ResultsAuxiliary()
+
+  static constexpr BranchType branch_type = InResults;
+
+  ResultsAuxiliary()
       :
       processHistoryID_(),
       allEventsProcessHistories_()

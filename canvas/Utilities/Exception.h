@@ -50,18 +50,18 @@ namespace art {
       SQLExecutionError,
       InvalidNumber,
       NotFound,
-      ServiceNotFound // = 30
+      ServiceNotFound, // = 30
+      ProductCannotBeAggregated
     };
 
   }  // errors
 
   namespace ExceptionDetail {
-    std::string
-      translate( errors::ErrorCodes );
+    std::string translate( errors::ErrorCodes );
   }
 
-  typedef  cet::coded_exception<errors::ErrorCodes,ExceptionDetail::translate>
-           Exception;
+  using Exception = cet::coded_exception<errors::ErrorCodes, ExceptionDetail::translate>;
+
 }  // art
 
 // ======================================================================

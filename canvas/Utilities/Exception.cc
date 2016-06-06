@@ -61,6 +61,7 @@ std::string
   case NotFound                  : return "NotFound";
 
   case ServiceNotFound           : return "ServiceNotFound";
+  case ProductCannotBeAggregated : return "ProductCannotBeAggregated";
   }
   throw Exception(errors::LogicError)
     << "Internal error: missing string translation for error "

@@ -83,6 +83,7 @@
 #include "canvas/Persistency/Common/Wrapper.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/TypeID.h"
+#include "cetlib/container_algorithms.h"
 #include "cetlib/demangle.h"
 
 #include "TBuffer.h"
@@ -117,42 +118,16 @@ namespace art {
     class AssnsStreamer : public TClassStreamer {
     public:
       void operator()(TBuffer & R_b, void * objp) {
-        //*/std::cout
-        //*/    << "-----> Begin AssnsStreamer<"
-        //*/    << cet::demangle_symbol(typeid(L).name())
-        //*/    << ", "
-        //*/    << cet::demangle_symbol(typeid(R).name())
-        //*/    << "::operator()"
-        //*/    << std::endl;
         static TClassRef cl(TClass::GetClass(typeid(Assns<L, R, void>)));
         Assns<L, R, void> *obj = reinterpret_cast<Assns<L, R, void> *>(objp);
         if (R_b.IsReading()) {
-          //*/std::cout
-          //*/    << "in reading case"
-          //*/    << std::endl;
           cl->ReadBuffer(R_b, obj);
-          //*/std::cout
-          //*/    << "calling fill_transients"
-          //*/    << std::endl;
           obj->fill_transients();
         }
         else {
-          //*/std::cout
-          //*/    << "in writing case"
-          //*/    << std::endl;
-          //*/std::cout
-          //*/    << "calling fill_from_transients"
-          //*/    << std::endl;
           obj->fill_from_transients();
           cl->WriteBuffer(R_b, obj);
         }
-        //*/std::cout
-        //*/    << "-----> End   AssnsStreamer<"
-        //*/    << cet::demangle_symbol(typeid(L).name())
-        //*/    << ", "
-        //*/    << cet::demangle_symbol(typeid(R).name())
-        //*/    << "::operator()"
-        //*/    << std::endl;
       }
     };
   }
@@ -193,17 +168,17 @@ public:
                  Ptr<right_t> const & right);
   void swap(art::Assns<L, R, void> &other);
 
-#ifndef __GCCXML__
   std::unique_ptr<EDProduct> makePartner() const;
-#endif
 
   static short Class_Version() { return 10; }
 
+  void aggregate(Assns const&) const {}
+
 protected:
   virtual void swap_(art::Assns<L, R, void> &other);
-#ifndef __GCCXML__
+
   virtual std::unique_ptr<EDProduct> makePartner_() const;
-#endif
+
 private:
   friend class detail::AssnsStreamer<left_t, right_t>;
   friend class art::Assns<right_t, left_t, void>; // partner_t.
@@ -263,23 +238,20 @@ public:
                  data_t const & data);
   void swap(art::Assns<L, R, D> &other);
 
-#ifndef __GCCXML__
+  void aggregate(Assns const&) const {}
   std::unique_ptr<EDProduct> makePartner() const;
-#endif
   static short Class_Version() { return 10; }
 
 private:
   friend class art::Assns<right_t, left_t, data_t>; // partner_t.
 
   void swap_(art::Assns<L, R, void> &other) override;
-#ifndef __GCCXML__
   std::unique_ptr<EDProduct> makePartner_() const override;
-#endif
+
   std::vector<data_t> data_;
 };
 
 ////////////////////////////////////////////////////////////////////////
-#ifndef __GCCXML__
 template <typename L, typename R>
 inline
 art::Assns<L, R, void>::Assns()
@@ -287,21 +259,7 @@ art::Assns<L, R, void>::Assns()
   , ptr_data_1_()
   , ptr_data_2_()
 {
-  //std::cout
-  //    << "-----> Begin Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", void>::Assns()"
-  //    << std::endl;
   init_streamer();
-  //std::cout
-  //    << "-----> End   Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", void>::Assns()"
-  //    << std::endl;
 }
 
 template <typename L, typename R>
@@ -311,35 +269,14 @@ art::Assns<L, R, void>::Assns(partner_t const & other)
   , ptr_data_1_()
   , ptr_data_2_()
 {
-  //std::cout
-  //    << "-----> Begin Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", void>::Assns(partner_t const&) ["
-  //    << "partner_t: "
-  //    << cet::demangle_symbol(typeid(partner_t).name())
-  //    << ']'
-  //    << std::endl;
   ptrs_.reserve(other.ptrs_.size());
-  for (typename partner_t::ptrs_t::const_iterator
-       i = other.ptrs_.begin(),
-       e = other.ptrs_.end();
-       i != e;
-       ++i) {
-    ptrs_.emplace_back(i->second, i->first);
-  }
+  cet::transform_all(other.ptrs_,
+                     std::back_inserter(ptrs_),
+                     [](auto const& pr){
+                       using pr_t = typename ptrs_t::value_type;
+                       return pr_t{pr.second, pr.first};
+                     });
   init_streamer();
-  //std::cout
-  //    << "-----> End   Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", void>::Assns(partner_t const&) ["
-  //    << "partner_t: "
-  //    << cet::demangle_symbol(typeid(partner_t).name())
-  //    << ']'
-  //    << std::endl;
 }
 
 template <typename L, typename R>
@@ -428,25 +365,7 @@ template <typename L, typename R>
 std::unique_ptr<art::EDProduct>
 art::Assns<L, R, void>::makePartner_() const
 {
-  //std::cout
-  //    << "-----> Begin Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", void>::makePartner_()"
-  //    << std::endl;
   std::unique_ptr<art::EDProduct> retval(new Wrapper<partner_t>(std::unique_ptr<partner_t>(new partner_t(*this))));
-  //std::cout
-  //    << "returning "
-  //    << retval.get()
-  //    << std::endl;
-  //std::cout
-  //    << "-----> End   Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", void>::makePartner_()"
-  //    << std::endl;
   return retval;
 }
 
@@ -504,15 +423,11 @@ art::Assns<L, R, void>::fill_from_transients()
   ptr_data_t & r_ref = left_first() ? ptr_data_2_ : ptr_data_1_;
   l_ref.reserve(ptrs_.size());
   r_ref.reserve(ptrs_.size());
-  for (typename ptrs_t::const_iterator
-       i = ptrs_.begin(),
-       e = ptrs_.end();
-       i != e;
-       ++i) {
-    l_ref.emplace_back(i->first.refCore(),
-                       i->first.key());
-    r_ref.emplace_back(i->second.refCore(),
-                       i->second.key());
+  for (auto const& pr : ptrs_) {
+    l_ref.emplace_back(pr.first.refCore(),
+                       pr.first.key());
+    r_ref.emplace_back(pr.second.refCore(),
+                       pr.second.key());
   }
 }
 
@@ -520,32 +435,10 @@ template <typename L, typename R>
 void
 art::Assns<L, R, void>::init_streamer()
 {
-  //std::cout
-  //    << "-----> Begin Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", void>::init_streamer()"
-  //    << std::endl;
   static TClassRef cl(TClass::GetClass(typeid(Assns<L, R, void>)));
   if (cl->GetStreamer() == 0) {
-    //std::cout
-    //    << "adopting streamer "
-    //    << "art::Assns<"
-    //    << cet::demangle_symbol(typeid(L).name())
-    //    << ", "
-    //    << cet::demangle_symbol(typeid(R).name())
-    //    << ", void>"
-    //    << std::endl;
     cl->AdoptStreamer(new detail::AssnsStreamer<L, R>);
   }
-  //std::cout
-  //    << "-----> End   Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", void>::init_streamer()"
-  //    << std::endl;
 }
 
 template <typename L, typename R, typename D>
@@ -561,32 +454,7 @@ template <typename L, typename R, typename D>
 art::Assns<L, R, D>::Assns(partner_t const& other)
   : base(other)
   , data_(other.data_)
-{
-  //std::cout
-  //    << "-----> Begin Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(D).name())
-  //    << ">::Assns(partner_t const&) ["
-  //    << "partner_t: "
-  //    << cet::demangle_symbol(typeid(partner_t).name())
-  //    << ']'
-  //    << std::endl;
-  //std::cout
-  //    << "-----> End  Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(D).name())
-  //    << ">::Assns(partner_t const&) ["
-  //    << "partner_t: "
-  //    << cet::demangle_symbol(typeid(partner_t).name())
-  //    << ']'
-  //    << std::endl;
-}
+{}
 
 template <typename L, typename R, typename D>
 inline
@@ -651,32 +519,9 @@ template <typename L, typename R, typename D>
 std::unique_ptr<art::EDProduct>
 art::Assns<L, R, D>::makePartner_() const
 {
-  //std::cout
-  //    << "-----> Begin Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(D).name())
-  //    << ">::makePartner_() called!"
-  //    << std::endl;
-  std::unique_ptr<art::EDProduct> retval(new Wrapper<partner_t>(std::unique_ptr<partner_t>(new partner_t(*this))));
-  //std::cout
-  //    << "returning: "
-  //    << retval.get()
-  //    << std::endl;
-  //std::cout
-  //    << "-----> End   Assns<"
-  //    << cet::demangle_symbol(typeid(L).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(R).name())
-  //    << ", "
-  //    << cet::demangle_symbol(typeid(D).name())
-  //    << ">::makePartner_() called!"
-  //    << std::endl;
+  std::unique_ptr<art::EDProduct> retval = std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
   return retval;
 }
-#endif /* __GCCXML__ */
 #endif /* canvas_Persistency_Common_Assns_h */
 
 // Local Variables:

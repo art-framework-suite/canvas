@@ -100,13 +100,15 @@
   <class name="art::Timestamp" ClassVersion="10">
     <version ClassVersion="10" checksum="2438251709"/>
   </class>
-  <class name="art::SubRunAuxiliary" ClassVersion="10">
+  <class name="art::SubRunAuxiliary" ClassVersion="11">
+   <version ClassVersion="11" checksum="1706997496"/>
     <version ClassVersion="10" checksum="832515965"/>
   </class>
   <class name="art::SubRunID" ClassVersion="10">
     <version ClassVersion="10" checksum="2879307132"/>
   </class>
-  <class name="art::RunAuxiliary" ClassVersion="10">
+  <class name="art::RunAuxiliary" ClassVersion="11">
+   <version ClassVersion="11" checksum="632272083"/>
     <version ClassVersion="10" checksum="156856400"/>
   </class>
   <class name="art::ResultsAuxiliary" ClassVersion="10">
@@ -124,4 +126,7 @@
   <class name="art::ParameterSetMap"/>
   <class name="std::pair<fhicl::ParameterSetID, art::ParameterSetBlob>"/>
   <class name="art::ProductID"/>
+  <class name="art::DictionaryChecker" ClassVersion="0"/>
+  <function name="art::name_of_assns_partner"/>
+  <function name="art::wrappedClassName"/>
 </lcgdict>
