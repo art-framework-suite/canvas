@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE ( th1Product aggregation Test )
-#include "boost/test/auto_unit_test.hpp"
+#include "cetlib/quiet_unit_test.hpp"
 #include "canvas/test/Persistency/Common/MockRun.h"
 #include "cetlib/container_algorithms.h"
 
