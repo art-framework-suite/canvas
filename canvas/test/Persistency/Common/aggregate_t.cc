@@ -5,7 +5,6 @@
 // N.B. art::PtrVector cannot be overloaded
 
 #include "cetlib/quiet_unit_test.hpp"
-#include "boost/test/test_tools.hpp"
 #include "canvas/test/Persistency/Common/MockRun.h"
 #include "cetlib/map_vector.h"
 #include "cetlib/test_macros.h"
