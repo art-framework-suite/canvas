@@ -67,8 +67,8 @@ BOOST_AUTO_TEST_CASE(collapsing1)
   BOOST_CHECK_EQUAL(rs.ranges().size(), 4u);
   rs.collapse();
   BOOST_REQUIRE_EQUAL(rs.ranges().size(), 1u);
-  BOOST_CHECK_EQUAL(rs.front().begin(), 1);
-  BOOST_CHECK_EQUAL(rs.front().end(), 101);
+  BOOST_CHECK_EQUAL(rs.front().begin(), 1u);
+  BOOST_CHECK_EQUAL(rs.front().end(), 101u);
   BOOST_CHECK(rs.has_disjoint_ranges());
 }
 
@@ -182,8 +182,8 @@ BOOST_AUTO_TEST_CASE(merging1)
   rs1.merge(rs2); // Ranges: [1,3), [3,4), [4,8) & [8,11)
                   // collapse to: [1,11)
   BOOST_CHECK_EQUAL(rs1.ranges().size(), 1u);
-  BOOST_CHECK_EQUAL(rs1.front().begin(), 1);
-  BOOST_CHECK_EQUAL(rs1.front().end(), 11);
+  BOOST_CHECK_EQUAL(rs1.front().begin(), 1u);
+  BOOST_CHECK_EQUAL(rs1.front().end(), 11u);
 }
 
 BOOST_AUTO_TEST_CASE(merging2)
