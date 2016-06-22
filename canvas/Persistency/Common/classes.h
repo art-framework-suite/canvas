@@ -24,8 +24,6 @@ template class art::PtrVector<int>;
 template class art::Wrapper<art::PtrVector<int>>;
 //template class std::vector<std::pair<art::RefCore, size_t>>;
 //template class std::pair<art::RefCore, size_t>;
-template class art::Wrapper<std::vector<art::RNGsnapshot>>;
-template class std::vector<art::RNGsnapshot>;
 
 // Local Variables:
 // mode: c++
