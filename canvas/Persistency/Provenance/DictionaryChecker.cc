@@ -521,9 +521,6 @@ reportMissingDictionaries()
          "\n"
          "to the appropriate classes_def.xml file.\n"
          "\n"
-         "If the class is a template instance, you may need\n"
-         "to define a dummy variable of this type in classes.h.\n"
-         "\n"
          "Also, if this class has any transient members,\n"
          "you need to specify them in classes_def.xml.";
 }
