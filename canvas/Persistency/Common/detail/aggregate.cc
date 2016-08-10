@@ -1,5 +1,12 @@
 #include "canvas/Persistency/Common/detail/aggregate.h"
 
+#include "CLHEP/Vector/TwoVector.h"
+#include "CLHEP/Vector/ThreeVector.h"
+#include "CLHEP/Vector/LorentzVector.h"
+#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Matrix/Vector.h"
+
 namespace art {
   namespace detail {
 
