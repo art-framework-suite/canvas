@@ -1,13 +1,13 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent canvas	v1_04_05
+parent canvas	v1_04_05a
 defaultqual	e10
 #
 fcldir -
 perllib  product_dir
 #
 product		version
-clhep		v2_3_2_2
+clhep		v2_2_0_8a
 cppunit		v1_12_1d
 python		v2_7_11
 root		v6_06_04b
