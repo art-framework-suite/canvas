@@ -7,13 +7,6 @@
 #include "cetlib/demangle.h"
 #include "cetlib/map_vector.h"
 
-#include "CLHEP/Vector/TwoVector.h"
-#include "CLHEP/Vector/ThreeVector.h"
-#include "CLHEP/Vector/LorentzVector.h"
-#include "CLHEP/Matrix/Matrix.h"
-#include "CLHEP/Matrix/SymMatrix.h"
-#include "CLHEP/Matrix/Vector.h"
-
 #include <typeinfo>
 
 #include <array>
@@ -24,7 +17,16 @@
 #include <utility>
 #include <vector>
 
-#include "TH1.h"
+namespace CLHEP {
+  class HepVector;
+  class Hep2Vector;
+  class Hep3Vector;
+  class HepLorentzVector;
+  class HepMatrix;
+  class HepSymMatrix;
+}
+
+class TH1;
 
 namespace art {
   namespace detail {
@@ -233,6 +235,17 @@ namespace art {
 
     //==============================================================
     // ROOT-TH1 specializations
+    //
+    // .. Do not include TH1.h!  Adding the TH1.h header causes woe
+    //    since it introduces a definition of a static variable of
+    //    type TVersionCheck, whose constructor is defined in the
+    //    ROOT_CORE library.  This causes users to link essentially
+    //    EVERYTHING against ROOT_CORE.  This is not a problem for
+    //    modules/source (they already depend on ROOT_CORE), but it
+    //    would introduce an inherent dependency on ROOT for services
+    //    as well.  Fortunately, the std::is_base_of<Base,Derived>
+    //    implementation only requires that Derived (T) be a complete
+    //    type, and not that of Base (TH1).
 
     template <typename T>
     struct CanBeAggregated<T, std::enable_if_t<std::is_base_of<TH1,T>::value>> : std::true_type {
