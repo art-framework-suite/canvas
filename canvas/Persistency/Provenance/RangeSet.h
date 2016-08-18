@@ -8,10 +8,6 @@
 #include "canvas/Utilities/Exception.h"
 #include "cetlib/container_algorithms.h"
 
-extern "C" {
-#include "sqlite3.h"
-}
-
 #include <algorithm>
 #include <ostream>
 #include <set>
