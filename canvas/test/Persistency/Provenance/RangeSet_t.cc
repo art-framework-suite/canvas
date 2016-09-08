@@ -78,20 +78,12 @@ BOOST_AUTO_TEST_CASE(collapsing2)
   rs.emplace_range(1,1,4);
   rs.emplace_range(1,1,11);
   rs.emplace_range(1,4,11);
-  rs.emplace_range(2,1,4);
-  rs.emplace_range(2,1,11);
-  rs.emplace_range(2,4,11);
   BOOST_CHECK(rs.is_sorted());
-  rs.collapse();
-
-  RangeSet ref {1};
-  ref.emplace_range(1,1,11);
-  ref.emplace_range(2,1,11);
-  rs.collapse();
-  BOOST_CHECK_EQUAL(rs, ref);
-
-  std::string const& ref_string {"1:1[1,11)2[1,11)"};
-  BOOST_CHECK_EQUAL(rs.to_compact_string(), ref_string);
+  BOOST_CHECK_EXCEPTION(rs.collapse(),
+                        art::Exception,
+                        [](art::Exception const& e) {
+                          return e.categoryCode() == art::errors::LogicError;
+                        });
 }
 
 BOOST_AUTO_TEST_CASE(splitting1)
@@ -144,25 +136,6 @@ BOOST_AUTO_TEST_CASE(assigning)
   BOOST_CHECK_EQUAL(rs, ref);
 }
 
-BOOST_AUTO_TEST_CASE(sorting)
-{
-  RangeSet rs {2};
-  rs.emplace_range(1,1,3);
-  rs.emplace_range(1,2,4);
-  rs.emplace_range(1,4,8);
-  rs.collapse();
-  BOOST_CHECK_EQUAL(rs.ranges().size(), 2u);
-  BOOST_CHECK(!rs.has_disjoint_ranges());
-  rs.emplace_range(1,1,9);
-  BOOST_CHECK(!rs.is_sorted());
-
-  RangeSet ref {2};
-  ref.emplace_range(1,1,3);
-  ref.emplace_range(1,2,8);
-  ref.emplace_range(1,1,9);
-  BOOST_CHECK_EQUAL(rs, ref);
-}
-
 BOOST_AUTO_TEST_CASE(merging1)
 {
   // Ranges: [1,3) & [4,8)
@@ -202,16 +175,11 @@ BOOST_AUTO_TEST_CASE(merging2)
   BOOST_REQUIRE(rs2.has_disjoint_ranges());
 
   BOOST_CHECK(!art::disjoint_ranges(rs1, rs2));
-  rs1.merge(rs2);
-
-  std::vector<EventRange> const ref_ranges {
-    EventRange{1,1,3},
-    EventRange{1,1,7},
-    EventRange{1,4,8}
-  };
-
-  RangeSet const ref {2, ref_ranges};
-  BOOST_CHECK_EQUAL(rs1, ref);
+  BOOST_CHECK_EXCEPTION(rs1.merge(rs2),
+                        art::Exception,
+                        [](art::Exception const& e) {
+                          return e.categoryCode() == art::errors::LogicError;
+                        });
 }
 
 BOOST_AUTO_TEST_CASE(merging3)
