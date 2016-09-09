@@ -107,22 +107,29 @@ namespace {
 
 std::string
 art::uniform_type_name(std::string name) {
+  using namespace std::string_literals;
   // We must use the same conventions previously used by Reflex.
   // The order is important.
 
+  // We must remove __cxx11:: from all type names. This should not have
+  // implications for I/O because ROOT stores the data that STL objects
+  // represent rather than doing a "dumb serialization" of the class.
+  cet::replace_all(name, "__cxx11::"s, ""s);
+
   // No space after comma.
-  cet::replace_all(name, ", ", ",");
+  cet::replace_all(name, ", "s, ","s);
   // No space before opening square bracket.
-  cet::replace_all(name, " [", "[");
+  cet::replace_all(name, " ["s, "["s);
   // Strip default allocator.
-  {
-    static std::string const allocator(",std::allocator<");
-    removeParameter(name, allocator);
-  }
+  removeParameter(name, ",std::allocator<"s);
   // Strip default comparator.
+  removeParameter(name, ",std::less<"s);
+  // Strip char traits.
+  removeParameter(name, ",std::char_traits<"s);
+  // std::basic_string<char> -> std::string
   {
-    static std::string const comparator(",std::less<");
-    removeParameter(name, comparator);
+    static std::regex const bs_regex("std::basic_string<char>\\s*"s);
+    reformat(name, bs_regex, "std::string"s);
   }
   // Put const qualifier before identifier.
   constBeforeIdentifier(name);
@@ -130,16 +137,15 @@ art::uniform_type_name(std::string name) {
   //
   // FIXME: The first time we see a type with e.g. operator>> as a
   // template argument, we could have a problem.
-  cet::replace_all(name, ">>", "> >");
+  cet::replace_all(name, ">>"s, "> >"s);
   // No u or l qualifiers for integers.
   {
-    static std::regex const ul_regex("(.*[<,][0-9]+)[ul]l*([,>].*)");
-    static std::string const ul_format("$1$2");
-    reformat(name, ul_regex, ul_format);
+    static std::regex const ul_regex("(.*[<,][0-9]+)[ul]l*([,>].*)"s);
+    reformat(name, ul_regex, "$1$2"s);
   }
   // For ROOT 6 and beyond.
-  cet::replace_all(name, "unsigned long long", "ULong64_t");
-  cet::replace_all(name, "long long", "Long64_t");
+  cet::replace_all(name, "unsigned long long"s, "ULong64_t"s);
+  cet::replace_all(name, "long long"s, "Long64_t"s);
   // Done.
   return name;
 }
