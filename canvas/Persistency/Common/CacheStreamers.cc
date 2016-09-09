@@ -3,10 +3,10 @@
 #include "canvas/Persistency/Common/BoolCache.h"
 #include "cetlib/exception.h"
 
+#include "TBuffer.h"
+
 // For nullptr:
 #include <memory>
-
-class TBuffer;
 
 namespace art {
   void

@@ -3,6 +3,7 @@
 #include "canvas/Persistency/Common/PtrVectorBase.h"
 #include "canvas/Utilities/TypeID.h"
 
+#include "TBuffer.h"
 #include "TClass.h"
 
 // FIXME: This should go away as soon as ROOT makes this function
