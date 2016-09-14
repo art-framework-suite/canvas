@@ -3,10 +3,14 @@
 
 /*----------------------------------------------------------------------
 
-Definition of traits templates used in the EDM.
+  Definition of traits templates used in the EDM.
 
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 
+#include "cetlib/detail/metaprogramming.h"
+#include "canvas/Utilities/Exception.h"
+#include "cetlib/demangle.h"
+#include "cetlib/detail/metaprogramming.h"
 #include "cetlib/map_vector.h"
 
 #include <deque>
@@ -15,6 +19,7 @@ Definition of traits templates used in the EDM.
 #include <map>
 #include <set>
 #include <string>
+#include <typeinfo>
 #include <utility>
 #include <vector>
 
@@ -34,28 +39,22 @@ namespace art
   template <class K>
   struct key_traits
   {
-    typedef K key_type;
-    static const key_type value;
+    using key_type = K;
+    static constexpr key_type value {std::numeric_limits<typename key_traits<K>::key_type>::max()};
   };
-
-  template <class K>
-  typename  key_traits<K>::key_type const
-  key_traits<K>::value =
-    std::numeric_limits<typename key_traits<K>::key_type>::max();
 
   // Partial specialization for std::pair
 
   template <class U, class V>
-  struct key_traits<std::pair<U,V> >
+  struct key_traits<std::pair<U,V>>
   {
-    typedef std::pair<U,V>  key_type;
+    using key_type = std::pair<U,V>;
     static const key_type value;
   };
 
   template <class U, class V>
-  typename key_traits<std::pair<U,V> >::key_type const
-  key_traits<std::pair<U,V> >::value( key_traits<U>::value,
-                                      key_traits<V>::value );
+  typename key_traits<std::pair<U,V>>::key_type const
+  key_traits<std::pair<U,V>>::value(key_traits<U>::value, key_traits<V>::value);
 
   // If we ever need to support instantiations of std::basic_string
   // other than std::string, this is the place to do it.
@@ -66,7 +65,7 @@ namespace art
   template <>
   struct key_traits<std::string>
   {
-    typedef std::string key_type;
+    using key_type = std::string;
     static const key_type value;
   };
 
@@ -100,42 +99,92 @@ namespace art
   //
   //------------------------------------------------------------
 
-  template <class T>
-  struct has_fillView
-  {
-    static bool const value = false;
+  // has_fillView
+  template <typename T, typename = void>
+  struct has_fillView : std::false_type {};
+
+  template <typename T>
+  struct has_fillView<T, cet::detail::enable_if_function_exists_t<void(T::*)(std::vector<void const*>&), &T::fillView>> : std::true_type {};
+
+  template <typename T>
+  struct CannotFillView {
+    static void fill(T const&, std::vector<void const*>&)
+    {
+      throw Exception(errors::ProductDoesNotSupportViews)
+        << "Product type " << cet::demangle_symbol(typeid(T).name())
+        << " has no fillView() capability.\n";
+    }
+  };
+
+  template <class T, typename = void>
+  struct MaybeFillView : CannotFillView<T> {};
+
+  template <typename T>
+  struct MaybeFillView<T, std::enable_if_t<has_fillView<T>::value>> {
+    static void fill(T const & product,
+                     std::vector<void const *> & view)
+    {
+      product.fillView(view);
+    }
   };
 
   template <class T, class A>
-  struct has_fillView<std::vector<T,A> >
-  {
-    static bool const value = true;
+  struct MaybeFillView<std::vector<T,A>> {
+    static void fill(std::vector<T> const& product,
+                     std::vector<void const*>& view)
+    {
+      for (auto const& p : product) {
+        view.push_back(&p);
+      }
+    }
   };
 
   template <class A>
-  struct has_fillView<std::vector<bool,A> >
-  {
-    static bool const value = false;
+  struct MaybeFillView<std::vector<bool,A>> : CannotFillView<std::vector<bool,A>> {};
+
+  template <class T, class A>
+  struct MaybeFillView<std::list<T,A>> {
+    static void fill(std::list<T> const& product,
+                     std::vector<void const*>& view)
+    {
+      for (auto const& p : product) {
+        view.push_back(&p);
+      }
+    }
   };
 
   template <class T, class A>
-  struct has_fillView<std::list<T,A> >
-  {
-    static bool const value = true;
+  struct MaybeFillView<std::deque<T,A>> {
+    static void fill(std::deque<T> const& product,
+                     std::vector<void const*>& view)
+    {
+      for (auto const& p : product) {
+        view.push_back(&p);
+      }
+    }
   };
 
   template <class T, class A>
-  struct has_fillView<std::deque<T,A> >
-  {
-    static bool const value = true;
+  struct MaybeFillView<std::set<T,A>> {
+    static void fill(std::set<T> const& product,
+                     std::vector<void const*>& view)
+    {
+      for (auto const & p : product) {
+        view.push_back(&p);
+      }
+    }
   };
 
-  template <class T, class A>
-  struct has_fillView<std::set<T,A> >
-  {
-    static bool const value = true;
+  template <class T>
+  struct MaybeFillView<cet::map_vector<T>> {
+    static void fill(cet::map_vector<T> const& product,
+                     std::vector<void const*>& view)
+    {
+      for (auto const & p : product) {
+        view.push_back(&p.second);
+      }
+    }
   };
-
 
   //------------------------------------------------------------
   //
@@ -150,46 +199,25 @@ namespace art
   //------------------------------------------------------------
 
   template <class T>
-    struct has_setPtr
-  {
-    static bool const value = false;
-  };
+  struct has_setPtr : std::false_type {};
 
   template <class T, class A>
-    struct has_setPtr<std::vector<T,A> >
-  {
-    static bool const value = true;
-  };
+  struct has_setPtr<std::vector<T,A>> : std::true_type {};
 
   template <class A>
-    struct has_setPtr<std::vector<bool,A> >
-  {
-    static bool const value = false;
-  };
+  struct has_setPtr<std::vector<bool,A>> : std::false_type {};
 
   template <class T, class A>
-    struct has_setPtr<std::list<T,A> >
-  {
-    static bool const value = true;
-  };
+  struct has_setPtr<std::list<T,A>> : std::true_type {};
 
   template <class T, class A>
-    struct has_setPtr<std::deque<T,A> >
-  {
-    static bool const value = true;
-  };
+  struct has_setPtr<std::deque<T,A>> : std::true_type {};
 
   template <class T, class A>
-    struct has_setPtr<std::set<T,A> >
-  {
-    static bool const value = true;
-  };
+  struct has_setPtr<std::set<T,A>> : std::true_type {};
 
   template <class T>
-    struct has_setPtr<cet::map_vector<T> >
-  {
-    static bool const value = true;
-  };
+  struct has_setPtr<cet::map_vector<T>> : std::true_type {};
 }
 
 #endif /* canvas_Persistency_Common_traits_h */

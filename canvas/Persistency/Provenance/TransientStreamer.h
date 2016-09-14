@@ -1,12 +1,11 @@
 #ifndef canvas_Persistency_Provenance_TransientStreamer_h
 #define canvas_Persistency_Provenance_TransientStreamer_h
 
+#include "TBuffer.h"
 #include "TClassRef.h"
 #include "TClassStreamer.h"
 #include "canvas/Utilities/TypeID.h"
 #include <string>
-
-class TBuffer;
 
 namespace art {
 

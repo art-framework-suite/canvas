@@ -67,13 +67,11 @@ RangeSet&
 RangeSet::collapse()
 {
   if (isCollapsed_) {
-    checksum_ = ::checksum(to_compact_string());
     return *this;
   }
 
   if (ranges_.size() < 2) {
     isCollapsed_ = true;
-    checksum_ = ::checksum(to_compact_string());
     return *this;
   }
 
@@ -83,30 +81,26 @@ RangeSet::collapse()
 
   auto processing = ranges_;
   decltype(ranges_) result;
-  while (!processing.empty()) {
-    result.push_back(processing.front());
-    processing.erase(processing.cbegin());
-    decltype(ranges_) remaining;
-    for (auto const& r : processing) {
-      if (result.back().is_adjacent(r)) {
-        result.back().merge(r);
-        // Check if newly-formed range has been cached as a
-        // remaining range to check
-        auto f = std::find(remaining.begin(), remaining.end(), result.back());
-        if (f != remaining.end())
-          remaining.erase(f);
-      }
-      else {
-        // If the current range is not adjacent to the 'result'
-        // range, then cache it for further processing later on.
-        remaining.push_back(r);
-      }
+  result.reserve(ranges_.size());
+  result.push_back(ranges_.front());
+  for (auto ir = ranges_.cbegin()+1, e= ranges_.cend(); ir!=e ; ++ir) {
+    auto const& r = *ir;
+    auto& back = result.back();
+    if (back.is_adjacent(r)) {
+      back.merge(r);
     }
-    std::swap(processing, remaining);
+    else if (back.is_disjoint(r)) {
+      result.push_back(r);
+    }
+    else {
+      throw art::Exception(art::errors::LogicError)
+        << "Attempt to merge event ranges that both contain one or more of the same events\n"
+        << "  " << back << "  vs.\n"
+        << "  " << r;
+    }
   }
   std::swap(ranges_, result);
   isCollapsed_ = true;
-  checksum_ = ::checksum(to_compact_string());
   return *this;
 }
 
@@ -165,8 +159,14 @@ RangeSet::split_range(SubRunNumber_t const s,
     std::swap(*result, right);
     did_split = true;
   }
-  checksum_ = ::checksum(to_compact_string());
   return std::make_pair(result, did_split);
+}
+
+unsigned
+RangeSet::checksum() const
+{
+  // Could cache checksums to improve performance when necessary.
+  return checksum_ = ::checksum(to_compact_string());
 }
 
 bool

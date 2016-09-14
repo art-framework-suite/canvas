@@ -2,9 +2,9 @@
 #define canvas_Persistency_Common_detail_aggregate_h
 
 #include "canvas/Utilities/Exception.h"
-#include "canvas/Utilities/detail/metaprogramming.h"
 #include "cetlib/container_algorithms.h"
 #include "cetlib/demangle.h"
+#include "cetlib/detail/metaprogramming.h"
 #include "cetlib/map_vector.h"
 
 #include <typeinfo>
@@ -30,6 +30,8 @@ class TH1;
 
 namespace art {
   namespace detail {
+
+    using cet::detail::enable_if_function_exists_t;
 
     template <typename T, typename = void>
     struct has_aggregate : std::false_type {};

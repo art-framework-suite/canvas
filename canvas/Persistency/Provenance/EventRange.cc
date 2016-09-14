@@ -5,16 +5,10 @@ using art::EventRange;
 
 namespace {
 
-  bool ordered(art::EventNumber_t const b,
-               art::EventNumber_t const e)
-  {
-    return b <= e;
-  }
-
   void require_ordering(art::EventNumber_t const b,
                         art::EventNumber_t const e)
   {
-    if (!ordered(b,e))
+    if (b > e)
       throw art::Exception{art::errors::LogicError}
         << "The 'begin' value for an EventRange must be less "
         << "than the 'end' value.\n"
@@ -108,7 +102,7 @@ EventRange::are_valid(EventRange const& l, EventRange const& r)
 bool
 EventRange::is_valid() const
 {
-  return art::is_valid(subRun_) && ordered(begin_,end_);
+  return art::is_valid(subRun_);
 }
 
 bool

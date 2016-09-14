@@ -8,10 +8,6 @@
 #include "canvas/Utilities/Exception.h"
 #include "cetlib/container_algorithms.h"
 
-extern "C" {
-#include "sqlite3.h"
-}
-
 #include <algorithm>
 #include <ostream>
 #include <set>
@@ -47,7 +43,7 @@ namespace art {
     auto begin() const { return ranges_.begin(); }
     auto end() const { return ranges_.end(); }
 
-    unsigned checksum() const {return checksum_;}
+    unsigned checksum() const;
 
     decltype(auto) front() { return ranges_.front(); }
     decltype(auto) back() { return ranges_.back(); }
@@ -88,7 +84,7 @@ namespace art {
     // Auxiliary info
     bool fullRun_ {false};
     bool isCollapsed_ {false};
-    unsigned checksum_ {invalidChecksum()};
+    mutable unsigned checksum_ {invalidChecksum()};
   };
 
   //==========================================================

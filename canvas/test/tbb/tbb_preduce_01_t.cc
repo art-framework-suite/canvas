@@ -13,6 +13,7 @@
 #include <cassert>
 #include <iostream>
 #include <iterator>
+#include <numeric>
 
 typedef tbb::blocked_range<typename std::vector<double>::const_iterator> br_t;
 

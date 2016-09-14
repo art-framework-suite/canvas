@@ -70,7 +70,7 @@ private:
           throw art::Exception(art::errors::DataCorruption)
             << "Attempt to construct or use a TypeNames object with insufficient input items.\n"
             << "Contents: "
-            << os
+            << os.str()
             << "\n";
         }
       }

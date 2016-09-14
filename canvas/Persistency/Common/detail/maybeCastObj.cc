@@ -24,8 +24,8 @@ public:
   bool is_ambiguous = false;
   long offset = 0L;
 public:
-  void print() const;
-  void reset();
+  void print [[gnu::unused]] () const;
+  void reset [[gnu::unused]] ();
 };
 
 void
@@ -74,7 +74,7 @@ visit_class_for_upcast(abi::__class_type_info const* ci,
   if (auto vmi = dynamic_cast<abi::__vmi_class_type_info const*>(ci)) {
     // Class is part of a more complicated inheritance chain.
     //cout
-	//<< "flags:\n"
+  //<< "flags:\n"
         //<< "  __non_diamond_repeat_mask: "
         //<< ((vmi->__flags) &
         //   abi::__vmi_class_type_info::__non_diamond_repeat_mask)
