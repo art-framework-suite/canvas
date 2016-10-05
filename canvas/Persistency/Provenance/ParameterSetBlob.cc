@@ -1,5 +1,7 @@
 #include "canvas/Persistency/Provenance/ParameterSetBlob.h"
 
+#include <ostream>
+
 namespace art {
 
   std::ostream&
