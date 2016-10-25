@@ -162,6 +162,11 @@ struct art::detail::EnsurePointer<TO, art::Ptr<PTRVAL> > {
 
 namespace art {
   namespace detail {
+    // FIXME: The code of ItemGetter, including specializations, would
+    // be completely unnecessary if Handle were to provide access to the
+    // setPtr() function of wrapper. As it is, some container-specific
+    // code is duplicated between here and art::Wrapper, leading to
+    // multiple points of maintenance (and failure).
     template <typename T, typename C>
     class ItemGetter;
     template <typename T>
