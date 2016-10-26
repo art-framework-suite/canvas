@@ -7,5 +7,4 @@
 !define NULLPTR <font color="red">""nullptr""</font>
 !define RESULT_OF(action) <font color="magenta">//action//</font>
 !define STAGE(stage) note over PARTICIPANTS #FCA0FC : stage
-!define STAGE(stage,begin,end) note over begin, end #FCA0FC : stage
-!define CF(ref) note over PARTICIPANTS #CCCCFF : //cf// ProductID, item access //etc// per ref
+!define STAGE(begin,end,stage) note over begin, end #FCA0FC : stage

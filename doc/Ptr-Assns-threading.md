@@ -16,7 +16,11 @@
 
 * File: `canvas/Persistency/Common/Ptr.h`.
 
-* *THREADING* `template <typename T> class art::Ptr`{.cpp} has no non-`const`{.cpp} members, but does modify the `mutable`{.cpp} `art::RefCore::RefCoreTransients::itemPtr` via `art::RefCore::setProductPtr(...)`{.cpp} in the private function `art::Ptr<T>::getData_(...)`{.cpp}, which is invoked directly via the public member function `art::Ptr<T>::operator ->()`{.cpp} and indirectly via `art::Ptr<T>::operator *()`{.cpp} and `art::Ptr<T>::get()`{.cpp}. Since `art::Ptr<T>`{.cpp} contains an `art::RefCore`{.cpp} by value, this only has threading implications for an `art::Ptr<T>`{.cpp} shared across multiple threads. However, a call to `art::Ptr<T>::getData_(...)`{.cpp} does call `art::EDProductGetter::getIt()`{.cpp}, which will interact with the data model and will almost certainly have threading implications of its own. See lifecycle sequence diagrams for ![`Ptr()`{.cpp}](Ptr-lifecycle.png "Ptr()"){align="top"} ![`Ptr(handle, idx)`{.cpp}](Ptr-lifecycle_001.png "Ptr(handle, idx)"){align="top"} ![`Ptr(productID)`{.cpp}](Ptr-lifecycle_002.png "Ptr(productID)"){align="top"} ![`Ptr(productID, itemKey, productGetter)`{.cpp}](Ptr-lifecycle_003.png "Ptr(productID, itemKey, productGetter)"){align="top"} ![`Ptr(productID, item, itemKey)`{.cpp}](Ptr-lifecycle_004.png "Ptr(productID, item, itemKey)"){align="top"}
+* *THREADING* `template <typename T> class art::Ptr`{.cpp} has no non-`const`{.cpp} members, but does modify the `mutable`{.cpp} `art::RefCore::RefCoreTransients::itemPtr` via `art::RefCore::setProductPtr(...)`{.cpp} in the private function `art::Ptr<T>::getData_(...)`{.cpp}, which is invoked directly via the public member function `art::Ptr<T>::operator ->()`{.cpp} and indirectly via `art::Ptr<T>::operator *()`{.cpp} and `art::Ptr<T>::get()`{.cpp}. Since `art::Ptr<T>`{.cpp} contains an `art::RefCore`{.cpp} by value, this only has threading implications for an `art::Ptr<T>`{.cpp} shared across multiple threads. However, a call to `art::Ptr<T>::getData_(...)`{.cpp} does call `art::EDProductGetter::getIt()`{.cpp}, which will interact with the data model and will almost certainly have threading implications of its own. See lifecycle sequence diagrams for `Ptr`{.cpp}:
+
+![`Ptr()`{.cpp}](Ptr-lifecycle.png "Ptr()"){align="top"} ![`Ptr(handle, idx)`{.cpp}](Ptr-lifecycle_001.png "Ptr(handle, idx)"){align="top"} ![`Ptr(productID)`{.cpp}](Ptr-lifecycle_002.png "Ptr(productID)"){align="top"} ![`Ptr(productID, itemKey, productGetter)`{.cpp}](Ptr-lifecycle_003.png "Ptr(productID, itemKey, productGetter)"){align="top"} ![`Ptr(productID, item, itemKey)`{.cpp}](Ptr-lifecycle_004.png "Ptr(productID, item, itemKey)"){align="top"}.
+
+See also the example of [streaming in `Ptr`{.cpp} objects as part of an `Assns`{.cpp} read operation](#assns-read), below.
 
 * *THREADING* In the constructor `template <typename T> template <typename H> Ptr<T>(H const & handle, key_type idx)`{.cpp}, `H::product(..)`{.cpp} is called, which may interact with the data model and will almost certainly have threading implications of its own.
 
@@ -49,6 +53,10 @@
 * *THREADING* `template <typename L, typename R> class art::detail::AssnsStreamer`{.cpp} is a friend of the base class `template <typename L, typename R> void art::Assns<L, R, void>`{.cpp} and calls the above `fill_X`{.cpp} functions during streaming.
 
 * *THREADING* There are three mutable data members: these are only modified during streaming operations.
+
+* *THREADING* See the figure below for an example of streaming in an `Assns`{.cpp} data product and the calls involved. The `RefCoreStreamer` is particularly problematic, here.
+
+![](Assns-read.png){#assns-read}
 
 ## `template <typename B, typename D = void> art::Find{One,Many}{,P}`{.cpp}
 

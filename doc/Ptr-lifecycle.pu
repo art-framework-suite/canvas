@@ -1,5 +1,5 @@
 @startuml
-!include defs.ipu
+!include ptrdefs.ipu
 title 1. Default construction
 participant Module
 STAGE(Create)
@@ -22,7 +22,7 @@ note over PARTICIPANTS #FFAAAA : //SEGFAULT//
 
 @startuml
 !define PARTICIPANTS Handle, Ptr
-!include defs.ipu
+!include ptrdefs.ipu
 title 2. Construction with Handle
 participant Handle
 participant Module
@@ -57,7 +57,7 @@ end
 @enduml
 
 @startuml
-!include defs.ipu
+!include ptrdefs.ipu
 title 3A. From a ""ProductID""
 STAGE(Create)
 Module -> Ptr : FUNC(Ptr(productID))
@@ -68,7 +68,7 @@ CF(FUNC(Ptr(Handle, idx)))
 
 @startuml
 !define PARTICIPANTS ProductGetter, RefCore
-!include defs.ipu
+!include ptrdefs.ipu
 title 3B. From a ""ProductID"", index and ""EDProductGetter""
 participant ProductGetter
 participant Module
@@ -113,7 +113,7 @@ end
 
 @startuml
 '!define PARTICIPANTS ProductGetter, RefCore
-!include defs.ipu
+!include ptrdefs.ipu
 title 5. From a ""ProductID"", item pointer and index.
 STAGE(Create)
 create Ptr
