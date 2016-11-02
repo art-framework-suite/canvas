@@ -21,9 +21,6 @@ namespace art {
 class art::PtrVectorBase {
 public:
   typedef unsigned long key_type;
-#if 0
-protected:
-#endif
   typedef std::vector<key_type> indices_t;
 public:
   typedef indices_t::size_type size_type;
@@ -52,17 +49,16 @@ protected:
     ;
 
   void clear();
-  void reserve(size_type n);
   void swap(PtrVectorBase &);
-  void fillPtrs() const;
   void updateCore(RefCore const &core);
-
-  template <typename T>
-  typename Ptr<T>::key_type key(Ptr<T> const &ptr) const;
-
   bool operator==(PtrVectorBase const &) const;
 
 private:
+  void reserve(size_type n);
+  void fillPtrs() const;
+  template <typename T>
+  typename Ptr<T>::key_type key(Ptr<T> const &ptr) const;
+
   RefCore core_;
   mutable indices_t indicies_; // Will be zeroed-out by fillPtrs();
 
