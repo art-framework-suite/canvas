@@ -27,7 +27,7 @@ namespace art {
 
 class art::RefCore {
 public:
-  RefCore();
+  RefCore() = default;
   RefCore(ProductID const & theId,
           void const * prodPtr,
           EDProductGetter const * prodGetter);
@@ -69,15 +69,6 @@ private:
 };
 
 #ifndef __GCCXML__
-inline
-art::RefCore::
-RefCore()
-  :
-  id_(),
-  transients_()
-{
-}
-
 inline
 art::RefCore::
 RefCore(ProductID const & id,
