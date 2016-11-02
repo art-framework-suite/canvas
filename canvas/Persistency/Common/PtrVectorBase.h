@@ -117,11 +117,6 @@ art::PtrVectorBase::swap(PtrVectorBase &other) {
   core_.swap(other.core_);
 }
 
-inline void
-art::PtrVectorBase::updateCore(RefCore const &core) {
-  core_.pushBackItem(core);
-}
-
 template <typename T>
 inline
 typename art::Ptr<T>::key_type
