@@ -193,7 +193,11 @@ private:
 #else
   virtual
 #endif
-  bool left_first();
+  bool left_first()
+#ifndef ROOT_CAN_REGISTER_IOREADS_PROPERLY
+const
+#endif
+;
 
   void fill_transients();
   void fill_from_transients();
@@ -372,7 +376,7 @@ art::Assns<L, R, void>::makePartner_() const
 template <typename L, typename R>
 inline
 bool
-art::Assns<L, R, void>::left_first()
+art::Assns<L, R, void>::left_first() const
 {
   static bool lf_s = (art::TypeID(typeid(left_t)).friendlyClassName() <
                       art::TypeID(typeid(right_t)).friendlyClassName());
@@ -386,12 +390,12 @@ art::Assns<L, R, void>::fill_transients()
   // Precondition: ptr_data_1_.size() = ptr_data_2_.size();
   ptrs_.clear();
   ptrs_.reserve(ptr_data_1_.size());
-  ptr_data_t & l_ref = left_first() ? ptr_data_1_ : ptr_data_2_;
-  ptr_data_t & r_ref = left_first() ? ptr_data_2_ : ptr_data_1_;
+  ptr_data_t const & l_ref = left_first() ? ptr_data_1_ : ptr_data_2_;
+  ptr_data_t const & r_ref = left_first() ? ptr_data_2_ : ptr_data_1_;
   for (typename ptr_data_t::const_iterator
-       l = l_ref.begin(),
-       e = l_ref.end(),
-       r = r_ref.begin();
+       l = l_ref.cbegin(),
+       e = l_ref.cend(),
+       r = r_ref.cbegin();
        l != e;
        ++l, ++r) {
     ptrs_.emplace_back(Ptr<left_t>(l->first.id(),
@@ -403,8 +407,8 @@ art::Assns<L, R, void>::fill_transients()
   }
   // Empty persistent representation.
   ptr_data_t tmp1, tmp2;
-  l_ref.swap(tmp1);
-  r_ref.swap(tmp2);
+  ptr_data_1_.swap(tmp1);
+  ptr_data_2_.swap(tmp2);
 }
 
 template <typename L, typename R>
