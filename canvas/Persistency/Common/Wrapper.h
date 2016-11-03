@@ -30,7 +30,7 @@ namespace art {
     struct has_size_member : std::false_type {};
 
     template <typename T>
-    struct has_size_member<T, enable_if_function_exists_t<size_t(T::*)(), &T::size>> : std::true_type {};
+    struct has_size_member<T, enable_if_function_exists_t<size_t(T::*)() const, &T::size>> : std::true_type {};
 
     // has_makePartner_member
     template <typename T, typename = void>
