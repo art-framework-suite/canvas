@@ -7,7 +7,7 @@ fcldir -
 perllib  product_dir
 #
 product		version
-clhep		v2_3_3_2a
+clhep		v2_3_4_2
 cppunit		v1_13_1a
 python		v2_7_12
 root		v6_08_00a
