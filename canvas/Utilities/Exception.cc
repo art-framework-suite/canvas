@@ -31,7 +31,7 @@ std::string
 
   case ProductNotFound            : return "ProductNotFound";
   case DictionaryNotFound         : return "DictionaryNotFound";
-  case InsertFailure              : return "InsertFailure";
+  case ProductPutFailure          : return "ProductPutFailure";
   case Configuration              : return "Configuration";
   case LogicError                 : return "LogicError";
   case UnimplementedFeature       : return "UnimplementedFeature";

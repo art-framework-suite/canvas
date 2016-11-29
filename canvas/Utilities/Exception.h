@@ -28,7 +28,7 @@ namespace art {
       BadExceptionType,
       ProductNotFound,
       DictionaryNotFound,
-      InsertFailure,
+      ProductPutFailure,
       Configuration,
       LogicError,    // = 10
       UnimplementedFeature,
