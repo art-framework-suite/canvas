@@ -81,6 +81,7 @@
 
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/Wrapper.h"
+#include "canvas/Persistency/Common/detail/throwPartnerException.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/TypeID.h"
 #include "cetlib/container_algorithms.h"
@@ -168,7 +169,7 @@ public:
                  Ptr<right_t> const & right);
   void swap(art::Assns<L, R, void> &other);
 
-  std::unique_ptr<EDProduct> makePartner() const;
+  std::unique_ptr<EDProduct> makePartner(std::type_info const & wanted_wrapper_type) const;
 
   static short Class_Version() { return 10; }
 
@@ -177,7 +178,7 @@ public:
 protected:
   virtual void swap_(art::Assns<L, R, void> &other);
 
-  virtual std::unique_ptr<EDProduct> makePartner_() const;
+  virtual std::unique_ptr<EDProduct> makePartner_(std::type_info const & wanted_wrapper_type) const;
 
 private:
   friend class detail::AssnsStreamer<left_t, right_t>;
@@ -242,15 +243,19 @@ public:
                  data_t const & data);
   void swap(art::Assns<L, R, D> &other);
 
-  void aggregate(Assns const&) const {}
-  std::unique_ptr<EDProduct> makePartner() const;
+  // This is needed (as opposed to using base::makePartner) because
+  // enable_if_function_exists_t does not detect the base's function.
+  std::unique_ptr<EDProduct> makePartner(std::type_info const & wanted_wrapper_type) const;
+
   static short Class_Version() { return 10; }
+
+  void aggregate(Assns const&) const {}
 
 private:
   friend class art::Assns<right_t, left_t, data_t>; // partner_t.
 
   void swap_(art::Assns<L, R, void> &other) override;
-  std::unique_ptr<EDProduct> makePartner_() const override;
+  std::unique_ptr<EDProduct> makePartner_(std::type_info const & wanted_wrapper_type) const override;
 
   std::vector<data_t> data_;
 };
@@ -349,9 +354,9 @@ art::Assns<L, R, void>::swap(art::Assns<L, R, void> &other)
 template <typename L, typename R>
 inline
 std::unique_ptr<art::EDProduct>
-art::Assns<L, R, void>::makePartner() const
+art::Assns<L, R, void>::makePartner(std::type_info const & wanted_wrapper_type) const
 {
-  return makePartner_();
+  return makePartner_(wanted_wrapper_type);
 }
 
 template <typename L, typename R>
@@ -367,8 +372,11 @@ art::Assns<L, R, void>::swap_(art::Assns<L, R, void> &other)
 
 template <typename L, typename R>
 std::unique_ptr<art::EDProduct>
-art::Assns<L, R, void>::makePartner_() const
+art::Assns<L, R, void>::makePartner_(std::type_info const & wanted_wrapper_type) const
 {
+  if (wanted_wrapper_type != typeid(Wrapper<partner_t>)) {
+    detail::throwPartnerException(typeid(*this), wanted_wrapper_type);
+  }
   std::unique_ptr<art::EDProduct> retval(new Wrapper<partner_t>(std::unique_ptr<partner_t>(new partner_t(*this))));
   return retval;
 }
@@ -500,9 +508,9 @@ art::Assns<L, R, D>::swap(Assns<L, R, D> &other)
 template <typename L, typename R, typename D>
 inline
 std::unique_ptr<art::EDProduct>
-art::Assns<L, R, D>::makePartner() const
+art::Assns<L, R, D>::makePartner(std::type_info const & wanted_wrapper_type) const
 {
-  return makePartner_();
+  return makePartner_(wanted_wrapper_type);
 }
 
 template <typename L, typename R, typename D>
@@ -521,10 +529,21 @@ art::Assns<L, R, D>::swap_(Assns<L, R, void> &other)
 
 template <typename L, typename R, typename D>
 std::unique_ptr<art::EDProduct>
-art::Assns<L, R, D>::makePartner_() const
+art::Assns<L, R, D>::makePartner_(std::type_info const & wanted_wrapper_type) const
 {
-  std::unique_ptr<art::EDProduct> retval = std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
-  return retval;
+  std::unique_ptr<art::EDProduct> result;
+  if (wanted_wrapper_type == typeid(Wrapper<partner_t>)) { // Partner.
+    result = std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
+  } else if (wanted_wrapper_type == typeid(Wrapper<base>)) { // Base.
+    // Can't use std::make_unique due to private base.
+    result = std::unique_ptr<Wrapper<base>>(new Wrapper<base>(std::unique_ptr<base>(new base(*this))));
+  } else if (wanted_wrapper_type == typeid(Wrapper<typename base::partner_t>)) { // Base of partner.
+    // Can't use std::make_unique due to private base.
+    result = std::unique_ptr<Wrapper<typename base::partner_t>>(new Wrapper<typename base::partner_t>(std::unique_ptr<typename base::partner_t>(new typename base::partner_t(*this))));
+  } else { // Oops.
+    detail::throwPartnerException(typeid(*this), wanted_wrapper_type);
+  }
+  return result;
 }
 #endif /* canvas_Persistency_Common_Assns_h */
 

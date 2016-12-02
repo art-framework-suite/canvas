@@ -37,7 +37,7 @@ namespace art {
     struct has_makePartner_member : std::false_type {};
 
     template <typename T>
-    struct has_makePartner_member<T, enable_if_function_exists_t<std::unique_ptr<EDProduct>(T::*)() const, &T::makePartner>> : std::true_type {};
+    struct has_makePartner_member<T, enable_if_function_exists_t<std::unique_ptr<EDProduct>(T::*)(std::type_info const &) const, &T::makePartner>> : std::true_type {};
 
   }
 
@@ -322,12 +322,7 @@ namespace art {
     std::unique_ptr<EDProduct>
     operator()(T const & obj,
                std::type_info const & wanted_wrapper_type) const {
-      if (typeid(Wrapper<typename T::partner_t>) == wanted_wrapper_type) {
-        return obj.makePartner();
-      }
-      throw Exception(errors::LogicError, "makePartner")
-        << "Attempted to make partner with inconsistent type information:\n"
-        << "Please report to the ART framework developers.\n";
+      return obj.makePartner(wanted_wrapper_type);
     }
   };
 
@@ -337,7 +332,9 @@ namespace art {
     operator()(T const &,
                std::type_info const &) const {
       throw Exception(errors::LogicError, "makePartner")
-        << "Attempted to make partner of a product that does not know how!\n"
+        << "Attempted to make partner of a product ("
+        << cet::demangle_symbol(typeid(T).name())
+        << ") that does not know how!\n"
         << "Please report to the ART framework developers.\n";
     }
   };
