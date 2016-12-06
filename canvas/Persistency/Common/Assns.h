@@ -377,8 +377,7 @@ art::Assns<L, R, void>::makePartner_(std::type_info const & wanted_wrapper_type)
   if (wanted_wrapper_type != typeid(Wrapper<partner_t>)) {
     detail::throwPartnerException(typeid(*this), wanted_wrapper_type);
   }
-  std::unique_ptr<art::EDProduct> retval(new Wrapper<partner_t>(std::unique_ptr<partner_t>(new partner_t(*this))));
-  return retval;
+  return std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
 }
 
 template <typename L, typename R>
@@ -531,15 +530,14 @@ template <typename L, typename R, typename D>
 std::unique_ptr<art::EDProduct>
 art::Assns<L, R, D>::makePartner_(std::type_info const & wanted_wrapper_type) const
 {
+  using bp = typename base::partner_t;
   std::unique_ptr<art::EDProduct> result;
   if (wanted_wrapper_type == typeid(Wrapper<partner_t>)) { // Partner.
     result = std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
   } else if (wanted_wrapper_type == typeid(Wrapper<base>)) { // Base.
-    // Can't use std::make_unique due to private base.
-    result = std::unique_ptr<Wrapper<base>>(new Wrapper<base>(std::unique_ptr<base>(new base(*this))));
-  } else if (wanted_wrapper_type == typeid(Wrapper<typename base::partner_t>)) { // Base of partner.
-    // Can't use std::make_unique due to private base.
-    result = std::unique_ptr<Wrapper<typename base::partner_t>>(new Wrapper<typename base::partner_t>(std::unique_ptr<typename base::partner_t>(new typename base::partner_t(*this))));
+    result = std::make_unique<Wrapper<base>>(std::make_unique<base>(static_cast<base>(*this)));
+  } else if (wanted_wrapper_type == typeid(Wrapper<bp>)) { // Base of partner.
+    result = std::make_unique<Wrapper<bp>>(std::make_unique<bp>(static_cast<base>(*this)));
   } else { // Oops.
     detail::throwPartnerException(typeid(*this), wanted_wrapper_type);
   }
