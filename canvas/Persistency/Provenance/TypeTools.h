@@ -16,6 +16,7 @@
 
 namespace art {
 
+  // Expensive: will almost certainly cause a ROOT autoparse.
   TypeWithDict
   find_nested_type_named(std::string const& nested_type,
                          TClass* const type_to_search);
@@ -46,6 +47,12 @@ namespace art {
   TypeWithDict
   type_of_assns_partner(std::string assns_type_name);
 
+  std::string
+  name_of_assns_base(std::string assns_type_name);
+
+  TypeWithDict
+  type_of_assns_base(std::string assns_type_name);
+
   bool
   is_instantiation_of(TClass* cl, std::string const& template_name);
 
@@ -71,9 +78,15 @@ art::type_of_assns_partner(std::string assns_type_name)
   return result;
 }
 
-
+inline
+art::TypeWithDict
+art::type_of_assns_base(std::string assns_type_name)
+{
+  TypeWithDict result(name_of_assns_base(assns_type_name));
+  return result;
+}
+#endif /* canvas_Persistency_Provenance_TypeTools_h */
 
 // Local Variables:
 // mode: c++
 // End:
-#endif /* canvas_Persistency_Provenance_TypeTools_h */

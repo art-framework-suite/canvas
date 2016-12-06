@@ -207,6 +207,27 @@ name_of_assns_partner(std::string assns_type_name) {
   return result;
 }
 
+std::string
+name_of_assns_base(std::string assns_type_name) {
+  using namespace std::string_literals;
+  std::string result;
+  static std::string const assns_start = "art::Assns<"s;
+  if (assns_type_name.compare(0, assns_start.size(), assns_start) != 0) {
+    // Not an Assns.
+    return result;
+  }
+  if (name_of_template_arg(assns_type_name, 2) == "void"s) {
+    // Doesn't have the base we're looking for.
+    return result;
+  }
+  result = assns_start +
+           name_of_template_arg(assns_type_name, 0) +
+           ',' +
+           name_of_template_arg(assns_type_name, 1) +
+           ",void>";
+  return result;
+}
+
 bool
 is_instantiation_of(TClass* const cl, string const& template_name)
 {
