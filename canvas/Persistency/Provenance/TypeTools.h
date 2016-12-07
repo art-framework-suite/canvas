@@ -56,6 +56,7 @@ namespace art {
   bool
   is_instantiation_of(TClass* cl, std::string const& template_name);
 
+  [[noreturn]]
   void
   throwLateDictionaryError(std::string const & className);
 
