@@ -205,9 +205,9 @@ const
 
   void init_streamer();
 
-  mutable ptrs_t ptrs_; //! transient
-  mutable ptr_data_t ptr_data_1_;
-  mutable ptr_data_t ptr_data_2_;
+  ptrs_t ptrs_; //! transient
+  ptr_data_t ptr_data_1_;
+  ptr_data_t ptr_data_2_;
 };
 
 ////////////////////////////////////////////////////////////////////////
