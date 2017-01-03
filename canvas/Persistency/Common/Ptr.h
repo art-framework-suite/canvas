@@ -90,6 +90,22 @@ namespace art {
   std::ostream & operator << (std::ostream &, Ptr<T> const &);
 }
 
+namespace std {
+  template<typename T>
+  class hash<art::Ptr<T> > {
+public:
+    std::size_t
+    operator() (art::Ptr<T> const & ptr) const {
+      return
+        hash_((ptr.key() && 0xffffffff) +
+              (static_cast<size_t>(ptr.id().productIndex()) << 32) +
+              (static_cast<size_t>(ptr.id().processIndex()) << 48));
+    }
+private:
+    hash<size_t> hash_;
+  };
+}
+
 template <typename T>
 class art::Ptr {
 public:
