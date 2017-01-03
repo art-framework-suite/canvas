@@ -41,6 +41,10 @@ namespace art {
   type_of_template_arg(std::string const & template_instance,
                        size_t desired_arg);
 
+  bool is_assns(TypeID const & tid);
+
+  bool is_assns(std::string const & type_name);
+
   std::string
   name_of_assns_partner(std::string assns_type_name);
 
@@ -52,6 +56,13 @@ namespace art {
 
   TypeWithDict
   type_of_assns_base(std::string assns_type_name);
+
+  bool
+  is_instantiation_of(std::string const & type_name,
+                      std::string const & template_name);
+
+  bool
+  is_instantiation_of(TypeID const & tid, std::string const & template_name);
 
   bool
   is_instantiation_of(TClass* cl, std::string const& template_name);
@@ -72,6 +83,21 @@ art::type_of_template_arg(std::string const & template_instance,
 }
 
 inline
+bool
+art::is_assns(TypeID const & tid)
+{
+  return is_assns(tid.className());
+}
+
+inline
+bool
+art::is_assns(std::string const & type_name)
+{
+  using namespace std::string_literals;
+  return is_instantiation_of(type_name, "art::Assns"s);
+}
+
+inline
 art::TypeWithDict
 art::type_of_assns_partner(std::string assns_type_name)
 {
@@ -86,6 +112,20 @@ art::type_of_assns_base(std::string assns_type_name)
   TypeWithDict result(name_of_assns_base(assns_type_name));
   return result;
 }
+
+inline
+bool
+art::is_instantiation_of(std::string const & type_name,
+                         std::string const & template_name) {
+  return type_name.find(template_name + '<') == 0ull;
+}
+
+inline
+bool
+art::is_instantiation_of(TypeID const & tid, std::string const & template_name) {
+  return is_instantiation_of(tid.className(), template_name);
+}
+
 #endif /* canvas_Persistency_Provenance_TypeTools_h */
 
 // Local Variables:
