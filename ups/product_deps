@@ -1,22 +1,26 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
 parent canvas	v1_05_01
-defaultqual	e12
+defaultqual	e14
 #
 fcldir -
 perllib  product_dir
 #
 product		version
-clhep		v2_3_4_2
-cppunit		v1_13_1a
-python		v2_7_12
-root		v6_08_00a
+clhep		v2_3_4_3a
+cppunit		v1_13_1b
+python		v2_7_13a
+root		v6_08_02a
 messagefacility	v1_18_00
-tbb		v2017_2
-cetbuildtools	v5_06_01	-	only_for_build
+tbb		v2017_3a
+cetbuildtools	v5_06_03	-	only_for_build
 end_product_list
 
 qualifier	messagefacility	root		clhep		cppunit		python	tbb		compiler	notes
+e14:debug	e14:debug	e14:debug	e14:debug	e14:debug	-nq-	e14:debug	gcc
+e14:prof	e14:prof	e14:prof	e14:prof	e14:prof	-nq-	e14:prof	gcc
+nu:e14:debug	e14:debug	e14:nu:debug	e14:debug	e14:debug	-nq-	e14:debug	gcc
+nu:e14:prof	e14:prof	e14:nu:prof	e14:prof	e14:prof	-nq-	e14:prof	gcc
 e12:debug	e12:debug	e12:debug	e12:debug	e12:debug	-nq-	e12:debug	gcc
 e12:prof	e12:prof	e12:prof	e12:prof	e12:prof	-nq-	e12:prof	gcc
 nu:e12:debug	e12:debug	e12:nu:debug	e12:debug	e12:debug	-nq-	e12:debug	gcc
