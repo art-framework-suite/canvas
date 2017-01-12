@@ -229,7 +229,7 @@ public:
   Assns();
   Assns(partner_t const & other);
 
-  using base::size;
+  size_type size() const; // Implemented explicitly only to let Wrapper know.
   using base::begin;
   using base::end;
   using base::operator[];
@@ -466,6 +466,14 @@ art::Assns<L, R, D>::Assns(partner_t const& other)
   : base(other)
   , data_(other.data_)
 {}
+
+template <typename L, typename R, typename D>
+inline
+typename art::Assns<L, R, void>::size_type
+art::Assns<L, R, D>::size() const
+{
+  return base::size();
+}
 
 template <typename L, typename R, typename D>
 inline
