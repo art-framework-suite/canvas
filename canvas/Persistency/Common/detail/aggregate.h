@@ -260,7 +260,7 @@ namespace art {
   }
 }
 
-#endif
+#endif /* canvas_Persistency_Common_detail_aggregate_h */
 
 // Local variables:
 // mode: c++

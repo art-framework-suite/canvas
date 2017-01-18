@@ -113,7 +113,7 @@ namespace art {
 
 }
 
-#endif
+#endif /* canvas_Persistency_Provenance_RangeSet_h */
 
 // Local variables:
 // mode: c++

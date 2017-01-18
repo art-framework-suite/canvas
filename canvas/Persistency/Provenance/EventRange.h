@@ -72,7 +72,7 @@ namespace art {
 
 }
 
-#endif
+#endif /* canvas_Persistency_Provenance_EventRange_h */
 
 // Local variables:
 // mode: c++
