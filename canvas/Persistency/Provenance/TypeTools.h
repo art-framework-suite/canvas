@@ -71,6 +71,9 @@ namespace art {
   void
   throwLateDictionaryError(std::string const & className);
 
+  std::string
+  name_of_unwrapped_product(std::string const & wrapped_name);
+
 } // namespace art
 
 inline
