@@ -20,6 +20,7 @@ namespace art {
   bool operator > (TypeID const &, TypeID const &);
   bool operator != (TypeID const &, TypeID const &);
   std::ostream & operator << (std::ostream &, TypeID const &);
+  void swap(TypeID &, TypeID &);
 }
 
 class art::TypeID {
@@ -60,6 +61,8 @@ public:
 
   // Access the typeinfo.
   std::type_info const & typeInfo() const;
+
+  void swap(TypeID & other);
 
 private:
 
@@ -131,6 +134,14 @@ art::TypeID::typeInfo() const
 }
 
 inline
+void
+art::TypeID::swap(TypeID & other)
+{
+  using std::swap;
+  swap(ti_, other.ti_);
+}
+
+inline
 bool
 art::operator > (TypeID const & a, TypeID const & b)
 {
@@ -142,6 +153,13 @@ bool
 art::operator != (TypeID const & a, TypeID const & b)
 {
   return !(a == b);
+}
+
+inline
+void
+art::swap (TypeID & left, TypeID & right)
+{
+  left.swap(right);
 }
 
 // Local Variables:
