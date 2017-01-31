@@ -138,12 +138,13 @@ namespace art {
   FileIndex::findPosition(SubRunID const &srID, bool exact) const {
     assert(sortState() != kNotSorted);
     const_iterator it;
+    auto const invID = EventID::invalidEvent(srID);
     if (sortState() == kSorted_Run_SubRun_EventEntry) {
-      Element el {EventID::invalidEvent(srID)};
+      Element const el {invID};
       it = lower_bound_all(entries_, el, Compare_Run_SubRun_EventEntry());
     }
     else {
-      it = findPosition(EventID::invalidEvent(srID));
+      it = findPosition(invID);
     }
     auto const itEnd = entries_.cend();
     while (it != itEnd && it->getEntryType() != FileIndex::kSubRun) {
@@ -159,12 +160,13 @@ namespace art {
   FileIndex::findPosition(RunID const &rID, bool exact) const {
     assert(sortState() != kNotSorted);
     const_iterator it;
+    auto const invID = EventID::invalidEvent(rID);
     if (sortState() == kSorted_Run_SubRun_EventEntry) {
-      Element el {EventID::invalidEvent(rID)};
+      Element const el {invID};
       it = lower_bound_all(entries_, el, Compare_Run_SubRun_EventEntry());
     }
     else {
-      it = findPosition(EventID::invalidEvent(rID));
+      it = findPosition(invID);
     }
     auto const itEnd = entries_.cend();
     while (it != itEnd && it->getEntryType() != FileIndex::kRun) {
