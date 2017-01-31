@@ -3,6 +3,7 @@
 
 #include "canvas/Persistency/Provenance/BranchChildren.h"
 #include "canvas/Persistency/Provenance/BranchIDList.h"
+#include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/FileIndex.h"
 #include "canvas/Persistency/Provenance/ParameterSetMap.h"
 #include "canvas/Persistency/Provenance/ProcessHistory.h"
@@ -10,6 +11,7 @@
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/TypeID.h"
 
+#include <string>
 #include <typeinfo>
 
 namespace art {
@@ -41,6 +43,7 @@ namespace art {
     //------------------------------------------------------------------
     // Other tree names
     std::string const & eventTreeName( );
+    std::string const & dataTreeName(BranchType bt);
     std::string const & eventMetaDataTreeName( );
 
 #define ART_ROOTNAME(T,N)                                     \

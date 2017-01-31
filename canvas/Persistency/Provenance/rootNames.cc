@@ -1,8 +1,8 @@
 #include "canvas/Persistency/Provenance/rootNames.h"
 
-#include "canvas/Persistency/Provenance/BranchType.h"
-
 namespace {
+  using namespace std::string_literals;
+
   std::string const parentageTree     = "Parentage";
   std::string const parentageIDBranch = "Hash";
   std::string const parentageBranch   = "Description";
@@ -12,7 +12,7 @@ namespace {
   std::string const eventHistory      = "EventHistory";
   std::string const eventBranchMapper = "EventBranchMapper";
 
-  std::string const events            = "Events";
+  std::array<std::string const, art::NumBranchTypes> dataTrees = { "Events"s, "SubRuns"s, "Runs"s, "Results"s };
   std::string const eventMeta         = "EventMetaData";
 }
 
@@ -50,7 +50,11 @@ std::string const & art::rootNames::eventHistoryBranchName( ) {
 }
 
 std::string const & art::rootNames::eventTreeName( ) {
-  return events;
+  return dataTrees[InEvent];
+}
+
+std::string const & art::rootNames::dataTreeName(BranchType bt) {
+  return dataTrees[bt];
 }
 
 std::string const & art::rootNames::eventMetaDataTreeName( ) {
