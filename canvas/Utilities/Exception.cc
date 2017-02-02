@@ -19,7 +19,7 @@ std::string
 {
   using namespace errors;
 
-  switch( code ) {
+  switch(code) {
     // Let the compiler tell us we missed one.
     // default                        : return "Unknown code";
 
@@ -28,7 +28,6 @@ std::string
   case Unknown                    : return "Unknown";
   case BadAlloc                   : return "BadAlloc";
   case BadExceptionType           : return "BadExceptionType";
-
   case ProductNotFound            : return "ProductNotFound";
   case DictionaryNotFound         : return "DictionaryNotFound";
   case ProductPutFailure          : return "ProductPutFailure";
@@ -40,29 +39,23 @@ std::string
   case NullPointerError           : return "NullPointerError";
   case EventTimeout               : return "EventTimeout";
   case DataCorruption             : return "DataCorruption";
-
   case ScheduleExecutionFailure   : return "ScheduleExecutionFailure";
   case EventProcessorFailure      : return "EventProcessorFailure";
   case EndJobFailure              : return "EndJobFailure";
-
   case FileOpenError              : return "FileOpenError";
   case FileReadError              : return "FileReadError";
   case FatalRootError             : return "FatalRootError";
   case MismatchedInputFiles       : return "MismatchedInputFiles";
   case CatalogServiceError        : return "CatalogServiceError";
-
   case ProductDoesNotSupportViews : return "ProductDoesNotSupportViews";
   case ProductDoesNotSupportPtr   : return "ProductDoesNotSupportPtr";
-
   case SQLExecutionError          : return "SQLExecutionError";
-
   case InvalidNumber              : return "InvalidNumber";
-
   case NotFound                   : return "NotFound";
-
   case ServiceNotFound            : return "ServiceNotFound";
   case ProductCannotBeAggregated  : return "ProductCannotBeAggregated";
   case ProductRegistrationFailure : return "ProductRegistrationFailure";
+  case SignalReceived             : return "SignalReceived";
   }
   throw Exception{errors::LogicError}
     << "Internal error: missing string translation for error "

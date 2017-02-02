@@ -52,7 +52,8 @@ namespace art {
       NotFound,
       ServiceNotFound, // = 30
       ProductCannotBeAggregated,
-      ProductRegistrationFailure
+      ProductRegistrationFailure,
+      SignalReceived
     };
 
   }  // errors
