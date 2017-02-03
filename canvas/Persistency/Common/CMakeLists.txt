@@ -12,17 +12,7 @@ foreach(ART_IPR_BASE_NAME FindOne FindMany)
     @ONLY)
 endforeach()
 
-cet_make(SUBDIRS detail
-  LIBRARIES
-  canvas_Persistency_Provenance
-  canvas_Utilities
-  ${ROOT_CORE}
-  ${Boost_THREAD_LIBRARY}
-  ${CLHEP}
-  NO_DICTIONARY
-  )
-
-art_dictionary(DICTIONARY_LIBRARIES canvas_Persistency_Common)
+art_dictionary(DICTIONARY_LIBRARIES canvas)
 
 install_headers(SUBDIRS detail)
 install_source(SUBDIRS detail)

@@ -1,32 +1,34 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent canvas	v1_05_01
-defaultqual	e10
+parent canvas	v1_06_00
+defaultqual	e14
 #
 fcldir -
 perllib  product_dir
 #
 product		version
-clhep		v2_3_3_2
-cppunit		v1_12_1d
-python		v2_7_11
-root		v6_06_08
-messagefacility	v1_18_00
-tbb		v4_4_3a
-cetbuildtools	v5_04_03	-	only_for_build
+clhep		v2_3_4_3b
+cppunit		v1_13_1c
+python		v2_7_13b
+root		v6_08_04b
+messagefacility	v1_18_01
+tbb		v2017_3c
+cetbuildtools	v5_05_06	-	only_for_build
 end_product_list
 
 qualifier	messagefacility	root		clhep		cppunit		python	tbb		compiler	notes
+e14:debug	e14:debug	e14:debug	e14:debug	e14:debug	-nq-	e14:debug	gcc
+e14:prof	e14:prof	e14:prof	e14:prof	e14:prof	-nq-	e14:prof	gcc
+nu:e14:debug	e14:debug	e14:nu:debug	e14:debug	e14:debug	-nq-	e14:debug	gcc
+nu:e14:prof	e14:prof	e14:nu:prof	e14:prof	e14:prof	-nq-	e14:prof	gcc
+e12:debug	e12:debug	e12:debug	e12:debug	e12:debug	-nq-	e12:debug	gcc
+e12:prof	e12:prof	e12:prof	e12:prof	e12:prof	-nq-	e12:prof	gcc
+nu:e12:debug	e12:debug	e12:nu:debug	e12:debug	e12:debug	-nq-	e12:debug	gcc
+nu:e12:prof	e12:prof	e12:nu:prof	e12:prof	e12:prof	-nq-	e12:prof	gcc
 e10:debug	e10:debug	e10:debug	e10:debug	e10:debug	-nq-	e10:debug	gcc
 e10:prof	e10:prof	e10:prof	e10:prof	e10:prof	-nq-	e10:prof	gcc
-e10:prof:sse2	e10:prof	e10:prof	e10:prof	e10:prof	-nq-	e10:prof	gcc		-msse2 -ftree-vectorizer-verbose
 nu:e10:debug	e10:debug	e10:nu:debug	e10:debug	e10:debug	-nq-	e10:debug	gcc
 nu:e10:prof	e10:prof	e10:nu:prof	e10:prof	e10:prof	-nq-	e10:prof	gcc
-e9:debug	e9:debug	e9:debug	e9:debug	e9:debug	-nq-	e9:debug	gcc
-e9:prof		e9:prof		e9:prof		e9:prof		e9:prof		-nq-	e9:prof		gcc
-e9:prof:sse2	e9:prof		e9:prof		e9:prof		e9:prof		-nq-	e9:prof		gcc		-msse2 -ftree-vectorizer-verbose
-nu:e9:debug	e9:debug	e9:nu:debug	e9:debug	e9:debug	-nq-	e9:debug	gcc
-nu:e9:prof	e9:prof		e9:nu:prof	e9:prof		e9:prof		-nq-	e9:prof		gcc
 end_qualifier_list
 
 # Local Variables:

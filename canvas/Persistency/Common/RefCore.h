@@ -27,7 +27,7 @@ namespace art {
 
 class art::RefCore {
 public:
-  RefCore();
+  RefCore() = default;
   RefCore(ProductID const & theId,
           void const * prodPtr,
           EDProductGetter const * prodGetter);
@@ -49,7 +49,6 @@ public:
   void setProductPtr(void const * prodPtr) const;
   void setProductGetter(EDProductGetter const * prodGetter) const;
   void swap(RefCore & other);
-  void pushBackItem(RefCore const & productToBeInserted);
 
   struct RefCoreTransients {
     // itemPtr_ is the address of the item for which the Ptr in which
@@ -69,15 +68,6 @@ private:
 };
 
 #ifndef __GCCXML__
-inline
-art::RefCore::
-RefCore()
-  :
-  id_(),
-  transients_()
-{
-}
-
 inline
 art::RefCore::
 RefCore(ProductID const & id,

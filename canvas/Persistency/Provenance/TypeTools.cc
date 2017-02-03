@@ -186,15 +186,11 @@ std::string
 name_of_assns_partner(std::string assns_type_name) {
 //**/cout <<  "-----> Begin art::name_of_assns_partner(assns_type_name)" << endl;
 //**/cout <<  "assns_type_name = " << assns_type_name << endl;
-  using namespace std::string_literals;
   std::string result;
-  static std::string const assns_start = "art::Assns<"s;
-//**/cout <<  "Comparing " << assns_start << " with " << assns_type_name.substr(0, assns_start.size()) << endl;
-  if (assns_type_name.compare(0, assns_start.size(), assns_start) != 0) {
-    // Not an Assns.
-//**/cout <<  "-----> End   art::name_of_assns_partner(assns_type_name)" << endl;
+  if (!is_assns(assns_type_name)) {
     return result;
   }
+  static std::string const assns_start = "art::Assns<"s;
   auto const arg0 = name_of_template_arg(assns_type_name, 0);
 //**/cout <<  "arg0 = " << arg0 << endl;
   auto const arg1 = name_of_template_arg(assns_type_name, 1);
@@ -207,6 +203,26 @@ name_of_assns_partner(std::string assns_type_name) {
   return result;
 }
 
+std::string
+name_of_assns_base(std::string assns_type_name) {
+  std::string result;
+  if (!is_assns(assns_type_name)) {
+    return result;
+  }
+  using namespace std::string_literals;
+  static std::string const assns_start = "art::Assns<"s;
+  if (name_of_template_arg(assns_type_name, 2) == "void"s) {
+    // Doesn't have the base we're looking for.
+    return result;
+  }
+  result = assns_start +
+           name_of_template_arg(assns_type_name, 0) +
+           ',' +
+           name_of_template_arg(assns_type_name, 1) +
+           ",void>";
+  return result;
+}
+
 bool
 is_instantiation_of(TClass* const cl, string const& template_name)
 {
@@ -214,7 +230,7 @@ is_instantiation_of(TClass* const cl, string const& template_name)
     throw Exception(errors::NullPointerError, "is_instantiation_of: ")
         << "Null TClass pointer passed!\n";
   }
-  return string(cl->GetName()).find(template_name + "<") == 0ul;
+  return is_instantiation_of(cl->GetName(), template_name);
 }
 
 void
@@ -225,6 +241,17 @@ throwLateDictionaryError(std::string const & className)
     << "Could not find dictionary for: "
     << className
     << "\ndespite passing runtime dictionary checks.\n";
+}
+
+std::string
+name_of_unwrapped_product(std::string const & wrapped_name)
+{
+  using namespace std::string_literals;
+  if (!is_instantiation_of(wrapped_name, "art::Wrapper"s)) {
+    throw Exception(errors::LogicError, "Can't unwrap"s)
+      << "-- attempted to get unwrapped product from non-instance of art::Wrapper."s;
+  }
+  return name_of_template_arg(wrapped_name, 0);
 }
 
 } // namespace art

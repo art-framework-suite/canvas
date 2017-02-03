@@ -56,7 +56,7 @@ namespace art {
 
 }
 
-#endif
+#endif /* canvas_Persistency_Provenance_IDNumber_h */
 
 // Local variables:
 // mode: c++

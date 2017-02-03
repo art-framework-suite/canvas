@@ -1,5 +1,5 @@
-#ifndef test_Persistency_Common_MockRun_h
-#define test_Persistency_Common_MockRun_h
+#ifndef canvas_test_Persistency_Common_MockRun_h
+#define canvas_test_Persistency_Common_MockRun_h
 
 #include "canvas/Persistency/Common/Wrapper.h"
 
@@ -35,7 +35,7 @@ namespace arttest {
 
 }
 
-#endif
+#endif /* canvas_test_Persistency_Common_MockRun_h */
 
 // Local variables:
 // mode: c++
