@@ -111,10 +111,14 @@ art::uniform_type_name(std::string name) {
   // We must use the same conventions previously used by Reflex.
   // The order is important.
 
-  // We must remove __cxx11:: from all type names. This should not have
-  // implications for I/O because ROOT stores the data that STL objects
-  // represent rather than doing a "dumb serialization" of the class.
-  cet::replace_all(name, "__cxx11::"s, ""s);
+  // We must change std::__cxx11:: -> std:: for all type names. This
+  // should not have implications for I/O because ROOT stores the data
+  // that STL objects represent rather than doing a "dumb serialization"
+  // of the class.
+  cet::replace_all(name, "std::__cxx11::"s, "std::"s);
+  // According to a report from Chris Jones, Apple Clang has a similar
+  // issue with std::__1.
+  cet::replace_all(name, "std::__1::"s, "std::"s);
 
   // No space after comma.
   cet::replace_all(name, ", "s, ","s);
