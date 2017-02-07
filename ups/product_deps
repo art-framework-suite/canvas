@@ -10,7 +10,7 @@ product		version
 clhep		v2_3_4_3b
 cppunit		v1_13_1c
 python		v2_7_13b
-root		v6_08_04b
+root		v6_08_04c
 messagefacility	v1_18_01
 tbb		v2017_3c
 cetbuildtools	v5_06_06	-	only_for_build
