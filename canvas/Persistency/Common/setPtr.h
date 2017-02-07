@@ -3,7 +3,7 @@
 
 #include "canvas/Persistency/Common/detail/maybeCastObj.h"
 #include "cetlib/map_vector.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 
 #include <iterator>
 #include <typeinfo>

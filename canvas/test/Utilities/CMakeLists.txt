@@ -11,6 +11,8 @@ set(default_canvas_test_libraries
   ${ROOT_REFLEX}
   )
 
+cet_test(Level_t)
+
 cet_test(InputTag_t USE_BOOST_UNIT
   LIBRARIES ${default_canvas_test_libraries}
   )

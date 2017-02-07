@@ -10,7 +10,7 @@
 #include "canvas/Persistency/Common/EDProduct.h"
 #include "canvas/Persistency/Common/detail/aggregate.h"
 #include "canvas/Utilities/DebugMacros.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 #include "cetlib/detail/metaprogramming.h"
 
 #include <memory>

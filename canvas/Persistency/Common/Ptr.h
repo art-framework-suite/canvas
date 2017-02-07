@@ -46,7 +46,7 @@
 #include "canvas/Persistency/Common/traits.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/ensurePointer.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 
 #include <cassert>
 #include <cstddef>

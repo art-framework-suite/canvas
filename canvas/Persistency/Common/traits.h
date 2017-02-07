@@ -9,7 +9,7 @@
 
 #include "cetlib/detail/metaprogramming.h"
 #include "canvas/Utilities/Exception.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 #include "cetlib/detail/metaprogramming.h"
 #include "cetlib/map_vector.h"
 

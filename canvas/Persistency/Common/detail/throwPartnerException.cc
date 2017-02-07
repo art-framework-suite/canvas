@@ -1,6 +1,6 @@
 #include "canvas/Persistency/Common/detail/throwPartnerException.h"
 #include "canvas/Utilities/Exception.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 
 void
 art::detail::

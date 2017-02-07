@@ -2,7 +2,7 @@
 // vim: set sw=2:
 
 #include "canvas/Utilities/Exception.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 
 #include "TClass.h"
 #include "TClassRef.h"
