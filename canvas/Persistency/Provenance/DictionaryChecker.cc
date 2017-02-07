@@ -3,7 +3,7 @@
 #include "canvas/Persistency/Provenance/TypeWithDict.h"
 #include "canvas/Utilities/DebugMacros.h"
 #include "canvas/Utilities/Exception.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 
 #include "TBaseClass.h"
 #include "TClass.h"

@@ -11,7 +11,7 @@
 #include "canvas/Utilities/Exception.h"
 #include "boost/mpl/assert.hpp"
 #include "boost/type_traits.hpp"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 
 #include <iterator>
 #include <type_traits>

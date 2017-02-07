@@ -1,7 +1,7 @@
 #ifndef canvas_Utilities_uniform_type_name_h
 #define canvas_Utilities_uniform_type_name_h
 
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 
 #include <string>
 #include <typeinfo>

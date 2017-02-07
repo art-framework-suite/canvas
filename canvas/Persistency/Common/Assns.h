@@ -85,7 +85,7 @@
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/TypeID.h"
 #include "cetlib/container_algorithms.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 
 #include "TBuffer.h"
 #include "TClassStreamer.h" // Temporary
