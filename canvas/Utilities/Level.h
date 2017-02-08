@@ -34,7 +34,6 @@ namespace art {
 
   constexpr auto level_up(Level const l) noexcept
   {
-    assert(l!=highest_level());
     return static_cast<Level>(underlying_value(l)-1);
   }
 
@@ -45,7 +44,6 @@ namespace art {
 
   constexpr auto level_down(Level const l) noexcept
   {
-    assert(l!=most_deeply_nested_level());
     return static_cast<Level>(underlying_value(l)+1);
   }
 
