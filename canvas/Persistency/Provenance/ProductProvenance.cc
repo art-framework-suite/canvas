@@ -1,77 +1,62 @@
-#include "canvas/Persistency/Provenance/ProductProvenance.h"
-
 #include "canvas/Persistency/Provenance/ParentageRegistry.h"
+#include "canvas/Persistency/Provenance/ProductProvenance.h"
+#include "canvas/Persistency/Provenance/ParentageRegistry.h"
+#include "canvas/Utilities/Exception.h"
+
 #include <cassert>
 #include <ostream>
 
 namespace art {
-  ProductProvenance::Transients::Transients() :
-    parentagePtr_(),
-    noParentage_(false)
-  {}
-
-  ProductProvenance::ProductProvenance() :
-    branchID_(),
-    productStatus_(productstatus::uninitialized()),
-    parentageID_(),
-    transients_()
-  {}
 
   ProductProvenance::ProductProvenance(BranchID const& bid) :
-    branchID_(bid),
-    productStatus_(productstatus::uninitialized()),
-    parentageID_(),
-    transients_()
+    branchID_{bid}
   {}
 
   ProductProvenance::ProductProvenance(BranchID const& bid,
-                                       ProductStatus status) :
-    branchID_(bid),
-    productStatus_(status),
-    parentageID_(),
-    transients_()
+                                       ProductStatus const status) :
+    branchID_{bid},
+    productStatus_{status}
   {}
 
   ProductProvenance::ProductProvenance(BranchID const& bid,
-                                       ProductStatus status,
+                                       ProductStatus const status,
                                        ParentageID const& edid) :
-    branchID_(bid),
-    productStatus_(status),
-    parentageID_(edid),
-    transients_()
+    branchID_{bid},
+    productStatus_{status},
+    parentageID_{edid}
   {}
 
   ProductProvenance::ProductProvenance(BranchID const& bid,
-                                       ProductStatus status,
+                                       ProductStatus const status,
                                        std::shared_ptr<Parentage> pPtr) :
-    branchID_(bid),
-    productStatus_(status),
-    parentageID_(pPtr->id()),
-    transients_()
+    branchID_{bid},
+    productStatus_{status},
+    parentageID_{pPtr->id()}
   {
     parentagePtr() = pPtr;
-    ParentageRegistry::put(*pPtr);
+    ParentageRegistry::emplace(parentageID_, *pPtr);
   }
 
   ProductProvenance::ProductProvenance(BranchID const& bid,
-                                       ProductStatus status,
+                                       ProductStatus const status,
                                        std::vector<BranchID> const& parents) :
-    branchID_(bid),
-    productStatus_(status),
-    parentageID_(),
-    transients_()
+    branchID_{bid},
+    productStatus_{status}
   {
     parentagePtr() = std::make_shared<Parentage>();
     parentagePtr()->parents() = parents;
     parentageID_ = parentagePtr()->id();
-    ParentageRegistry::put(*parentagePtr());
+    ParentageRegistry::emplace(parentageID_, *parentagePtr());
   }
 
-  Parentage const &
+  Parentage const&
   ProductProvenance::parentage() const {
     if (!parentagePtr()) {
       parentagePtr() = std::make_shared<Parentage>();
-      ParentageRegistry::get(parentageID_, *parentagePtr());
+      auto parIt = ParentageRegistry::find(parentageID_);
+      if (parIt != ParentageRegistry::cend()) {
+        *parentagePtr() = parIt->second;
+      }
     }
     return *parentagePtr();
   }

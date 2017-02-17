@@ -28,7 +28,6 @@ namespace art {
     bool operator==(BranchID const& rh) const {return id_ == rh.id_;}
     bool operator!=(BranchID const& rh) const {return id_ != rh.id_;}
 
-#ifndef __GCCXML__
     struct Hash {
       std::size_t operator()(BranchID const& bid) const
       {
@@ -36,7 +35,6 @@ namespace art {
                          // worry about further hashing
       }
     };
-#endif
 
   private:
     static value_type toID(std::string const& branchName);

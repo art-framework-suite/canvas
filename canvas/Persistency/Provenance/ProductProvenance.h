@@ -18,10 +18,6 @@ and how it came into existence, plus the status.
 #include <memory>
 #include <vector>
 
-/*
-  ProductProvenance
-*/
-
 namespace art {
   class ProductProvenance;
   typedef std::vector<ProductProvenance> ProductProvenances;
@@ -34,7 +30,8 @@ namespace art {
 
 class art::ProductProvenance {
 public:
-  ProductProvenance();
+
+  ProductProvenance() = default;
   explicit ProductProvenance(BranchID const& bid);
   ProductProvenance(BranchID const& bid,
                     ProductStatus status);
@@ -63,23 +60,23 @@ public:
   void setPresent() const;
   void setNotPresent() const;
 
-  bool & noParentage() const {return transients_.get().noParentage_;}
+  bool noParentage() const {return transients_.get().noParentage_;}
 
   struct Transients {
-    Transients();
-    std::shared_ptr<Parentage> parentagePtr_;
-    bool noParentage_;
+    Transients() = default;
+    std::shared_ptr<Parentage> parentagePtr_ {nullptr};
+    bool noParentage_ {false};
   };
 
 private:
 
-  std::shared_ptr<Parentage> & parentagePtr() const
+  std::shared_ptr<Parentage>& parentagePtr() const
   {return transients_.get().parentagePtr_;}
 
-  BranchID branchID_;
-  mutable ProductStatus productStatus_;
-  ParentageID parentageID_;
-  mutable Transient<Transients> transients_;
+  BranchID branchID_ {};
+  mutable ProductStatus productStatus_ {productstatus::uninitialized()};
+  ParentageID parentageID_ {};
+  mutable Transient<Transients> transients_ {};
 };
 
 inline
