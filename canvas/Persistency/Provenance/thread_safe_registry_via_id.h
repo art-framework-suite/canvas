@@ -29,31 +29,35 @@
 
 namespace art {
 
-  template <typename T>
-  struct is_instantiation_of_hash : std::false_type {};
+  namespace detail {
+    template <typename T>
+    struct is_instantiation_of_hash : std::false_type {};
 
-  template <int I>
-  struct is_instantiation_of_hash<art::Hash<I>> : std::true_type {};
+    template <int I>
+    struct is_instantiation_of_hash<art::Hash<I>> : std::true_type {};
 
-  template <typename H>
-  struct hash_to_size_t {
+    template <typename H>
+    struct hash_to_size_t {
 
-    std::enable_if_t<is_instantiation_of_hash<H>::value, std::size_t>
-    operator()(H const& id) const
-    {
-      std::ostringstream os;
-      id.print(os);
-      return tbb::tbb_hasher(os.str());
-    }
-  };
+      std::enable_if_t<is_instantiation_of_hash<H>::value, std::size_t>
+      operator()(H const& id) const
+      {
+        std::ostringstream os;
+        id.print(os);
+        return tbb::tbb_hasher(os.str());
+      }
+    };
+  }
 
   template <typename K, typename M>
   class thread_safe_registry_via_id {
   public:
 
-    using collection_type = tbb::concurrent_unordered_map<K, M, hash_to_size_t<K>>;
+    using collection_type = tbb::concurrent_unordered_map<K, M, detail::hash_to_size_t<K>>;
     using value_type = typename collection_type::value_type;
 
+    template <typename C>
+    static void put(C const& container);
     static auto emplace(value_type const& value);
     static auto emplace(K const& key, M const& mapped);
     static auto find(K const& key);
@@ -67,6 +71,16 @@ namespace art {
       return me;
     }
   };
+
+  template <typename K, typename M>
+  template <typename C>
+  void thread_safe_registry_via_id<K,M>::put(C const& container)
+  {
+    auto& me = instance();
+    for (auto const& e : container) {
+      me.emplace(e);
+    }
+  }
 
   template <typename K, typename M>
   auto thread_safe_registry_via_id<K,M>::emplace(value_type const& value)

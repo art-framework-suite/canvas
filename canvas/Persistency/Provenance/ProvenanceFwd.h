@@ -12,7 +12,6 @@ namespace art {
   class BranchDescription;
   class BranchID;
   class BranchKey;
-  class BranchKey;
   class BranchMapper;
   class EventAuxiliary;
   class EventID;
@@ -20,9 +19,7 @@ namespace art {
   class Parentage;
   class ProcessConfiguration;
   class ProcessHistory;
-  class ProcessRegistry;
   class ProductID;
-  class ProductProvenance;
   class ProductProvenance;
   class RunAuxiliary;
   class RunID;
