@@ -11,17 +11,17 @@ int main()
   assert(pnl1 == pnl1);
   art::ProcessHistory pnl2;
   assert(pnl1 == pnl2);
-  art::ProcessConfiguration iHLT(std::string("HLT"), fhicl::ParameterSetID(), art::getCanvasReleaseVersion(), art::getPassID());
-  art::ProcessConfiguration iRECO(std::string("RECO"), fhicl::ParameterSetID(), art::getCanvasReleaseVersion(), art::getPassID());
+  art::ProcessConfiguration const iHLT {"HLT", fhicl::ParameterSetID{}, art::getCanvasReleaseVersion(), art::getPassID()};
+  art::ProcessConfiguration const iRECO {"RECO", fhicl::ParameterSetID{}, art::getCanvasReleaseVersion(), art::getPassID()};
   pnl2.push_back(iHLT);
   assert(pnl1 != pnl2);
   art::ProcessHistory pnl3;
   pnl3.push_back(iHLT);
   pnl3.push_back(iRECO);
 
-  art::ProcessHistoryID id1 = pnl1.id();
-  art::ProcessHistoryID id2 = pnl2.id();
-  art::ProcessHistoryID id3 = pnl3.id();
+  art::ProcessHistoryID const id1 {pnl1.id()};
+  art::ProcessHistoryID const id2 {pnl2.id()};
+  art::ProcessHistoryID const id3 {pnl3.id()};
 
   assert(id1 != id2);
   assert(id2 != id3);

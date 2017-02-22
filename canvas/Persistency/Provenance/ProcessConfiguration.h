@@ -19,15 +19,17 @@
 namespace art {
 
   struct ProcessConfiguration {
-    ProcessConfiguration() : processName_(), parameterSetID_(), releaseVersion_(), passID_() {}
+    ProcessConfiguration() = default;
+
     ProcessConfiguration(std::string const& procName,
                          fhicl::ParameterSetID const& pSetID,
                          ReleaseVersion const& relVersion,
                          PassID const& pass) :
-      processName_(procName),
-      parameterSetID_(pSetID),
-      releaseVersion_(relVersion),
-      passID_(pass) { }
+      processName_{procName},
+      parameterSetID_{pSetID},
+      releaseVersion_{relVersion},
+      passID_{pass}
+    {}
 
     std::string const& processName() const {return processName_;}
     fhicl::ParameterSetID const& parameterSetID() const {return parameterSetID_;}
@@ -35,10 +37,10 @@ namespace art {
     PassID const& passID() const {return passID_;}
     ProcessConfigurationID id() const;
 
-    std::string processName_;
-    fhicl::ParameterSetID parameterSetID_;
-    ReleaseVersion releaseVersion_;
-    PassID passID_;
+    std::string processName_ {};
+    fhicl::ParameterSetID parameterSetID_ {};
+    ReleaseVersion releaseVersion_ {};
+    PassID passID_ {};
   };
 
   bool

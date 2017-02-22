@@ -11,14 +11,15 @@ BranchID: A unique identifier for each branch.
 #include <string>
 
 namespace art {
+
   class BranchID {
   public:
     typedef unsigned int value_type;
-    BranchID() : id_(0) { }
-    explicit BranchID(std::string const& branchName) : id_(toID(branchName)) {
-    }
-    explicit BranchID(value_type id) : id_(id) {
-    }
+
+    BranchID() = default;
+    explicit BranchID(std::string const& branchName) : BranchID{toID(branchName)} {}
+    explicit BranchID(value_type const id) : id_{id} {}
+
     void setID(std::string const& branchName) {id_ = toID(branchName);}
     unsigned int id() const { return id_; }
     bool isValid() const {return id_ != 0;}
@@ -38,7 +39,7 @@ namespace art {
 
   private:
     static value_type toID(std::string const& branchName);
-    value_type id_;
+    value_type id_ {};
   };
 
   std::ostream&
