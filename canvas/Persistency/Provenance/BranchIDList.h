@@ -15,8 +15,8 @@ BranchIDLists:
 #include "canvas/Persistency/Provenance/BranchID.h"
 
 namespace art {
-  using BranchIDList = std::vector<BranchID::value_type>;
-  using BranchIDLists = std::vector<BranchIDList>;
+  typedef std::vector<BranchID::value_type> BranchIDList;
+  typedef std::vector<BranchIDList>         BranchIDLists;
 }
 #endif /* canvas_Persistency_Provenance_BranchIDList_h */
 

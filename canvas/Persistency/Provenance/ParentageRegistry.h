@@ -6,7 +6,7 @@
 #include "canvas/Persistency/Provenance/thread_safe_registry_via_id.h"
 
 namespace art {
-  using ParentageRegistry = thread_safe_registry_via_id<ParentageID, Parentage>;
+  typedef thread_safe_registry_via_id<ParentageID, Parentage> ParentageRegistry;
 }
 
 #endif
