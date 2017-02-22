@@ -53,10 +53,7 @@ namespace art {
   ProductProvenance::parentage() const {
     if (!parentagePtr()) {
       parentagePtr() = std::make_shared<Parentage>();
-      auto parIt = ParentageRegistry::find(parentageID_);
-      if (parIt != ParentageRegistry::cend()) {
-        *parentagePtr() = parIt->second;
-      }
+      ParentageRegistry::get(parentageID_, *parentagePtr()); // Filled only if successful retrieval
     }
     return *parentagePtr();
   }

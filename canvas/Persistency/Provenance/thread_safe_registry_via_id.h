@@ -60,10 +60,9 @@ namespace art {
     static void put(C const& container);
     static auto emplace(value_type const& value);
     static auto emplace(K const& key, M const& mapped);
-    static auto find(K const& key);
     static bool empty();
-    static auto cend();
     static collection_type const& get();
+    static bool get(K const& key, M& mapped);
 
   private:
     static auto& instance() {
@@ -95,18 +94,6 @@ namespace art {
   }
 
   template <typename K, typename M>
-  auto thread_safe_registry_via_id<K,M>::find(K const& key)
-  {
-    return instance().find(key);
-  }
-
-  template <typename K, typename M>
-  auto thread_safe_registry_via_id<K,M>::cend()
-  {
-    return instance().cend();
-  }
-
-  template <typename K, typename M>
   bool thread_safe_registry_via_id<K,M>::empty()
   {
     return instance().empty();
@@ -116,6 +103,18 @@ namespace art {
   auto thread_safe_registry_via_id<K,M>::get() -> collection_type const&
   {
     return instance();
+  }
+
+  template <typename K, typename M>
+  bool thread_safe_registry_via_id<K,M>::get(K const& k, M& mapped)
+  {
+    auto& me = instance();
+    auto it = me.find(k);
+    if (it != me.cend()) {
+      mapped = it->second;
+      return true;
+    }
+    return false;
   }
 
 }
