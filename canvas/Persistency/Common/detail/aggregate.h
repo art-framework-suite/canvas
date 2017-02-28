@@ -3,7 +3,7 @@
 
 #include "canvas/Utilities/Exception.h"
 #include "cetlib/container_algorithms.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 #include "cetlib/detail/metaprogramming.h"
 #include "cetlib/map_vector.h"
 
@@ -260,7 +260,7 @@ namespace art {
   }
 }
 
-#endif
+#endif /* canvas_Persistency_Common_detail_aggregate_h */
 
 // Local variables:
 // mode: c++

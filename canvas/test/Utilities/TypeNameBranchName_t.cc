@@ -3,7 +3,7 @@
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/FriendlyName.h"
 #include "canvas/Utilities/uniform_type_name.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 #include "cetlib/map_vector.h"
 #include "cetlib/replace_all.h"
 

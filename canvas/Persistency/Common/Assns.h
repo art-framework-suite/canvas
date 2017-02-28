@@ -81,10 +81,11 @@
 
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/Wrapper.h"
+#include "canvas/Persistency/Common/detail/throwPartnerException.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/TypeID.h"
 #include "cetlib/container_algorithms.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 
 #include "TBuffer.h"
 #include "TClassStreamer.h" // Temporary
@@ -168,7 +169,7 @@ public:
                  Ptr<right_t> const & right);
   void swap(art::Assns<L, R, void> &other);
 
-  std::unique_ptr<EDProduct> makePartner() const;
+  std::unique_ptr<EDProduct> makePartner(std::type_info const & wanted_wrapper_type) const;
 
   static short Class_Version() { return 10; }
 
@@ -177,7 +178,7 @@ public:
 protected:
   virtual void swap_(art::Assns<L, R, void> &other);
 
-  virtual std::unique_ptr<EDProduct> makePartner_() const;
+  virtual std::unique_ptr<EDProduct> makePartner_(std::type_info const & wanted_wrapper_type) const;
 
 private:
   friend class detail::AssnsStreamer<left_t, right_t>;
@@ -193,16 +194,20 @@ private:
 #else
   virtual
 #endif
-  bool left_first();
+  bool left_first()
+#ifndef ROOT_CAN_REGISTER_IOREADS_PROPERLY
+const
+#endif
+;
 
   void fill_transients();
   void fill_from_transients();
 
   void init_streamer();
 
-  mutable ptrs_t ptrs_; //! transient
-  mutable ptr_data_t ptr_data_1_;
-  mutable ptr_data_t ptr_data_2_;
+  ptrs_t ptrs_; //! transient
+  ptr_data_t ptr_data_1_;
+  ptr_data_t ptr_data_2_;
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -224,7 +229,7 @@ public:
   Assns();
   Assns(partner_t const & other);
 
-  using base::size;
+  size_type size() const; // Implemented explicitly only to let Wrapper know.
   using base::begin;
   using base::end;
   using base::operator[];
@@ -238,15 +243,19 @@ public:
                  data_t const & data);
   void swap(art::Assns<L, R, D> &other);
 
-  void aggregate(Assns const&) const {}
-  std::unique_ptr<EDProduct> makePartner() const;
+  // This is needed (as opposed to using base::makePartner) because
+  // enable_if_function_exists_t does not detect the base's function.
+  std::unique_ptr<EDProduct> makePartner(std::type_info const & wanted_wrapper_type) const;
+
   static short Class_Version() { return 10; }
+
+  void aggregate(Assns const&) const {}
 
 private:
   friend class art::Assns<right_t, left_t, data_t>; // partner_t.
 
   void swap_(art::Assns<L, R, void> &other) override;
-  std::unique_ptr<EDProduct> makePartner_() const override;
+  std::unique_ptr<EDProduct> makePartner_(std::type_info const & wanted_wrapper_type) const override;
 
   std::vector<data_t> data_;
 };
@@ -345,9 +354,9 @@ art::Assns<L, R, void>::swap(art::Assns<L, R, void> &other)
 template <typename L, typename R>
 inline
 std::unique_ptr<art::EDProduct>
-art::Assns<L, R, void>::makePartner() const
+art::Assns<L, R, void>::makePartner(std::type_info const & wanted_wrapper_type) const
 {
-  return makePartner_();
+  return makePartner_(wanted_wrapper_type);
 }
 
 template <typename L, typename R>
@@ -363,16 +372,18 @@ art::Assns<L, R, void>::swap_(art::Assns<L, R, void> &other)
 
 template <typename L, typename R>
 std::unique_ptr<art::EDProduct>
-art::Assns<L, R, void>::makePartner_() const
+art::Assns<L, R, void>::makePartner_(std::type_info const & wanted_wrapper_type) const
 {
-  std::unique_ptr<art::EDProduct> retval(new Wrapper<partner_t>(std::unique_ptr<partner_t>(new partner_t(*this))));
-  return retval;
+  if (wanted_wrapper_type != typeid(Wrapper<partner_t>)) {
+    detail::throwPartnerException(typeid(*this), wanted_wrapper_type);
+  }
+  return std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
 }
 
 template <typename L, typename R>
 inline
 bool
-art::Assns<L, R, void>::left_first()
+art::Assns<L, R, void>::left_first() const
 {
   static bool lf_s = (art::TypeID(typeid(left_t)).friendlyClassName() <
                       art::TypeID(typeid(right_t)).friendlyClassName());
@@ -386,12 +397,12 @@ art::Assns<L, R, void>::fill_transients()
   // Precondition: ptr_data_1_.size() = ptr_data_2_.size();
   ptrs_.clear();
   ptrs_.reserve(ptr_data_1_.size());
-  ptr_data_t & l_ref = left_first() ? ptr_data_1_ : ptr_data_2_;
-  ptr_data_t & r_ref = left_first() ? ptr_data_2_ : ptr_data_1_;
+  ptr_data_t const & l_ref = left_first() ? ptr_data_1_ : ptr_data_2_;
+  ptr_data_t const & r_ref = left_first() ? ptr_data_2_ : ptr_data_1_;
   for (typename ptr_data_t::const_iterator
-       l = l_ref.begin(),
-       e = l_ref.end(),
-       r = r_ref.begin();
+       l = l_ref.cbegin(),
+       e = l_ref.cend(),
+       r = r_ref.cbegin();
        l != e;
        ++l, ++r) {
     ptrs_.emplace_back(Ptr<left_t>(l->first.id(),
@@ -403,8 +414,8 @@ art::Assns<L, R, void>::fill_transients()
   }
   // Empty persistent representation.
   ptr_data_t tmp1, tmp2;
-  l_ref.swap(tmp1);
-  r_ref.swap(tmp2);
+  ptr_data_1_.swap(tmp1);
+  ptr_data_2_.swap(tmp2);
 }
 
 template <typename L, typename R>
@@ -458,6 +469,14 @@ art::Assns<L, R, D>::Assns(partner_t const& other)
 
 template <typename L, typename R, typename D>
 inline
+typename art::Assns<L, R, void>::size_type
+art::Assns<L, R, D>::size() const
+{
+  return base::size();
+}
+
+template <typename L, typename R, typename D>
+inline
 typename art::Assns<L, R, D>::data_t const &
 art::Assns<L, R, D>::data(typename std::vector<data_t>::size_type index) const
 {
@@ -496,9 +515,9 @@ art::Assns<L, R, D>::swap(Assns<L, R, D> &other)
 template <typename L, typename R, typename D>
 inline
 std::unique_ptr<art::EDProduct>
-art::Assns<L, R, D>::makePartner() const
+art::Assns<L, R, D>::makePartner(std::type_info const & wanted_wrapper_type) const
 {
-  return makePartner_();
+  return makePartner_(wanted_wrapper_type);
 }
 
 template <typename L, typename R, typename D>
@@ -517,10 +536,20 @@ art::Assns<L, R, D>::swap_(Assns<L, R, void> &other)
 
 template <typename L, typename R, typename D>
 std::unique_ptr<art::EDProduct>
-art::Assns<L, R, D>::makePartner_() const
+art::Assns<L, R, D>::makePartner_(std::type_info const & wanted_wrapper_type) const
 {
-  std::unique_ptr<art::EDProduct> retval = std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
-  return retval;
+  using bp = typename base::partner_t;
+  std::unique_ptr<art::EDProduct> result;
+  if (wanted_wrapper_type == typeid(Wrapper<partner_t>)) { // Partner.
+    result = std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
+  } else if (wanted_wrapper_type == typeid(Wrapper<base>)) { // Base.
+    result = std::make_unique<Wrapper<base>>(std::make_unique<base>(static_cast<base>(*this)));
+  } else if (wanted_wrapper_type == typeid(Wrapper<bp>)) { // Base of partner.
+    result = std::make_unique<Wrapper<bp>>(std::make_unique<bp>(static_cast<base>(*this)));
+  } else { // Oops.
+    detail::throwPartnerException(typeid(*this), wanted_wrapper_type);
+  }
+  return result;
 }
 #endif /* canvas_Persistency_Common_Assns_h */
 

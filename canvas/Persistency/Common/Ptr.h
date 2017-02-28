@@ -46,7 +46,7 @@
 #include "canvas/Persistency/Common/traits.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/ensurePointer.h"
-#include "cetlib/demangle.h"
+#include "cetlib_except/demangle.h"
 
 #include <cassert>
 #include <cstddef>
@@ -88,6 +88,22 @@ namespace art {
 
   template <typename T>
   std::ostream & operator << (std::ostream &, Ptr<T> const &);
+}
+
+namespace std {
+  template<typename T>
+  class hash<art::Ptr<T> > {
+public:
+    std::size_t
+    operator() (art::Ptr<T> const & ptr) const {
+      return
+        hash_((ptr.key() && 0xffffffff) +
+              (static_cast<size_t>(ptr.id().productIndex()) << 32) +
+              (static_cast<size_t>(ptr.id().processIndex()) << 48));
+    }
+private:
+    hash<size_t> hash_;
+  };
 }
 
 template <typename T>
@@ -162,6 +178,11 @@ struct art::detail::EnsurePointer<TO, art::Ptr<PTRVAL> > {
 
 namespace art {
   namespace detail {
+    // FIXME: The code of ItemGetter, including specializations, would
+    // be completely unnecessary if Handle were to provide access to the
+    // setPtr() function of wrapper. As it is, some container-specific
+    // code is duplicated between here and art::Wrapper, leading to
+    // multiple points of maintenance (and failure).
     template <typename T, typename C>
     class ItemGetter;
     template <typename T>

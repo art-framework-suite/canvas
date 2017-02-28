@@ -6,9 +6,7 @@ set(CMAKE_MODULE_PATH
 art_dictionary(NO_INSTALL)
 
 set(standard_libraries
-  canvas_Persistency_Provenance
-  canvas_Utilities
-  canvas_Version
+  canvas
   ${Boost_THREAD_LIBRARY}
   ${ROOT_CINTEX}
   ${ROOT_CORE}
@@ -18,7 +16,7 @@ set(standard_libraries
   )
 
 cet_test(EventID_t USE_BOOST_UNIT
-  LIBRARIES canvas_Persistency_Provenance
+  LIBRARIES canvas
   )
 
 file(GLOB cppunit_files *.cppunit.cc)
@@ -54,18 +52,17 @@ cet_test(RootClassMapping_t USE_BOOST_UNIT
 
 cet_test(EventRange_t USE_BOOST_UNIT
   LIBRARIES
-  canvas_Persistency_Provenance
+  canvas
   )
 
 cet_test(RangeSet_t USE_BOOST_UNIT
   LIBRARIES
-  canvas_Persistency_Provenance
+  canvas
   )
 
 cet_test(TypeTools_t USE_BOOST_UNIT
   LIBRARIES
-  canvas_Persistency_Provenance
-  canvas_Utilities
+  canvas
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
   ${ROOT_TREE}
@@ -84,7 +81,6 @@ cet_test(TypeTools_t USE_BOOST_UNIT
 
 cet_test(TypeWithDict_t USE_BOOST_UNIT
   LIBRARIES
-  canvas_Persistency_Provenance
-  canvas_Utilities
+  canvas
   ${ROOT_CORE}
   )

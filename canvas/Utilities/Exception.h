@@ -28,7 +28,7 @@ namespace art {
       BadExceptionType,
       ProductNotFound,
       DictionaryNotFound,
-      InsertFailure,
+      ProductPutFailure,
       Configuration,
       LogicError,    // = 10
       UnimplementedFeature,
@@ -51,13 +51,15 @@ namespace art {
       InvalidNumber,
       NotFound,
       ServiceNotFound, // = 30
-      ProductCannotBeAggregated
+      ProductCannotBeAggregated,
+      ProductRegistrationFailure,
+      SignalReceived
     };
 
   }  // errors
 
   namespace ExceptionDetail {
-    std::string translate( errors::ErrorCodes );
+    std::string translate(errors::ErrorCodes);
   }
 
   using Exception = cet::coded_exception<errors::ErrorCodes, ExceptionDetail::translate>;

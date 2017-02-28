@@ -1,11 +1,10 @@
 #ifndef canvas_Persistency_Provenance_IDNumber_h
 #define canvas_Persistency_Provenance_IDNumber_h
 
+#include "canvas/Utilities/Level.h"
 #include <cstdint>
 
 namespace art {
-
-  enum class Level { Event, SubRun, Run };
 
   template <Level>
   struct IDNumber;
@@ -56,7 +55,7 @@ namespace art {
 
 }
 
-#endif
+#endif /* canvas_Persistency_Provenance_IDNumber_h */
 
 // Local variables:
 // mode: c++

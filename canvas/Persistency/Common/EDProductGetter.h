@@ -12,21 +12,10 @@ namespace art {
 class art::EDProductGetter {
 public:
 
-#ifdef __GCCXML__
-  EDProductGetter();
-  ~EDProductGetter();
-private:
-  EDProductGetter(EDProductGetter const&);
-  // Cannot ref-qualify assignment because of GCC_XML.
-  EDProductGetter& operator=(EDProductGetter const&);
-public:
-
-#else
   EDProductGetter() = default;
   EDProductGetter(EDProductGetter const&) = delete;
   EDProductGetter& operator=(EDProductGetter const&) = delete;
   virtual ~EDProductGetter() = default;
-#endif
 
   // Can you even try to resolve the product?
   virtual bool isReady() const = 0;
@@ -34,9 +23,8 @@ public:
   virtual EDProduct const *anyProduct() const = 0;
   virtual EDProduct const *uniqueProduct() const = 0;
   virtual EDProduct const *uniqueProduct(TypeID const &) const = 0;
-  virtual bool resolveProduct(bool fillOnDemand, TypeID const &) const = 0;
-  virtual bool resolveProductIfAvailable(bool fillOnDemand,
-                                         TypeID const &) const = 0;
+  virtual bool resolveProduct(TypeID const &) const = 0;
+  virtual bool resolveProductIfAvailable(TypeID const &) const = 0;
 };  // EDProductGetter
 
 #endif /* canvas_Persistency_Common_EDProductGetter_h */
