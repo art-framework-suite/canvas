@@ -4,11 +4,9 @@
 #include "canvas/Persistency/Provenance/HashedTypes.h"
 #include "canvas/Persistency/Provenance/Hash.h"
 
-// Obsolete
-
 namespace art
 {
-  typedef Hash<ModuleDescriptionType> ModuleDescriptionID;
+  typedef unsigned int ModuleDescriptionID;
 }
 
 

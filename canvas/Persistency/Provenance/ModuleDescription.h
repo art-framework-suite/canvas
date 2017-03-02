@@ -27,7 +27,10 @@ public:
     ModuleDescription(fhicl::ParameterSetID parameterSetID,
                       std::string const & modName,
                       std::string const & modLabel,
-                      ProcessConfiguration pc); // Feel free to use move semantics.
+                      ProcessConfiguration pc,
+                      ModuleDescriptionID id = getUniqueID());
+
+    // Feel free to use move semantics.
 
     void write(std::ostream& os) const;
 
@@ -49,7 +52,11 @@ public:
 
     bool operator!=(ModuleDescription const& rh) const;
 
-    ModuleDescriptionID id() const; // For backward compatibility
+    ModuleDescriptionID id() const { return id_; } // Unique only within a process.
+
+    static ModuleDescriptionID getUniqueID();
+
+    static constexpr ModuleDescriptionID invalidID() { return std::numeric_limits<ModuleDescriptionID>::max(); }
 
 private:
     // ID of parameter set of the creator
@@ -64,6 +71,9 @@ private:
 
     // The process configuration.
     ProcessConfiguration processConfiguration_;
+
+    // Unique ID.
+    unsigned int id_;
   };
 
   inline
