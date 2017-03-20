@@ -9,36 +9,29 @@
 
 using art::RNGsnapshot;
 
-// ======================================================================
-
-namespace {
-
-  template< class From, class To >
-  inline To
-  cast_one( From value )
-  {
-    return static_cast<To>( value );
-  }
-
+RNGsnapshot::RNGsnapshot(std::string const& ekind,
+                         label_t const& lbl,
+                         engine_state_t const& est)
+{
+  saveFrom(ekind, lbl, est);
 }
 
-// --- Save/restore:
 void
-RNGsnapshot::
-saveFrom( std::string    const & ekind,
-          label_t        const & lbl,
-          engine_state_t const & est )
+RNGsnapshot::saveFrom(std::string const& ekind,
+                      label_t const& lbl,
+                      engine_state_t const& est)
 {
   engine_kind_ = ekind;
   label_ = lbl;
-  cet::transform_all( est, std::back_inserter(state_), cast_one<CLHEP_t,saved_t> );
+  cet::copy_all(est, std::back_inserter(state_));
 }
 
-void
-RNGsnapshot::
-restoreTo( engine_state_t & est ) const
+RNGsnapshot::engine_state_t
+RNGsnapshot::restoreState() const
 {
-  cet::transform_all( state_, std::back_inserter(est), cast_one<saved_t,CLHEP_t> );
+  engine_state_t est;
+  cet::copy_all(state_, std::back_inserter(est));
+  return est;
 }
 
 // ======================================================================

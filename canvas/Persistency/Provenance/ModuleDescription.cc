@@ -1,34 +1,25 @@
 #include "canvas/Persistency/Provenance/ModuleDescription.h"
-
 #include "cetlib/MD5Digest.h"
 
 #include <atomic>
 #include <ostream>
 
-art::ModuleDescription::ModuleDescription() :
-  parameterSetID_(),
-  moduleName_(),
-  moduleLabel_(),
-  processConfiguration_(),
-  id_(invalidID())
-{ }
-
-art::ModuleDescription::ModuleDescription(fhicl::ParameterSetID parameterSetID,
-                                          std::string const & modName,
-                                          std::string const & modLabel,
+art::ModuleDescription::ModuleDescription(fhicl::ParameterSetID const parameterSetID,
+                                          std::string const& modName,
+                                          std::string const& modLabel,
                                           ProcessConfiguration pc,
-                                          ModuleDescriptionID id)
-  :
-  parameterSetID_(parameterSetID),
-  moduleName_(modName),
-  moduleLabel_(modLabel),
-  processConfiguration_(std::move(pc)),
-  id_(id)
+                                          ModuleDescriptionID const id) :
+  parameterSetID_{parameterSetID},
+  moduleName_{modName},
+  moduleLabel_{modLabel},
+  processConfiguration_{std::move(pc)},
+  id_{id}
 {
 }
 
 bool
-art::ModuleDescription::operator<(ModuleDescription const& rh) const {
+art::ModuleDescription::operator<(ModuleDescription const& rh) const
+{
   if (moduleLabel() < rh.moduleLabel()) return true;
   if (rh.moduleLabel() < moduleLabel()) return false;
   if (processName() < rh.processName()) return true;
@@ -44,17 +35,20 @@ art::ModuleDescription::operator<(ModuleDescription const& rh) const {
 }
 
 bool
-art::ModuleDescription::operator==(ModuleDescription const& rh) const {
-    return !((*this) < rh || rh < (*this));
+art::ModuleDescription::operator==(ModuleDescription const& rh) const
+{
+  return !((*this) < rh || rh < (*this));
 }
 
 bool
-art::ModuleDescription::operator!=(ModuleDescription const& rh) const {
-  return !((*this) == rh);
+art::ModuleDescription::operator!=(ModuleDescription const& rh) const
+{
+  return !operator==(rh);
 }
 
 void
-art::ModuleDescription::write(std::ostream& os) const {
+art::ModuleDescription::write(std::ostream& os) const
+{
   os  << "Module type=" << moduleName() << ", "
       << "Module label=" << moduleLabel() << ", "
       << "Parameter Set ID=" << parameterSetID() << ", "
