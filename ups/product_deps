@@ -1,18 +1,19 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent canvas	v1_06_03
+parent canvas	v1_06_04
 defaultqual	e14
 #
 fcldir -
 perllib  product_dir
 #
 product		version
-clhep		v2_3_4_3b
+clhep		v2_3_4_4
 cppunit		v1_13_1c
-python		v2_7_13b
-root		v6_08_04e
+python		v2_7_13d
+root		v6_08_06d
 messagefacility	v2_0_0
-cetbuildtools	v5_06_06	-	only_for_build
+tbb		v2017_3c
+cetbuildtools	v5_06_07	-	only_for_build
 end_product_list
 
 qualifier	messagefacility	root		clhep		cppunit		python	compiler	notes

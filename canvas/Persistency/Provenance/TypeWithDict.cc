@@ -385,10 +385,18 @@ typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
   }
   if (category == Category::BASICTYPE) {
     auto type = dynamic_cast<TDataType*>(tDict)->GetType();
-    if ((type == kOther_t/*-1*/) &&
-        (string(dynamic_cast<TDataType*>(tDict)->GetName()) == "void")) {
-      // Compensate for bug in TDataType::SetType(name) for void.
-      type = kVoid_t/*20*/;
+    if (type == kOther_t/*-1*/) {
+      string nm(dynamic_cast<TDataType*>(tDict)->GetName());
+      if (nm == "void") {
+        // Compensate for bug in TDataType::SetType(name) for void.
+        type = kVoid_t/*20*/;
+      }
+      else {
+        throw Exception(errors::LogicError)
+            << "Missing dictionary for type: "
+            << nm
+            << '\n';
+      }
     }
     return getTypeID(type);
   }
