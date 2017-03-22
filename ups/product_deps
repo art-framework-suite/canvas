@@ -12,7 +12,6 @@ cppunit		v1_13_1c
 python		v2_7_13d
 root		v6_08_06d
 messagefacility	v2_0_0
-tbb		v2017_3c
 cetbuildtools	v5_06_07	-	only_for_build
 end_product_list
 
