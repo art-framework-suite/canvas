@@ -7,13 +7,13 @@ fcldir -
 perllib  product_dir
 #
 product		version
-clhep		v2_3_4_3b
+clhep		v2_3_4_4
 cppunit		v1_13_1c
-python		v2_7_13b
-root		v6_08_04e
+python		v2_7_13d
+root		v6_08_06d
 messagefacility	v1_18_03
 tbb		v2017_3c
-cetbuildtools	v5_06_06	-	only_for_build
+cetbuildtools	v5_06_07	-	only_for_build
 end_product_list
 
 qualifier	messagefacility	root		clhep		cppunit		python	tbb		compiler	notes
