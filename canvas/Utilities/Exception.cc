@@ -55,7 +55,7 @@ std::string
   case ServiceNotFound            : return "ServiceNotFound";
   case ProductCannotBeAggregated  : return "ProductCannotBeAggregated";
   case ProductRegistrationFailure : return "ProductRegistrationFailure";
-  case SignalReceived             : return "SignalReceived";
+  case EventRangeOverlap          : return "EventRangeOverlap";
   }
   throw Exception{errors::LogicError}
     << "Internal error: missing string translation for error "

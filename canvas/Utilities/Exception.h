@@ -53,7 +53,7 @@ namespace art {
       ServiceNotFound, // = 30
       ProductCannotBeAggregated,
       ProductRegistrationFailure,
-      SignalReceived
+      EventRangeOverlap
     };
 
   }  // errors

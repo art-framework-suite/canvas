@@ -27,7 +27,7 @@ BranchMapper::insert(std::unique_ptr<ProductProvenance const> && pp_ptr)
 {
   readProvenance();
   result_t result(pp_ptr.get());
-  entryInfoSet_[ result->branchID() ].reset(pp_ptr.release());
+  entryInfoSet_[result->branchID()].reset(pp_ptr.release());
   return result;
 }
 

@@ -93,8 +93,9 @@ RangeSet::collapse()
       result.push_back(r);
     }
     else {
-      throw art::Exception(art::errors::LogicError)
+      throw art::Exception(art::errors::EventRangeOverlap)
         << "Attempt to merge event ranges that both contain one or more of the same events\n"
+        << " Run: " << run_ << '\n'
         << "  " << back << "  vs.\n"
         << "  " << r;
     }

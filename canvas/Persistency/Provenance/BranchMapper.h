@@ -21,7 +21,7 @@
 namespace art {
   // defined below:
   class BranchMapper;
-  std::ostream &operator << (std::ostream &, BranchMapper const &);
+  std::ostream &operator<< (std::ostream&, BranchMapper const&);
 
   // forward declaration:
   class ProductID;
@@ -35,26 +35,26 @@ public:
   BranchMapper(BranchMapper const&) = delete;
   BranchMapper& operator=(BranchMapper const&) = delete;
 
-  typedef  cet::exempt_ptr<ProductProvenance const>  result_t;
+  using result_t = cet::exempt_ptr<ProductProvenance const>;
 
   explicit BranchMapper(bool delayedRead = false);
   virtual ~BranchMapper() = default;
 
-  void write(std::ostream &) const;
+  void write(std::ostream&) const;
 
-  result_t branchToProductProvenance(BranchID const &) const;
-  result_t insert(std::unique_ptr<ProductProvenance const>&& );
+  result_t branchToProductProvenance(BranchID const&) const;
+  result_t insert(std::unique_ptr<ProductProvenance const>&&);
 
-  void setDelayedRead(bool value) {delayedRead_ = value;}
+  void setDelayedRead(bool const value) {delayedRead_ = value;}
 
 private:
-  using eiSet = std::map <BranchID, cet::value_ptr<ProductProvenance const> >;
+  using eiSet = std::map<BranchID, cet::value_ptr<ProductProvenance const>>;
 
-  eiSet         entryInfoSet_;
-  mutable bool  delayedRead_;
+  eiSet entryInfoSet_;
+  mutable bool delayedRead_;
 
   void readProvenance() const;
-  virtual void readProvenance_() const { }
+  virtual void readProvenance_() const {}
 
 };  // BranchMapper
 
