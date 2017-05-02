@@ -4,16 +4,64 @@
 #include "canvas/Utilities/Exception.h"
 #include "cetlib_except/demangle.h"
 
+#ifdef __APPLE__
 #include "TClass.h"
 #include "TClassRef.h"
+#endif // __APPLE__
 
 #include <iomanip>
 #include <iostream>
 #include <typeinfo>
+
+#ifndef __APPLE__
 #include <cxxabi.h>
+#endif // __APPLE__
 
 using namespace art;
 using namespace std;
+
+#ifdef __APPLE__
+
+void const*
+art::detail::maybeCastObj(void const* address,
+                          const std::type_info& tiFrom,
+                          const std::type_info& tiTo)
+{
+  if (tiFrom == tiTo) {
+    // The do nothing case.
+    return address;
+  }
+  TClassRef const clFrom(TClass::GetClass(tiFrom));
+  TClassRef const clTo(TClass::GetClass(tiTo));
+  void const* castAddr(nullptr);
+  if (clFrom->InheritsFrom(clTo)) {
+    // The upcast case, let ROOT do it.
+    castAddr = clFrom->DynamicCast(clTo, const_cast<void*>(address), true);
+  }
+  else if (clTo->InheritsFrom(clFrom)) {
+    // The downcast case is forbidden.
+    throw Exception(errors::TypeConversion)
+        << "art::Wrapper<> : unable to convert type "
+        << cet::demangle_symbol(tiFrom.name())
+        << " to "
+        << cet::demangle_symbol(tiTo.name())
+        << ", which is a subclass.\n";
+  }
+  if (castAddr != nullptr) {
+    // ROOT succeeded, done.
+    return castAddr;
+  }
+  // ROOT could not do the upcast, or there was no inheritance
+  // relationship between the classes, die.
+  throw Exception(errors::TypeConversion)
+      << "art::Wrapper<> : unable to convert type "
+      << cet::demangle_symbol(tiFrom.name())
+      << " to "
+      << cet::demangle_symbol(tiTo.name())
+      << "\n";
+}
+
+#else // __APPLE__
 
 namespace {
 
@@ -155,3 +203,4 @@ maybeCastObj(void const* ptr, const type_info& tid_from,
   return static_cast<char const*>(ptr) + res.offset;
 }
 
+#endif // __APPLE__
