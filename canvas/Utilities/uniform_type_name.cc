@@ -18,9 +18,9 @@ namespace {
   /// \param[format] format The specified format string for the
   /// replacement.
   void
-  reformat(std::string & input,
-           std::regex const & exp,
-           std::string const & format)
+  reformat(std::string& input,
+           std::regex const& exp,
+           std::string const& format)
   {
     while (1) {
       std::string const formatted = std::regex_replace(input, exp, format);
@@ -43,7 +43,7 @@ namespace {
   /// string. Include leading comma if appropriate and trailing open
   /// angled bracket for template instantiations.
   void
-  removeParameter(std::string & name, std::string const & toRemove)
+  removeParameter(std::string& name, std::string const& toRemove)
   {
     auto const asize = toRemove.size();
     auto const initDepth = (toRemove.back() == '<') ? 1 : 0;
@@ -80,7 +80,7 @@ namespace {
   ///
   /// \param[in,out] name The string to manipulate.
   void
-  constBeforeIdentifier(std::string & name)
+  constBeforeIdentifier(std::string& name)
   {
     std::string const toBeMoved(" const");
     auto const asize = toBeMoved.size();
@@ -103,6 +103,52 @@ namespace {
       }
     }
   }
+
+  /// \fn translateInlineNamespace
+  ///
+  /// \brief Remove inlined namespace and apply Itanium abbreviations
+  ///
+  /// \param[in,out] name The directly demangled typename to translate
+  ///
+  /// Inlined namespaces prevent direct use of Itanium ABI compressions
+  /// so fully qualified typenames will be returned by any demangling.
+  /// For example, libc++'s inline namespace "std::__1::" means that
+  /// demangling a std::string argument will return
+  ///
+  /// std::__1::basic_string<char, std::char_traits<char>, std::allocator<char> >
+  ///
+  /// instead of
+  ///
+  /// std::string
+  ///
+  /// which would be the case without inline namespaces.
+  ///
+  /// Canvas requires the abbreviations, so the demangled name must be
+  /// stripped of the inline namespace and any Itanium abbreviation
+  /// reapplied. Currently known inlined namespaces are:
+  ///
+  /// std::__1::     Clang/libc++
+  /// std::__cxx11:: GCC/libstdc++
+  ///
+  /// For further information on the Itanium ABI abbreviations, see
+  ///
+  ///   http://mentorembedded.github.io/cxx-abi/abi.html#mangling-compression
+  ///
+  void translateInlineNamespace(std::string& name)
+  {
+    // libc++/libstdc++ std::ABI_TAG -> std::
+    {
+      static std::regex const ns_regex("std::__(1|cxx11)::");
+      static std::string const ns_format("std::");
+      reformat(name, ns_regex, ns_format);
+    }
+
+    // Apply Itanium abbreviations
+    // FIXME: If the need arises, may need to apply other abbreviations:
+    // http://mentorembedded.github.io/cxx-abi/abi.html#mangling-compression
+    cet::replace_all(name, "std::basic_string<char, std::char_traits<char>, std::allocator<char> >", "std::string");
+    cet::replace_all(name, "std::basic_string<char, std::char_traits<char> >", "std::string");
+  }
 }
 
 std::string
@@ -110,6 +156,9 @@ art::uniform_type_name(std::string name) {
   using namespace std::string_literals;
   // We must use the same conventions previously used by Reflex.
   // The order is important.
+
+  // Translate any inlined namespace
+  translateInlineNamespace(name);
 
   // We must change std::__cxx11:: -> std:: for all type names. This
   // should not have implications for I/O because ROOT stores the data
@@ -137,6 +186,16 @@ art::uniform_type_name(std::string name) {
   }
   // Put const qualifier before identifier.
   constBeforeIdentifier(name);
+
+  // No spaces between template brakets and arguments
+  // FIXME?: need a regex because just stripping the spaces
+  // can cause subsequent ">>" removal fail...
+  {
+    static std::regex const bk_regex("([_a-zA-Z0-9])( +)>");
+    static std::string const bk_format("$1>");
+    reformat(name, bk_regex, bk_format);
+  }
+
   // No consecutive '>'.
   //
   // FIXME: The first time we see a type with e.g. operator>> as a
