@@ -12,7 +12,7 @@ cppunit		v1_13_1c
 python		v2_7_13d
 root		v6_08_06d
 messagefacility	v2_0_0
-cetbuildtools	v5_06_07	-	only_for_build
+cetbuildtools	v5_08_00	-	only_for_build
 end_product_list
 
 qualifier	messagefacility	root		clhep		cppunit		python	compiler	notes
