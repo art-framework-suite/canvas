@@ -61,14 +61,14 @@ namespace art {
 
       // 1. When Bcoll is a collection of pointer to const B -- one to one.
       template <typename Bcoll>
-      typename std::enable_if<std::is_same<typename Bcoll::value_type, ProdB const *>::value>::type
+      std::enable_if_t<std::is_same<typename Bcoll::value_type, ProdB const *>::value>
       fill(size_t index,
            Ptr<ProdB> const & item,
            Bcoll & bColl);
 
       // 2. When Bcoll is a collection of Ptr<B> -- one to one.
       template <typename Bcoll>
-      typename std::enable_if<std::is_convertible<typename Bcoll::value_type, Ptr<ProdB> >::value>::type
+      std::enable_if_t<std::is_convertible<typename Bcoll::value_type, Ptr<ProdB> >::value>
       fill(size_t index,
            Ptr<ProdB> const & item,
            Bcoll & bColl);
@@ -78,14 +78,14 @@ namespace art {
 
       // 3. When Bcoll is a collection of pointer to const B -- one to many.
       template <typename Bcoll>
-      typename std::enable_if<std::is_same<typename Bcoll::value_type, ProdB const *>::value>::type
+      std::enable_if_t<std::is_same<typename Bcoll::value_type, ProdB const *>::value>
       fill(size_t index,
            Ptr<ProdB> const & item,
            std::vector<Bcoll> & bColls) const;
 
       // 4. When Bcoll is a collection of Ptr<B> -- one to many.
       template <typename Bcoll>
-      typename std::enable_if<std::is_convertible<typename Bcoll::value_type, Ptr<ProdB> >::value>::type
+      std::enable_if_t<std::is_convertible<typename Bcoll::value_type, Ptr<ProdB> >::value>
       fill(size_t index,
            Ptr<ProdB> const & item,
            std::vector<Bcoll> & bColls) const;
@@ -102,7 +102,7 @@ class art::detail::IPRHelper {
 private:
 
   // We use IPRHelperDef in place of DATACOLL if Data is void.
-  typedef typename std::conditional<std::is_void<Data>::value, IPRHelperDef, DATACOLL>::type dataColl_t;
+  typedef std::conditional_t<std::is_void<Data>::value, IPRHelperDef, DATACOLL> dataColl_t;
 
 public:
   typedef std::shared_ptr<art::Exception const> shared_exception_t;
@@ -313,7 +313,7 @@ init(size_t size, Bcoll & bColl)
 template <typename ProdB>
 template <typename Bcoll>
 inline
-typename std::enable_if<std::is_same<typename Bcoll::value_type, ProdB const *>::value>::type
+std::enable_if_t<std::is_same<typename Bcoll::value_type, ProdB const *>::value>
 art::detail::BcollHelper<ProdB>::
 fill(size_t index,
      Ptr<ProdB> const & item,
@@ -340,7 +340,7 @@ fill(size_t index,
 template <typename ProdB>
 template <typename Bcoll>
 inline
-typename std::enable_if<std::is_convertible<typename Bcoll::value_type, art::Ptr<ProdB> >::value>::type
+std::enable_if_t<std::is_convertible<typename Bcoll::value_type, art::Ptr<ProdB> >::value>
 art::detail::BcollHelper<ProdB>::
 fill(size_t index,
      Ptr<ProdB> const & item,
@@ -372,7 +372,7 @@ init(size_t size, std::vector<Bcoll> & bColls) const
 template <typename ProdB>
 template <typename Bcoll>
 inline
-typename std::enable_if<std::is_same<typename Bcoll::value_type, ProdB const *>::value>::type
+std::enable_if_t<std::is_same<typename Bcoll::value_type, ProdB const *>::value>
 art::detail::BcollHelper<ProdB>::
 fill(size_t index,
      Ptr<ProdB> const & item,
@@ -385,7 +385,7 @@ fill(size_t index,
 template <typename ProdB>
 template <typename Bcoll>
 inline
-typename std::enable_if<std::is_convertible<typename Bcoll::value_type, art::Ptr<ProdB> >::value>::type
+std::enable_if_t<std::is_convertible<typename Bcoll::value_type, art::Ptr<ProdB> >::value>
 art::detail::BcollHelper<ProdB>::
 fill(size_t index,
      Ptr<ProdB> const & item,
