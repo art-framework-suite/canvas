@@ -20,6 +20,7 @@ namespace {
   std::regex const reBeginSpace{"^ +"};
   std::regex const reComma{","};
   std::regex const reEndSpace{" +$"};
+  std::regex const reParens{"(\\(|\\))"};
   std::regex const reFirstTwoArgs{"^([^,]+),([^,]+)"};
   std::regex const reLong{"long "};
   std::regex const reLongLong{"Long64_t"};
@@ -44,6 +45,11 @@ namespace {
   std::string removeAllSpaces(std::string const& in)
   {
     return std::regex_replace(in, reAllSpaces, emptyString);
+  }
+
+  std::string escapeParens(std::string const& in)
+  {
+    return std::regex_replace(in, reParens, "\\$1");
   }
 
   std::string standardRenames(std::string const& in)
@@ -72,7 +78,11 @@ namespace {
       std::string const cMatch{theMatch.str(1)};
       std::string const aMatch{theMatch.str(2)};
       std::string const theSub{handleTemplateArguments(cMatch, aMatch)};
-      std::regex const eMatch{std::string{"^"} + cMatch + '<' + aMatch + '>'};
+      // If a type (e.g.) A was declared in an anonymous namespace,
+      // the demangled typename can be (anonymous namespace)::A.  The
+      // parentheses must be escaped so that they do not interfere
+      // with the regex library.
+      std::regex const eMatch{std::string{"^"} + escapeParens(cMatch) + '<' + escapeParens(aMatch) + '>'};
       result = std::regex_replace(result, eMatch, theSub+cMatch);
     }
     return result;

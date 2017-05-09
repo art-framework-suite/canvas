@@ -1,3 +1,7 @@
+cet_test(TypeIDAssns_t USE_BOOST_UNIT
+  LIBRARIES canvas
+  )
+
 cet_test(aggregate_t USE_BOOST_UNIT
   LIBRARIES canvas
   )
