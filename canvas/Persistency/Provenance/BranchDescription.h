@@ -27,7 +27,7 @@ namespace art {
 
   class BranchDescription;
 
-  std::ostream& operator << (std::ostream& os, BranchDescription const& p);
+  std::ostream& operator<<(std::ostream& os, BranchDescription const& p);
 
   bool operator <  (BranchDescription const& a, BranchDescription const& b);
   bool operator == (BranchDescription const& a, BranchDescription const& b);
@@ -40,26 +40,26 @@ namespace art {
   }
 
   // Declared below due to use of nested type:
-//   std::string match(BranchDescription const& a,
-//                     BranchDescription const& b,
-//                     std::string const& fileName,
-//                     BranchDescription::MatchMode m);
-
+  //   std::string match(BranchDescription const& a,
+  //                     BranchDescription const& b,
+  //                     std::string const& fileName,
+  //                     BranchDescription::MatchMode m);
 }
 
 // ----------------------------------------------------------------------
 
 class art::BranchDescription {
 public:
-  static int const invalidSplitLevel = -1;
-  static int const invalidBasketSize = 0;
-  static int const invalidCompression = -1;
-  enum MatchMode { Strict = 0,
-                   Permissive };
 
-  BranchDescription();
+  static int constexpr invalidSplitLevel{-1};
+  static int constexpr invalidBasketSize{0};
+  static int constexpr invalidCompression{-1};
+  enum MatchMode {Strict = 0, Permissive};
 
-  BranchDescription(TypeLabel const &tl,
+  BranchDescription() = default;
+
+  BranchDescription(BranchType const bt,
+                    TypeLabel const&tl,
                     ModuleDescription const& modDesc);
 
   // use compiler-generated copy c'tor, copy assignment, and d'tor
@@ -83,48 +83,48 @@ public:
 
   BranchID branchID() const {return branchID_;}
   BranchType branchType() const {return branchType_;}
-  std::string const &branchName() const {return guts().branchName_;}
-  std::string const &wrappedName() const {return guts().wrappedName_;}
+  std::string const& branchName() const {return guts().branchName_;}
+  std::string const& wrappedName() const {return guts().wrappedName_;}
 
   void merge(BranchDescription const& other);
-  void swap(BranchDescription &other);
+  void swap(BranchDescription& other);
 
-  friend bool combinable(BranchDescription const &, BranchDescription const &);
-  friend std::string match(BranchDescription const &,
-                           BranchDescription const &,
-                           std::string const &,
+  friend bool combinable(BranchDescription const&, BranchDescription const&);
+  friend std::string match(BranchDescription const&,
+                           BranchDescription const&,
+                           std::string const&,
                            BranchDescription::MatchMode);
-  friend bool operator<(BranchDescription const &, BranchDescription const &);
-  friend bool operator==(BranchDescription const &, BranchDescription const &);
+  friend bool operator<(BranchDescription const&, BranchDescription const&);
+  friend bool operator==(BranchDescription const&, BranchDescription const&);
 
   struct Transients {
-    Transients();
+    Transients() = default;
 
     // The branch name, which is currently derivable fron the other attributes.
-    std::string branchName_;
+    std::string branchName_{};
 
     // The wrapped class name, which is currently derivable fron the other attributes.
-    std::string wrappedName_;
+    std::string wrappedName_{};
 
     // Was this branch produced in this process
     // rather than in a previous process
-    bool produced_;
+    bool produced_{false};
 
     // Is the class of the branch marked as transient
     // in the data dictionary
-    bool transient_;
+    bool transient_{false};
 
     // The split level of the branch, as marked
     // in the data dictionary.
-    int splitLevel_;
+    int splitLevel_{};
 
     // The basket size of the branch, as marked
     // in the data dictionary.
-    int basketSize_;
+    int basketSize_{};
 
     // The compression of the branch, as marked
     // in the data dictionary.
-    int compression_;
+    int compression_{invalidCompression};
   };
 
 private:
@@ -138,43 +138,43 @@ private:
   bool isPsetIDUnique() const {return psetIDs().size() == 1;}
   std::set<ProcessConfigurationID> const& processConfigurationIDs() const {return processConfigurationIDs_;}
 
-  Transients &guts() {return transients_.get(); }
-  Transients const &guts() const {return transients_.get(); }
+  Transients& guts() {return transients_.get(); }
+  Transients const& guts() const {return transients_.get(); }
 
   void throwIfInvalid_() const;
 
   // What tree is the branch in?
-  BranchType branchType_;
+  BranchType branchType_{InEvent};
 
   // A human friendly string that uniquely identifies the EDProducer
   // and becomes part of the identity of a product that it produces
-  std::string moduleLabel_;
+  std::string moduleLabel_{};
 
   // the physical process that this program was part of (e.g. production)
-  std::string processName_;
+  std::string processName_{};
 
   // An ID uniquely identifying the branch
-  BranchID branchID_;
+  BranchID branchID_{};
 
   // the full name of the type of product this is
-  std::string producedClassName_;
+  std::string producedClassName_{};
 
   // a readable name of the type of product this is
-  std::string friendlyClassName_;
+  std::string friendlyClassName_{};
 
   // a user-supplied name to distinguish multiple products of the same type
   // that are produced by the same producer
-  std::string productInstanceName_;
+  std::string productInstanceName_{};
 
   // ID's of parameter set of the creators of products
   // on this branch
-  std::set<fhicl::ParameterSetID> psetIDs_;
+  std::set<fhicl::ParameterSetID> psetIDs_{};
 
   // ID's of process configurations for products
   // on this branch
-  std::set<ProcessConfigurationID> processConfigurationIDs_;
+  std::set<ProcessConfigurationID> processConfigurationIDs_{};
 
-  mutable Transient<Transients> transients_;
+  mutable Transient<Transients> transients_{};
 };  // BranchDescription
 
 namespace art {

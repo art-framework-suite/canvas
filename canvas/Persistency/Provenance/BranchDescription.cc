@@ -37,45 +37,13 @@ namespace {
 namespace art {
 
 BranchDescription::
-Transients::
-Transients() :
-  branchName_(),
-  wrappedName_(),
-  produced_(false),
-  transient_(false),
-  splitLevel_(),
-  basketSize_(),
-  compression_(invalidCompression)
-{
-}
-
-BranchDescription::
-BranchDescription() :
-  branchType_(InEvent),
-  moduleLabel_(),
-  processName_(),
-  branchID_(),
-  producedClassName_(),
-  friendlyClassName_(),
-  productInstanceName_(),
-  psetIDs_(),
-  processConfigurationIDs_(),
-  transients_()
-{
-}
-
-BranchDescription::
-BranchDescription(TypeLabel const& tl, ModuleDescription const& md) :
-  branchType_(tl.branchType),
+BranchDescription(BranchType const bt, TypeLabel const& tl, ModuleDescription const& md) :
+  branchType_{bt},
   moduleLabel_(tl.hasEmulatedModule() ? tl.emulatedModule : md.moduleLabel()),
   processName_(md.processName()),
-  branchID_(),
   producedClassName_(tl.className()),
   friendlyClassName_(tl.friendlyClassName()),
-  productInstanceName_(tl.productInstanceName),
-  psetIDs_(),
-  processConfigurationIDs_(),
-  transients_()
+  productInstanceName_(tl.productInstanceName)
 {
   guts().produced_ = true;
   psetIDs_.insert(md.parameterSetID());
