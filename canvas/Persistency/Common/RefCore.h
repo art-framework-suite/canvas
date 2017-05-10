@@ -67,7 +67,6 @@ private:
   RefCoreTransients transients_;
 };
 
-#ifndef __GCCXML__
 inline
 art::RefCore::
 RefCore(ProductID const & id,
@@ -194,7 +193,6 @@ art::swap(art::RefCore & lhs, art::RefCore & rhs)
 { lhs.swap(rhs); }
 
 
-#endif /* __GCCXML__ */
 #endif /* canvas_Persistency_Common_RefCore_h */
 
 // Local Variables:

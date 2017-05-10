@@ -12,12 +12,12 @@ namespace art {
   class InputTag;
 
   std::ostream& operator << (std::ostream& ost, InputTag const& tag);
-  bool operator != (InputTag const & left, InputTag const & right);
+  bool operator != (InputTag const& left, InputTag const& right);
 }
 
 class art::InputTag {
 public:
-  InputTag();
+  InputTag() = default;
 
   // Create an InputTag by parsing the given string, which is
   // expected to be in colon-delimited form, fitting one of the
@@ -55,25 +55,14 @@ public:
   bool operator==(InputTag const& tag) const;
 
 private:
-  std::string label_;
-  std::string instance_;
-  std::string process_;
+  std::string label_{};
+  std::string instance_{};
+  std::string process_{};
 
   // Helper function, to parse colon-separated initialization
   // string.
   void set_from_string_(std::string const& s);
 };
-
-#ifndef __GCCXML__
-inline
-art::InputTag::
-InputTag()
-  :
-  label_(),
-  instance_(),
-  process_()
-{
-}
 
 inline
 art::InputTag::
@@ -98,21 +87,13 @@ InputTag(char const* label, char const* instance, char const* processName)
 inline
 art::InputTag::
 InputTag(std::string const& s)
-  :
-  label_(),
-  instance_(),
-  process_()
 {
   set_from_string_(s);
 }
 
 inline
 art::InputTag::
-InputTag(const char* s)
-  :
-  label_(),
-  instance_(),
-  process_()
+InputTag(char const* s)
 {
   set_from_string_(s);
 }
@@ -130,11 +111,10 @@ operator==(InputTag const& tag) const
 inline
 bool
 art::
-operator!=(InputTag const & left, InputTag const & right)
+operator!=(InputTag const& left, InputTag const& right)
 {
-  return ! (left == right);
+  return !(left == right);
 }
-#endif /* __GCCXML__ */
 
 //=====================================================================
 // decode specialization for allowing conversions from
@@ -142,8 +122,7 @@ operator!=(InputTag const & left, InputTag const & right)
 //    sequence ===> InputTag
 
 namespace art {
-
-  void decode( boost::any const & a, InputTag & tag );
+  void decode(boost::any const& a, InputTag& tag);
 }
 
 #endif /* canvas_Utilities_InputTag_h */

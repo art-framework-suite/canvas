@@ -44,7 +44,6 @@ struct art::BranchKey {
   int branchType_;
 };
 
-#ifndef __GCCXML__
 inline
 art::BranchKey::
 BranchKey() :
@@ -95,8 +94,6 @@ bool
 art::operator!=(BranchKey const& a, BranchKey const& b) {
   return !(a == b);
 }
-
-#endif /* __GCCXML__ */
 
 #endif /* canvas_Persistency_Provenance_BranchKey_h */
 
