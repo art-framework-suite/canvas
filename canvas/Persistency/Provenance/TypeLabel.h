@@ -36,7 +36,7 @@ namespace art
     return (a.branchType != b.branchType) ? a.branchType < b.branchType :
       (a.emulatedModule != b.emulatedModule) ? a.emulatedModule < b.emulatedModule :
       (a.productInstanceName != b.productInstanceName) ? a.productInstanceName < b.productInstanceName :
-      a.friendlyClassName() < b.friendlyClassName();
+      a.className() < b.className();
   }
 }
 
