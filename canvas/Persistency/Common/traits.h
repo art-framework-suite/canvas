@@ -2,16 +2,15 @@
 #define canvas_Persistency_Common_traits_h
 
 /*----------------------------------------------------------------------
-
-  Definition of traits templates used in the EDM.
-
+  Definition of traits templates used in the event data model.
   ----------------------------------------------------------------------*/
 
-#include "cetlib/detail/metaprogramming.h"
 #include "canvas/Utilities/Exception.h"
-#include "cetlib_except/demangle.h"
+#include "cetlib/container_algorithms.h"
+#include "cetlib/detail/metaprogramming.h"
 #include "cetlib/detail/metaprogramming.h"
 #include "cetlib/map_vector.h"
+#include "cetlib_except/demangle.h"
 
 #include <deque>
 #include <limits>
@@ -20,6 +19,7 @@
 #include <set>
 #include <string>
 #include <typeinfo>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -44,17 +44,12 @@ namespace art
   };
 
   // Partial specialization for std::pair
-
   template <class U, class V>
   struct key_traits<std::pair<U,V>>
   {
     using key_type = std::pair<U,V>;
     static const key_type value;
   };
-
-  template <class U, class V>
-  typename key_traits<std::pair<U,V>>::key_type const
-  key_traits<std::pair<U,V>>::value(key_traits<U>::value, key_traits<V>::value);
 
   // If we ever need to support instantiations of std::basic_string
   // other than std::string, this is the place to do it.
@@ -82,10 +77,6 @@ namespace art
   // Usage:
   //    class MyClass : public art::DoNotRecordParents { ... }
   struct DoNotRecordParents { };
-
-  // Other is a base class. NEVER USE IT. It is for the
-  // core of the event model only.
-  struct Other { };
 
   //------------------------------------------------------------
   //
@@ -121,8 +112,8 @@ namespace art
 
   template <typename T>
   struct MaybeFillView<T, std::enable_if_t<has_fillView<T>::value>> {
-    static void fill(T const & product,
-                     std::vector<void const *> & view)
+    static void fill(T const& product,
+                     std::vector<void const*>& view)
     {
       product.fillView(view);
     }
@@ -133,9 +124,7 @@ namespace art
     static void fill(std::vector<T> const& product,
                      std::vector<void const*>& view)
     {
-      for (auto const& p : product) {
-        view.push_back(&p);
-      }
+      cet::transform_all(product, std::back_inserter(view), [](auto const &p){ return &p; });
     }
   };
 
@@ -147,9 +136,7 @@ namespace art
     static void fill(std::list<T> const& product,
                      std::vector<void const*>& view)
     {
-      for (auto const& p : product) {
-        view.push_back(&p);
-      }
+      cet::transform_all(product, std::back_inserter(view), [](auto const &p){ return &p; });
     }
   };
 
@@ -158,9 +145,7 @@ namespace art
     static void fill(std::deque<T> const& product,
                      std::vector<void const*>& view)
     {
-      for (auto const& p : product) {
-        view.push_back(&p);
-      }
+      cet::transform_all(product, std::back_inserter(view), [](auto const &p){ return &p; });
     }
   };
 
@@ -169,9 +154,7 @@ namespace art
     static void fill(std::set<T> const& product,
                      std::vector<void const*>& view)
     {
-      for (auto const & p : product) {
-        view.push_back(&p);
-      }
+      cet::transform_all(product, std::back_inserter(view), [](auto const &p){ return &p; });
     }
   };
 
@@ -180,9 +163,7 @@ namespace art
     static void fill(cet::map_vector<T> const& product,
                      std::vector<void const*>& view)
     {
-      for (auto const & p : product) {
-        view.push_back(&p.second);
-      }
+      cet::transform_all(product, std::back_inserter(view), [](auto const &p){ return &p.second; });
     }
   };
 
