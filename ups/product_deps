@@ -8,11 +8,11 @@ perllib  product_dir
 #
 product		version
 clhep		v2_3_4_4
-cppunit		v1_13_1c
+cppunit		v1_13_2
 python		v2_7_13d
-root		v6_08_06d
+root		v6_08_06e
 messagefacility	v2_0_0
-cetbuildtools	v5_08_00	-	only_for_build
+cetbuildtools	v5_08_01	-	only_for_build
 end_product_list
 
 qualifier	messagefacility	root		clhep		cppunit		python	compiler	notes
