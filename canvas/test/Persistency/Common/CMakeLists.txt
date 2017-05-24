@@ -1,4 +1,6 @@
-cet_test(TypeIDAssns_t USE_BOOST_UNIT
+art_dictionary(NO_INSTALL)
+
+cet_test(test_ConstAssnIter
   LIBRARIES canvas
   )
 

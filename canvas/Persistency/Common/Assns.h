@@ -79,6 +79,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
+#include "canvas/Persistency/Common/AssnsIter.h"
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/Wrapper.h"
 #include "canvas/Persistency/Common/detail/throwPartnerException.h"
@@ -222,21 +223,21 @@ public:
   typedef typename base::right_t right_t;
   typedef D data_t;
   typedef art::Assns<right_t, left_t, data_t> partner_t;
-  typedef typename base::assn_t assn_t;
-  typedef typename base::assn_iterator assn_iterator;
+  typedef typename art::const_AssnsIter<L, R, D> const_iterator;
   typedef typename base::size_type size_type;
 
   Assns();
   Assns(partner_t const & other);
 
   size_type size() const; // Implemented explicitly only to let Wrapper know.
-  using base::begin;
-  using base::end;
+  const_iterator begin() const;
+  const_iterator end() const;
+
   using base::operator[];
   using base::at;
 
   data_t const & data(typename std::vector<data_t>::size_type index) const;
-  data_t const & data(assn_iterator it) const;
+  data_t const & data(const_iterator it) const;
 
   void addSingle(Ptr<left_t> const & left,
                  Ptr<right_t> const & right,
@@ -259,6 +260,8 @@ private:
 
   std::vector<data_t> data_;
 };
+
+/////
 
 ////////////////////////////////////////////////////////////////////////
 template <typename L, typename R>
@@ -477,6 +480,22 @@ art::Assns<L, R, D>::size() const
 
 template <typename L, typename R, typename D>
 inline
+typename art::Assns<L, R, D>::const_iterator
+art::Assns<L, R, D>::begin() const
+{
+    return {*this, 0};
+}
+
+template <typename L, typename R, typename D>
+inline
+typename art::Assns<L, R, D>::const_iterator
+art::Assns<L, R, D>::end() const
+{
+    return {*this};
+}
+
+template <typename L, typename R, typename D>
+inline
 typename art::Assns<L, R, D>::data_t const &
 art::Assns<L, R, D>::data(typename std::vector<data_t>::size_type index) const
 {
@@ -486,9 +505,9 @@ art::Assns<L, R, D>::data(typename std::vector<data_t>::size_type index) const
 template <typename L, typename R, typename D>
 inline
 typename art::Assns<L, R, D>::data_t const &
-art::Assns<L, R, D>::data(assn_iterator it) const
+art::Assns<L, R, D>::data(const_iterator it) const
 {
-  return data_.at(it - begin());
+  return data_.at(it.getIndex());
 }
 
 template <typename L, typename R, typename D>
