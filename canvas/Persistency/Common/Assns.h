@@ -483,7 +483,7 @@ inline
 typename art::Assns<L, R, D>::const_iterator
 art::Assns<L, R, D>::begin() const
 {
-    return {*this, 0};
+    return const_iterator{*this, 0};
 }
 
 template <typename L, typename R, typename D>
@@ -491,7 +491,7 @@ inline
 typename art::Assns<L, R, D>::const_iterator
 art::Assns<L, R, D>::end() const
 {
-    return {*this};
+    return const_iterator{*this};
 }
 
 template <typename L, typename R, typename D>
