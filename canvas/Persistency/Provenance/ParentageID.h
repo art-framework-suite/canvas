@@ -4,11 +4,9 @@
 #include "canvas/Persistency/Provenance/HashedTypes.h"
 #include "canvas/Persistency/Provenance/Hash.h"
 
-namespace art
-{
+namespace art {
   typedef Hash<ParentageType> ParentageID;
 }
-
 
 #endif /* canvas_Persistency_Provenance_ParentageID_h */
 

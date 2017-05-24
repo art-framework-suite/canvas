@@ -23,8 +23,7 @@ namespace art {
 
   bool isAncestor(art::ProcessHistory const& a, art::ProcessHistory const& b);
 
-  bool
-  isDescendant(art::ProcessHistory const& a, art::ProcessHistory const& b);
+  bool isDescendant(art::ProcessHistory const& a, art::ProcessHistory const& b);
 
   std::ostream& operator<<(std::ostream& ost, art::ProcessHistory const& ph);
 }
@@ -45,7 +44,7 @@ public:
 
   typedef collection_type::size_type size_type;
 
-  ProcessHistory();
+  ProcessHistory() = default;
   explicit ProcessHistory(size_type n);
   explicit ProcessHistory(collection_type const& vec);
 
@@ -68,19 +67,13 @@ public:
 
   const_iterator begin() const {return data_.begin();}
   const_iterator end() const {return data_.end();}
-
-#ifndef __GCCXML__
   const_iterator cbegin() const {return data_.cbegin();}
   const_iterator cend() const {return data_.cend();}
-#endif // #ifndef __GCCXML__
-
   const_reverse_iterator rbegin() const {return data_.rbegin();}
   const_reverse_iterator rend() const {return data_.rend();}
 
-#ifndef __GCCXML__
   const_reverse_iterator crbegin() const {return data_.crbegin();}
   const_reverse_iterator crend() const {return data_.crend();}
-#endif // #ifndef __GCCXML__
 
   collection_type const& data() const {return data_;}
   ProcessHistoryID id() const;
@@ -93,12 +86,12 @@ public:
   bool getConfigurationForProcess(std::string const& name, ProcessConfiguration& config) const;
 
   struct Transients {
-    ProcessHistoryID phid_;
+    ProcessHistoryID phid_ {};
   };
 
 private:
-  collection_type data_;
-  mutable Transient<Transients> transients_;
+  collection_type data_ {};
+  mutable Transient<Transients> transients_ {};
 
   void invalidateProcessHistoryID_() { transients_.get().phid_ = ProcessHistoryID(); }
 
@@ -108,25 +101,29 @@ private:
 // Free swap function
 inline
 void
-art::swap(art::ProcessHistory& a, art::ProcessHistory& b) {
+art::swap(art::ProcessHistory& a, art::ProcessHistory& b)
+{
   a.swap(b);
 }
 
 inline
 bool
-art::operator==(art::ProcessHistory const& a, art::ProcessHistory const& b) {
+art::operator==(art::ProcessHistory const& a, art::ProcessHistory const& b)
+{
   return a.data() == b.data();
 }
 
 inline
 bool
-art::operator!=(art::ProcessHistory const& a, art::ProcessHistory const& b) {
+art::operator!=(art::ProcessHistory const& a, art::ProcessHistory const& b)
+{
   return !(a==b);
 }
 
 inline
 bool
-art::isDescendant(art::ProcessHistory const& a, art::ProcessHistory const& b) {
+art::isDescendant(art::ProcessHistory const& a, art::ProcessHistory const& b)
+{
   return isAncestor(b, a);
 }
 
@@ -134,22 +131,14 @@ art::isDescendant(art::ProcessHistory const& a, art::ProcessHistory const& b) {
 // Implementation of ProcessHistory
 
 inline
-art::ProcessHistory::ProcessHistory() :
-  data_(),
-  transients_()
-{ }
-
-inline
 art::ProcessHistory::ProcessHistory(size_type n) :
-  data_(n),
-  transients_()
-{ }
+  data_(n) // NOT uniform initialization
+{}
 
 inline
 art::ProcessHistory::ProcessHistory(collection_type const& vec) :
-  data_(vec),
-  transients_()
-{ }
+  data_{vec}
+{}
 
 inline
 void art::ProcessHistory::swap(ProcessHistory& other)

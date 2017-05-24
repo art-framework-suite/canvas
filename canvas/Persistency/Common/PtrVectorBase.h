@@ -25,11 +25,7 @@ public:
 public:
   typedef indices_t::size_type size_type;
 
-  virtual ~PtrVectorBase()
-#ifndef __GCCXML__
-  = default
-#endif
-    ;
+  virtual ~PtrVectorBase() = default;
 
   // Observers
   bool isNonnull() const;
@@ -42,11 +38,7 @@ public:
   void setProductGetter(EDProductGetter *g) const;
 
 protected:
-  PtrVectorBase()
-#ifndef __GCCXML__
-  = default
-#endif
-    ;
+  PtrVectorBase() = default;
 
   void clear();
   void swap(PtrVectorBase &);
@@ -69,7 +61,6 @@ private:
   friend class art::detail::PtrVectorBaseStreamer;
 }; // PtrVectorBase
 
-#ifndef __GCCXML__
 inline bool
 art::PtrVectorBase::isNonnull() const {
   return core_.isNonnull();
@@ -131,7 +122,6 @@ operator==(PtrVectorBase const &other) const {
   return core_ == other.core_;
 }
 
-#endif /* __GCCXML__ */
 #endif /* canvas_Persistency_Common_PtrVectorBase_h */
 
 // Local Variables:

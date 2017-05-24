@@ -56,9 +56,6 @@
   <version ClassVersion="10" checksum="1754135862"/>
  </class>
  <class name="art::Wrapper<art::TriggerResults>" splitLevel="0"/>
- <class name="art::Other" ClassVersion="10">
-  <version ClassVersion="10" checksum="2978157"/>
- </class>
  <class name="art::DoNotRecordParents" ClassVersion="10">
   <version ClassVersion="10" checksum="318074619"/>
  </class>

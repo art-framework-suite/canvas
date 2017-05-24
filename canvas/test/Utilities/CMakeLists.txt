@@ -66,3 +66,15 @@ foreach(types_file
     )
   math(EXPR tnum "${tnum} + 1")
 endforeach()
+
+cet_make_exec(EventIDMatcher_t
+  NO_INSTALL
+  LIBRARIES
+  canvas
+  cetlib
+)
+
+cet_test(EventIDMatcher_test HANDBUILT
+  TEST_EXEC EventIDMatcher_t
+)
+

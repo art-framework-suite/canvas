@@ -3,17 +3,13 @@
 
 #include <string>
 #include "canvas/Utilities/TypeID.h"
-#include "canvas/Persistency/Provenance/BranchType.h"
 
-namespace art
-{
+namespace art {
 
   struct TypeLabel {
-    TypeLabel (BranchType const&  branchType,
-               TypeID const&      itemtype,
-               std::string const& instanceName,
-               std::string const& emulatedMod = std::string()) :
-      branchType(branchType),
+    TypeLabel(TypeID const& itemtype,
+              std::string const& instanceName,
+              std::string const& emulatedMod = std::string()) :
       typeID(itemtype),
       productInstanceName(instanceName),
       emulatedModule(emulatedMod)
@@ -23,7 +19,6 @@ namespace art
     std::string friendlyClassName() const { return typeID.friendlyClassName(); }
     bool hasEmulatedModule() const { return !emulatedModule.empty(); }
 
-    BranchType  branchType;
     TypeID      typeID;
     std::string productInstanceName;
     std::string emulatedModule;
@@ -33,10 +28,9 @@ namespace art
   // class for the purposes of this comparison.
   inline
   bool operator<(TypeLabel const &a, TypeLabel const &b) {
-    return (a.branchType != b.branchType) ? a.branchType < b.branchType :
-      (a.emulatedModule != b.emulatedModule) ? a.emulatedModule < b.emulatedModule :
+    return (a.emulatedModule != b.emulatedModule) ? a.emulatedModule < b.emulatedModule :
       (a.productInstanceName != b.productInstanceName) ? a.productInstanceName < b.productInstanceName :
-      a.friendlyClassName() < b.friendlyClassName();
+      a.className() < b.className();
   }
 }
 

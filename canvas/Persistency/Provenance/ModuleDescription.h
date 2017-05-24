@@ -22,12 +22,15 @@ namespace art {
   // are constant   (change to ModuleDescription)
 
   class ModuleDescription {
-public:
-    ModuleDescription();
-    ModuleDescription(fhicl::ParameterSetID parameterSetID,
-                      std::string const & modName,
-                      std::string const & modLabel,
-                      ProcessConfiguration pc); // Feel free to use move semantics.
+  public:
+    explicit ModuleDescription() = default;
+    explicit ModuleDescription(fhicl::ParameterSetID parameterSetID,
+                               std::string const & modName,
+                               std::string const & modLabel,
+                               ProcessConfiguration pc,
+                               ModuleDescriptionID id = getUniqueID());
+
+    // Feel free to use move semantics.
 
     void write(std::ostream& os) const;
 
@@ -41,34 +44,38 @@ public:
     std::string const& passID() const {return processConfiguration().passID();}
     fhicl::ParameterSetID const& mainParameterSetID() const {return processConfiguration().parameterSetID();}
 
-    // compiler-written copy c'tor, assignment, and d'tor are correct.
-
     bool operator<(ModuleDescription const& rh) const;
-
     bool operator==(ModuleDescription const& rh) const;
-
     bool operator!=(ModuleDescription const& rh) const;
 
-    ModuleDescriptionID id() const; // For backward compatibility
+    ModuleDescriptionID id() const { return id_; } // Unique only within a process.
+
+    static ModuleDescriptionID getUniqueID();
+
+    static constexpr ModuleDescriptionID invalidID() { return std::numeric_limits<ModuleDescriptionID>::max(); }
 
 private:
     // ID of parameter set of the creator
-    fhicl::ParameterSetID parameterSetID_;
+    fhicl::ParameterSetID parameterSetID_ {};
 
     // The class name of the creator
-    std::string moduleName_;
+    std::string moduleName_ {};
 
     // A human friendly string that uniquely identifies the EDProducer
     // and becomes part of the identity of a product that it produces
-    std::string moduleLabel_;
+    std::string moduleLabel_ {};
 
     // The process configuration.
-    ProcessConfiguration processConfiguration_;
+    ProcessConfiguration processConfiguration_ {};
+
+    // Unique ID.
+    ModuleDescriptionID id_ {invalidID()};
   };
 
   inline
   std::ostream&
-  operator<<(std::ostream& os, const ModuleDescription& p) {
+  operator<<(std::ostream& os, ModuleDescription const& p)
+  {
     p.write(os);
     return os;
   }

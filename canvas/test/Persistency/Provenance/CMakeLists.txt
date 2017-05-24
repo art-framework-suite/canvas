@@ -84,3 +84,5 @@ cet_test(TypeWithDict_t USE_BOOST_UNIT
   canvas
   ${ROOT_CORE}
   )
+
+cet_test(ParentageRegistry_t USE_BOOST_UNIT LIBRARIES canvas)

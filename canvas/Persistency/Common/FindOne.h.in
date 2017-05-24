@@ -160,20 +160,20 @@ public:
     @ART_IPR_CLASS_NAME@(HANDLE const & aCollection,
                          EVENT const & e,
                          InputTag const & tag,
-                         typename std::enable_if<detail::is_handle<HANDLE>::value>::type * = 0);
+                         std::enable_if_t<detail::is_handle<HANDLE>::value> * = 0);
 
   template <typename ProdAColl, typename EVENT>
     @ART_IPR_CLASS_NAME@(ProdAColl const & view,
                          EVENT const & e,
                          InputTag const & tag,
-                         typename std::enable_if<std::is_pointer<typename ProdAColl::value_type>::value, void>::type * = 0);
+                         std::enable_if_t<std::is_pointer<typename ProdAColl::value_type>::value, void> * = 0);
 
   template <typename PtrProdAColl, typename EVENT>
     @ART_IPR_CLASS_NAME@(PtrProdAColl const & aPtrColl,
                          EVENT const & e,
                          InputTag const & tag,
-                         typename std::enable_if<std::is_same<typename PtrProdAColl::value_type,
-                         art::Ptr<typename PtrProdAColl::value_type::value_type> >::value>::type * = 0);
+                         std::enable_if_t<std::is_same<typename PtrProdAColl::value_type,
+                         art::Ptr<typename PtrProdAColl::value_type::value_type> >::value> * = 0);
 
   template <typename ProdA, typename EVENT>
     @ART_IPR_CLASS_NAME@(std::initializer_list<Ptr<ProdA> > const & ptrs,
@@ -231,21 +231,21 @@ public:
     @ART_IPR_CLASS_NAME@(HANDLE const & aCollection,
                          EVENT const & e,
                          InputTag const & tag,
-                         typename std::enable_if<detail::is_handle<HANDLE>::value>::type * = 0);
+                         std::enable_if_t<detail::is_handle<HANDLE>::value> * = 0);
 
   template <typename ProdAColl, typename EVENT>
     @ART_IPR_CLASS_NAME@(ProdAColl const & view,
                          EVENT const & e,
                          InputTag const & tag,
-                         typename std::enable_if<std::is_pointer<typename ProdAColl::value_type>::value, void>::type * = 0);
+                         std::enable_if_t<std::is_pointer<typename ProdAColl::value_type>::value, void> * = 0);
 
 
   template <typename PtrProdAColl, typename EVENT>
     @ART_IPR_CLASS_NAME@(PtrProdAColl const & aPtrColl,
                          EVENT const & e,
                          InputTag const & tag,
-                         typename std::enable_if<std::is_same<typename PtrProdAColl::value_type,
-                         art::Ptr<typename PtrProdAColl::value_type::value_type> >::value>::type * = 0);
+                         std::enable_if_t<std::is_same<typename PtrProdAColl::value_type,
+                         art::Ptr<typename PtrProdAColl::value_type::value_type> >::value> * = 0);
 
   template <typename ProdA, typename EVENT>
     @ART_IPR_CLASS_NAME@(std::initializer_list<Ptr<ProdA> > const & ptrs,
@@ -283,7 +283,7 @@ art::@ART_IPR_CLASS_NAME@<ProdB, void>::
 @ART_IPR_CLASS_NAME@(HANDLE const & aCollection,
                      EVENT const & e,
                      InputTag const & tag,
-                     typename std::enable_if<detail::is_handle<HANDLE>::value>::type *)
+                     std::enable_if_t<detail::is_handle<HANDLE>::value> *)
   :
   bCollection_(),
   storedException_()
@@ -300,12 +300,12 @@ art::@ART_IPR_CLASS_NAME@<ProdB, void>::
 @ART_IPR_CLASS_NAME@(ProdAColl const & view,
                      EVENT const & e,
                      InputTag const & tag,
-                     typename std::enable_if<std::is_pointer<typename ProdAColl::value_type>::value, void>::type *)
+                     std::enable_if_t<std::is_pointer<typename ProdAColl::value_type>::value, void> *)
   :
   bCollection_(),
   storedException_()
 {
-  typedef typename std::remove_const<typename std::remove_pointer<typename ProdAColl::value_type>::type>::type ProdA;
+  typedef std::remove_const_t<std::remove_pointer_t<typename ProdAColl::value_type>> ProdA;
   detail::IPRHelper<ProdA, ProdB, void, void, EVENT> finder(e, tag);
   storedException_ =
     finder(view, bCollection_);
@@ -317,8 +317,8 @@ art::@ART_IPR_CLASS_NAME@<ProdB, void>::
 @ART_IPR_CLASS_NAME@(PtrProdAColl const & aPtrColl,
                      EVENT const & e,
                      InputTag const & tag,
-                     typename std::enable_if<std::is_same<typename PtrProdAColl::value_type,
-                     art::Ptr<typename PtrProdAColl::value_type::value_type> >::value>::type *)
+                     std::enable_if_t<std::is_same<typename PtrProdAColl::value_type,
+                     art::Ptr<typename PtrProdAColl::value_type::value_type> >::value> *)
   :
   bCollection_(),
   storedException_()
@@ -443,7 +443,7 @@ art::@ART_IPR_CLASS_NAME@<ProdB, Data>::
 @ART_IPR_CLASS_NAME@(HANDLE const & aCollection,
                      EVENT const & e,
                      InputTag const & tag,
-                     typename std::enable_if<detail::is_handle<HANDLE>::value>::type *)
+                     std::enable_if_t<detail::is_handle<HANDLE>::value> *)
     :
     base(),
     dataCollection_()
@@ -459,12 +459,12 @@ art::@ART_IPR_CLASS_NAME@<ProdB, Data>::
 @ART_IPR_CLASS_NAME@(ProdAColl const & view,
                      EVENT const & e,
                      InputTag const & tag,
-                         typename std::enable_if<std::is_pointer<typename ProdAColl::value_type>::value, void>::type *)
+                     std::enable_if_t<std::is_pointer<typename ProdAColl::value_type>::value, void> *)
     :
     base(),
     dataCollection_()
 {
-  typedef typename std::remove_const<typename std::remove_pointer<typename ProdAColl::value_type>::type>::type ProdA;
+  typedef std::remove_const_t<std::remove_pointer_t<typename ProdAColl::value_type>> ProdA;
   detail::IPRHelper<ProdA, ProdB, Data, dataColl_t, EVENT> finder(e, tag);
   base::setStoredException(finder(view, base::bCollection(), dataCollection_));
 }
@@ -475,8 +475,8 @@ art::@ART_IPR_CLASS_NAME@<ProdB, Data>::
 @ART_IPR_CLASS_NAME@(PtrProdAColl const & aPtrColl,
                      EVENT const & e,
                      InputTag const & tag,
-                     typename std::enable_if<std::is_same<typename PtrProdAColl::value_type,
-                     art::Ptr<typename PtrProdAColl::value_type::value_type> >::value>::type *)
+                     std::enable_if_t<std::is_same<typename PtrProdAColl::value_type,
+                     art::Ptr<typename PtrProdAColl::value_type::value_type> >::value> *)
     :
     base(),
     dataCollection_()

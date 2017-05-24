@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(collapsing2)
   BOOST_CHECK_EXCEPTION(rs.collapse(),
                         art::Exception,
                         [](art::Exception const& e) {
-                          return e.categoryCode() == art::errors::LogicError;
+                          return e.categoryCode() == art::errors::EventRangeOverlap;
                         });
 }
 
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(merging2)
   BOOST_CHECK_EXCEPTION(rs1.merge(rs2),
                         art::Exception,
                         [](art::Exception const& e) {
-                          return e.categoryCode() == art::errors::LogicError;
+                          return e.categoryCode() == art::errors::EventRangeOverlap;
                         });
 }
 

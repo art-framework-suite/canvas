@@ -16,7 +16,7 @@ BranchIDLists:
 
 namespace art {
   typedef std::vector<BranchID::value_type> BranchIDList;
-  typedef std::vector<BranchIDList> BranchIDLists;
+  typedef std::vector<BranchIDList>         BranchIDLists;
 }
 #endif /* canvas_Persistency_Provenance_BranchIDList_h */
 
