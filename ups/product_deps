@@ -1,6 +1,6 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent canvas	v2_00_01
+parent canvas	v2_00_02
 defaultqual	e14
 #
 fcldir -
@@ -10,9 +10,9 @@ product		version
 clhep		v2_3_4_4
 cppunit		v1_13_2
 python		v2_7_13d
-root		v6_08_06f
+root		v6_08_06g
 messagefacility	v2_00_02
-cetbuildtools	v5_08_01	-	only_for_build
+cetbuildtools	v5_08_02	-	only_for_build
 end_product_list
 
 qualifier	messagefacility	root		clhep		cppunit		python	compiler	notes
