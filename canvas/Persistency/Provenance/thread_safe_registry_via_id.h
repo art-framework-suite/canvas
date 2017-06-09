@@ -119,4 +119,4 @@ namespace art {
 
 }
 
-#endif
+#endif /* canvas_Persistency_Provenance_thread_safe_registry_via_id_h */

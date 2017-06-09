@@ -9,4 +9,4 @@ namespace art {
   typedef thread_safe_registry_via_id<ParentageID, Parentage> ParentageRegistry;
 }
 
-#endif
+#endif /* canvas_Persistency_Provenance_ParentageRegistry_h */

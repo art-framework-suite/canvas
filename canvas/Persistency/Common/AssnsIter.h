@@ -223,4 +223,4 @@ namespace art {
   }
 }
 
-#endif
+#endif /* canvas_Persistency_Common_AssnsIter_h */
