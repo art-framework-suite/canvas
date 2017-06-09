@@ -125,7 +125,18 @@
   </class>
   <class name="art::ParameterSetMap"/>
   <class name="std::pair<fhicl::ParameterSetID, art::ParameterSetBlob>"/>
-  <class name="art::ProductID"/>
+  <class name="art::ProductID" ClassVersion="10">
+    <version ClassVersion="10" checksum="2026026665"/>
+  </class>
+  <ioread sourceClass="art::ProductID" version="[-9]"
+          targetClass="art::ProductID"
+          source="art::ProcessIndex processIndex_; art::ProductIndex productIndex_"
+          target="value_"
+          include="canvas/Persistency/Provenance/BranchIDListRegistry.h">
+    <![CDATA[
+        value_ = art::BranchIDListRegistry::instance().data()[onfile.processIndex_][onfile.productIndex_];
+    ]]>
+  </ioread>
   <class name="art::DictionaryChecker" ClassVersion="0"/>
   <function name="art::name_of_assns_partner"/>
   <function name="art::wrappedClassName"/>

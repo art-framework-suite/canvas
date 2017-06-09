@@ -1,21 +1,11 @@
 #ifndef canvas_Persistency_Provenance_ProductID_h
 #define canvas_Persistency_Provenance_ProductID_h
 
-/*----------------------------------------------------------------------
+//=====================================================================
+// ProductID: A unique identifier for each EDProduct within a process.
+//=====================================================================
 
-ProductID: A unique identifier for each EDProduct within a process.
-Used only in Ptr and similar classes.
-
-The high order 16 bits is the process index, identifying the process
-in which the product was created.  Exception: An index of 0 means that
-the product was created prior to the new format (i.e. prior to
-CMSSW_3_0_0.
-
-The low order 16 bits is the product index, identifying the product in
-which the product was created.  An index of zero means no product.
-
-----------------------------------------------------------------------*/
-
+#include "canvas/Persistency/Provenance/BranchID.h"
 #include <iosfwd>
 
 namespace art {
@@ -23,38 +13,35 @@ namespace art {
   typedef unsigned short ProcessIndex;
   typedef unsigned short ProductIndex;
 
-  class ProductID
-  {
+  class ProductID {
   public:
 
+    using value_type = BranchID::value_type;
+
     ProductID() = default;
+    ProductID(value_type const value);
 
-    ProductID(ProcessIndex const processIndex, ProductIndex const productIndex) :
-      processIndex_{processIndex},
-      productIndex_{productIndex}
-    {}
-
-    bool isValid() const {return productIndex_ != 0;}
-
-    ProcessIndex processIndex() const {return processIndex_;}
-    ProcessIndex productIndex() const {return productIndex_;}
+    bool isValid() const {return value_ != 0;}
+    auto value() const {return value_;}
 
   private:
-    ProcessIndex processIndex_{};
-    ProductIndex productIndex_{};
-    friend bool operator<(ProductID const& lh, ProductID const& rh);
+    value_type value_{};
   };
 
   inline
   bool operator==(ProductID const& lh, ProductID const& rh) {
-    return lh.processIndex() == rh.processIndex() && lh.productIndex() == rh.productIndex();
+    return lh.value() == rh.value();
   }
   inline
   bool operator!=(ProductID const& lh, ProductID const& rh) {
     return !(lh == rh);
   }
 
-  bool operator<(ProductID const& lh, ProductID const& rh);
+  inline
+  bool operator<(ProductID const& lh, ProductID const& rh)
+  {
+    return lh.value() < rh.value();
+  }
 
   std::ostream&
   operator<<(std::ostream& os, ProductID const& id);

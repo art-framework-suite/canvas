@@ -6,10 +6,10 @@
 #include <forward_list>
 #include <type_traits>
 
-typedef std::vector<int>             intvec_t;
-typedef std::vector<short>             shortvec_t;
-typedef std::vector<std::string>     strvec_t;
-typedef std::vector<float>           floatvec_t;
+typedef std::vector<int>         intvec_t;
+typedef std::vector<short>       shortvec_t;
+typedef std::vector<std::string> strvec_t;
+typedef std::vector<float>       floatvec_t;
 typedef art::Assns<int, float> assns_ab_t;
 typedef art::Assns<int, float, short> assns_abd_t;
 typedef assns_abd_t::const_iterator ci_t;
@@ -17,8 +17,8 @@ typedef assns_abd_t::const_iterator ci_t;
 int main() {
 
     //initialization stuff
-    art::ProductID const viid(1, 2);
-    art::ProductID const vfid(1, 3);
+    art::ProductID const viid(2);
+    art::ProductID const vfid(3);
     //auto const vs = strvec_t {"one", "one-a", "two", "two-a", "three", "three-a"};
     auto const vi = intvec_t {1, 2, 3};
     auto const vf = floatvec_t {1.0, 1.1, 2.0, 2.1, 3.0, 3.1 };
