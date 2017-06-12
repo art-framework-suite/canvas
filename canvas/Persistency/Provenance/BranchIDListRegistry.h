@@ -7,18 +7,12 @@
 // ====================================================================
 
 #include "canvas/Persistency/Provenance/BranchIDList.h"
-#include "canvas/Persistency/Provenance/BranchListIndex.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
-#include "canvas/Persistency/Provenance/ProductList.h"
-#include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 
-#include <map>
+#include <memory>
 #include <vector>
-#include <utility>
 
 namespace art {
-
-  class MasterProductRegistry;
 
   class BranchIDListRegistry {
   public:
@@ -27,29 +21,20 @@ namespace art {
 
     auto size() const { return data_.size(); }
     auto const& data() const { return data_; }
-    auto const& branchIDToIndexMap() const { return branchIDToIndexMap_; }
 
     static BranchIDListRegistry& instance();
-    static void mergeFromFile(BranchIDLists const& file_bidlists, std::string const& fileName);
-    static void expand(ProductList const& products);
-
-    using IndexPair = std::pair<BranchListIndex, ProductIndex>;
-    using BranchIDToIndexMap = std::map<BranchID, IndexPair>;
+    static void resetFromFile(std::unique_ptr<BranchIDLists>&& file_bidlists);
 
   private:
 
     BranchIDListRegistry() = default;
     ~BranchIDListRegistry() = default;
 
-    static void generate_branchIDToIndexMap();
-
     // Not copyable:
     BranchIDListRegistry(BranchIDListRegistry const&) = delete;
     BranchIDListRegistry& operator= (BranchIDListRegistry const&) = delete;
 
     collection_type data_ {};
-    BranchIDToIndexMap branchIDToIndexMap_ {};
-
     static BranchIDListRegistry* instance_;
   };
 

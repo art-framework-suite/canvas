@@ -21,7 +21,7 @@
 // 3. From a ProductID.
 //      Ptr(ProductID const &); // Invalid ("null") Ptr.
 //
-//      Ptr(Product ID const &, key_type, EDProductGetter const *);
+//      Ptr(ProductID const &, key_type, EDProductGetter const *);
 //
 //    Obtain the ProductID from the collection handle or the result of
 //    Event::put(). Obtain the EDProductGetter from the event using the
