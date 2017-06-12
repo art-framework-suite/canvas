@@ -134,7 +134,14 @@
           target="value_"
           include="canvas/Persistency/Provenance/BranchIDListRegistry.h">
     <![CDATA[
-        value_ = art::BranchIDListRegistry::instance().data()[onfile.processIndex_][onfile.productIndex_];
+      // The processIndex_ and productIndex_ values are indexed, starting at 1, not 0.
+      if (onfile.processIndex_ > 0 && onfile.productIndex_ > 0) {
+        auto const& data = art::BranchIDListRegistry::instance().data();
+        if (onfile.processIndex_ <= data.size() &&
+            onfile.productIndex_ <= data[onfile.processIndex_-1].size()) {
+          value_ = art::BranchIDListRegistry::instance().data()[onfile.processIndex_-1][onfile.productIndex_-1];
+        }
+      }
     ]]>
   </ioread>
   <class name="art::DictionaryChecker" ClassVersion="0"/>
