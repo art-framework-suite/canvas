@@ -7,7 +7,7 @@
 //
 // ======================================================================
 
-#include "canvas/Persistency/Provenance/BranchID.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/ProductProvenance.h"
 #include "cetlib/container_algorithms.h"
 #include "cetlib/exempt_ptr.h"
@@ -42,13 +42,13 @@ public:
 
   void write(std::ostream&) const;
 
-  result_t branchToProductProvenance(BranchID const&) const;
+  result_t branchToProductProvenance(ProductID const&) const;
   result_t insert(std::unique_ptr<ProductProvenance const>&&);
 
   void setDelayedRead(bool const value) {delayedRead_ = value;}
 
 private:
-  using eiSet = std::map<BranchID, cet::value_ptr<ProductProvenance const>>;
+  using eiSet = std::map<ProductID, cet::value_ptr<ProductProvenance const>>;
 
   eiSet entryInfoSet_;
   mutable bool delayedRead_;

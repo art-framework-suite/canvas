@@ -8,9 +8,17 @@
   <class name="art::EventSelectionIDVector"/>
   <class name="art::ProcessHistoryID"/>
   <class name="std::vector<art::ProductProvenance>"/>
-  <class name="art::ProductProvenance" ClassVersion="10">
+  <class name="art::ProductProvenance" ClassVersion="11">
+    <version ClassVersion="11" checksum="4148564992"/>
     <version ClassVersion="10" checksum="1364826586"/>
   </class>
+  <ioread sourceClass="art::ProductProvenance" version="[-10]"
+          targetClass="art::ProductProvenance"
+          source="art::BranchID branchID_"
+          target="productID_"
+          include="canvas/Persistency/Provenance/BranchID.h">
+    <![CDATA[ productID_ = art::ProductID{onfile.branchID_.id()}; ]]>
+  </ioread>
   <class name="art::ProductProvenance::Transients"/>
   <class name="art::BranchID" ClassVersion="10">
     <version ClassVersion="10" checksum="2476990556"/>
@@ -37,9 +45,26 @@
     <version ClassVersion="10" checksum="2473205264"/>
   </class>
   <class name="art::ProcessHistory::Transients"/>
-  <class name="art::BranchChildren" ClassVersion="10">
+  <class name="art::BranchChildren" ClassVersion="11">
+    <version ClassVersion="11" checksum="2534407299"/>
     <version ClassVersion="10" checksum="1681313459"/>
   </class>
+  <ioread sourceClass="art::BranchChildren" version="[-10]"
+          targetClass="art::BranchChildren"
+          source="std::map<art::BranchID, std::set<art::BranchID>> childLookup_;"
+          target="childLookup_"
+          include="canvas/Persistency/Provenance/BranchID.h">
+    <![CDATA[
+        childLookup_.clear();
+        for (auto const& lookup : onfile.childLookup_) {
+          std::set<art::ProductID> descendents;
+          for (art::BranchID const desc : lookup.second) {
+            descendents.insert(desc.id());
+          }
+          childLookup_[art::ProductID{lookup.first.id()}] = descendents;
+        }
+    ]]>
+  </ioread>
   <class name="std::set<art::BranchID>"/>
   <class name="std::pair<art::BranchID, std::set<art::BranchID> >"/>
   <class name="std::map<art::BranchID, std::set<art::BranchID> >"/>
@@ -84,12 +109,25 @@
   <class name="std::set<art::ProcessConfigurationID>"/>
   <class name="std::pair<art::BranchKey, art::BranchDescription>"/>
   <class name="art::ProductList"/>
-  <class name="art::Parentage" ClassVersion="10">
+  <class name="art::Parentage" ClassVersion="11">
+    <version ClassVersion="11" checksum="1829758938"/>
     <version ClassVersion="10" checksum="3473129795"/>
   </class>
+  <ioread sourceClass="art::Parentage" version="[-10]"
+          targetClass="art::Parentage"
+          source="std::vector<art::BranchID> parents_;"
+          target="parents_"
+          include="canvas/Persistency/Provenance/BranchID.h">
+    <![CDATA[
+        parents_.resize(onfile.parents_.size());
+        for (std::size_t i = 0; i < parents_.size(); ++i) {
+          parents_[i] = art::ProductID{onfile.parents_[i].id()};
+        }
+    ]]>
+  </ioread>
   <class name="std::vector<art::BranchID>"/>
   <class name="art::EventAuxiliary" ClassVersion="11">
-   <version ClassVersion="11" checksum="731591074"/>
+    <version ClassVersion="11" checksum="731591074"/>
     <version ClassVersion="10" checksum="3057204332"/>
   </class>
    <class name="art::EventID" ClassVersion="12">
@@ -139,9 +177,9 @@
         auto const& data = art::BranchIDListRegistry::instance().data();
         if (onfile.processIndex_ <= data.size() &&
             onfile.productIndex_ <= data[onfile.processIndex_-1].size()) {
-          value_ = art::BranchIDListRegistry::instance().data()[onfile.processIndex_-1][onfile.productIndex_-1];
+            value_ = art::BranchIDListRegistry::instance().data()[onfile.processIndex_-1][onfile.productIndex_-1];
+          }
         }
-      }
     ]]>
   </ioread>
   <class name="art::DictionaryChecker" ClassVersion="0"/>

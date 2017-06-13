@@ -11,7 +11,7 @@ Parents: The EDProducts used as input by the creator.
 
 ----------------------------------------------------------------------*/
 
-#include "canvas/Persistency/Provenance/BranchID.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/ParentageID.h"
 
 #include <iosfwd>
@@ -22,16 +22,16 @@ namespace art {
   public:
 
     Parentage() = default;
-    explicit Parentage(std::vector<BranchID> const& parents);
+    explicit Parentage(std::vector<ProductID> const& parents);
 
     // Only the 'salient attributes' are encoded into the ID.
     ParentageID id() const;
 
-    std::vector<BranchID> const& parents() const {return parents_;}
-    std::vector<BranchID>& parents() {return parents_;}
+    std::vector<ProductID> const& parents() const {return parents_;}
+    std::vector<ProductID>& parents() {return parents_;}
 
   private:
-    std::vector<BranchID> parents_ {};
+    std::vector<ProductID> parents_ {};
   };
 
   inline std::ostream& operator<<(std::ostream& os, Parentage const&)

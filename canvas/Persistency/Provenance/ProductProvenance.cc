@@ -8,28 +8,28 @@
 
 namespace art {
 
-  ProductProvenance::ProductProvenance(BranchID const& bid) :
-    branchID_{bid}
+  ProductProvenance::ProductProvenance(ProductID const& pid) :
+    productID_{pid}
   {}
 
-  ProductProvenance::ProductProvenance(BranchID const& bid,
+  ProductProvenance::ProductProvenance(ProductID const& pid,
                                        ProductStatus const status) :
-    branchID_{bid},
+    productID_{pid},
     productStatus_{status}
   {}
 
-  ProductProvenance::ProductProvenance(BranchID const& bid,
+  ProductProvenance::ProductProvenance(ProductID const& pid,
                                        ProductStatus const status,
                                        ParentageID const& edid) :
-    branchID_{bid},
+    productID_{pid},
     productStatus_{status},
     parentageID_{edid}
   {}
 
-  ProductProvenance::ProductProvenance(BranchID const& bid,
+  ProductProvenance::ProductProvenance(ProductID const& pid,
                                        ProductStatus const status,
                                        std::shared_ptr<Parentage> pPtr) :
-    branchID_{bid},
+    productID_{pid},
     productStatus_{status},
     parentageID_{pPtr->id()}
   {
@@ -37,10 +37,10 @@ namespace art {
     ParentageRegistry::emplace(parentageID_, *pPtr);
   }
 
-  ProductProvenance::ProductProvenance(BranchID const& bid,
+  ProductProvenance::ProductProvenance(ProductID const& pid,
                                        ProductStatus const status,
-                                       std::vector<BranchID> const& parents) :
-    branchID_{bid},
+                                       std::vector<ProductID> const& parents) :
+    productID_{pid},
     productStatus_{status}
   {
     parentagePtr() = std::make_shared<Parentage>();
@@ -75,7 +75,7 @@ namespace art {
 
   void
   ProductProvenance::write(std::ostream& os) const {
-    os << "branch ID = " << branchID() << '\n';
+    os << "branch ID = " << productID() << '\n';
     os << "product status = " << static_cast<int>(productStatus()) << '\n';
     if (!noParentage()) {
       os << "entry description ID = " << parentageID() << '\n';
@@ -88,11 +88,11 @@ namespace art {
     if (a.noParentage() != b.noParentage()) return false;
     if (a.noParentage()) {
       return
-        a.branchID() == b.branchID()
+        a.productID() == b.productID()
         && a.productStatus() == b.productStatus();
     }
     return
-      a.branchID() == b.branchID()
+      a.productID() == b.productID()
       && a.productStatus() == b.productStatus()
       && a.parentageID() == b.parentageID();
   }

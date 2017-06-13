@@ -27,15 +27,15 @@ BranchMapper::insert(std::unique_ptr<ProductProvenance const> && pp_ptr)
 {
   readProvenance();
   result_t result(pp_ptr.get());
-  entryInfoSet_[result->branchID()].reset(pp_ptr.release());
+  entryInfoSet_[result->productID()].reset(pp_ptr.release());
   return result;
 }
 
 BranchMapper::result_t
-BranchMapper::branchToProductProvenance(BranchID const &bid) const
+BranchMapper::branchToProductProvenance(ProductID const& pid) const
 {
   readProvenance();
-  eiSet::const_iterator it = entryInfoSet_.find(bid);
+  eiSet::const_iterator it = entryInfoSet_.find(pid);
   return it == entryInfoSet_.end() ? result_t()
          : result_t(it->second.get());
 }

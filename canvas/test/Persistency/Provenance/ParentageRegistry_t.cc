@@ -2,6 +2,7 @@
 #include "cetlib/quiet_unit_test.hpp"
 
 #include "canvas/Persistency/Provenance/BranchID.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/Parentage.h"
 #include "canvas/Persistency/Provenance/ParentageRegistry.h"
 #include "cetlib/SimultaneousFunctionSpawner.h"
@@ -14,14 +15,22 @@
 using namespace art;
 using namespace std::string_literals;
 
+namespace {
+  ProductID makeProductID(std::string const& name)
+  {
+    BranchID const bid{name};
+    return ProductID{bid.id()};
+  }
+}
+
 BOOST_AUTO_TEST_SUITE(ParentageTest)
 
 BOOST_AUTO_TEST_CASE(concurrent_insertion_reading)
 {
   using ParentNames = std::vector<std::string>;
-  using ParentBranchIDs = std::vector<BranchID>;
+  using ParentProductIDs = std::vector<ProductID>;
 
-  std::vector<ParentBranchIDs> setsOfParents;
+  std::vector<ParentProductIDs> setsOfParents;
   {
     std::vector<ParentNames> setsOfParentNames {
       {"p1a", "p1b", "p1c"},
@@ -31,10 +40,10 @@ BOOST_AUTO_TEST_CASE(concurrent_insertion_reading)
     cet::transform_all(setsOfParentNames,
                        std::back_inserter(setsOfParents),
                        [](auto const& parentNames) {
-                         ParentBranchIDs bids;
-                         cet::transform_all(parentNames, std::back_inserter(bids),
-                                            [](auto const& name){ return BranchID{name}; });
-                         return bids;
+                         ParentProductIDs pids;
+                         cet::transform_all(parentNames, std::back_inserter(pids),
+                                            [](auto const& name){ return makeProductID(name); });
+                         return pids;
                        });
   }
 

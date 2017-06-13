@@ -6,7 +6,7 @@
 
 namespace art {
 
-  Parentage::Parentage(std::vector<BranchID> const& parents):
+  Parentage::Parentage(std::vector<ProductID> const& parents):
     parents_{parents}
   {}
 
@@ -15,8 +15,8 @@ namespace art {
   {
     // This implementation is ripe for optimization.
     std::ostringstream oss;
-    for (auto const bid : parents_) {
-      oss << bid << ' ';
+    for (auto const pid : parents_) {
+      oss << pid << ' ';
     }
 
     std::string const stringrep {oss.str()};
