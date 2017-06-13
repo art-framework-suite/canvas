@@ -232,7 +232,7 @@ write(std::ostream& os) const
   os << "Branch Type = " << branchType_ << std::endl;
   os << "Process Name = " << processName() << std::endl;
   os << "ModuleLabel = " << moduleLabel() << std::endl;
-  os << "Branch ID = " << branchID() << '\n';
+  os << "Product ID = " << productID() << '\n';
   os << "Class Name = " << producedClassName() << '\n';
   os << "Friendly Class Name = " << friendlyClassName() << '\n';
   os << "Product Instance Name = " << productInstanceName() << std::endl;
@@ -346,10 +346,10 @@ operator<(BranchDescription const& a, BranchDescription const& b)
   if (b.branchType() < a.branchType()) {
     return false;
   }
-  if (a.branchID() < b.branchID()) {
+  if (a.productID() < b.productID()) {
     return true;
   }
-  if (b.branchID() < a.branchID()) {
+  if (b.productID() < a.productID()) {
     return false;
   }
   if (a.psetIDs() < b.psetIDs()) {
@@ -377,7 +377,7 @@ combinable(BranchDescription const& a, BranchDescription const& b)
     (a.friendlyClassName() == b.friendlyClassName()) &&
     (a.productInstanceName() == b.productInstanceName()) &&
     (a.moduleLabel() == b.moduleLabel()) &&
-    (a.branchID() == b.branchID());
+    (a.productID() == b.productID());
 }
 
 bool
@@ -446,18 +446,18 @@ match(BranchDescription const& a, BranchDescription const& b,
         << a.branchType()
         << "' branch in previous files.\n";
   }
-  if (a.branchID() != b.branchID()) {
+  if (a.productID() != b.productID()) {
     differences
         << "Branch '"
         << b.branchName()
-        << "' has a branch ID of '"
-        << b.branchID()
+        << "' has a product ID of '"
+        << b.productID()
         << "'\n";
     differences
         << "    in file '"
         << fileName
         << "', but '"
-        << a.branchID()
+        << a.productID()
         << "' in previous files.\n";
   }
   if (a.producedClassName() != b.producedClassName()) {

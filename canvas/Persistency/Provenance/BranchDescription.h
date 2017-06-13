@@ -12,6 +12,7 @@ This description also applies to every product instance on the branch.
 #include "canvas/Persistency/Provenance/BranchID.h"
 #include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 #include "canvas/Persistency/Provenance/Transient.h"
 #include "canvas/Persistency/Provenance/TypeLabel.h"
@@ -81,7 +82,7 @@ public:
 
   std::set<fhicl::ParameterSetID> const& psetIDs() const {return psetIDs_;}
 
-  BranchID branchID() const {return branchID_;}
+  ProductID productID() const {return ProductID{branchID_.id()};}
   BranchType branchType() const {return branchType_;}
   std::string const& branchName() const {return guts().branchName_;}
   std::string const& wrappedName() const {return guts().wrappedName_;}
