@@ -68,6 +68,7 @@
   <class name="std::set<art::BranchID>"/>
   <class name="std::pair<art::BranchID, std::set<art::BranchID> >"/>
   <class name="std::map<art::BranchID, std::set<art::BranchID> >"/>
+  <class name="std::map<art::ProductID, std::set<art::ProductID> >"/>
   <class name="art::ProductRegistry" ClassVersion="12">
     <version ClassVersion="12" checksum="2309607360"/>
     <version ClassVersion="11" checksum="2309607360"/>

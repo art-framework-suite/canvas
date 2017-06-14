@@ -13,6 +13,7 @@ cet_make ( LIBRARY_NAME canvas
   Utilities
   Utilities/detail
   Persistency/Provenance
+  Persistency/Provenance/Compatibility
   Persistency/Common
   Persistency/Common/detail
   LIBRARIES  MF_MessageLogger

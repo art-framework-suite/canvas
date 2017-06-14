@@ -1,7 +1,7 @@
 #ifndef canvas_Persistency_Common_ProductIDStreamer_h
 #define canvas_Persistency_Common_ProductIDStreamer_h
 
-#include "canvas/Persistency/Provenance/BranchIDList.h"
+#include "canvas/Persistency/Provenance/Compatibility/BranchIDList.h"
 #include "cetlib/exempt_ptr.h"
 
 #include "TClassStreamer.h"

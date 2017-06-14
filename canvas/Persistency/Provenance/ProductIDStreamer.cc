@@ -1,4 +1,4 @@
-#include "canvas/Persistency/Provenance/OldProductID.h"
+#include "canvas/Persistency/Provenance/Compatibility/type_aliases.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/ProductIDStreamer.h"
 #include "canvas/Utilities/Exception.h"
@@ -20,23 +20,21 @@ namespace art {
         return;
       }
 
-      OldProductID* opidp {nullptr};
-      cl->ReadBuffer(R_b, opidp, version, start, count);
+      // Extract the data members from the old version of the ProductID
+      compatibility::ProcessIndex oldProcessIndex;
+      compatibility::ProductIndex oldProductIndex;
+      R_b >> oldProcessIndex >> oldProductIndex;
 
       auto obj = static_cast<ProductID*>(objp);
       if (branchIDLists_) {
         // The processIndex_ and productIndex_ values are indexed,
         // starting at 1, not 0.
-        auto const oldProcessIndex = opidp->processIndex();
-        auto const oldProductIndex = opidp->productIndex();
         auto const& data = *branchIDLists_;
         if (oldProcessIndex <= data.size() &&
             oldProductIndex <= data[oldProcessIndex-1].size()) {
           obj->value_ = data[oldProcessIndex-1][oldProductIndex-1];
         }
-        else {
-          obj->value_ = {}; // FIXME, need to represent invalid
-        }
+        // obj->value_ defaults to an invalid value.
       }
       else {
         throw Exception{errors::DataCorruption, "ProductID streamer:\n"}
