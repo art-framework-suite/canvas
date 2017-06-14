@@ -10,8 +10,7 @@
 
 namespace art {
 
-  typedef unsigned short ProcessIndex;
-  typedef unsigned short ProductIndex;
+  class ProductIDStreamer;
 
   class ProductID {
   public:
@@ -25,6 +24,7 @@ namespace art {
     auto value() const {return value_;}
 
   private:
+    friend class ProductIDStreamer;
     value_type value_{};
   };
 
