@@ -59,7 +59,7 @@
         for (auto const& lookup : onfile.childLookup_) {
           std::set<art::ProductID> descendents;
           for (art::BranchID const desc : lookup.second) {
-            descendents.insert(desc.id());
+            descendents.emplace(desc.id());
           }
           childLookup_[art::ProductID{lookup.first.id()}] = descendents;
         }
@@ -93,12 +93,19 @@
     <version ClassVersion="11" checksum="363573437"/>
     <version ClassVersion="10" checksum="2938245437"/>
   </class>
-  <class name="art::BranchDescription" ClassVersion="13">
-   <version ClassVersion="13" checksum="2315032926"/>
+  <class name="art::BranchDescription" ClassVersion="14">
+    <version ClassVersion="14" checksum="1426833576"/>
+    <version ClassVersion="13" checksum="2315032926"/>
     <version ClassVersion="12" checksum="544968977"/>
     <version ClassVersion="11" checksum="1740239918"/>
     <version ClassVersion="10" checksum="3580977508"/>
   </class>
+  <ioread sourceClass="art::BranchDescription" version="[-13]"
+          targetClass="art::BranchDescription"
+          source="art::BranchID branchID_;"
+          target="productID_">
+    <![CDATA[productID_ = art::ProductID{onfile.branchID_.id()};]]>
+  </ioread>
   <ioread sourceClass="art::BranchDescription" version="[-10]"
           targetClass="art::BranchDescription"
           source="std::string fullClassName_;" target="producedClassName_">

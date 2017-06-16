@@ -82,7 +82,7 @@ public:
 
   std::set<fhicl::ParameterSetID> const& psetIDs() const {return psetIDs_;}
 
-  ProductID productID() const {return ProductID{branchID_.id()};}
+  ProductID productID() const {return productID_;}
   BranchType branchType() const {return branchType_;}
   std::string const& branchName() const {return guts().branchName_;}
   std::string const& wrappedName() const {return guts().wrappedName_;}
@@ -132,7 +132,7 @@ private:
   friend class detail::BranchDescriptionStreamer;
 
   bool transientsFluffed_() const {return !guts().branchName_.empty(); }
-  void initBranchID_();
+  void initProductID_();
   void fluffTransients_() const;
 
   fhicl::ParameterSetID const& psetID() const;
@@ -154,8 +154,8 @@ private:
   // the physical process that this program was part of (e.g. production)
   std::string processName_{};
 
-  // An ID uniquely identifying the branch
-  BranchID branchID_{};
+  // An ID uniquely identifying the product
+  ProductID productID_{};
 
   // the full name of the type of product this is
   std::string producedClassName_{};

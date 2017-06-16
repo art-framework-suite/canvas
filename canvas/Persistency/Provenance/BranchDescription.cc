@@ -50,18 +50,18 @@ BranchDescription(BranchType const bt, TypeLabel const& tl, ModuleDescription co
   processConfigurationIDs_.insert(md.processConfigurationID());
   throwIfInvalid_();
   fluffTransients_();
-  initBranchID_();
+  initProductID_();
 }
 
 void
 BranchDescription::
-initBranchID_()
+initProductID_()
 {
   if (!transientsFluffed_()) {
     return;
   }
-  if (!branchID_.isValid()) {
-    branchID_.setID(guts().branchName_);
+  if (!productID_.isValid()) {
+    productID_.setID(guts().branchName_);
   }
 }
 
@@ -246,7 +246,7 @@ swap(BranchDescription& other)
   swap(branchType_, other.branchType_);
   swap(moduleLabel_, other.moduleLabel_);
   swap(processName_, other.processName_);
-  swap(branchID_, other.branchID_);
+  swap(productID_, other.productID_);
   swap(producedClassName_, other.producedClassName_);
   swap(friendlyClassName_, other.friendlyClassName_);
   swap(productInstanceName_, other.productInstanceName_);
