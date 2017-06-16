@@ -26,15 +26,20 @@ namespace art {
       R_b >> oldProcessIndex >> oldProductIndex;
 
       auto obj = static_cast<ProductID*>(objp);
+      // It is okay to return early without setting obj->value_ since
+      // it defaults to an invalid value.
+
       if (branchIDLists_) {
+
         // The processIndex_ and productIndex_ values are indexed,
         // starting at 1, not 0.
+        if (oldProcessIndex == 0 || oldProductIndex == 0) return;
+
         auto const& data = *branchIDLists_;
         if (oldProcessIndex <= data.size() &&
             oldProductIndex <= data[oldProcessIndex-1].size()) {
           obj->value_ = data[oldProcessIndex-1][oldProductIndex-1];
         }
-        // obj->value_ defaults to an invalid value.
       }
       else {
         throw Exception{errors::DataCorruption, "ProductID streamer:\n"}
