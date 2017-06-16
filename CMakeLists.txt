@@ -13,15 +13,16 @@
 # ======================================================================
 
 
-# use cmake 2.8 or later
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required( VERSION 3.2 )
 
-project(canvas)
+project(canvas VERSION 2.00.02 )
 
-# cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
+# cetmodules contains our cmake modules
+find_package(cetmodules REQUIRED)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Modules)
+# module path
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Modules
+                              ${cetmodules_MODULE_PATH})
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -32,15 +33,18 @@ cet_set_compiler_flags(DIAGS VIGILANT
   EXTRA_FLAGS -pedantic
   EXTRA_CXX_FLAGS -Wnon-virtual-dtor -Wdelete-non-virtual-dtor
   )
-cet_have_qual(sse2 SSE2)
-if ( SSE2 )
-  cet_add_compiler_flags(CXX -msse2 -ftree-vectorizer-verbose=2)
-endif()
+# no qualifiers ....
+##cet_have_qual(sse2 SSE2)
+##if ( SSE2 )
+##  cet_add_compiler_flags(CXX -msse2 -ftree-vectorizer-verbose=2)
+##endif()
 
 cet_report_compiler_flags()
 
-find_ups_product(cppunit)
-find_ups_product(clhep)
+#find_ups_product(cppunit)
+#find_ups_product(clhep)
+set(CLHEP_DIR "${CLHEP_FQ_DIR}/lib/CLHEP-2.3.4.4")
+find_package( CLHEP )
 find_ups_product(cetlib_except)
 find_ups_product(cetlib v2_01_00)
 find_ups_product(fhiclcpp)
@@ -48,14 +52,20 @@ find_ups_product(messagefacility)
 find_ups_product(tbb)
 find_ups_root()
 find_ups_boost()
-find_ups_product(cetbuildtools)
 
 
 # define CLHEP
 cet_find_library( CLHEP  NAMES CLHEP   PATHS ENV CLHEP_LIB_DIR NO_DEFAULT_PATH )
+include_directories ( $ENV{CLHEP_INC} )
 
 # define cppunit
 cet_find_library( CPPUNIT NAMES cppunit   PATHS ENV CPPUNIT_LIB   NO_DEFAULT_PATH )
+
+# Python
+cet_find_library(PYTHON NAMES python2.7 PATHS ENV PYTHON_LIB NO_DEFAULT_PATH)
+
+# SQLite
+cet_find_library(SQLITE3 NAMES sqlite3_ups PATHS ENV SQLITE_LIB NO_DEFAULT_PATH)
 
 # art_dictionary
 include(ArtDictionary)
@@ -71,4 +81,4 @@ add_subdirectory(ups)
 add_subdirectory(Modules)
 
 # packaging utility
-include(UseCPack)
+#include(UseCPack)

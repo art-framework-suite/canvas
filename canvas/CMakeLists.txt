@@ -33,4 +33,4 @@ cet_make ( LIBRARY_NAME canvas
   )
 
 # Testing
-add_subdirectory(test)
+##add_subdirectory(test)

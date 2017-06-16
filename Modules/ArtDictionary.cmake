@@ -52,11 +52,11 @@ include(BuildDictionary)
 include(CMakeParseArguments)
 
 function(art_dictionary)
-  check_ups_version(cetbuildtools ${cetbuildtools_UPS_VERSION} v5_0_0
-    PRODUCT_MATCHES_VAR AD_HAVE_REQUIRED_CETBUILDTOOLS)
-  if (NOT AD_HAVE_REQUIRED_CETBUILDTOOLS)
-    message(FATAL_ERROR "ArtDictionary requires cetbuildtools v5_0_0 or greater.")
-  endif()
+  ##check_ups_version(cetbuildtools ${cetbuildtools_UPS_VERSION} v5_0_0
+  ##  PRODUCT_MATCHES_VAR AD_HAVE_REQUIRED_CETBUILDTOOLS)
+  ##if (NOT AD_HAVE_REQUIRED_CETBUILDTOOLS)
+  ##  message(FATAL_ERROR "ArtDictionary requires cetbuildtools v5_0_0 or greater.")
+  ##endif()
 
   cmake_parse_arguments(AD
     "UPDATE_IN_PLACE;DICT_FUNCTIONS;USE_PRODUCT_NAME;NO_CHECK_CLASS_VERSION;NO_DEFAULT_LIBRARIES"
