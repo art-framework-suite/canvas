@@ -5,8 +5,6 @@
 // ProductID: A unique identifier for each EDProduct within a process.
 //=====================================================================
 
-#include "canvas/Persistency/Provenance/BranchID.h"
-
 #include <iosfwd>
 #include <string>
 
@@ -25,16 +23,16 @@ namespace art {
     bool isValid() const {return value_ != 0;}
     auto value() const {return value_;}
 
-    bool operator<(ProductID const& rh) const {return value_ < rh.value_;}
-    bool operator>(ProductID const& rh) const {return rh < *this;}
-    bool operator==(ProductID const& rh) const {return value_ == rh.value_;}
-    bool operator!=(ProductID const& rh) const {return !(*this == rh); }
+    bool operator<(ProductID const rh) const {return value_ < rh.value_;}
+    bool operator>(ProductID const rh) const {return rh < *this;}
+    bool operator==(ProductID const rh) const {return value_ == rh.value_;}
+    bool operator!=(ProductID const rh) const {return !(*this == rh); }
 
     struct Hash {
-      std::size_t operator()(ProductID const& pid) const
+      std::size_t operator()(ProductID const pid) const
       {
         return pid.value(); // since the ID is already a checksum, don't
-                         // worry about further hashing
+                            // worry about further hashing
       }
     };
 

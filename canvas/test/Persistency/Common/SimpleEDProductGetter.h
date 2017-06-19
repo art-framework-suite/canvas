@@ -10,23 +10,20 @@
 
 class SimpleEDProductGetter : public art::EDProductGetter
 {
- public:
+public:
 
-  typedef std::map<art::ProductID, std::shared_ptr<art::EDProduct> > map_t;
+  using map_t = std::map<art::ProductID, std::shared_ptr<art::EDProduct>>;
   template <class T>
   void
-  addProduct(art::ProductID const& id, std::unique_ptr<T> && p)
+  addProduct(art::ProductID const id, std::unique_ptr<T>&& p)
   {
-    typedef art::Wrapper<T> wrapper_t;
-
-    std::shared_ptr<wrapper_t> product(new wrapper_t(p));
-    database[id] = product;
+    database[id] = std::shared_ptr<art::Wrapper<T>>(p.release());
   }
 
   size_t size() const
   { return database.size(); }
 
-  virtual art::EDProduct const* getIt(art::ProductID const& id) const
+  virtual art::EDProduct const* getIt(art::ProductID const id) const
   {
     map_t::const_iterator i = database.find(id);
     if (i == database.end())

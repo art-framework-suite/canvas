@@ -8,17 +8,17 @@
 
 namespace art {
 
-  ProductProvenance::ProductProvenance(ProductID const& pid) :
+  ProductProvenance::ProductProvenance(ProductID const pid) :
     productID_{pid}
   {}
 
-  ProductProvenance::ProductProvenance(ProductID const& pid,
+  ProductProvenance::ProductProvenance(ProductID const pid,
                                        ProductStatus const status) :
     productID_{pid},
     productStatus_{status}
   {}
 
-  ProductProvenance::ProductProvenance(ProductID const& pid,
+  ProductProvenance::ProductProvenance(ProductID const pid,
                                        ProductStatus const status,
                                        ParentageID const& edid) :
     productID_{pid},
@@ -26,7 +26,7 @@ namespace art {
     parentageID_{edid}
   {}
 
-  ProductProvenance::ProductProvenance(ProductID const& pid,
+  ProductProvenance::ProductProvenance(ProductID const pid,
                                        ProductStatus const status,
                                        std::shared_ptr<Parentage> pPtr) :
     productID_{pid},
@@ -37,7 +37,7 @@ namespace art {
     ParentageRegistry::emplace(parentageID_, *pPtr);
   }
 
-  ProductProvenance::ProductProvenance(ProductID const& pid,
+  ProductProvenance::ProductProvenance(ProductID const pid,
                                        ProductStatus const status,
                                        std::vector<ProductID> const& parents) :
     productID_{pid},
@@ -75,7 +75,7 @@ namespace art {
 
   void
   ProductProvenance::write(std::ostream& os) const {
-    os << "branch ID = " << productID() << '\n';
+    os << "product ID = " << productID() << '\n';
     os << "product status = " << static_cast<int>(productStatus()) << '\n';
     if (!noParentage()) {
       os << "entry description ID = " << parentageID() << '\n';

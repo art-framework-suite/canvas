@@ -22,29 +22,30 @@ namespace art {
   class ProductProvenance;
   typedef std::vector<ProductProvenance> ProductProvenances;
 
-  bool operator<(ProductProvenance const &a, ProductProvenance const &b);
-  std::ostream &operator<<(std::ostream &os, ProductProvenance const &p);
-  bool operator==(ProductProvenance const &a, ProductProvenance const &b);
-  bool operator!=(ProductProvenance const &a, ProductProvenance const &b);
+  bool operator<(ProductProvenance const& a, ProductProvenance const& b);
+  std::ostream& operator<<(std::ostream& os, ProductProvenance const& p);
+  bool operator==(ProductProvenance const& a, ProductProvenance const& b);
+  bool operator!=(ProductProvenance const& a, ProductProvenance const& b);
 }
 
 class art::ProductProvenance {
 public:
 
   ProductProvenance() = default;
-  explicit ProductProvenance(ProductID const& bid);
-  ProductProvenance(ProductID const& bid,
+  explicit ProductProvenance(ProductID pid);
+
+  ProductProvenance(ProductID pid,
                     ProductStatus status);
 
-  ProductProvenance(ProductID const& bid,
+  ProductProvenance(ProductID pid,
                     ProductStatus status,
                     std::shared_ptr<Parentage> parentagePtr);
 
-  ProductProvenance(ProductID const& bid,
+  ProductProvenance(ProductID pid,
                     ProductStatus status,
                     ParentageID const& id);
 
-  ProductProvenance(ProductID const& bid,
+  ProductProvenance(ProductID pid,
                     ProductStatus status,
                     std::vector<ProductID> const& parents);
 
@@ -52,7 +53,7 @@ public:
 
   void write(std::ostream& os) const;
 
-  ProductID const& productID() const {return productID_;}
+  ProductID productID() const {return productID_;}
   ProductStatus const& productStatus() const {return productStatus_;}
   ParentageID const& parentageID() const {return parentageID_;}
   Parentage const& parentage() const;

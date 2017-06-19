@@ -133,7 +133,7 @@ RangeSet::merge(RangeSet const& other)
   return *this;
 }
 
-std::pair<RangeSet::const_iterator,bool>
+std::pair<RangeSet::const_iterator, bool>
 RangeSet::split_range(SubRunNumber_t const s,
                       EventNumber_t const e)
 {

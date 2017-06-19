@@ -8,10 +8,9 @@
 
 using art::BranchMapper;
 
-BranchMapper::BranchMapper(bool delayedRead) :
-  entryInfoSet_(),
-  delayedRead_(delayedRead)
-{ }
+BranchMapper::BranchMapper(bool const delayedRead) :
+  delayedRead_{delayedRead}
+{}
 
 void
 BranchMapper::readProvenance() const
@@ -23,21 +22,21 @@ BranchMapper::readProvenance() const
 }
 
 BranchMapper::result_t
-BranchMapper::insert(std::unique_ptr<ProductProvenance const> && pp_ptr)
+BranchMapper::insert(std::unique_ptr<ProductProvenance const>&& pp_ptr)
 {
   readProvenance();
-  result_t result(pp_ptr.get());
+  result_t result{pp_ptr.get()};
   entryInfoSet_[result->productID()].reset(pp_ptr.release());
   return result;
 }
 
 BranchMapper::result_t
-BranchMapper::branchToProductProvenance(ProductID const& pid) const
+BranchMapper::branchToProductProvenance(ProductID const pid) const
 {
   readProvenance();
-  eiSet::const_iterator it = entryInfoSet_.find(pid);
+  auto it = entryInfoSet_.find(pid);
   return it == entryInfoSet_.end() ? result_t()
-         : result_t(it->second.get());
+    : result_t(it->second.get());
 }
 
 // ======================================================================

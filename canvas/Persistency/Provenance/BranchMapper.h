@@ -42,7 +42,7 @@ public:
 
   void write(std::ostream&) const;
 
-  result_t branchToProductProvenance(ProductID const&) const;
+  result_t branchToProductProvenance(ProductID const) const;
   result_t insert(std::unique_ptr<ProductProvenance const>&&);
 
   void setDelayedRead(bool const value) {delayedRead_ = value;}
@@ -50,7 +50,7 @@ public:
 private:
   using eiSet = std::map<ProductID, cet::value_ptr<ProductProvenance const>>;
 
-  eiSet entryInfoSet_;
+  eiSet entryInfoSet_{};
   mutable bool delayedRead_;
 
   void readProvenance() const;
