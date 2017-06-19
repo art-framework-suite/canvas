@@ -21,8 +21,7 @@ project(canvas VERSION 2.00.02 )
 find_package(cetmodules REQUIRED)
 
 # module path
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Modules
-                              ${cetmodules_MODULE_PATH})
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Modules)
 
 include(CetCMakeEnv)
 cet_cmake_env()
