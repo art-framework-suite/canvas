@@ -1,16 +1,21 @@
-
-
 @PACKAGE_INIT@
 
 set_and_check(@PROJECT_NAME@_MODULE_PATH "${PACKAGE_PREFIX_DIR}/Modules")
 set_and_check(@PROJECT_NAME@_LIBDIR "${PACKAGE_PREFIX_DIR}/lib")
 set_and_check(@PROJECT_NAME@_INCDIR "${PACKAGE_PREFIX_DIR}/include")
-find_library(CANVAS NAMES canvas PATHS "${@PROJECT_NAME@_LIBDIR}" NO_DEFAULT_PATH)
+@CONFIG_FIND_LIBRARY_COMMANDS@
 include_directories( ${@PROJECT_NAME@_INCDIR} )
 
 if (IS_DIRECTORY "${PACKAGE_PREFIX_DIR}/Modules")
   list(APPEND CMAKE_MODULE_PATH "${PACKAGE_PREFIX_DIR}/Modules")
 endif()
 
-check_required_components(@PROJECT_NAME@)
+find_package(messagefacility)
 
+# define CLHEP
+set(CLHEP_DIR "$ENV{CLHEP_FQ_DIR}/lib/CLHEP-2.3.4.4")
+find_package( CLHEP )
+find_library( CLHEP  NAMES CLHEP   PATHS ENV CLHEP_LIB_DIR NO_DEFAULT_PATH )
+include_directories ( $ENV{CLHEP_INC} )
+
+check_required_components(@PROJECT_NAME@)
