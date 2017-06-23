@@ -39,11 +39,11 @@ namespace art {
 BranchDescription::
 BranchDescription(BranchType const bt, TypeLabel const& tl, ModuleDescription const& md) :
   branchType_{bt},
-  moduleLabel_(tl.hasEmulatedModule() ? tl.emulatedModule : md.moduleLabel()),
-  processName_(md.processName()),
-  producedClassName_(tl.className()),
-  friendlyClassName_(tl.friendlyClassName()),
-  productInstanceName_(tl.productInstanceName)
+  moduleLabel_{tl.hasEmulatedModule() ? tl.emulatedModule() : md.moduleLabel()},
+  processName_{md.processName()},
+  producedClassName_{tl.className()},
+  friendlyClassName_{tl.friendlyClassName()},
+  productInstanceName_{tl.productInstanceName()}
 {
   guts().produced_ = true;
   psetIDs_.insert(md.parameterSetID());
