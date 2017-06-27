@@ -79,6 +79,18 @@ checkDictionaries(std::string const & name_orig,
     }
     name.erase(0, 5);
   }
+  if (!name.compare(0, 11, "unique_ptr<")) {
+    auto const arg0 = name_of_template_arg(name, 0);
+    if (arg0.empty()) {
+      throw Exception(errors::LogicError, "checkDictionaries: ")
+        << "Could not get first template arg from: "
+        << name
+        << '\n';
+    }
+    //cerr << indent << name << " (vector) -> " << arg0 << "\n";
+    checkDictionaries(arg0, true, level + 2);
+    return;
+  }
   {
     auto I = checked_names_.find(name);
     if (I != checked_names_.end()) {
