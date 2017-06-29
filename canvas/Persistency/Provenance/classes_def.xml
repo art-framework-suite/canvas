@@ -37,7 +37,8 @@
   <class name="std::vector<art::FileIndex::Element>"/>
   <class name="art::FileIndex::Transients"/>
   <class name="std::vector<art::ProcessConfiguration>"/>
-  <class name="art::ProcessConfiguration" ClassVersion="10">
+  <class name="art::ProcessConfiguration" ClassVersion="11">
+   <version ClassVersion="11" checksum="2746056774"/>
     <version ClassVersion="10" checksum="877610178"/>
   </class>
   <class name="std::vector<art::ProcessHistory>"/>

@@ -29,8 +29,6 @@ art::ModuleDescription::operator<(ModuleDescription const& rh) const
   if (parameterSetID() < rh.parameterSetID()) return true;
   if (rh.parameterSetID() < parameterSetID()) return false;
   if (releaseVersion() < rh.releaseVersion()) return true;
-  if (rh.releaseVersion() < releaseVersion()) return false;
-  if (passID() < rh.passID()) return true;
   return false;
 }
 
@@ -54,7 +52,6 @@ art::ModuleDescription::write(std::ostream& os) const
       << "Parameter Set ID=" << parameterSetID() << ", "
       << "Process name=" << processName() << ", "
       << "Release Version=" << releaseVersion() << ", "
-      << "Pass ID=" << passID() << ", "
       << "Main Parameter Set ID=" << mainParameterSetID();
 }
 
@@ -63,5 +60,5 @@ static std::atomic<art::ModuleDescriptionID> s_id {0u};
 art::ModuleDescriptionID
 art::ModuleDescription::getUniqueID()
 {
-  return s_id++;
+  return ++s_id;
 }

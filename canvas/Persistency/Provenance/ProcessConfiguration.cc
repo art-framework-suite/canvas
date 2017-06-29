@@ -19,21 +19,20 @@ namespace art {
   }
 
   bool operator<(ProcessConfiguration const& a, ProcessConfiguration const& b) {
-    return std::tie(a.processName_, a.parameterSetID_, a.releaseVersion_, a.passID_) <
-           std::tie(b.processName_, b.parameterSetID_, b.releaseVersion_, b.passID_);
+    return std::tie(a.processName_, a.parameterSetID_, a.releaseVersion_) <
+           std::tie(b.processName_, b.parameterSetID_, b.releaseVersion_);
   }
 
   bool operator==(ProcessConfiguration const& a, ProcessConfiguration const& b) {
-    return std::tie(a.processName_, a.parameterSetID_, a.releaseVersion_, a.passID_) ==
-           std::tie(b.processName_, b.parameterSetID_, b.releaseVersion_, b.passID_);
+    return std::tie(a.processName_, a.parameterSetID_, a.releaseVersion_) ==
+           std::tie(b.processName_, b.parameterSetID_, b.releaseVersion_);
   }
 
   std::ostream&
   operator<< (std::ostream& os, ProcessConfiguration const& pc) {
     os << pc.processName_ << ' '
        << pc.parameterSetID_ << ' '
-       << pc.releaseVersion_ << ' '
-       << pc.passID_;
+       << pc.releaseVersion_ << ' '; // Retain the last space for backwards compatibility
     return os;
   }
 }

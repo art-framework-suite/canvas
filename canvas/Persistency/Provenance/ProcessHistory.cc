@@ -23,7 +23,7 @@ namespace art {
       oss << i->processName() << ' '
           << i->parameterSetID() << ' '
           << i->releaseVersion() << ' '
-          << i->passID() << ' ';
+          << ' ';  // retain extra spaces for backwards compatibility
     }
     string stringrep = oss.str();
     cet::MD5Digest md5alg(stringrep);

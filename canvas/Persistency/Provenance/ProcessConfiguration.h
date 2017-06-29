@@ -7,7 +7,6 @@
 //
 // ======================================================================
 
-#include "canvas/Persistency/Provenance/PassID.h"
 #include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
 #include "canvas/Persistency/Provenance/ReleaseVersion.h"
 #include "fhiclcpp/ParameterSetID.h"
@@ -21,24 +20,20 @@ namespace art {
 
     ProcessConfiguration(std::string const& procName,
                          fhicl::ParameterSetID const& pSetID,
-                         ReleaseVersion const& relVersion,
-                         PassID const& pass) :
+                         ReleaseVersion const& relVersion) :
       processName_{procName},
       parameterSetID_{pSetID},
-      releaseVersion_{relVersion},
-      passID_{pass}
+      releaseVersion_{relVersion}
     {}
 
     std::string const& processName() const {return processName_;}
     fhicl::ParameterSetID const& parameterSetID() const {return parameterSetID_;}
     ReleaseVersion const& releaseVersion() const {return releaseVersion_;}
-    PassID const& passID() const {return passID_;}
     ProcessConfigurationID id() const;
 
     std::string processName_ {};
     fhicl::ParameterSetID parameterSetID_ {};
     ReleaseVersion releaseVersion_ {};
-    PassID passID_ {};
   };
 
   bool

@@ -41,7 +41,6 @@ namespace art {
     ProcessConfigurationID const processConfigurationID() const {return processConfiguration().id();}
     std::string const& processName() const {return processConfiguration().processName();}
     std::string const& releaseVersion() const {return processConfiguration().releaseVersion();}
-    std::string const& passID() const {return processConfiguration().passID();}
     fhicl::ParameterSetID const& mainParameterSetID() const {return processConfiguration().parameterSetID();}
 
     bool operator<(ModuleDescription const& rh) const;
