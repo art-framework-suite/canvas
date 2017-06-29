@@ -14,8 +14,6 @@
 #include <iosfwd>
 #include <string>
 
-// ----------------------------------------------------------------------
-
 namespace art {
 
   struct ProcessConfiguration {
@@ -46,14 +44,8 @@ namespace art {
   bool
   operator<(ProcessConfiguration const& a, ProcessConfiguration const& b);
 
-  inline
   bool
-  operator==(ProcessConfiguration const& a, ProcessConfiguration const& b) {
-    return a.processName() == b.processName() &&
-    a.parameterSetID() == b.parameterSetID() &&
-    a.releaseVersion() == b.releaseVersion() &&
-    a.passID() == b.passID();
-  }
+  operator==(ProcessConfiguration const& a, ProcessConfiguration const& b);
 
   inline
   bool
