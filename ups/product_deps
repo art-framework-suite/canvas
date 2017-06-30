@@ -10,9 +10,9 @@ product		version
 clhep		v2_3_4_4
 cppunit		v1_13_2
 python		v2_7_13d
-root		v6_08_06g
+root		v6_10_00a
 messagefacility	v2_00_02
-cetbuildtools	v5_08_02	-	only_for_build
+cetbuildtools	v5_10_00	-	only_for_build
 end_product_list
 
 qualifier	messagefacility	root		clhep		cppunit		python	compiler	notes
@@ -20,14 +20,6 @@ e14:debug	e14:debug	e14:debug	e14:debug	e14:debug	-nq-	gcc
 e14:prof	e14:prof	e14:prof	e14:prof	e14:prof	-nq-	gcc
 nu:e14:debug	e14:debug	e14:nu:debug	e14:debug	e14:debug	-nq-	gcc
 nu:e14:prof	e14:prof	e14:nu:prof	e14:prof	e14:prof	-nq-	gcc
-e12:debug	e12:debug	e12:debug	e12:debug	e12:debug	-nq-	gcc
-e12:prof	e12:prof	e12:prof	e12:prof	e12:prof	-nq-	gcc
-nu:e12:debug	e12:debug	e12:nu:debug	e12:debug	e12:debug	-nq-	gcc
-nu:e12:prof	e12:prof	e12:nu:prof	e12:prof	e12:prof	-nq-	gcc
-e10:debug	e10:debug	e10:debug	e10:debug	e10:debug	-nq-	gcc
-e10:prof	e10:prof	e10:prof	e10:prof	e10:prof	-nq-	gcc
-nu:e10:debug	e10:debug	e10:nu:debug	e10:debug	e10:debug	-nq-	gcc
-nu:e10:prof	e10:prof	e10:nu:prof	e10:prof	e10:prof	-nq-	gcc
 end_qualifier_list
 
 # Local Variables:
