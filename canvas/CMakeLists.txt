@@ -16,18 +16,14 @@ cet_make ( LIBRARY_NAME canvas
   Persistency/Provenance/Compatibility
   Persistency/Common
   Persistency/Common/detail
-  LIBRARIES  MF_MessageLogger
+  LIBRARIES
+  MF_MessageLogger
   ${ROOT_CORE}
   ${TBB}
-  MF_Utilities
   fhiclcpp
   cetlib
   cetlib_except
   ${CLHEP}
-  ${Boost_FILESYSTEM_LIBRARY}
-  ${Boost_REGEX_LIBRARY}
-  ${Boost_SYSTEM_LIBRARY}
-  ${Boost_THREAD_LIBRARY}
   ${CMAKE_THREAD_LIBS_INIT}
   ${CMAKE_DL_LIBS}
   NO_DICTIONARY
