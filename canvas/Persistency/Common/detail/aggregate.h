@@ -4,8 +4,8 @@
 #include "canvas/Utilities/Exception.h"
 #include "cetlib/container_algorithms.h"
 #include "cetlib_except/demangle.h"
-#include "cetlib/detail/metaprogramming.h"
 #include "cetlib/map_vector.h"
+#include "cetlib/metaprogramming.h"
 
 #include <typeinfo>
 
@@ -31,7 +31,7 @@ class TH1;
 namespace art {
   namespace detail {
 
-    using cet::detail::enable_if_function_exists_t;
+    using cet::enable_if_function_exists_t;
 
     template <typename T, typename = void>
     struct has_aggregate : std::false_type {};

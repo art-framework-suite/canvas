@@ -11,7 +11,7 @@
 #include "canvas/Persistency/Common/detail/aggregate.h"
 #include "canvas/Utilities/DebugMacros.h"
 #include "cetlib_except/demangle.h"
-#include "cetlib/detail/metaprogramming.h"
+#include "cetlib/metaprogramming.h"
 
 #include <memory>
 #include <string>
@@ -23,7 +23,7 @@ namespace art {
   // Implementation detail declarations.
   namespace detail {
 
-    using cet::detail::enable_if_function_exists_t;
+    using cet::enable_if_function_exists_t;
 
     // has_size_member
     template <typename T, typename = void>
@@ -116,7 +116,6 @@ private:
 
 #include "canvas/Persistency/Common/traits.h"
 #include "canvas/Utilities/Exception.h"
-#include "cetlib/detail/metaprogramming.h"
 #include "boost/lexical_cast.hpp"
 #include <memory>
 #include <type_traits>

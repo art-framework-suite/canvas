@@ -7,8 +7,7 @@
 
 #include "canvas/Utilities/Exception.h"
 #include "cetlib/container_algorithms.h"
-#include "cetlib/detail/metaprogramming.h"
-#include "cetlib/detail/metaprogramming.h"
+#include "cetlib/metaprogramming.h"
 #include "cetlib/map_vector.h"
 #include "cetlib_except/demangle.h"
 
@@ -95,7 +94,7 @@ namespace art
   struct has_fillView : std::false_type {};
 
   template <typename T>
-  struct has_fillView<T, cet::detail::enable_if_function_exists_t<void(T::*)(std::vector<void const*>&), &T::fillView>> : std::true_type {};
+  struct has_fillView<T, cet::enable_if_function_exists_t<void(T::*)(std::vector<void const*>&), &T::fillView>> : std::true_type {};
 
   template <typename T>
   struct CannotFillView {
