@@ -20,8 +20,7 @@
 using fhicl::ParameterSetID;
 
 namespace {
-
-  void throwExceptionWithText(const char* txt)
+  void throwExceptionWithText(char const* txt)
   {
     throw art::Exception(art::errors::LogicError)
       << "Problem using an incomplete BranchDescription\n"
@@ -31,13 +30,11 @@ namespace {
 
   constexpr char underscore('_');
   constexpr char period('.');
-
 }
 
 namespace art {
 
-BranchDescription::
-BranchDescription(BranchType const bt, TypeLabel const& tl, ModuleDescription const& md) :
+BranchDescription::BranchDescription(BranchType const bt, TypeLabel const& tl, ModuleDescription const& md) :
   branchType_{bt},
   moduleLabel_{tl.hasEmulatedModule() ? tl.emulatedModule() : md.moduleLabel()},
   processName_{md.processName()},
@@ -54,8 +51,7 @@ BranchDescription(BranchType const bt, TypeLabel const& tl, ModuleDescription co
 }
 
 void
-BranchDescription::
-initProductID_()
+BranchDescription::initProductID_()
 {
   if (!transientsFluffed_()) {
     return;
@@ -66,8 +62,7 @@ initProductID_()
 }
 
 void
-BranchDescription::
-fluffTransients_() const
+BranchDescription::fluffTransients_() const
 {
   if (transientsFluffed_()) {
     return;
@@ -190,8 +185,7 @@ fluffTransients_() const
 }
 
 ParameterSetID const&
-BranchDescription::
-psetID() const
+BranchDescription::psetID() const
 {
   assert(!psetIDs().empty());
   if (psetIDs().size() != 1) {
@@ -206,8 +200,7 @@ psetID() const
 }
 
 void
-BranchDescription::
-merge(BranchDescription const& other)
+BranchDescription::merge(BranchDescription const& other)
 {
   psetIDs_.insert(other.psetIDs().begin(), other.psetIDs().end());
   processConfigurationIDs_.insert(other.processConfigurationIDs().begin(),
@@ -226,8 +219,7 @@ merge(BranchDescription const& other)
 }
 
 void
-BranchDescription::
-write(std::ostream& os) const
+BranchDescription::write(std::ostream& os) const
 {
   os << "Branch Type = " << branchType_ << std::endl;
   os << "Process Name = " << processName() << std::endl;
@@ -239,8 +231,7 @@ write(std::ostream& os) const
 }
 
 void
-BranchDescription::
-swap(BranchDescription& other)
+BranchDescription::swap(BranchDescription& other)
 {
   using std::swap;
   swap(branchType_, other.branchType_);
@@ -256,8 +247,7 @@ swap(BranchDescription& other)
 }
 
 void
-BranchDescription::
-throwIfInvalid_() const
+BranchDescription::throwIfInvalid_() const
 {
   if (transientsFluffed_()) {
     return;
@@ -394,12 +384,10 @@ public:
 };
 
 void
-detail::
-BranchDescriptionStreamer::
-operator()(TBuffer& R_b, void* objp)
+detail::BranchDescriptionStreamer::operator()(TBuffer& R_b, void* objp)
 {
-  static TClassRef cl(TClass::GetClass(typeid(BranchDescription)));
-  BranchDescription* obj(reinterpret_cast<BranchDescription*>(objp));
+  static TClassRef cl{TClass::GetClass(typeid(BranchDescription))};
+  auto obj = reinterpret_cast<BranchDescription*>(objp);
   if (R_b.IsReading()) {
     cl->ReadBuffer(R_b, obj);
     obj->fluffTransients_();
@@ -410,18 +398,18 @@ operator()(TBuffer& R_b, void* objp)
 }
 
 void
-detail::
-setBranchDescriptionStreamer()
+detail::setBranchDescriptionStreamer()
 {
-  static TClassRef cl(TClass::GetClass(typeid(BranchDescription)));
-  if (cl->GetStreamer() == 0) {
+  static TClassRef cl{TClass::GetClass(typeid(BranchDescription))};
+  if (cl->GetStreamer() == nullptr) {
     cl->AdoptStreamer(new BranchDescriptionStreamer);
   }
 }
 
 std::string
-match(BranchDescription const& a, BranchDescription const& b,
-      std::string const& fileName, BranchDescription::MatchMode m)
+match(BranchDescription const& a,
+      BranchDescription const& b,
+      std::string const& fileName)
 {
   std::ostringstream differences;
   if (a.branchName() != b.branchName()) {
@@ -473,54 +461,6 @@ match(BranchDescription const& a, BranchDescription const& b,
         << "', but '"
         << a.producedClassName()
         << "' in previous files.\n";
-  }
-  if (m == BranchDescription::Strict) {
-    if (b.psetIDs().size() > 1) {
-      differences
-          << "Branch '"
-          << b.branchName()
-          << "' uses more than one parameter set in file '"
-          << fileName
-          << "'.\n";
-    }
-    else if (a.psetIDs().size() > 1) {
-      differences
-          << "Branch '"
-          << a.branchName()
-          << "' uses more than one parameter set in previous files.\n";
-    }
-    else if (a.psetIDs() != b.psetIDs()) {
-      differences
-          << "Branch '"
-          << b.branchName()
-          << "' uses different parameter sets in file '"
-          << fileName
-          << "'.\n"
-          << "    than in previous files.\n";
-    }
-    if (b.processConfigurationIDs().size() > 1) {
-      differences
-          << "Branch '"
-          << b.branchName()
-          << "' uses more than one process configuration in file '"
-          << fileName
-          << "'.\n";
-    }
-    else if (a.processConfigurationIDs().size() > 1) {
-      differences
-          << "Branch '"
-          << a.branchName()
-          << "' uses more than one process configuration in previous files.\n";
-    }
-    else if (a.processConfigurationIDs() != b.processConfigurationIDs()) {
-      differences
-          << "Branch '"
-          << b.branchName()
-          << "' uses different process configurations in file '"
-          << fileName
-          << "'.\n"
-          << "    than in previous files.\n";
-    }
   }
   return differences.str();
 }

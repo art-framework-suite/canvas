@@ -43,8 +43,7 @@ namespace art {
   // Declared below due to use of nested type:
   //   std::string match(BranchDescription const& a,
   //                     BranchDescription const& b,
-  //                     std::string const& fileName,
-  //                     BranchDescription::MatchMode m);
+  //                     std::string const& fileName);
 }
 
 // ----------------------------------------------------------------------
@@ -55,7 +54,6 @@ public:
   static int constexpr invalidSplitLevel{-1};
   static int constexpr invalidBasketSize{0};
   static int constexpr invalidCompression{-1};
-  enum MatchMode {Strict = 0, Permissive};
 
   BranchDescription() = default;
 
@@ -93,8 +91,7 @@ public:
   friend bool combinable(BranchDescription const&, BranchDescription const&);
   friend std::string match(BranchDescription const&,
                            BranchDescription const&,
-                           std::string const&,
-                           BranchDescription::MatchMode);
+                           std::string const&);
   friend bool operator<(BranchDescription const&, BranchDescription const&);
   friend bool operator==(BranchDescription const&, BranchDescription const&);
 
@@ -181,8 +178,7 @@ private:
 namespace art {
   std::string match(BranchDescription const& a,
                     BranchDescription const& b,
-                    std::string const& fileName,
-                    BranchDescription::MatchMode m);
+                    std::string const& fileName);
 }
 
 #endif /* canvas_Persistency_Provenance_BranchDescription_h */
