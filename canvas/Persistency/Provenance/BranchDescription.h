@@ -40,10 +40,6 @@ namespace art {
     void setBranchDescriptionStreamer();
   }
 
-  // Declared below due to use of nested type:
-  //   std::string match(BranchDescription const& a,
-  //                     BranchDescription const& b,
-  //                     std::string const& fileName);
 }
 
 // ----------------------------------------------------------------------
@@ -89,9 +85,6 @@ public:
   void swap(BranchDescription& other);
 
   friend bool combinable(BranchDescription const&, BranchDescription const&);
-  friend std::string match(BranchDescription const&,
-                           BranchDescription const&,
-                           std::string const&);
   friend bool operator<(BranchDescription const&, BranchDescription const&);
   friend bool operator==(BranchDescription const&, BranchDescription const&);
 
@@ -174,12 +167,6 @@ private:
 
   mutable Transient<Transients> transients_{};
 };  // BranchDescription
-
-namespace art {
-  std::string match(BranchDescription const& a,
-                    BranchDescription const& b,
-                    std::string const& fileName);
-}
 
 #endif /* canvas_Persistency_Provenance_BranchDescription_h */
 

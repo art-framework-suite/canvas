@@ -135,8 +135,7 @@ getTypeID(int type)
 }
 
 void
-TypeWithDict::
-print(ostream& os) const
+TypeWithDict::print(ostream& os) const
 {
   switch (category_) {
     case Category::NONE:
@@ -159,8 +158,7 @@ print(ostream& os) const
 }
 
 char const*
-TypeWithDict::
-name() const
+TypeWithDict::name() const
 {
   char const* result = "";
   switch (category_) {
@@ -182,8 +180,7 @@ name() const
 }
 
 string
-TypeWithDict::
-className() const
+TypeWithDict::className() const
 {
   string result;
   switch (category_) {
@@ -207,8 +204,7 @@ className() const
 }
 
 string
-TypeWithDict::
-friendlyClassName() const
+TypeWithDict::friendlyClassName() const
 {
   string result;
   switch (category_) {
@@ -233,8 +229,7 @@ friendlyClassName() const
 }
 
 TClass*
-TypeWithDict::
-tClass() const
+TypeWithDict::tClass() const
 {
   if (category_ == Category::CLASSTYPE) {
     return dynamic_cast<TClass*>(tDict_);
@@ -249,8 +244,7 @@ tClass() const
 }
 
 TEnum*
-TypeWithDict::
-tEnum() const
+TypeWithDict::tEnum() const
 {
   if (category_ == Category::ENUMTYPE) {
     return dynamic_cast<TEnum*>(tDict_);
@@ -265,8 +259,7 @@ tEnum() const
 }
 
 TDataType*
-TypeWithDict::
-tDataType() const
+TypeWithDict::tDataType() const
 {
   if (category_ == Category::BASICTYPE) {
     return dynamic_cast<TDataType*>(tDict_);
@@ -281,8 +274,7 @@ tDataType() const
 }
 
 TDictionary*
-TypeWithDict::
-dictFromTypeInfo_(type_info const& ti)
+TypeWithDict::dictFromTypeInfo_(type_info const& ti)
 {
   throwIfUnsupportedType(uniform_type_name(ti));
   TDictionary* result = TClass::GetClass(ti);
@@ -310,8 +302,7 @@ dictFromTypeInfo_(type_info const& ti)
 }
 
 TDictionary*
-TypeWithDict::
-dictFromName_(string const& name)
+TypeWithDict::dictFromName_(string const& name)
 {
   TDictionary* result = nullptr;
   static tbb::concurrent_unordered_map<string, TDictionary*> s_nameToDict;
@@ -340,8 +331,7 @@ dictFromName_(string const& name)
 }
 
 TypeWithDict::Category
-TypeWithDict::
-categoryFromDict_(TDictionary* tDict)
+TypeWithDict::categoryFromDict_(TDictionary* tDict)
 {
   Category result = Category::NONE;
   if (tDict == nullptr) {
@@ -368,8 +358,7 @@ categoryFromDict_(TDictionary* tDict)
 }
 
 TypeID
-TypeWithDict::
-typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
+TypeWithDict::typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
 {
   TypeID result;
   if (category == Category::NONE) {
@@ -410,8 +399,7 @@ typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
 }
 
 type_info const&
-TypeWithDict::
-typeInfo() const
+TypeWithDict::typeInfo() const
 {
   if (!*this) {
     throw Exception(errors::LogicError)
@@ -448,4 +436,3 @@ to_string(TypeWithDict::Category category)
 }
 
 } // namespace art
-

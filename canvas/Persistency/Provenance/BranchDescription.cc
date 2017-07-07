@@ -394,65 +394,6 @@ detail::setBranchDescriptionStreamer()
   }
 }
 
-std::string
-match(BranchDescription const& a,
-      BranchDescription const& b,
-      std::string const& fileName)
-{
-  std::ostringstream differences;
-  if (a.branchName() != b.branchName()) {
-    differences
-        << "Branch name '"
-        << b.branchName()
-        << "' does not match '"
-        << a.branchName()
-        << "'.\n";
-  }
-  if (a.branchType() != b.branchType()) {
-    differences
-        << "Branch '"
-        << b.branchName()
-        << "' is a(n) '"
-        << b.branchType()
-        << "' branch\n";
-    differences
-        << "    in file '"
-        << fileName
-        << "', but a(n) '"
-        << a.branchType()
-        << "' branch in previous files.\n";
-  }
-  if (a.productID() != b.productID()) {
-    differences
-        << "Branch '"
-        << b.branchName()
-        << "' has a product ID of '"
-        << b.productID()
-        << "'\n";
-    differences
-        << "    in file '"
-        << fileName
-        << "', but '"
-        << a.productID()
-        << "' in previous files.\n";
-  }
-  if (a.producedClassName() != b.producedClassName()) {
-    differences
-        << "Products on branch '"
-        << b.branchName()
-        << "' have type '"
-        << b.producedClassName()
-        << "'\n";
-    differences
-        << "    in file '"
-        << fileName
-        << "', but '"
-        << a.producedClassName()
-        << "' in previous files.\n";
-  }
-  return differences.str();
-}
-
 std::ostream&
 operator<<(std::ostream& os, BranchDescription const& p)
 {
