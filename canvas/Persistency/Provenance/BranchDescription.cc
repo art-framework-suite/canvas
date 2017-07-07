@@ -2,6 +2,7 @@
 // vim: set sw=2:
 
 #include "canvas/Persistency/Provenance/ModuleDescription.h"
+#include "canvas/Persistency/Provenance/canonicalProductName.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/FriendlyName.h"
 #include "canvas/Utilities/WrappedClassName.h"
@@ -27,9 +28,6 @@ namespace {
       << txt
       << "\nPlease report this error to the ART developers\n";
   }
-
-  constexpr char underscore('_');
-  constexpr char period('.');
 }
 
 namespace art {
@@ -67,21 +65,10 @@ BranchDescription::fluffTransients_() const
   if (transientsFluffed_()) {
     return;
   }
-  transients_.get().branchName_.reserve(friendlyClassName().size() +
-                                        moduleLabel().size() +
-                                        productInstanceName().size() +
-                                        processName().size() + 4);
-  transients_.get().branchName_ += friendlyClassName();
-  transients_.get().branchName_ += underscore;
-  transients_.get().branchName_ += moduleLabel();
-  transients_.get().branchName_ += underscore;
-  transients_.get().branchName_ += productInstanceName();
-  transients_.get().branchName_ += underscore;
-  transients_.get().branchName_ += processName();
-  transients_.get().branchName_ += period;
-  // It is *absolutely* needed to have the trailing period on the branch
-  // name, as this gives instruction to ROOT to split this branch in the
-  // modern (v4+) way vs the old way (v3-).
+  transients_.get().branchName_ = canonicalProductName(friendlyClassName(),
+                                                       moduleLabel(),
+                                                       productInstanceName(),
+                                                       processName());
   {
     auto pcl = TClass::GetClass(producedClassName().c_str());
     if (pcl == nullptr) {
@@ -249,6 +236,7 @@ BranchDescription::swap(BranchDescription& other)
 void
 BranchDescription::throwIfInvalid_() const
 {
+  constexpr char underscore{'_'};
   if (transientsFluffed_()) {
     return;
   }
@@ -361,13 +349,13 @@ bool
 combinable(BranchDescription const& a, BranchDescription const& b)
 {
   return
-    (a.branchType() == b.branchType()) &&
-    (a.processName() == b.processName()) &&
-    (a.producedClassName() == b.producedClassName()) &&
-    (a.friendlyClassName() == b.friendlyClassName()) &&
-    (a.productInstanceName() == b.productInstanceName()) &&
-    (a.moduleLabel() == b.moduleLabel()) &&
-    (a.productID() == b.productID());
+    (a.branchType() == b.branchType()) && // *
+    (a.processName() == b.processName()) && // **
+    (a.producedClassName() == b.producedClassName()) && // *
+    (a.friendlyClassName() == b.friendlyClassName()) && // **
+    (a.productInstanceName() == b.productInstanceName()) && // **
+    (a.moduleLabel() == b.moduleLabel()) && // **
+    (a.productID() == b.productID()); // *
 }
 
 bool
