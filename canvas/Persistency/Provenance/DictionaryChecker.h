@@ -13,9 +13,9 @@ class art::DictionaryChecker {
 public:
 
   /// Check dictionaries (optionally recursively) for named type.
-  void checkDictionaries(std::string const & name_orig,
+  void checkDictionaries(std::string const& name_orig,
                          bool recursive = false,
-                         int level = 0);
+                         std::size_t level = 0);
 
   /// Return the sequence of (demangled) types missing dictionaries.
   std::vector<std::string> typesMissingDictionaries();
@@ -26,6 +26,9 @@ public:
 private:
   /// Reset missing types list.
   void resetMissingTypes_();
+  void checkDictionariesForArg_(std::string const& template_name,
+                                std::size_t index,
+                                std::size_t level);
 
   std::set<std::string> checked_names_;
   std::set<std::string> missing_types_;
@@ -33,8 +36,7 @@ private:
 
 inline
 void
-art::DictionaryChecker::
-resetMissingTypes_()
+art::DictionaryChecker::resetMissingTypes_()
 {
   using std::swap;
   std::set<std::string> tmp;

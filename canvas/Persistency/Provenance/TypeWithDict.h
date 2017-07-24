@@ -40,34 +40,29 @@ public:
 
 public:
 
-  TypeWithDict()
-    : tDict_(nullptr)
-    , category_(Category::NONE)
-    , id_()
-  {
-  }
+  TypeWithDict() = default;
 
   explicit
   TypeWithDict(std::type_info const& t)
-    : tDict_(dictFromTypeInfo_(t))
-    , category_(categoryFromDict_(tDict_))
-    , id_(t)
+    : tDict_{dictFromTypeInfo_(t)}
+    , category_{categoryFromDict_(tDict_)}
+    , id_{t}
   {
   }
 
   explicit
   TypeWithDict(TypeID const& id)
-    : tDict_(id ? dictFromTypeInfo_(id.typeInfo()) : nullptr)
-    , category_(categoryFromDict_(tDict_))
-    , id_(typeIDFromDictAndCategory_(tDict_, category_))
+    : tDict_{id ? dictFromTypeInfo_(id.typeInfo()) : nullptr}
+    , category_{categoryFromDict_(tDict_)}
+    , id_{typeIDFromDictAndCategory_(tDict_, category_)}
   {
   }
 
   explicit
   TypeWithDict(std::string const& name)
-    : tDict_(dictFromName_(name))
-    , category_(categoryFromDict_(tDict_))
-    , id_(typeIDFromDictAndCategory_(tDict_, category_))
+    : tDict_{dictFromName_(name)}
+    , category_{categoryFromDict_(tDict_)}
+    , id_{typeIDFromDictAndCategory_(tDict_, category_)}
   {
   }
 
@@ -151,9 +146,9 @@ private:
 
 private:
 
-  TDictionary* tDict_;
-  Category category_;
-  TypeID id_;
+  TDictionary* tDict_{nullptr};
+  Category category_{Category::NONE};
+  TypeID id_{};
 
 };
 
