@@ -1,5 +1,5 @@
-#ifndef canvas_Persistency_Provenance_Compatibility_typedefs_h
-#define canvas_Persistency_Provenance_Compatibility_typedefs_h
+#ifndef canvas_Persistency_Provenance_Compatibility_type_aliases_h
+#define canvas_Persistency_Provenance_Compatibility_type_aliases_h
 
 //======================================================================
 // These typedefs were used in the versions 1-9 of ProductID.
@@ -12,7 +12,7 @@ namespace art {
   }
 }
 
-#endif /* canvas_Persistency_Provenance_OldProductID_h */
+#endif /* canvas_Persistency_Provenance_Compatibility_type_aliases_h */
 
 // Local Variables:
 // mode: c++

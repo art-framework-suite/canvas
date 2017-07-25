@@ -120,3 +120,7 @@ namespace art {
 }
 
 #endif /* canvas_Persistency_Provenance_thread_safe_registry_via_id_h */
+
+// Local Variables:
+// mode: c++
+// End:

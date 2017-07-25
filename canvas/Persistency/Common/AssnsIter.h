@@ -264,3 +264,7 @@ namespace art {
 }
 
 #endif /* canvas_Persistency_Common_AssnsIter_h */
+
+// Local Variables:
+// mode: c++
+// End:

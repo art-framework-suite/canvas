@@ -1,5 +1,5 @@
-#ifndef canvas_Persistency_Provenance_BranchIDList_h
-#define canvas_Persistency_Provenance_BranchIDList_h
+#ifndef canvas_Persistency_Provenance_Compatibility_BranchIDList_h
+#define canvas_Persistency_Provenance_Compatibility_BranchIDList_h
 
 // =======================================================================
 // For art::ProductID versions 1-9, the schema included a (process
@@ -17,7 +17,7 @@ namespace art {
   typedef std::vector<BranchID::value_type> BranchIDList;
   typedef std::vector<BranchIDList>         BranchIDLists;
 }
-#endif /* canvas_Persistency_Provenance_BranchIDList_h */
+#endif /* canvas_Persistency_Provenance_Compatibility_BranchIDList_h */
 
 // Local Variables:
 // mode: c++

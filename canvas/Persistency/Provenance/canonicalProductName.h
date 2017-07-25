@@ -14,7 +14,7 @@ namespace art {
                                    std::string const& processName);
 }
 
-#endif
+#endif /* canvas_Persistency_Provenance_canonicalProductName_h */
 
 // Local variables:
 // mode: c++
