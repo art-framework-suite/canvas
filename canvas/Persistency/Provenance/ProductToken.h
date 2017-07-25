@@ -1,5 +1,5 @@
-#ifndef canvas_Persistency_Common_ProductToken_h
-#define canvas_Persistency_Common_ProductToken_h
+#ifndef canvas_Persistency_Provenance_ProductToken_h
+#define canvas_Persistency_Provenance_ProductToken_h
 
 //==============================================================
 // ProductToken is used to enable efficient product lookup via a
@@ -33,7 +33,7 @@ namespace art {
 
 }
 
-#endif /* canvas_Persistency_Common_ProductToken_h */
+#endif /* canvas_Persistency_Provenance_ProductToken_h */
 
 // Local Variables:
 // mode: c++
