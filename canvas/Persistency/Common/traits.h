@@ -65,20 +65,6 @@ namespace art
 
   //------------------------------------------------------------
   //
-  // DoNotRecordParents is a base class. Derive your own (EDProduct)
-  // class X from DoNotRecordParents when your class already keeps all
-  // data that are relevant to parentage internally, and the
-  // information kept by the event model would thus be redundant.
-  //
-  // DoNotRecordParents has no behavior; it is used at compile time to
-  // influence the behavior of Event::put.
-  //
-  // Usage:
-  //    class MyClass : public art::DoNotRecordParents { ... }
-  struct DoNotRecordParents { };
-
-  //------------------------------------------------------------
-  //
   // The trait struct template has_fillView<T> is used to
   // indicate whether or not the type T has a member function
   //
