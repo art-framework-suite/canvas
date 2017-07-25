@@ -59,16 +59,22 @@ BranchDescription::initProductID_()
   }
 }
 
+std::string
+BranchDescription::canonicalProductName() const
+{
+  return art::canonicalProductName(friendlyClassName(),
+                                   moduleLabel(),
+                                   productInstanceName(),
+                                   processName());
+}
+
 void
 BranchDescription::fluffTransients_() const
 {
   if (transientsFluffed_()) {
     return;
   }
-  transients_.get().branchName_ = canonicalProductName(friendlyClassName(),
-                                                       moduleLabel(),
-                                                       productInstanceName(),
-                                                       processName());
+  transients_.get().branchName_ = canonicalProductName();
   {
     auto pcl = TClass::GetClass(producedClassName().c_str());
     if (pcl == nullptr) {
