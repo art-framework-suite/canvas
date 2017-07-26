@@ -16,6 +16,11 @@
 namespace art {
   namespace detail {
 
+    inline InputTag input_tag(InputTag const& tag) { return tag; }
+
+    template <typename T>
+    inline InputTag input_tag(ProductToken<T> const& token) { return token.inputTag(); }
+
     class IPRHelperDef { };
 
     template <typename ProdA, typename ProdB, typename Data, typename DATACOLL, typename EVENT>
