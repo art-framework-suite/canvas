@@ -6,6 +6,7 @@
 
 #include "canvas/Persistency/Common/Assns.h"
 #include "canvas/Persistency/Common/Ptr.h"
+#include "canvas/Persistency/Provenance/ProductToken.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/InputTag.h"
 #include "canvas/Utilities/ensurePointer.h"
