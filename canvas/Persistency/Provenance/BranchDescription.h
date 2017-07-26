@@ -76,11 +76,9 @@ public:
 
   std::set<fhicl::ParameterSetID> const& psetIDs() const {return psetIDs_;}
 
-  std::string canonicalProductName() const;
   ProductID productID() const {return productID_;}
   BranchType branchType() const {return branchType_;}
-  [[deprecated("Use canonicalProductName() instead")]] std::string const& branchName() const {return guts().branchName_;}
-
+  std::string const& branchName() const {return guts().branchName_;}
   std::string const& wrappedName() const {return guts().wrappedName_;}
 
   void merge(BranchDescription const& other);
