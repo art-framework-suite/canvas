@@ -20,7 +20,7 @@ namespace art {
     inline InputTag input_tag(InputTag const& tag) { return tag; }
 
     template <typename T>
-    inline InputTag input_tag(ProductToken<T> const& token) { return token.inputTag(); }
+    inline InputTag input_tag(ProductToken<T> const& token) { return token.inputTag_; }
 
     class IPRHelperDef { };
 
