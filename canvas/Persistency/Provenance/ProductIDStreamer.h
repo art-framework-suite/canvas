@@ -1,5 +1,5 @@
-#ifndef canvas_Persistency_Common_ProductIDStreamer_h
-#define canvas_Persistency_Common_ProductIDStreamer_h
+#ifndef canvas_Persistency_Provenance_ProductIDStreamer_h
+#define canvas_Persistency_Provenance_ProductIDStreamer_h
 
 #include "canvas/Persistency/Provenance/Compatibility/BranchIDList.h"
 #include "cetlib/exempt_ptr.h"
@@ -30,7 +30,7 @@ namespace art {
     cet::exempt_ptr<BranchIDLists const> branchIDLists_;
   };
 }
-#endif /* canvas_Persistency_Common_ProductIDStreamer_h */
+#endif /* canvas_Persistency_Provenance_ProductIDStreamer_h */
 
 // Local Variables:
 // mode: c++

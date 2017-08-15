@@ -6,6 +6,7 @@
 
 #include "canvas/Persistency/Common/Assns.h"
 #include "canvas/Persistency/Common/Ptr.h"
+#include "canvas/Persistency/Provenance/ProductToken.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/InputTag.h"
 #include "canvas/Utilities/ensurePointer.h"
@@ -15,6 +16,14 @@
 
 namespace art {
   namespace detail {
+
+    inline InputTag input_tag(InputTag const& tag) { return tag; }
+
+    template <typename T>
+    inline InputTag input_tag(ProductToken<T> const& token) { return token.inputTag_; }
+
+    template <typename T>
+    inline InputTag input_tag(ViewToken<T> const& token) { return token.inputTag_; }
 
     class IPRHelperDef { };
 

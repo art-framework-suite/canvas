@@ -10,3 +10,7 @@ namespace art {
 }
 
 #endif /* canvas_Persistency_Provenance_ParentageRegistry_h */
+
+// Local Variables:
+// mode: c++
+// End:
