@@ -12,9 +12,11 @@ namespace art {
 
     TypeLabel(TypeID const& itemtype,
               std::string const& instanceName,
+              bool const supportsView,
               std::string const& emulatedMod = {}) :
       typeID_{itemtype},
       productInstanceName_{instanceName},
+      supportsView_{supportsView},
       emulatedModule_{emulatedMod}
     {}
 
@@ -24,10 +26,12 @@ namespace art {
     std::string const& emulatedModule() const { return emulatedModule_; }
     std::string const& productInstanceName() const { return productInstanceName_; }
     bool hasEmulatedModule() const { return !emulatedModule_.empty(); }
+    bool supportsView() const { return supportsView_; }
 
   private:
     TypeID      typeID_;
     std::string productInstanceName_;
+    bool        supportsView_;
     std::string emulatedModule_;
     friend bool operator<(TypeLabel const& a, TypeLabel const& b);
   };

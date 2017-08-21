@@ -143,18 +143,18 @@ namespace art {
 template <typename L, typename R>
 class art::Assns<L, R, void> {
 public:
-  typedef L left_t;
-  typedef R right_t;
-  typedef art::Assns<right_t, left_t, void> partner_t;
+  using left_t = L;
+  using right_t = R;
+  using partner_t = art::Assns<right_t, left_t, void>;
 
 private:
-  typedef std::vector<std::pair<Ptr<left_t>, Ptr<right_t>>> ptrs_t;
-  typedef std::vector<std::pair<RefCore, std::size_t>> ptr_data_t;
+  using ptrs_t = std::vector<std::pair<Ptr<left_t>, Ptr<right_t>>>;
+  using ptr_data_t = std::vector<std::pair<RefCore, std::size_t>>;
 
 public:
-  typedef typename ptrs_t::value_type assn_t;
-  typedef typename ptrs_t::const_iterator assn_iterator;
-  typedef typename ptrs_t::size_type size_type;
+  using assn_t = typename ptrs_t::value_type;
+  using assn_iterator = typename ptrs_t::const_iterator;
+  using size_type = typename ptrs_t::size_type;
 
   // Constructors, destructor.
   Assns();
@@ -220,15 +220,15 @@ private:
 template <typename L, typename R, typename D>
 class art::Assns : private art::Assns<L, R> {
 private:
-  typedef Assns<L, R> base;
+  using base = Assns<L, R>;
 public:
-  typedef typename base::left_t left_t;
-  typedef typename base::right_t right_t;
-  typedef D data_t;
-  typedef art::Assns<right_t, left_t, data_t> partner_t;
-  typedef typename art::const_AssnsIter<L, R, D, Direction::Forward> const_iterator;
-  typedef typename art::const_AssnsIter<L, R, D, Direction::Reverse> const_reverse_iterator;
-  typedef typename base::size_type size_type;
+  using left_t = typename base::left_t;
+  using right_t = typename base::right_t;
+  using data_t = D;
+  using partner_t = art::Assns<right_t, left_t, data_t>;
+  using const_iterator = typename art::const_AssnsIter<L, R, D, Direction::Forward>;
+  using const_reverse_iterator = typename art::const_AssnsIter<L, R, D, Direction::Reverse>;
+  using size_type = typename base::size_type;
 
   Assns();
   Assns(partner_t const& other);
@@ -396,9 +396,9 @@ art::Assns<L, R, void>::fill_transients()
   ptrs_.reserve(ptr_data_1_.size());
   ptr_data_t const& l_ref = left_first() ? ptr_data_1_ : ptr_data_2_;
   ptr_data_t const& r_ref = left_first() ? ptr_data_2_ : ptr_data_1_;
-  for (auto l = l_ref.cbegin(),
-         e = l_ref.cend(),
-         r = r_ref.cbegin();
+  for (auto l = cbegin(l_ref),
+         e = cend(l_ref),
+         r = cbegin(r_ref);
        l != e;
        ++l, ++r) {
     ptrs_.emplace_back(Ptr<left_t>{l->first.id(), l->second, l->first.productGetter()},

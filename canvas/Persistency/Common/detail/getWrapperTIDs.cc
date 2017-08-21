@@ -1,5 +1,6 @@
 #include "canvas/Persistency/Common/detail/getWrapperTIDs.h"
 
+#include "canvas/Utilities/TypeID.h"
 #include "canvas/Persistency/Provenance/TypeTools.h"
 #include "canvas/Persistency/Provenance/TypeWithDict.h"
 

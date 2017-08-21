@@ -64,7 +64,44 @@ namespace art
   };
 
   //------------------------------------------------------------
-  //
+  // ... Check for value_type
+  template <typename T, typename = void>
+  struct has_value_type : std::false_type {};
+
+  template <typename T>
+  struct has_value_type<T, cet::enable_if_type_exists_t<typename T::value_type>> : std::true_type {
+    using element_type = typename T::value_type;
+  };
+
+  // ... Check for mapped_type
+  template <typename T, typename = void>
+  struct has_mapped_type : std::false_type {};
+
+  template <typename T>
+  struct has_mapped_type<T, cet::enable_if_type_exists_t<typename T::mapped_type>> : std::true_type {
+    using element_type = typename T::mapped_type;
+  };
+
+  // A type supports a view if it has a nested 'value_type' or
+  // 'mapped_type' type name.
+  template <typename T, typename = void>
+  struct SupportsView : std::false_type {
+    static std::type_info const* type_id() { return nullptr; }
+  };
+
+  template <typename T>
+  struct SupportsView<T, std::enable_if_t<(has_value_type<T>::value && !has_mapped_type<T>::value)>> : std::true_type {
+    using element_type = typename has_value_type<T>::element_type;
+    static std::type_info const* type_id() { return &typeid(element_type); }
+  };
+
+  template <typename T>
+  struct SupportsView<T, std::enable_if_t<has_mapped_type<T>::value>> : std::true_type {
+    using element_type = typename has_mapped_type<T>::element_type;
+    static std::type_info const* type_id() { return &typeid(element_type); }
+  };
+
+  //------------------------------------------------------------
   // The trait struct template has_fillView<T> is used to
   // indicate whether or not the type T has a member function
   //
@@ -72,15 +109,14 @@ namespace art
   //
   // We assume the 'general case' for T is to not support fillView.
   // Classes which do support fillView must specialize this trait.
-  //
   //------------------------------------------------------------
 
   // has_fillView
   template <typename T, typename = void>
-  struct has_fillView : std::false_type {};
+  struct has_fillView {};
 
   template <typename T>
-  struct has_fillView<T, cet::enable_if_function_exists_t<void(T::*)(std::vector<void const*>&), &T::fillView>> : std::true_type {};
+  struct has_fillView<T, cet::enable_if_function_exists_t<void(T::*)(std::vector<void const*>&), &T::fillView>> {};
 
   template <typename T>
   struct CannotFillView {
@@ -109,7 +145,7 @@ namespace art
     static void fill(std::vector<T> const& product,
                      std::vector<void const*>& view)
     {
-      cet::transform_all(product, std::back_inserter(view), [](auto const &p){ return &p; });
+      cet::transform_all(product, std::back_inserter(view), [](auto const& p){ return &p; });
     }
   };
 
@@ -121,7 +157,7 @@ namespace art
     static void fill(std::list<T> const& product,
                      std::vector<void const*>& view)
     {
-      cet::transform_all(product, std::back_inserter(view), [](auto const &p){ return &p; });
+      cet::transform_all(product, std::back_inserter(view), [](auto const& p){ return &p; });
     }
   };
 
@@ -130,7 +166,7 @@ namespace art
     static void fill(std::deque<T> const& product,
                      std::vector<void const*>& view)
     {
-      cet::transform_all(product, std::back_inserter(view), [](auto const &p){ return &p; });
+      cet::transform_all(product, std::back_inserter(view), [](auto const& p){ return &p; });
     }
   };
 
@@ -139,7 +175,7 @@ namespace art
     static void fill(std::set<T> const& product,
                      std::vector<void const*>& view)
     {
-      cet::transform_all(product, std::back_inserter(view), [](auto const &p){ return &p; });
+      cet::transform_all(product, std::back_inserter(view), [](auto const& p){ return &p; });
     }
   };
 
@@ -148,12 +184,11 @@ namespace art
     static void fill(cet::map_vector<T> const& product,
                      std::vector<void const*>& view)
     {
-      cet::transform_all(product, std::back_inserter(view), [](auto const &p){ return &p.second; });
+      cet::transform_all(product, std::back_inserter(view), [](auto const& p){ return &p.second; });
     }
   };
 
   //------------------------------------------------------------
-  //
   // The trait struct template has_setPtr<T> is used to
   // indicate whether or not the type T has a member function
   //
@@ -161,7 +196,6 @@ namespace art
   //
   // We assume the 'general case' for T is to not support setPtr.
   // Classes which do support setPtr must specialize this trait.
-  //
   //------------------------------------------------------------
 
   template <class T>

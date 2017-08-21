@@ -38,7 +38,8 @@ BranchDescription::BranchDescription(BranchType const bt, TypeLabel const& tl, M
   processName_{md.processName()},
   producedClassName_{tl.className()},
   friendlyClassName_{tl.friendlyClassName()},
-  productInstanceName_{tl.productInstanceName()}
+  productInstanceName_{tl.productInstanceName()},
+  supportsView_{tl.supportsView()}
 {
   guts().produced_ = true;
   psetIDs_.insert(md.parameterSetID());
@@ -228,6 +229,7 @@ BranchDescription::swap(BranchDescription& other)
   swap(producedClassName_, other.producedClassName_);
   swap(friendlyClassName_, other.friendlyClassName_);
   swap(productInstanceName_, other.productInstanceName_);
+  swap(supportsView_, other.supportsView_);
   swap(psetIDs_, other.psetIDs_);
   swap(processConfigurationIDs_, other.processConfigurationIDs_);
   swap(transients_, other.transients_);

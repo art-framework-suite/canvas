@@ -54,7 +54,7 @@ public:
   BranchDescription() = default;
 
   BranchDescription(BranchType const bt,
-                    TypeLabel const&tl,
+                    TypeLabel const& tl,
                     ModuleDescription const& modDesc);
 
   // use compiler-generated copy c'tor, copy assignment, and d'tor
@@ -78,6 +78,7 @@ public:
 
   ProductID productID() const {return productID_;}
   BranchType branchType() const {return branchType_;}
+  bool supportsView() const { return supportsView_; }
   std::string const& branchName() const {return guts().branchName_;}
   std::string const& wrappedName() const {return guts().wrappedName_;}
 
@@ -91,30 +92,32 @@ public:
   struct Transients {
     Transients() = default;
 
-    // The branch name, which is currently derivable fron the other attributes.
+    // The branch name, which is currently derivable from the other
+    // attributes.
     std::string branchName_{};
 
-    // The wrapped class name, which is currently derivable fron the other attributes.
+    // The wrapped class name, which is currently derivable from the
+    // other attributes.
     std::string wrappedName_{};
 
-    // Was this branch produced in this process
-    // rather than in a previous process
+    // Was this branch produced in this process rather than in a
+    // previous process
     bool produced_{false};
 
-    // Is the class of the branch marked as transient
-    // in the data dictionary
+    // Is the class of the branch marked as transient in the data
+    // dictionary
     bool transient_{false};
 
-    // The split level of the branch, as marked
-    // in the data dictionary.
+    // The split level of the branch, as marked in the data
+    // dictionary.
     int splitLevel_{};
 
-    // The basket size of the branch, as marked
-    // in the data dictionary.
+    // The basket size of the branch, as marked in the data
+    // dictionary.
     int basketSize_{};
 
-    // The compression of the branch, as marked
-    // in the data dictionary.
+    // The compression of the branch, as marked in the data
+    // dictionary.
     int compression_{invalidCompression};
   };
 
@@ -156,6 +159,9 @@ private:
   // a user-supplied name to distinguish multiple products of the same type
   // that are produced by the same producer
   std::string productInstanceName_{};
+
+  // Does this product support the concept of a view?
+  bool supportsView_{false};
 
   // ID's of parameter set of the creators of products
   // on this branch

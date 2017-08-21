@@ -9,7 +9,7 @@
 namespace art {
   namespace detail { // Internal use only.
     std::vector<TypeID> getWrapperTIDs(BranchDescription const& bd);
-    std::vector<TypeID> getWrapperTIDs(std::string const & productClassName);
+    std::vector<TypeID> getWrapperTIDs(std::string const& productClassName);
   }
 }
 

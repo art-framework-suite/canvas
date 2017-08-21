@@ -94,7 +94,8 @@
     <version ClassVersion="11" checksum="363573437"/>
     <version ClassVersion="10" checksum="2938245437"/>
   </class>
-  <class name="art::BranchDescription" ClassVersion="14">
+  <class name="art::BranchDescription" ClassVersion="15">
+   <version ClassVersion="15" checksum="1969003144"/>
     <version ClassVersion="14" checksum="1426833576"/>
     <version ClassVersion="13" checksum="2315032926"/>
     <version ClassVersion="12" checksum="544968977"/>

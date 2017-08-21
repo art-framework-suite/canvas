@@ -19,8 +19,19 @@ namespace art {
 
   bool operator > (TypeID const&, TypeID const&);
   bool operator != (TypeID const&, TypeID const&);
-  std::ostream& operator << (std::ostream&, TypeID const&);
+  std::ostream& operator<<(std::ostream&, TypeID const&);
   void swap(TypeID&, TypeID&);
+
+  bool is_assns(TypeID const& tid);
+  bool is_assns(std::string const& type_name);
+
+  bool is_instantiation_of(std::string const& type_name, std::string const& template_name);
+  bool is_instantiation_of(TypeID const& tid, std::string const& template_name);
+
+  std::string name_of_template_arg(std::string const& template_instance, size_t desired_arg);
+  std::string name_of_assns_partner(std::string assns_type_name);
+  std::string name_of_assns_base(std::string assns_type_name);
+  std::string name_of_unwrapped_product(std::string const& wrapped_name);
 }
 
 class art::TypeID {
@@ -47,9 +58,6 @@ public:
   std::string className() const;
 
   std::string friendlyClassName() const;
-
-  // Does ROOT have access to dictionary information for this type?
-  bool hasDictionary() const;
 
   bool operator < (TypeID const& rhs) const;
 
@@ -156,6 +164,35 @@ art::swap(TypeID& left, TypeID& right)
 {
   left.swap(right);
 }
+
+inline
+bool
+art::is_assns(TypeID const& tid)
+{
+  return is_assns(tid.className());
+}
+
+inline
+bool
+art::is_assns(std::string const& type_name)
+{
+  using namespace std::string_literals;
+  return is_instantiation_of(type_name, "art::Assns"s);
+}
+
+inline
+bool
+art::is_instantiation_of(std::string const& type_name,
+                         std::string const& template_name) {
+  return type_name.find(template_name + '<') == 0ull;
+}
+
+inline
+bool
+art::is_instantiation_of(TypeID const& tid, std::string const& template_name) {
+  return is_instantiation_of(tid.className(), template_name);
+}
+
 
 // Local Variables:
 // mode: c++
