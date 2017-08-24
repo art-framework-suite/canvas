@@ -41,7 +41,7 @@ BranchDescription::BranchDescription(BranchType const bt, TypeLabel const& tl, M
   productInstanceName_{tl.productInstanceName()},
   supportsView_{tl.supportsView()}
 {
-  guts().produced_ = true;
+  guts().validity_ = Transients::Produced;
   psetIDs_.insert(md.parameterSetID());
   processConfigurationIDs_.insert(md.processConfigurationID());
   throwIfInvalid_();

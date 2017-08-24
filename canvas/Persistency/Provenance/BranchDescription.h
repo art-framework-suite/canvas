@@ -67,7 +67,9 @@ public:
   std::string const& friendlyClassName() const {return friendlyClassName_;}
   std::string const& productInstanceName() const {return productInstanceName_;}
 
-  bool produced() const {return guts().produced_;}
+  bool produced() const {return guts().validity_ == Transients::Produced;}
+  bool present() const {return guts().validity_ == Transients::PresentFromSource; }
+  bool dropped() const {return guts().validity_ == Transients::Dropped; }
   bool transient() const {return guts().transient_;}
 
   int splitLevel() const {return guts().splitLevel_;}
@@ -92,6 +94,8 @@ public:
   struct Transients {
     Transients() = default;
 
+    enum validity_state {Produced, PresentFromSource, Dropped, Invalid};
+
     // The branch name, which is currently derivable from the other
     // attributes.
     std::string branchName_{};
@@ -102,7 +106,7 @@ public:
 
     // Was this branch produced in this process rather than in a
     // previous process
-    bool produced_{false};
+    validity_state validity_{PresentFromSource};
 
     // Is the class of the branch marked as transient in the data
     // dictionary
@@ -120,6 +124,8 @@ public:
     // dictionary.
     int compression_{invalidCompression};
   };
+
+  void setValidity(Transients::validity_state const state) { guts().validity_ = state; }
 
 private:
   friend class detail::BranchDescriptionStreamer;
