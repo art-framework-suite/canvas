@@ -8,7 +8,7 @@
 
 #include <vector>
 
-using art::TypeWithDict;
+using art::root::TypeWithDict;
 
 BOOST_AUTO_TEST_SUITE(TypeWithDict_t)
 
@@ -67,77 +67,5 @@ test_basic_type(unsigned int,ui)
 test_basic_type(unsigned long,ul)
 test_basic_type(long long,ll)
 test_basic_type(unsigned long long,ull)
-
-BOOST_AUTO_TEST_CASE(t04)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t05)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t06)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t07)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t08)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t09)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t10)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t11)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t12)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t13)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t14)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t15)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t16)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t17)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t18)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t19)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t20)
-{
-}
-
-BOOST_AUTO_TEST_CASE(t21)
-{
-}
 
 BOOST_AUTO_TEST_SUITE_END()

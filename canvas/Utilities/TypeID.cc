@@ -128,3 +128,14 @@ art::name_of_assns_base(std::string assns_type_name) {
            ",void>";
   return result;
 }
+
+std::string
+art::name_of_unwrapped_product(std::string const& wrapped_name)
+{
+  using namespace std::string_literals;
+  if (!is_instantiation_of(wrapped_name, "art::Wrapper"s)) {
+    throw Exception(errors::LogicError, "Can't unwrap"s)
+      << "-- attempted to get unwrapped product from non-instance of art::Wrapper."s;
+  }
+  return name_of_template_arg(wrapped_name, 0);
+}

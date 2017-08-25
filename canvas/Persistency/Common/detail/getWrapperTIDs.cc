@@ -7,19 +7,20 @@
 using namespace std;
 
 namespace {
-  void maybeThrowLateDictionaryError(art::TypeWithDict const & twd,
-                                     std::string const & tname)
+  void maybeThrowLateDictionaryError(art::root::TypeWithDict const& twd,
+                                     std::string const& tname)
   {
     if (!twd) {
-      art::throwLateDictionaryError(tname);
+      art::root::throwLateDictionaryError(tname);
     }
   }
 }
 
 std::vector<art::TypeID>
-art::detail::
-getWrapperTIDs(std::string const & productClassName)
+art::detail::getWrapperTIDs(std::string const& productClassName)
 {
+  using art::root::TypeWithDict;
+
   std::vector<TypeID> result;
   TypeWithDict const ta(productClassName);
   maybeThrowLateDictionaryError(ta, productClassName);
@@ -28,7 +29,7 @@ getWrapperTIDs(std::string const & productClassName)
   maybeThrowLateDictionaryError(tw, twName);
   result.emplace_back(tw.id()); // Wrapper.
   if (ta.category() == TypeWithDict::Category::CLASSTYPE &&
-      is_instantiation_of(ta.tClass(), "art::Assns")) {
+      art::root::is_instantiation_of(ta.tClass(), "art::Assns")) {
     auto const tpName = name_of_assns_partner(productClassName);
     TypeWithDict const tp(tpName);
     maybeThrowLateDictionaryError(tp, tpName);

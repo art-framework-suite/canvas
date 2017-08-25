@@ -194,7 +194,4 @@
   <class name="art::ProductID" ClassVersion="10">
     <version ClassVersion="10" checksum="2026026665"/>
   </class>
-  <class name="art::DictionaryChecker" ClassVersion="0"/>
-  <function name="art::name_of_assns_partner"/>
-  <function name="art::wrappedClassName"/>
 </lcgdict>

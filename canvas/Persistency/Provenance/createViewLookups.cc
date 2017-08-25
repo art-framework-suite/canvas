@@ -53,7 +53,7 @@ art::root::createViewLookups(ProductList const& prods)
     // Look in the class of the product for a typedef named "value_type",
     // if there is one allow lookups by that type name too (and by all
     // of its base class names as well).
-    art::TypeWithDict const TY {pd.producedClassName()};
+    TypeWithDict const TY {pd.producedClassName()};
     TClass* const TYc = TY.tClass();
     auto ET = mapped_type_of(TYc);
     if (ET || (ET = value_type_of(TYc))) {
@@ -62,10 +62,9 @@ art::root::createViewLookups(ProductList const& prods)
       // types too.
       auto const vtFCN = ET.friendlyClassName();
       result[bt][vtFCN][procName].emplace_back(pid);
-      if (ET.category() == art::TypeWithDict::Category::CLASSTYPE) {
+      if (ET.category() == TypeWithDict::Category::CLASSTYPE) {
         // Repeat this for all public base classes of the value_type.
-        std::vector<TClass*> bases;
-        art::public_base_classes(ET.tClass(), bases);
+        auto bases = public_base_classes(ET.tClass());
         for (auto const BT: bases) {
           auto const btFCN = art::TypeID{BT->GetTypeInfo()}.friendlyClassName();
           result[bt][btFCN][procName].emplace_back(pid);
