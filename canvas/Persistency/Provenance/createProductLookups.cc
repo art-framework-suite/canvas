@@ -1,12 +1,9 @@
-#include "canvas/Persistency/Provenance/fillLookups.h"
+#include "canvas/Persistency/Provenance/createProductLookups.h"
 // vim: set sw=2:
 
 #include "canvas/Persistency/Provenance/BranchKey.h"
-#include "canvas/Persistency/Provenance/TypeTools.h"
-#include "canvas/Persistency/Provenance/TypeWithDict.h"
-#include "canvas/Utilities/TypeID.h"
 #include "canvas/Utilities/FriendlyName.h"
-#include "canvas/Utilities/WrappedClassName.h"
+#include "canvas/Utilities/TypeID.h"
 
 #include <cassert>
 #include <unordered_map>
@@ -80,11 +77,11 @@ namespace {
 }
 
 
-std::pair<art::ProductLookup_t, art::ViewLookup_t>
-art::detail::fillLookups(ProductList const& prods)
+art::ProductLookup_t
+art::createProductLookups(ProductList const& prods)
 {
   // Computing the product lookups does not rely on any ROOT facilities.
-  ProductLookup_t pl;
+  ProductLookup_t result;
   std::vector<PendingBTLEntry> pendingEntries;
   std::unordered_map<ProductID, CheapTag, ProductID::Hash> insertedABVs;
   for (auto const& val: prods) {
@@ -92,7 +89,7 @@ art::detail::fillLookups(ProductList const& prods)
     auto const pid = val.second.productID();
     auto const& prodFCN = val.first.friendlyClassName_;
     auto const bt = val.first.branchType_;
-    pl[bt][prodFCN][procName].emplace_back(pid);
+    result[bt][prodFCN][procName].emplace_back(pid);
 
     // Additional work only for Assns lookup
     auto const& moduleLabel = val.first.moduleLabel_;
@@ -124,9 +121,9 @@ art::detail::fillLookups(ProductList const& prods)
   // combination.
   std::for_each(pendingEntries.cbegin(),
                 pendingEntries.cend(),
-                [&pl, &insertedABVs, iend](auto const& pe)
+                [&result, &insertedABVs, iend](auto const& pe)
                 {
-                  auto& pids = pl[pe.bt()][pe.fcn()][pe.process()];
+                  auto& pids = result[pe.bt()][pe.fcn()][pe.process()];
                   if (pids.empty() ||
                       !std::any_of(pids.cbegin(), pids.cend(),
                                    [&insertedABVs, &iend, &pe](ProductID const pid) {
@@ -138,39 +135,5 @@ art::detail::fillLookups(ProductList const& prods)
                     }
                 });
 
-  // Form element lookups for views.  Right now we rely on ROOT to
-  // tell us the list of allowed base classes.
-  ViewLookup_t vl;
-  for (auto const& val: prods) {
-    auto const& procName = val.first.processName_;
-    auto const pid = val.second.productID();
-    auto const bt = val.first.branchType_;
-
-    // Look in the class of the product for a typedef named "value_type",
-    // if there is one allow lookups by that type name too (and by all
-    // of its base class names as well).
-    art::TypeWithDict const TY {val.second.producedClassName()};
-    if (TY.category() != art::TypeWithDict::Category::CLASSTYPE) {
-      continue;
-    }
-    TClass* const TYc = TY.tClass();
-    auto ET = mapped_type_of(TYc);
-    if (ET || (ET = value_type_of(TYc))) {
-      // The class of the product has a nested type, "mapped_type," or,
-      // "value_type," so allow lookups by that type and all of its base
-      // types too.
-      auto const vtFCN = ET.friendlyClassName();
-      vl[bt][vtFCN][procName].emplace_back(pid);
-      if (ET.category() == art::TypeWithDict::Category::CLASSTYPE) {
-        // Repeat this for all public base classes of the value_type.
-        std::vector<TClass*> bases;
-        art::public_base_classes(ET.tClass(), bases);
-        for (auto const BT: bases) {
-          auto const btFCN = art::TypeID{BT->GetTypeInfo()}.friendlyClassName();
-          vl[bt][btFCN][procName].emplace_back(pid);
-        }
-      }
-    }
-  }
-  return std::make_pair(pl, vl);
+  return result;
 }
