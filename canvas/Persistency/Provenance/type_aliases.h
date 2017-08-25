@@ -21,13 +21,14 @@ namespace art {
   using ProcessLookup     = std::map<std::string const, std::vector<ProductID>>;
   // ... the key is the friendly class name.
   using TypeLookup        = std::map<std::string const, ProcessLookup>;
-  using BranchTypeLookup  = std::array<TypeLookup, NumBranchTypes>;
-  using ProductLookup_t = BranchTypeLookup;
-  // For the world without ROOT:
+  using PerBranchTypeLookup  = std::array<TypeLookup, NumBranchTypes>;
+  using ProductLookup_t = PerBranchTypeLookup;
   using ViewLookup_t = std::array<ProcessLookup, NumBranchTypes>;
 
   namespace root {
-    using ViewLookup_t = BranchTypeLookup;
+    // Although this specific type alias does not rely on ROOT, it is
+    // only used when ROOT fills an object of this type name.
+    using ViewLookup_t = PerBranchTypeLookup;
   }
 
   using ProductListUpdatedCallback = std::function<void(FileBlock const&)>;
