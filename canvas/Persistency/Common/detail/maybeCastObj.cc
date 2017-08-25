@@ -22,6 +22,18 @@ using namespace std;
 
 #ifdef __APPLE__
 
+bool
+detail::upcastAllowed(type_info const& tid_from,
+                      type_info const& tid_to)
+{
+  if (tid_from == tid_to) {
+    return true;
+  }
+  TClassRef const clFrom{TClass::GetClass(tid_from)};
+  TClassRef const clTo{TClass::GetClass(tid_to)};
+  return clFrom->InheritsFrom(clTo);
+}
+
 void const*
 art::detail::maybeCastObj(void const* address,
                           std::type_info const& tiFrom,
@@ -31,8 +43,8 @@ art::detail::maybeCastObj(void const* address,
     // The do nothing case.
     return address;
   }
-  TClassRef const clFrom(TClass::GetClass(tiFrom));
-  TClassRef const clTo(TClass::GetClass(tiTo));
+  TClassRef const clFrom{TClass::GetClass(tiFrom)};
+  TClassRef const clTo{TClass::GetClass(tiTo)};
   void const* castAddr(nullptr);
   if (clFrom->InheritsFrom(clTo)) {
     // The upcast case, let ROOT do it.
