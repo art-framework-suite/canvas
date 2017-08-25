@@ -38,7 +38,7 @@
   <class name="art::FileIndex::Transients"/>
   <class name="std::vector<art::ProcessConfiguration>"/>
   <class name="art::ProcessConfiguration" ClassVersion="11">
-   <version ClassVersion="11" checksum="2746056774"/>
+    <version ClassVersion="11" checksum="2746056774"/>
     <version ClassVersion="10" checksum="877610178"/>
   </class>
   <class name="std::vector<art::ProcessHistory>"/>
@@ -81,12 +81,12 @@
           target="productList_"
           include="canvas/Persistency/Provenance/ProductList.h">
     <![CDATA[
-        art::ProductList::const_iterator it  = onfile.productList_.begin();
-        art::ProductList::const_iterator end = onfile.productList_.end();
-        for ( ; it != end ; ++it ) {
-          art::BranchKey key ( it->first );
+        auto it  = onfile.productList_.cbegin();
+        auto end = onfile.productList_.cend();
+        for (; it != end ; ++it) {
+          art::BranchKey key{it->first};
           key.branchType_ = it->second.branchType();
-          productList_.insert( std::pair<art::BranchKey,art::BranchDescription>(key,it->second) );
+          productList_.emplace(key, it->second);
         }
     ]]>
   </ioread>
@@ -95,13 +95,31 @@
     <version ClassVersion="10" checksum="2938245437"/>
   </class>
   <class name="art::BranchDescription" ClassVersion="15">
-   <version ClassVersion="15" checksum="1969003144"/>
+    <version ClassVersion="15" checksum="1969003144"/>
     <version ClassVersion="14" checksum="1426833576"/>
     <version ClassVersion="13" checksum="2315032926"/>
     <version ClassVersion="12" checksum="544968977"/>
     <version ClassVersion="11" checksum="1740239918"/>
     <version ClassVersion="10" checksum="3580977508"/>
   </class>
+  <ioread sourceClass="art::BranchDescription" version="[-14]"
+          targetClass="art::BranchDescription"
+          source="std::string producedClassName_"
+          target="supportsView_"
+          include="canvas/Persistency/Provenance/TypeWithDict.h">
+    <![CDATA[
+      // Look in the class of the product for a typedef named "value_type" or "mapped_type".
+      using namespace art::root;
+      TypeWithDict const TY {onfile.producedClassName_};
+      if (TY.category() != TypeWithDict::Category::CLASSTYPE) {
+        supportsView_ = false;
+      }
+      else {
+        TClass* const TYc = TY.tClass();
+        supportsView_ = mapped_type_of(TYc) || value_type_of(TYc);
+      }
+    ]]>
+  </ioread>
   <ioread sourceClass="art::BranchDescription" version="[-13]"
           targetClass="art::BranchDescription"
           source="art::BranchID branchID_;"
@@ -140,7 +158,7 @@
     <version ClassVersion="11" checksum="731591074"/>
     <version ClassVersion="10" checksum="3057204332"/>
   </class>
-   <class name="art::EventID" ClassVersion="12">
+  <class name="art::EventID" ClassVersion="12">
     <version ClassVersion="12" checksum="784191624"/>
     <version ClassVersion="11" checksum="3432767131"/>
     <version ClassVersion="10" checksum="784191624"/>
@@ -149,18 +167,18 @@
     <version ClassVersion="10" checksum="2438251709"/>
   </class>
   <class name="art::SubRunAuxiliary" ClassVersion="11">
-   <version ClassVersion="11" checksum="1706997496"/>
+    <version ClassVersion="11" checksum="1706997496"/>
     <version ClassVersion="10" checksum="832515965"/>
   </class>
   <class name="art::SubRunID" ClassVersion="10">
     <version ClassVersion="10" checksum="2879307132"/>
   </class>
   <class name="art::RunAuxiliary" ClassVersion="11">
-   <version ClassVersion="11" checksum="632272083"/>
+    <version ClassVersion="11" checksum="632272083"/>
     <version ClassVersion="10" checksum="156856400"/>
   </class>
   <class name="art::ResultsAuxiliary" ClassVersion="10">
-   <version ClassVersion="10" checksum="1769416444"/>
+    <version ClassVersion="10" checksum="1769416444"/>
   </class>
   <class name="art::RunID" ClassVersion="10">
     <version ClassVersion="10" checksum="1627543759"/>
