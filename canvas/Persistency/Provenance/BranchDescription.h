@@ -180,6 +180,10 @@ private:
   mutable Transient<Transients> transients_{};
 };  // BranchDescription
 
+namespace art {
+  using ProductDescriptions = std::vector<BranchDescription>;
+}
+
 #endif /* canvas_Persistency_Provenance_BranchDescription_h */
 
 // Local Variables:

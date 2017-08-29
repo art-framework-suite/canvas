@@ -78,23 +78,23 @@ namespace {
 
 
 art::ProductLookup_t
-art::createProductLookups(ProductList const& prods)
+art::createProductLookups(ProductDescriptions const& descriptions)
 {
   // Computing the product lookups does not rely on any ROOT facilities.
   ProductLookup_t result;
   std::vector<PendingBTLEntry> pendingEntries;
   std::unordered_map<ProductID, CheapTag, ProductID::Hash> insertedABVs;
-  for (auto const& val: prods) {
-    auto const& procName = val.first.processName_;
-    auto const pid = val.second.productID();
-    auto const& prodFCN = val.first.friendlyClassName_;
-    auto const bt = val.first.branchType_;
+  for (auto const& pd : descriptions) {
+    auto const bt = pd.branchType();
+    auto const& prodFCN = pd.friendlyClassName();
+    auto const& procName = pd.processName();
+    auto const pid = pd.productID();
     result[bt][prodFCN][procName].emplace_back(pid);
 
     // Additional work only for Assns lookup
-    auto const& moduleLabel = val.first.moduleLabel_;
-    auto const& instanceName = val.first.productInstanceName_;
-    auto const& className = val.second.producedClassName();
+    auto const& moduleLabel = pd.moduleLabel();
+    auto const& instanceName = pd.productInstanceName();
+    auto const& className = pd.producedClassName();
 
     if (!is_assns(className)) continue;
 
