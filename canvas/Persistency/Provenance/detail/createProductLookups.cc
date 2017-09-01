@@ -1,4 +1,4 @@
-#include "canvas/Persistency/Provenance/createProductLookups.h"
+#include "canvas/Persistency/Provenance/detail/createProductLookups.h"
 // vim: set sw=2:
 
 #include "canvas/Persistency/Provenance/BranchKey.h"
@@ -50,25 +50,21 @@ namespace {
 
   class PendingBTLEntry {
   public:
-    PendingBTLEntry(BranchType const bt,
-                    std::string const& fcn,
+    PendingBTLEntry(std::string const& fcn,
                     std::string const& moduleLabel,
                     std::string const& instanceName,
                     std::string const& procName,
                     ProductID const pid)
-      : bt_{bt}
-      , fcn_{fcn}
+      : fcn_{fcn}
       , ct_{moduleLabel, instanceName, procName}
       , pid_{pid}
     {}
 
-    BranchType bt() const { return bt_; }
     std::string const& fcn() const { return fcn_; }
     CheapTag const& ct() const { return ct_; }
     std::string const& process() const { return ct_.process(); }
     ProductID pid() const { return pid_; }
   private:
-    BranchType bt_;
     std::string fcn_;
     CheapTag ct_;
     ProductID pid_;
@@ -78,18 +74,17 @@ namespace {
 
 
 art::ProductLookup_t
-art::createProductLookups(ProductDescriptions const& descriptions)
+art::detail::createProductLookups(ProductDescriptions const& descriptions)
 {
   // Computing the product lookups does not rely on any ROOT facilities.
   ProductLookup_t result;
   std::vector<PendingBTLEntry> pendingEntries;
   std::unordered_map<ProductID, CheapTag, ProductID::Hash> insertedABVs;
   for (auto const& pd : descriptions) {
-    auto const bt = pd.branchType();
     auto const& prodFCN = pd.friendlyClassName();
     auto const& procName = pd.processName();
     auto const pid = pd.productID();
-    result[bt][prodFCN][procName].emplace_back(pid);
+    result[prodFCN][procName].emplace_back(pid);
 
     // Additional work only for Assns lookup
     auto const& moduleLabel = pd.moduleLabel();
@@ -101,8 +96,7 @@ art::createProductLookups(ProductDescriptions const& descriptions)
     auto const baseName = name_of_assns_base(className);
     if (!baseName.empty()) {
       // We're an Assns<A, B, D>, with a base Assns<A, B>.
-      pendingEntries.emplace_back(static_cast<art::BranchType>(bt),
-                                  art::friendlyname::friendlyName(baseName),
+      pendingEntries.emplace_back(art::friendlyname::friendlyName(baseName),
                                   moduleLabel,
                                   instanceName,
                                   procName,
@@ -123,7 +117,7 @@ art::createProductLookups(ProductDescriptions const& descriptions)
                 pendingEntries.cend(),
                 [&result, &insertedABVs, iend](auto const& pe)
                 {
-                  auto& pids = result[pe.bt()][pe.fcn()][pe.process()];
+                  auto& pids = result[pe.fcn()][pe.process()];
                   if (pids.empty() ||
                       !std::any_of(pids.cbegin(), pids.cend(),
                                    [&insertedABVs, &iend, &pe](ProductID const pid) {

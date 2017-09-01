@@ -14,6 +14,7 @@ cet_make ( LIBRARY_NAME canvas
   Utilities/detail
   Persistency/Provenance
   Persistency/Provenance/Compatibility
+  Persistency/Provenance/detail
   Persistency/Common
   Persistency/Common/detail
   LIBRARIES
