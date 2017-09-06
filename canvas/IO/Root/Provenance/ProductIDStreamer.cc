@@ -1,6 +1,6 @@
 #include "canvas/Persistency/Provenance/Compatibility/type_aliases.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
-#include "canvas/Persistency/Provenance/ProductIDStreamer.h"
+#include "canvas/IO/Root/Provenance/ProductIDStreamer.h"
 #include "canvas/Utilities/Exception.h"
 
 #include "TBuffer.h"

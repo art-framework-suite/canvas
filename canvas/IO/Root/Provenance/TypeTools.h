@@ -2,12 +2,11 @@
 #define canvas_Persistency_Provenance_TypeTools_h
 // vim: set sw=2:
 
-//
-//  TypeTools provides a small number of Reflex-based tools, used in
-//  the CMS event model.
-//
+// ==============================================================
+// TypeTools provides a small number of Reflex-based tools
+// ==============================================================
 
-#include "canvas/Persistency/Provenance/TypeWithDict.h"
+#include "canvas/IO/Root/Provenance/TypeWithDict.h"
 #include "canvas/Utilities/WrappedClassName.h"
 #include "TClass.h"
 #include <ostream>

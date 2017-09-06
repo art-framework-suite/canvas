@@ -1,7 +1,6 @@
-#include "canvas/Persistency/Provenance/TypeTools.h"
+#include "canvas/IO/Root/Provenance/TypeTools.h"
 // vim: set sw=2:
 
-#include "canvas/Persistency/Provenance/TypeWithDict.h"
 #include "canvas/Utilities/DebugMacros.h"
 #include "canvas/Utilities/Exception.h"
 #include "boost/algorithm/string.hpp"

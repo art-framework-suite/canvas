@@ -1,4 +1,4 @@
-#include "canvas/Persistency/Provenance/TransientStreamer.h"
+#include "canvas/IO/Root/Provenance/TransientStreamer.h"
 
 #include "canvas/Persistency/Provenance/BranchDescription.h"
 #include "canvas/Persistency/Provenance/FileIndex.h"

@@ -1,4 +1,4 @@
-#include "canvas/Persistency/Provenance/TypeWithDict.h"
+#include "canvas/IO/Root/Provenance/TypeWithDict.h"
 // vim: set sw=2:
 
 #include "canvas/Utilities/Exception.h"

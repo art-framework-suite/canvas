@@ -8,8 +8,8 @@
 #include <typeinfo>
 #include <vector>
 
-#include "canvas/Persistency/Provenance/TypeTools.h"
-#include "canvas/Persistency/Provenance/TypeWithDict.h"
+#include "canvas/IO/Root/Provenance/TypeTools.h"
+#include "canvas/IO/Root/Provenance/TypeWithDict.h"
 #include "canvas/Persistency/Common/Wrapper.h"
 
 using namespace std::string_literals;
