@@ -368,34 +368,6 @@ operator==(BranchDescription const& a, BranchDescription const& b)
          (a.processConfigurationIDs() == b.processConfigurationIDs());
 }
 
-class detail::BranchDescriptionStreamer : public TClassStreamer {
-public:
-  void operator()(TBuffer&, void* objp) override;
-};
-
-void
-detail::BranchDescriptionStreamer::operator()(TBuffer& R_b, void* objp)
-{
-  static TClassRef cl{TClass::GetClass(typeid(BranchDescription))};
-  auto obj = reinterpret_cast<BranchDescription*>(objp);
-  if (R_b.IsReading()) {
-    cl->ReadBuffer(R_b, obj);
-    obj->fluffTransients_();
-  }
-  else {
-    cl->WriteBuffer(R_b, obj);
-  }
-}
-
-void
-detail::setBranchDescriptionStreamer()
-{
-  static TClassRef cl{TClass::GetClass(typeid(BranchDescription))};
-  if (cl->GetStreamer() == nullptr) {
-    cl->AdoptStreamer(new BranchDescriptionStreamer);
-  }
-}
-
 std::ostream&
 operator<<(std::ostream& os, BranchDescription const& p)
 {

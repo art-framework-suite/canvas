@@ -1,19 +1,10 @@
-#include "canvas/Persistency/Common/detail/setPtrVectorBaseStreamer.h"
+#include "canvas/IO/Root/Common/setPtrVectorBaseStreamer.h"
 
 #include "canvas/Persistency/Common/PtrVectorBase.h"
 #include "canvas/Utilities/TypeID.h"
 
 #include "TBuffer.h"
 #include "TClass.h"
-
-// FIXME: This should go away as soon as ROOT makes this function
-// public. In the meantime, we have to verify that this signature does
-// not change in new versions of ROOT.
-namespace ROOT {
-  namespace Cintex {
-    std::string CintName(const std::string&);
-  }
-}
 
 void
 art::detail::PtrVectorBaseStreamer::operator()(TBuffer &R_b, void *objp) {

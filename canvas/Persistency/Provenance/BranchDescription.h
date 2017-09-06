@@ -37,9 +37,7 @@ namespace art {
 
   namespace detail {
     class BranchDescriptionStreamer;
-    void setBranchDescriptionStreamer();
   }
-
 }
 
 // ----------------------------------------------------------------------

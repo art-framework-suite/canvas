@@ -1,4 +1,4 @@
-#include "canvas/Persistency/Common/RefCoreStreamer.h"
+#include "canvas/IO/Root/Common/RefCoreStreamer.h"
 
 #include "canvas/Persistency/Common/EDProductGetterFinder.h"
 #include "canvas/Persistency/Common/RefCore.h"
