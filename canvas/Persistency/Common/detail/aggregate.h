@@ -3,9 +3,9 @@
 
 #include "canvas/Utilities/Exception.h"
 #include "cetlib/container_algorithms.h"
-#include "cetlib_except/demangle.h"
 #include "cetlib/map_vector.h"
 #include "cetlib/metaprogramming.h"
+#include "cetlib_except/demangle.h"
 
 #include <typeinfo>
 
