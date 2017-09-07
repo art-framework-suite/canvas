@@ -1,5 +1,6 @@
 #ifndef canvas_Persistency_Provenance_ProductIDStreamer_h
 #define canvas_Persistency_Provenance_ProductIDStreamer_h
+// vim: set sw=2 expandtab :
 
 #include "canvas/Persistency/Provenance/Compatibility/BranchIDList.h"
 #include "cetlib/exempt_ptr.h"
@@ -10,26 +11,54 @@ class TBuffer;
 
 namespace art {
 
+void
+configureProductIDStreamer(cet::exempt_ptr<BranchIDLists const> branchIDLists = {});
+
+class ProductIDStreamer : public TClassStreamer {
+
+public: // MEMBER FUNCTIONS -- Special Member Functions
+
+  virtual
+  ~ProductIDStreamer();
+
+  explicit
+  ProductIDStreamer(BranchIDLists const* branchIDLists = nullptr);
+
+  ProductIDStreamer(ProductIDStreamer const&);
+
+  ProductIDStreamer(ProductIDStreamer&&) = delete;
+
+  ProductIDStreamer&
+  operator=(ProductIDStreamer const&) = delete;
+
+  ProductIDStreamer&
+  operator=(ProductIDStreamer&&) = delete;
+
+public: // MEMBER FUNCTIONS -- For the use of configureProductIDStreamer
+
   void
-  configureProductIDStreamer(cet::exempt_ptr<BranchIDLists const> branchIDLists = {});
+  setBranchIDLists(BranchIDLists const*);
 
-  class ProductIDStreamer : public TClassStreamer {
-  public:
+public: // MEMBER FUNCTIONS -- Required by TClassStreamer API
 
-    explicit ProductIDStreamer(cet::exempt_ptr<BranchIDLists const> branchIDLists = {}) : branchIDLists_{branchIDLists}
-    {}
+  virtual
+  TClassStreamer*
+  Generate() const override;
 
-    void setBranchIDLists(cet::exempt_ptr<BranchIDLists const> bidLists)
-    {
-      branchIDLists_ = bidLists;
-    }
+  virtual
+  void
+  operator()(TBuffer&, void*) override;
 
-    void operator() (TBuffer& R_b, void* objp) override;
+private: // MEMBER DATA
 
-  private:
-    cet::exempt_ptr<BranchIDLists const> branchIDLists_;
-  };
-}
+  // Note: We do not own this.
+  BranchIDLists const*
+  branchIDLists_{nullptr};
+
+};
+
+} // namespace art
+
 #endif /* canvas_Persistency_Provenance_ProductIDStreamer_h */
 
 // Local Variables:

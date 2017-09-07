@@ -1,21 +1,29 @@
 #include "canvas/Persistency/Provenance/TypeWithDict.h"
-// vim: set sw=2:
+// vim: set sw=2 expandtab :
 
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/FriendlyName.h"
+#include "canvas/Utilities/TypeID.h"
 #include "canvas/Utilities/uniform_type_name.h"
 #include "tbb/concurrent_unordered_map.h"
+
 #include "TClass.h"
 #include "TDataType.h"
 #include "TDictionary.h"
 #include "TEnum.h"
 #include "TROOT.h"
 
+#include <ostream>
+#include <string>
+#include <typeinfo>
+#include <utility>
+
 using namespace art;
 using namespace std;
 
 namespace {
 
+// Note: throws
 void
 throwIfUnsupportedType(string const& uname)
 {
@@ -55,6 +63,7 @@ throwIfUnsupportedType(string const& uname)
 
 namespace art {
 
+// Note: throws
 TypeID
 getTypeID(int type)
 {
@@ -134,8 +143,119 @@ getTypeID(int type)
   return result;
 }
 
+TypeWithDict::
+~TypeWithDict() noexcept
+{
+  tDict_ = nullptr;
+}
+
+TypeWithDict::
+TypeWithDict() noexcept
+  : tDict_{nullptr}
+  , category_{Category::NONE}
+  , id_{}
+{
+}
+
+// Note: cannot be noexcept because dictFromTypeInfo_,
+// and categoryFromDict_ throw.
+TypeWithDict::
+TypeWithDict(type_info const& t)
+  : tDict_{dictFromTypeInfo_(t)}
+  , category_{categoryFromDict_(tDict_)}
+  , id_{t}
+{
+}
+
+// Note: cannot be noexcept because dictFromTypeInfo_,
+// categoryFromDict_, and typeIDFromDictAndCategory_ throw.
+TypeWithDict::
+TypeWithDict(TypeID const& id)
+  : tDict_{id ? dictFromTypeInfo_(id.typeInfo()) : nullptr}
+  , category_{categoryFromDict_(tDict_)}
+  , id_{typeIDFromDictAndCategory_(tDict_, category_)}
+{
+}
+
+// Note: cannot be noexcept because dictFromTypeInfo_,
+// categoryFromDict_, and typeIDFromDictAndCategory_ throw.
+TypeWithDict::
+TypeWithDict(string const& name)
+  : tDict_{dictFromName_(name)}
+  , category_{categoryFromDict_(tDict_)}
+  , id_{typeIDFromDictAndCategory_(tDict_, category_)}
+{
+}
+
+TypeWithDict::
+TypeWithDict(TypeWithDict const& rhs) noexcept
+  : tDict_{rhs.tDict_}
+  , category_{rhs.category_}
+  , id_{rhs.id_}
+{
+}
+
+TypeWithDict::
+TypeWithDict(TypeWithDict&& rhs) noexcept
+  : tDict_{move(rhs.tDict_)}
+  , category_{move(rhs.category_)}
+  , id_{move(rhs.id_)}
+{
+}
+
+TypeWithDict&
+TypeWithDict::
+operator=(TypeWithDict const& rhs) noexcept
+{
+  if (this != &rhs) {
+    tDict_ = rhs.tDict_;
+    category_ = rhs.category_;
+    id_ = rhs.id_;
+  }
+  return *this;
+}
+
+TypeWithDict&
+TypeWithDict::
+operator=(TypeWithDict&& rhs) noexcept
+{
+  tDict_ = move(rhs.tDict_);
+  category_ = move(rhs.category_);
+  id_ = move(rhs.id_);
+  return *this;
+}
+
+TDictionary*
+TypeWithDict::
+tDictionary() const noexcept
+{
+  return tDict_;
+}
+
+TypeWithDict::Category
+TypeWithDict::
+category() const noexcept
+{
+  return category_;
+}
+
+TypeID const&
+TypeWithDict::
+id() const noexcept
+{
+  return id_;
+}
+
+TypeWithDict::
+operator bool() const noexcept
+{
+  return (category_ == Category::ENUMTYPE) || id_;
+}
+
+// Note: throws
 void
-TypeWithDict::print(ostream& os) const
+TypeWithDict::
+print(ostream& os) const
 {
   switch (category_) {
     case Category::NONE:
@@ -157,8 +277,10 @@ TypeWithDict::print(ostream& os) const
   }
 }
 
+// Note: throws
 char const*
-TypeWithDict::name() const
+TypeWithDict::
+name() const
 {
   char const* result = "";
   switch (category_) {
@@ -179,8 +301,10 @@ TypeWithDict::name() const
   return result;
 }
 
+// Note: throws
 string
-TypeWithDict::className() const
+TypeWithDict::
+className() const
 {
   string result;
   switch (category_) {
@@ -203,8 +327,10 @@ TypeWithDict::className() const
   return result;
 }
 
+// Note: throws
 string
-TypeWithDict::friendlyClassName() const
+TypeWithDict::
+friendlyClassName() const
 {
   string result;
   switch (category_) {
@@ -228,8 +354,10 @@ TypeWithDict::friendlyClassName() const
   return result;
 }
 
+// Note: throws
 TClass*
-TypeWithDict::tClass() const
+TypeWithDict::
+tClass() const
 {
   if (category_ == Category::CLASSTYPE) {
     return dynamic_cast<TClass*>(tDict_);
@@ -243,8 +371,10 @@ TypeWithDict::tClass() const
       << ".\n";
 }
 
+// Note: throws
 TEnum*
-TypeWithDict::tEnum() const
+TypeWithDict::
+tEnum() const
 {
   if (category_ == Category::ENUMTYPE) {
     return dynamic_cast<TEnum*>(tDict_);
@@ -258,8 +388,10 @@ TypeWithDict::tEnum() const
       << ".\n";
 }
 
+// Note: throws
 TDataType*
-TypeWithDict::tDataType() const
+TypeWithDict::
+tDataType() const
 {
   if (category_ == Category::BASICTYPE) {
     return dynamic_cast<TDataType*>(tDict_);
@@ -273,8 +405,10 @@ TypeWithDict::tDataType() const
       << ".\n";
 }
 
+// Note: throws
 TDictionary*
-TypeWithDict::dictFromTypeInfo_(type_info const& ti)
+TypeWithDict::
+dictFromTypeInfo_(type_info const& ti)
 {
   throwIfUnsupportedType(uniform_type_name(ti));
   TDictionary* result = TClass::GetClass(ti);
@@ -301,8 +435,10 @@ TypeWithDict::dictFromTypeInfo_(type_info const& ti)
       << "ensure that it is properly marked as such in classes_def.xml\n";
 }
 
+// Note: throws
 TDictionary*
-TypeWithDict::dictFromName_(string const& name)
+TypeWithDict::
+dictFromName_(string const& name)
 {
   TDictionary* result = nullptr;
   static tbb::concurrent_unordered_map<string, TDictionary*> s_nameToDict;
@@ -330,8 +466,10 @@ TypeWithDict::dictFromName_(string const& name)
   return result;
 }
 
+// Note: throws
 TypeWithDict::Category
-TypeWithDict::categoryFromDict_(TDictionary* tDict)
+TypeWithDict::
+categoryFromDict_(TDictionary* tDict)
 {
   Category result = Category::NONE;
   if (tDict == nullptr) {
@@ -357,8 +495,10 @@ TypeWithDict::categoryFromDict_(TDictionary* tDict)
       << ".\n";
 }
 
+// Note: throws
 TypeID
-TypeWithDict::typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
+TypeWithDict::
+typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
 {
   TypeID result;
   if (category == Category::NONE) {
@@ -398,8 +538,10 @@ TypeWithDict::typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
       << ").\n";
 }
 
+// Note: throws
 type_info const&
-TypeWithDict::typeInfo() const
+TypeWithDict::
+typeInfo() const
 {
   if (!*this) {
     throw Exception(errors::LogicError)
@@ -408,6 +550,7 @@ TypeWithDict::typeInfo() const
   return id_.typeInfo();
 }
 
+// Note: throws
 string
 to_string(TypeWithDict::Category category)
 {
@@ -435,4 +578,21 @@ to_string(TypeWithDict::Category category)
       << "\n";
 }
 
+// Note: throws because to_string does
+ostream&
+operator<<(ostream& os, TypeWithDict::Category category)
+{
+  os << to_string(category);
+  return os;
+}
+
+// Note: throws because print does
+ostream&
+operator<<(ostream& os, TypeWithDict const& ty)
+{
+  ty.print(os);
+  return os;
+}
+
 } // namespace art
+

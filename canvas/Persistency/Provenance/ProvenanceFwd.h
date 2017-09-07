@@ -12,7 +12,6 @@ namespace art {
   class BranchDescription;
   class BranchID;
   class BranchKey;
-  class BranchMapper;
   class EventAuxiliary;
   class EventID;
   class ModuleDescription;

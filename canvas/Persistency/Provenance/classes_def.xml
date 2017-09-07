@@ -43,6 +43,7 @@
   </class>
   <class name="std::vector<art::ProcessHistory>"/>
   <class name="art::ProcessHistory" ClassVersion="10">
+    <field name="mutex_" transient="true"/>
     <version ClassVersion="10" checksum="2473205264"/>
   </class>
   <class name="art::ProcessHistory::Transients"/>

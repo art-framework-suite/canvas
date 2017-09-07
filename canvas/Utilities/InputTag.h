@@ -1,129 +1,84 @@
 #ifndef canvas_Utilities_InputTag_h
 #define canvas_Utilities_InputTag_h
+// vim: set sw=2 expandtab :
 
 #include <iosfwd>
 #include <string>
 
 namespace boost {
-  class any;
-}
+
+class any;
+
+} // namespace boost
 
 namespace art {
-  class InputTag;
 
-  std::ostream& operator << (std::ostream& ost, InputTag const& tag);
-  bool operator != (InputTag const& left, InputTag const& right);
-}
+class InputTag {
 
-class art::InputTag {
-public:
-  InputTag() = default;
+public: // MEMBER FUNCTIONS -- Special Member Functions
 
-  // Create an InputTag by parsing the given string, which is
-  // expected to be in colon-delimited form, fitting one of the
-  // following patterns:
-  //
-  //   label
-  //   label:instance
-  //   label:instance:process
-  InputTag(std::string const& s);
-  InputTag(char const * s);
+  ~InputTag();
 
-  // Create an InputTag with the given label, instance, and process
-  // specificiations.
-  InputTag(std::string const& label,
-           std::string const& instance,
-           std::string const& processName = std::string());
+  InputTag();
 
-  // Create an InputTag with the given label, instance, and process
-  // specifications.
-  InputTag(char const* label,
-           char const* instance,
-           char const* processName="");
+  InputTag(std::string const& label, std::string const& instance, std::string const& processName = std::string());
 
+  InputTag(char const* label, char const* instance, char const* processName = "");
 
-  // use compiler-generated copy c'tor, copy assignment, and d'tor
+  InputTag(std::string const&);
 
-  std::string encode() const;
+  InputTag(char const*);
 
-  std::string const& label() const {return label_;}
-  std::string const& instance() const {return instance_;}
-  ///an empty string means find the most recently produced
-  ///product with the label and instance
-  std::string const& process() const {return process_;}
+  InputTag(InputTag const&);
 
-  bool operator==(InputTag const& tag) const;
+  InputTag(InputTag&&);
 
-private:
-  std::string label_{};
-  std::string instance_{};
-  std::string process_{};
+  InputTag&
+  operator=(InputTag const&);
 
-  // Helper function, to parse colon-separated initialization
-  // string.
-  void set_from_string_(std::string const& s);
+  InputTag&
+  operator=(InputTag&&);
+
+public: // MEMBER FUNCTIONS -- API for the user
+
+  bool
+  operator==(InputTag const&) const;
+
+  std::string const&
+  label() const;
+
+  std::string const&
+  instance() const;
+
+  std::string const&
+  process() const;
+
+  std::string
+  encode() const;
+
+private: // MEMBER DATA
+
+  std::string
+  label_{};
+
+  std::string
+  instance_{};
+
+  std::string
+  process_{};
+
 };
 
-inline
-art::InputTag::
-InputTag(std::string const& label, std::string const& instance, std::string const& processName)
-  :
-  label_(label),
-  instance_(instance),
-  process_(processName)
-{
-}
-
-inline
-art::InputTag::
-InputTag(char const* label, char const* instance, char const* processName)
-  :
-  label_(label),
-  instance_(instance),
-  process_(processName)
-{
-}
-
-inline
-art::InputTag::
-InputTag(std::string const& s)
-{
-  set_from_string_(s);
-}
-
-inline
-art::InputTag::
-InputTag(char const* s)
-{
-  set_from_string_(s);
-}
-
-inline
 bool
-art::InputTag::
-operator==(InputTag const& tag) const
-{
-  return (label_ == tag.label_)
-    && (instance_ == tag.instance_)
-    && (process_ == tag.process_);
-}
+operator!=(InputTag const&, InputTag const&);
 
-inline
-bool
-art::
-operator!=(InputTag const& left, InputTag const& right)
-{
-  return !(left == right);
-}
+void
+decode(boost::any const&, InputTag&);
 
-//=====================================================================
-// decode specialization for allowing conversions from
-//    atom     ===> InputTag
-//    sequence ===> InputTag
+std::ostream&
+operator<<(std::ostream&, InputTag const&);
 
-namespace art {
-  void decode(boost::any const& a, InputTag& tag);
-}
+} // namespace art
 
 #endif /* canvas_Utilities_InputTag_h */
 

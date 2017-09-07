@@ -1,25 +1,56 @@
 #ifndef canvas_Utilities_DebugMacros_h
 #define canvas_Utilities_DebugMacros_h
+// vim: set sw=2 expandtab :
 
 #include "canvas/Utilities/fwd.h"
 
 #include <iostream>
 
 namespace art {
-  struct debugvalue {
 
-    debugvalue();
+struct DebugValue {
 
-    int operator()() { return value_; }
+  DebugValue();
 
-    const char * cvalue_;
-    int value_;
-  };
+  int
+  operator()()
+  {
+    return value_;
+  }
 
-  extern debugvalue debugit;
+  char const*
+  cvalue_;
+
+  int
+  value_;
+
+};
+
+struct DebugTasksValue {
+
+  DebugTasksValue();
+
+  int
+  operator()()
+  {
+    return value_;
+  }
+
+  char const*
+  cvalue_;
+
+  int
+  value_;
+
+};
+
+extern DebugValue debugit;
+extern DebugTasksValue debugTasks;
+
 }
 
-#define FDEBUG(lev) if(lev <= art::debugit()) std::cerr
+#define FDEBUG(LEVEL) if ((LEVEL) <= art::debugit()) std::cerr
+#define TDEBUG(LEVEL) if ((LEVEL) <= art::debugTasks()) std::cerr
 
 #endif /* canvas_Utilities_DebugMacros_h */
 

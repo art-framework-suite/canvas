@@ -1,9 +1,10 @@
 #ifndef canvas_Persistency_Provenance_TypeWithDict_h
 #define canvas_Persistency_Provenance_TypeWithDict_h
-// vim: set sw=2:
+// vim: set sw=2 expandtab :
 
 #include "canvas/Utilities/TypeID.h"
-#include <ostream>
+
+#include <iosfwd>
 #include <string>
 #include <typeinfo>
 
@@ -17,20 +18,10 @@ namespace art {
 TypeID
 getTypeID(int);
 
-/// \class TypeWithDict
-///
-/// \brief Type information using ROOT dictionaries.
-///
-/// Inspired by the TypeWithDict class from CMSSW, but substantially
-/// simpler due to fewer requirements for type introspection in art.
-///
 class TypeWithDict {
 
-public:
+public: // TYPES
 
-  /// \enum Category
-  ///
-  /// \brief Represent the different categories of type.
   enum class Category {
     NONE, // 0
     CLASSTYPE, // 1
@@ -38,53 +29,44 @@ public:
     BASICTYPE // 3
   };
 
-public:
+public: // MEMBER FUNCTIONS -- Special Member Functions
 
-  TypeWithDict() = default;
+  ~TypeWithDict() noexcept;
 
-  explicit
-  TypeWithDict(std::type_info const& t)
-    : tDict_{dictFromTypeInfo_(t)}
-    , category_{categoryFromDict_(tDict_)}
-    , id_{t}
-  {
-  }
+  TypeWithDict() noexcept;
 
   explicit
-  TypeWithDict(TypeID const& id)
-    : tDict_{id ? dictFromTypeInfo_(id.typeInfo()) : nullptr}
-    , category_{categoryFromDict_(tDict_)}
-    , id_{typeIDFromDictAndCategory_(tDict_, category_)}
-  {
-  }
+  TypeWithDict(std::type_info const& t);
 
   explicit
-  TypeWithDict(std::string const& name)
-    : tDict_{dictFromName_(name)}
-    , category_{categoryFromDict_(tDict_)}
-    , id_{typeIDFromDictAndCategory_(tDict_, category_)}
-  {
-  }
+  TypeWithDict(TypeID const& id);
+
+  explicit
+  TypeWithDict(std::string const& name);
+
+  TypeWithDict(TypeWithDict const&) noexcept;
+
+  TypeWithDict(TypeWithDict&&) noexcept;
+
+  TypeWithDict&
+  operator=(TypeWithDict const&) noexcept;
+
+  TypeWithDict&
+  operator=(TypeWithDict&&) noexcept;
+
+public: // MEMBER FUNCTIONS -- API for the user
+
+  TDictionary*
+  tDictionary() const noexcept;
 
   Category
-  category() const
-  {
-    return category_;
-  }
+  category() const noexcept;
 
-  /// \brief Object validity.
-  explicit
-  operator bool() const
-  {
-    return (category_ == Category::ENUMTYPE) || id_;
-  }
-
-  /// \name non-ROOT information access.
   TypeID const&
-  id() const
-  {
-    return id_;
-  }
+  id() const noexcept;
+
+  explicit
+  operator bool() const noexcept;
 
   std::type_info const&
   typeInfo() const;
@@ -101,11 +83,6 @@ public:
   std::string
   friendlyClassName() const;
 
-  /// \name ROOT information access.
-  ///
-  ///{
-  /// \throws Exception() if not appropriate for category.
-
   TClass*
   tClass() const;
 
@@ -115,17 +92,8 @@ public:
   TDataType*
   tDataType() const;
 
-  TDictionary*
-  tDictionary() const
-  {
-    return tDict_;
-  }
+private: // MEMBER FUNCTIONS -- Implementation details
 
-  ///}
-
-private:
-
-  /// Obtain the TDictionary for the provided type.
   static
   TDictionary*
   dictFromTypeInfo_(std::type_info const& t);
@@ -134,41 +102,35 @@ private:
   TDictionary*
   dictFromName_(std::string const& name);
 
-  /// Obtain the category for the provided type information.
   static
   Category
   categoryFromDict_(TDictionary* tDict);
 
-  /// Obtain the std::type_info for the provided type information and category.
   static
   TypeID
   typeIDFromDictAndCategory_(TDictionary* tDict, Category category);
 
-private:
+private: // MEMBER DATA
 
-  TDictionary* tDict_{nullptr};
-  Category category_{Category::NONE};
-  TypeID id_{};
+  TDictionary*
+  tDict_{nullptr};
+
+  Category
+  category_{Category::NONE};
+
+  TypeID
+  id_{};
 
 };
 
-std::string to_string(TypeWithDict::Category category);
+std::string
+to_string(TypeWithDict::Category category);
 
-inline
 std::ostream&
-operator<<(std::ostream& os, TypeWithDict::Category category)
-{
-  os << to_string(category);
-  return os;
-}
+operator<<(std::ostream& os, TypeWithDict::Category category);
 
-inline
 std::ostream&
-operator<<(std::ostream& os, TypeWithDict const& ty)
-{
-  ty.print(os);
-  return os;
-}
+operator<<(std::ostream& os, TypeWithDict const& ty);
 
 } // namespace art
 

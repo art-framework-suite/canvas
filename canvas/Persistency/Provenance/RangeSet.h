@@ -1,5 +1,6 @@
 #ifndef canvas_Persistency_Provenance_RangeSet_h
 #define canvas_Persistency_Provenance_RangeSet_h
+// vim: set sw=2 expandtab :
 
 #include "canvas/Persistency/Provenance/EventRange.h"
 #include "canvas/Persistency/Provenance/IDNumber.h"
@@ -8,110 +9,216 @@
 #include "canvas/Utilities/Exception.h"
 #include "cetlib/container_algorithms.h"
 
-#include <algorithm>
+#include <cstddef>
+#include <limits>
 #include <ostream>
-#include <set>
+#include <string>
+#include <utility>
 #include <vector>
 
 namespace art {
 
-  class RangeSet {
-  public:
+class RangeSet {
 
-    static RangeSet invalid();
-    static RangeSet forRun(RunID);
-    static RangeSet forSubRun(SubRunID);
+public: // TYPES
 
-    explicit RangeSet(RunNumber_t);
-    explicit RangeSet(RunNumber_t, std::vector<EventRange> const& eventRanges);
+  using const_iterator = std::vector<EventRange>::const_iterator;
 
-    using const_iterator = std::vector<EventRange>::const_iterator;
+public: // MEMBER FUNCTIONS -- Static API
 
-    RunNumber_t run() const { return run_; }
-    std::vector<EventRange> const& ranges() const { return ranges_; }
-    bool contains(RunNumber_t, SubRunNumber_t, EventNumber_t) const;
+  static
+  constexpr
+  unsigned
+  invalidChecksum()
+  {
+    return std::numeric_limits<unsigned>::max();
+  }
 
-    bool is_valid() const;
-    bool is_full_run() const { return fullRun_; }
-    bool is_full_subRun() const;
-    bool is_sorted() const;
-    bool is_collapsed() const { return isCollapsed_; }
-    std::string to_compact_string() const;
-    bool has_disjoint_ranges() const;
+  static
+  RangeSet
+  invalid();
 
-    bool empty() const { return ranges_.empty(); }
-    auto begin() const { return ranges_.begin(); }
-    auto end() const { return ranges_.end(); }
+  static
+  RangeSet
+  forRun(RunID);
 
-    unsigned checksum() const;
+  static
+  RangeSet
+  forSubRun(SubRunID);
 
-    decltype(auto) front() { return ranges_.front(); }
-    decltype(auto) back() { return ranges_.back(); }
+public: // MEMBER FUNCTIONS -- Special Member Functions
 
-    void assign_ranges(const_iterator b, const_iterator e);
+  ~RangeSet();
 
-    template <typename ... ARGS>
-    void emplace_range(ARGS&& ...);
+  explicit
+  RangeSet();
 
-    RangeSet& collapse();
-    RangeSet& merge(RangeSet const& other);
+  explicit
+  RangeSet(RunNumber_t);
 
-    // For a range [1,6) split into [1,3) and [3,6) the specified
-    // event number is the new 'end' of the left range (3).
-    std::pair<const_iterator,bool> split_range(SubRunNumber_t, EventNumber_t);
-    void set_run(RunNumber_t const r) { run_ = r; }
+  explicit
+  RangeSet(RunNumber_t, std::vector<EventRange> const& eventRanges);
 
-    void sort() { cet::sort_all(ranges_); }
-    void clear() { ranges_.clear(); }
+  RangeSet(RangeSet const&);
 
-    static constexpr unsigned invalidChecksum() { return std::numeric_limits<unsigned>::max(); }
+  RangeSet(RangeSet&&);
 
-  private:
+  RangeSet&
+  operator=(RangeSet const&);
 
-    explicit RangeSet() = default;
-    explicit RangeSet(RunNumber_t const r, bool fullRun);
+  RangeSet&
+  operator=(RangeSet&&);
 
-    void require_not_full_run()
-    {
-      if (fullRun_)
-        throw art::Exception(art::errors::LogicError,"RangeSet::require_not_full_run")
-          << "\nA RangeSet created using RangeSet::forRun cannot be modified.\n";
-    }
+private: // MEMBER FUNCTIONS -- Special Member Functions
 
-    RunNumber_t run_ {IDNumber<Level::Run>::invalid()};
-    std::vector<EventRange> ranges_ {};
+  explicit
+  RangeSet(RunNumber_t const r, bool fullRun);
 
-    // Auxiliary info
-    bool fullRun_ {false};
-    bool isCollapsed_ {false};
-    mutable unsigned checksum_ {invalidChecksum()};
-  };
+public: // MEMBER FUNCTIONS -- API provided to user
 
-  //==========================================================
-  // Non-member functions
+  RunNumber_t
+  run() const;
 
-  bool operator==(RangeSet const& l, RangeSet const& r);
-  bool same_ranges(RangeSet const& l, RangeSet const& r);
-  bool disjoint_ranges(RangeSet const& l, RangeSet const& r);
+  std::vector<EventRange> const&
+  ranges() const;
 
-  // If one range-set is a superset of the other, the return value is
-  // 'true'.
-  bool overlapping_ranges(RangeSet const& l, RangeSet const& r);
-  std::ostream& operator<<(std::ostream& os, RangeSet const& rs);
+  bool
+  contains(RunNumber_t, SubRunNumber_t, EventNumber_t) const;
 
-  //==========================================================
-  // RangeSet implementation details
+  bool
+  is_valid() const;
+
+  bool
+  is_full_run() const;
+
+  bool
+  is_full_subRun() const;
+
+  bool
+  is_sorted() const;
+
+  bool
+  is_collapsed() const;
+
+  std::string
+  to_compact_string() const;
+
+  bool
+  has_disjoint_ranges() const;
+
+  bool
+  empty() const;
+
+  const_iterator
+  begin() const;
+
+  const_iterator
+  end() const;
+
+  std::size_t
+  begin_idx() const;
+
+  std::size_t
+  end_idx() const;
+
+  unsigned
+  checksum() const;
+
+  std::size_t
+  next_subrun_or_end(std::size_t const b) const;
+
+  EventRange&
+  front();
+
+  EventRange&
+  back();
+
+  EventRange&
+  at(std::size_t);
+
+  std::vector<EventRange>
+  extract_ranges(std::size_t const b, std::size_t const e);
+
+  void
+  assign_ranges(RangeSet const& rs, std::size_t const b, std::size_t const e);
 
   template <typename ... ARGS>
   void
-  RangeSet::emplace_range(ARGS&& ... args)
-  {
-    require_not_full_run();
-    ranges_.emplace_back(std::forward<ARGS>(args)...);
-    isCollapsed_ = false;
-  }
+  emplace_range(ARGS&& ...);
 
+  RangeSet&
+  collapse();
+
+  RangeSet&
+  merge(RangeSet const& other);
+
+  // For a range [1,6) split into [1,3) and [3,6) the specified
+  // event number is the new 'end' of the left range (3).
+  std::pair<std::size_t, bool>
+  split_range(SubRunNumber_t, EventNumber_t);
+
+  void
+  set_run(RunNumber_t const r);
+
+  void
+  sort();
+
+  void
+  clear();
+
+private: // MEMBER FUNCTIONS -- Implementation details
+
+  void
+  require_not_full_run();
+
+private: // MEMBER DATA
+
+  RunNumber_t
+  run_{IDNumber<Level::Run>::invalid()};
+
+  std::vector<EventRange>
+  ranges_{};
+
+  bool
+  fullRun_{false};
+
+  bool
+  isCollapsed_{false};
+
+  mutable
+  unsigned
+  checksum_{invalidChecksum()};
+
+};
+
+template <typename ... ARGS>
+void
+RangeSet::
+emplace_range(ARGS&& ... args)
+{
+  require_not_full_run();
+  ranges_.emplace_back(std::forward<ARGS>(args)...);
+  isCollapsed_ = false;
 }
+
+bool
+operator==(RangeSet const& l, RangeSet const& r);
+
+bool
+same_ranges(RangeSet const& l, RangeSet const& r);
+
+bool
+disjoint_ranges(RangeSet const& l, RangeSet const& r);
+
+// If one range-set is a superset of the other, the return value is
+// 'true'.
+bool
+overlapping_ranges(RangeSet const& l, RangeSet const& r);
+
+std::ostream&
+operator<<(std::ostream& os, RangeSet const& rs);
+
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_RangeSet_h */
 

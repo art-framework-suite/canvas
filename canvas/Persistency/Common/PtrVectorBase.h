@@ -32,10 +32,10 @@ public:
   bool isNull() const;
   bool isAvailable() const;
   ProductID id() const;
-  EDProductGetter const * productGetter() const;
+  EDProductGetter const* productGetter() const;
 
   // Mutators
-  void setProductGetter(EDProductGetter *g) const;
+  void setProductGetter(EDProductGetter const*);
 
 protected:
   PtrVectorBase() = default;
@@ -81,13 +81,13 @@ art::PtrVectorBase::id() const {
   return core_.id();
 }
 
-inline art::EDProductGetter const *
+inline art::EDProductGetter const*
 art::PtrVectorBase::productGetter() const {
   return core_.productGetter();
 }
 
 inline void
-art::PtrVectorBase::setProductGetter(EDProductGetter *g) const {
+art::PtrVectorBase::setProductGetter(EDProductGetter const* g) {
   core_.setProductGetter(g);
 }
 

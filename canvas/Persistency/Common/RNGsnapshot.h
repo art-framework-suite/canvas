@@ -1,15 +1,13 @@
 #ifndef canvas_Persistency_Common_RNGsnapshot_h
 #define canvas_Persistency_Common_RNGsnapshot_h
+// vim: set sw=2 expandtab :
 
-// ======================================================================
 //
-// RNGsnapshot - a data product holding saved state from/for the
-//               RandomNumberGenerator
+// A data product holding saved state from/for the
+// RandomNumberGenerator
 //
-// ======================================================================
 //
 // Notes:
-// ------
 //
 // CLHEP specifies that the state of any of its engines will be returned
 // as a vector<unsigned long>.  However, the size of such a long is
@@ -26,59 +24,66 @@
 // problematic whenever the two systems did not agree on the underlying
 // type.
 //
-// ======================================================================
 
 #include <limits>
 #include <string>
 #include <type_traits>
 #include <vector>
 
-// ======================================================================
-
 namespace art {
 
-  class RNGsnapshot {
-  public:
-    // --- CLHEP engine state characteristics:
-    using CLHEP_t        = unsigned long;
-    using engine_state_t = std::vector<CLHEP_t>;
+class RNGsnapshot {
 
-    // --- Our state characteristics:
-    using saved_t          = unsigned int;
-    using snapshot_state_t = std::vector<saved_t>;
-    using label_t          = std::string;
+public:
 
-    static_assert(std::numeric_limits<saved_t>::digits == 32,
-                  "std::numeric_limits<saved_t>::digits != 32");
-    static_assert(sizeof(saved_t) <= sizeof(CLHEP_t),
-                  "sizeof(saved_t) > sizeof(CLHEP_t)");
+  static_assert(std::numeric_limits<unsigned>::digits == 32, "std::numeric_limits<unsigned>::digits != 32");
+  static_assert(sizeof(unsigned) <= sizeof(unsigned long), "sizeof(unsigned) > sizeof(unsigned long)");
 
-    RNGsnapshot() = default;
-    explicit RNGsnapshot(std::string const& ekind,
-                         label_t const& label,
-                         engine_state_t const& est);
+  RNGsnapshot() = default;
 
-    // --- Access:
-    std::string      const& ekind() const { return engine_kind_; }
-    label_t          const& label() const { return label_; }
-    snapshot_state_t const& state() const { return state_; }
+  explicit
+  RNGsnapshot(std::string const& ekind, std::string const& label, std::vector<unsigned long> const& est);
 
-    // --- Save/restore:
-    void saveFrom(std::string const&,
-                  label_t const&,
-                  engine_state_t const&);
-    engine_state_t restoreState() const;
+  // -- Access
+  std::string const&
+  ekind() const
+  {
+    return engine_kind_;
+  }
 
-  private:
-    std::string engine_kind_ {};
-    label_t     label_ {};
-    snapshot_state_t state_ {};
+  std::string const&
+  label() const
+  {
+    return label_;
+  }
 
-  };  // RNGsnapshot
+  std::vector<unsigned> const&
+  state() const
+  {
+    return state_;
+  }
 
-}  // art
+  // -- Save/restore
+  void
+  saveFrom(std::string const&, std::string const&, std::vector<unsigned long> const&);
 
-// ======================================================================
+  std::vector<unsigned long>
+  restoreState() const;
+
+private:
+
+  std::string
+  engine_kind_{};
+
+  std::string
+  label_{};
+
+  std::vector<unsigned>
+  state_{};
+
+};
+
+} // namespace art
 
 #endif /* canvas_Persistency_Common_RNGsnapshot_h */
 

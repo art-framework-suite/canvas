@@ -1,59 +1,77 @@
 #ifndef canvas_Persistency_Provenance_ProcessConfiguration_h
 #define canvas_Persistency_Provenance_ProcessConfiguration_h
-
-// ======================================================================
-//
-// ProcessConfiguration
-//
-// ======================================================================
+// vim: set sw=2 expandtab :
 
 #include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
 #include "canvas/Persistency/Provenance/ReleaseVersion.h"
 #include "fhiclcpp/ParameterSetID.h"
+
 #include <iosfwd>
 #include <string>
 
 namespace art {
 
-  struct ProcessConfiguration {
-    ProcessConfiguration() = default;
+class ProcessConfiguration {
 
-    ProcessConfiguration(std::string const& procName,
-                         fhicl::ParameterSetID const& pSetID,
-                         ReleaseVersion const& relVersion) :
-      processName_{procName},
-      parameterSetID_{pSetID},
-      releaseVersion_{relVersion}
-    {}
+public:
 
-    std::string const& processName() const {return processName_;}
-    fhicl::ParameterSetID const& parameterSetID() const {return parameterSetID_;}
-    ReleaseVersion const& releaseVersion() const {return releaseVersion_;}
-    ProcessConfigurationID id() const;
+  ~ProcessConfiguration();
 
-    std::string processName_ {};
-    fhicl::ParameterSetID parameterSetID_ {};
-    ReleaseVersion releaseVersion_ {};
-  };
+  // Note: Cannot be noexcept because the psetid ctor can throw.
+  ProcessConfiguration();
 
-  bool
-  operator<(ProcessConfiguration const& a, ProcessConfiguration const& b);
+  // Note: Cannot be noexcept because the psetid ctor can throw.
+  ProcessConfiguration(ProcessConfiguration const&);
 
-  bool
-  operator==(ProcessConfiguration const& a, ProcessConfiguration const& b);
+  // Note: Cannot be noexcept because the psetid ctor can throw.
+  ProcessConfiguration(ProcessConfiguration&&);
 
-  inline
-  bool
-  operator!=(ProcessConfiguration const& a, ProcessConfiguration const& b) {
-    return !(a == b);
-  }
+  ProcessConfiguration&
+  operator=(ProcessConfiguration const&);
 
-  std::ostream&
-  operator<< (std::ostream& os, ProcessConfiguration const& pc);
+  ProcessConfiguration&
+  operator=(ProcessConfiguration&&);
 
-}  // art
+  // Note: Cannot be noexcept because the psetid ctor can throw.
+  ProcessConfiguration(std::string const& name, fhicl::ParameterSetID const&, ReleaseVersion const&);
 
-// ======================================================================
+public:
+
+  std::string const&
+  processName() const;
+
+  fhicl::ParameterSetID const&
+  parameterSetID() const;
+
+  ReleaseVersion const&
+  releaseVersion() const;
+
+  ProcessConfigurationID
+  id() const;
+
+private:
+
+  std::string processName_{};
+  // Note: threading: The psetid constructor can throw!
+  fhicl::ParameterSetID parameterSetID_{};
+  // Note: This is just a std::string!
+  ReleaseVersion releaseVersion_{};
+
+};
+
+bool
+operator<(ProcessConfiguration const& a, ProcessConfiguration const& b);
+
+bool
+operator==(ProcessConfiguration const& a, ProcessConfiguration const& b);
+
+bool
+operator!=(ProcessConfiguration const& a, ProcessConfiguration const& b);
+
+std::ostream&
+operator<<(std::ostream& os, ProcessConfiguration const& pc);
+
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_ProcessConfiguration_h */
 

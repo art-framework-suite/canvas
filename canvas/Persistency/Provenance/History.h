@@ -1,66 +1,79 @@
 #ifndef canvas_Persistency_Provenance_History_h
 #define canvas_Persistency_Provenance_History_h
+// vim: set sw=2 expandtab :
 
-//----------------------------------------------------------------------
 //
 // Class History represents the processing history of a single Event.
 // It includes ordered sequences of elements, each of which contains
 // information about a specific 'process' through which the Event has
 // passed, with earlier processes at the beginning of the sequence.
 //
-//
-//----------------------------------------------------------------------
 
 #include "canvas/Persistency/Provenance/BranchListIndex.h"
 #include "canvas/Persistency/Provenance/EventSelectionID.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 
 namespace art {
-  class History {
-  public:
-    typedef std::size_t size_type;
 
-    // Compiler-generated default c'tor, copy c'tor, assignment and
-    // d'tor are all correct.
+class History {
 
-    // Return the number of 'processing steps' recorded in this
-    // History.
-    size_type size() const;
+public:
 
-    // Add the given entry to this History. When a new data member is
-    // added to the History class, this function should be modified to
-    // take an instance of the type of the new data member.
-    void addEventSelectionEntry(EventSelectionID const& eventSelection);
+  typedef std::size_t size_type;
 
-    void addBranchListIndexEntry(BranchListIndex const& branchListIndex);
+public:
 
-    EventSelectionID const& getEventSelectionID(size_type i) const;
+  ~History();
 
-    EventSelectionIDVector const& eventSelectionIDs() const;
+  History();
 
-    ProcessHistoryID const& processHistoryID() const {return processHistoryID_;}
+  History(History const&) = default;
 
-    void setProcessHistoryID(ProcessHistoryID const& phid) const {processHistoryID_ = phid;}
+  History(History&&) = delete;
 
-    BranchListIndexes const& branchListIndexes() const {return branchListIndexes_;}
+  History&
+  operator=(History const&) = delete;
 
-    BranchListIndexes& branchListIndexes() {return branchListIndexes_;}
-  private:
+  History&
+  operator=(History&&) = delete;
 
-    // Note: We could, instead, define a struct that contains the
-    // appropriate information for each history entry, and then contain
-    // only one data member: a vector of this struct. This might make
-    // iteration more convenient. But it would seem to complicate
-    // persistence. The current plan is to have parallel vectors, one
-    // for each type of item stored as data.
-    EventSelectionIDVector eventSelections_;
+public:
 
-    BranchListIndexes branchListIndexes_;
+  size_type size() const;
 
-    mutable ProcessHistoryID processHistoryID_;
-  };
+  void
+  addEventSelectionEntry(EventSelectionID const& eventSelection);
 
-}
+  void
+  addBranchListIndexEntry(BranchListIndex const& branchListIndex);
+
+  EventSelectionID const&
+  getEventSelectionID(size_type i) const;
+
+  EventSelectionIDVector const&
+  eventSelectionIDs() const;
+
+  ProcessHistoryID const&
+  processHistoryID() const;
+
+  void
+  setProcessHistoryID(ProcessHistoryID const& phid) const;
+
+  BranchListIndexes const&
+  branchListIndexes() const;
+
+  BranchListIndexes&
+  branchListIndexes();
+
+private:
+
+  EventSelectionIDVector eventSelections_;
+  BranchListIndexes branchListIndexes_;
+  mutable ProcessHistoryID processHistoryID_;
+
+};
+
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_History_h */
 

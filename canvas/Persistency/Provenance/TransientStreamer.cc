@@ -1,4 +1,5 @@
 #include "canvas/Persistency/Provenance/TransientStreamer.h"
+// vim: set sw=2 expandtab :
 
 #include "canvas/Persistency/Provenance/BranchDescription.h"
 #include "canvas/Persistency/Provenance/FileIndex.h"
@@ -6,10 +7,16 @@
 #include "canvas/Persistency/Provenance/ProductProvenance.h"
 #include "canvas/Persistency/Provenance/Transient.h"
 
-void art::setProvenanceTransientStreamers()
+namespace art {
+
+void
+setProvenanceTransientStreamers()
 {
-  detail::SetTransientStreamer<Transient<BranchDescription::Transients> >();
-  detail::SetTransientStreamer<Transient<FileIndex::Transients> >();
-  detail::SetTransientStreamer<Transient<ProcessHistory::Transients> >();
-  detail::SetTransientStreamer<Transient<ProductProvenance::Transients> >();
+  detail::SetTransientStreamer<Transient<BranchDescription::Transients>>();
+  detail::SetTransientStreamer<Transient<FileIndex::Transients>>();
+  detail::SetTransientStreamer<Transient<ProcessHistory::Transients>>();
+  detail::SetTransientStreamer<Transient<ProductProvenance::Transients>>();
 }
+
+} // namespace art
+

@@ -12,10 +12,12 @@ int main()
   md2 = art::ModuleDescription(fhicl::ParameterSet().id(),
                                "class2",
                                "",
+                               1,
                                art::ProcessConfiguration());
   art::ModuleDescription md3(fhicl::ParameterSet().id(),
                              "class3",
                              "",
+                             1,
                              art::ProcessConfiguration());
 
   art::ModuleDescriptionID id1 = md1.id();
@@ -29,6 +31,7 @@ int main()
   art::ModuleDescription md4(fhicl::ParameterSet().id(),
                              "class2",
                              "",
+                             1,
                              art::ProcessConfiguration());
   art::ModuleDescriptionID id4 = md4.id();
   assert(md4 == md2);

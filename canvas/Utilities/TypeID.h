@@ -1,161 +1,110 @@
 #ifndef canvas_Utilities_TypeID_h
 #define canvas_Utilities_TypeID_h
-// vim: set sw=2:
+// vim: set sw=2 expandtab :
 
 //
 // TypeID: A unique identifier for a C++ type.
 //
-// The identifier is unique within an entire program, but cannot be
-// persisted across invocations of the program.
+// The identifier is unique within an entire program (not really,
+// it is supposed to be, but gcc violates the standard requirement
+// that a type_info should have a unique address for performance
+// reasons) but cannot be persisted across invocations of the program.
 //
 
-#include "canvas/Utilities/fwd.h"
 #include <iosfwd>
 #include <string>
 #include <typeinfo>
+#include <utility>
 
 namespace art {
-  class TypeID;
 
-  bool operator > (TypeID const&, TypeID const&);
-  bool operator != (TypeID const&, TypeID const&);
-  std::ostream& operator << (std::ostream&, TypeID const&);
-  void swap(TypeID&, TypeID&);
-}
+class TypeID {
 
-class art::TypeID {
-public:
-  TypeID() = default;
+public: // MEMBER FUNCTIONS -- Special Member Functions
+
+  ~TypeID() noexcept;
+
+  TypeID() noexcept;
 
   explicit
-  TypeID(std::type_info const&);
+  TypeID(std::type_info const&) noexcept;
 
   explicit
-  TypeID(std::type_info const*);
+  TypeID(std::type_info const*) noexcept;
 
   template<typename T>
   explicit
-  TypeID(T const& val);
+  TypeID(T const& val) noexcept;
 
-  // Print out the name of the type, using the reflection class name.
-  void print(std::ostream&) const;
+  TypeID(TypeID const&) noexcept;
 
-  // Returned C-style string owned by system; do not delete[] it.
-  // This is the (horrible, mangled, platform-dependent) name of the type.
-  char const* name() const;
+  TypeID(TypeID&&) noexcept;
 
-  std::string className() const;
+  TypeID&
+  operator=(TypeID const&) noexcept;
 
-  std::string friendlyClassName() const;
+  TypeID&
+  operator=(TypeID&&) noexcept;
 
-  // Does ROOT have access to dictionary information for this type?
-  bool hasDictionary() const;
+public: // MEMBER FUNCTIONS -- API for the user
 
-  bool operator < (TypeID const& rhs) const;
+  void
+  print(std::ostream&) const;
 
-  bool operator==(TypeID const& rhs) const;
+  char const*
+  name() const;
 
-  // Are we valid?
+  std::string
+  className() const;
+
+  std::string
+  friendlyClassName() const;
+
+  bool
+  hasDictionary() const;
+
+  bool
+  operator<(TypeID const&) const;
+
+  bool
+  operator==(TypeID const&) const;
+
   explicit
   operator bool() const;
 
-  // Access the typeinfo.
-  std::type_info const& typeInfo() const;
+  std::type_info const&
+  typeInfo() const;
 
-  void swap(TypeID& other);
+  void
+  swap(TypeID&);
 
-private:
+private: // MEMBER DATA
 
-  // NOTE: since (a) the compiler generates the type_infos, and (b)
-  // they have a lifetime good for the entire application, we do not
-  // have to delete it.
-  // We use a pointer rather than a reference so that assignment will
-  // work
-  std::type_info const* ti_{nullptr};
+  std::type_info const*
+  ti_{nullptr};
 
 };
 
-inline
-art::TypeID::TypeID(std::type_info const& ti)
-  : ti_{&ti}
-{
-}
-
-inline
-art::TypeID::TypeID(std::type_info const* ti)
-  : ti_{ti}
-{
-}
-
 template <typename T>
-inline
-art::TypeID::TypeID(T const& val)
+TypeID::
+TypeID(T const& val) noexcept
   : ti_{&typeid(val)}
 {
 }
 
-inline
-char const*
-art::TypeID::name() const
-{
-  return ti_->name();
-}
-
-inline
 bool
-art::TypeID::operator < (TypeID const& rhs) const
-{
-  return ti_->before(*rhs.ti_);
-}
+operator>(TypeID const&, TypeID const&);
 
-inline
 bool
-art::TypeID::operator == (TypeID const& rhs) const
-{
-  return *ti_ == *rhs.ti_;
-}
+operator!=(TypeID const&, TypeID const&);
 
-inline
-art::TypeID::operator bool() const
-{
-  return ti_ != nullptr;
-}
+std::ostream&
+operator<<(std::ostream&, TypeID const&);
 
-inline
-std::type_info const&
-art::TypeID::typeInfo() const
-{
-  return *ti_;
-}
-
-inline
 void
-art::TypeID::swap(TypeID& other)
-{
-  using std::swap;
-  swap(ti_, other.ti_);
-}
+swap(TypeID&, TypeID&);
 
-inline
-bool
-art::operator > (TypeID const& a, TypeID const& b)
-{
-  return b < a;
-}
-
-inline
-bool
-art::operator != (TypeID const& a, TypeID const& b)
-{
-  return !(a == b);
-}
-
-inline
-void
-art::swap(TypeID& left, TypeID& right)
-{
-  left.swap(right);
-}
+} // namespace art
 
 // Local Variables:
 // mode: c++

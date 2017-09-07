@@ -1,50 +1,54 @@
 #ifndef canvas_Persistency_Provenance_TypeLabel_h
 #define canvas_Persistency_Provenance_TypeLabel_h
+// vim: set sw=2 expandtab :
 
 #include <string>
-#include <tuple>
 #include "canvas/Utilities/TypeID.h"
 
 namespace art {
 
-  class TypeLabel {
-  public:
+class TypeLabel {
 
-    TypeLabel(TypeID const& itemtype,
-              std::string const& instanceName,
-              std::string const& emulatedMod = {}) :
-      typeID_{itemtype},
-      productInstanceName_{instanceName},
-      emulatedModule_{emulatedMod}
-    {}
+  friend bool operator<(TypeLabel const& a, TypeLabel const& b);
 
-    auto const& typeID() const { return typeID_; }
-    std::string className() const { return typeID_.className(); }
-    std::string friendlyClassName() const { return typeID_.friendlyClassName(); }
-    std::string const& emulatedModule() const { return emulatedModule_; }
-    std::string const& productInstanceName() const { return productInstanceName_; }
-    bool hasEmulatedModule() const { return !emulatedModule_.empty(); }
+public: // MEMBER FUNCTIONS -- Special Member Functions
 
-  private:
-    TypeID      typeID_;
-    std::string productInstanceName_;
-    std::string emulatedModule_;
-    friend bool operator<(TypeLabel const& a, TypeLabel const& b);
-  };
+  TypeLabel(TypeID const& itemtype, std::string const& instanceName, std::string const& emulatedMod = {});
 
-  // Types with the same friendlyClassName are in the same equivalence
-  // class for the purposes of this comparison.
-  inline
-  bool operator<(TypeLabel const& a, TypeLabel const& b)
-  {
-    auto const& a_class_name = a.className();
-    auto const& b_class_name = b.className();
-    return std::tie(a.emulatedModule_, a.productInstanceName_, a_class_name) <
-           std::tie(b.emulatedModule_, b.productInstanceName_, b_class_name);
-  }
-}
+public: // MEMBER FUNCTIONS
 
+  TypeID const&
+  typeID() const;
 
+  //std::string
+  //className() const;
+
+  //std::string
+  //friendlyClassName() const;
+
+  std::string const&
+  productInstanceName() const;
+
+  std::string const&
+  emulatedModule() const;
+
+  //bool
+  //hasEmulatedModule() const;
+
+private: // MEMBER DATA
+
+  TypeID
+  typeID_;
+
+  std::string
+  productInstanceName_;
+
+  std::string
+  emulatedModule_;
+
+};
+
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_TypeLabel_h */
 

@@ -106,8 +106,8 @@ BOOST_AUTO_TEST_CASE(splitting2)
   rs.emplace_range(1,9,14);
   auto split_range1 = rs.split_range(1,7); // SubRun 1, Event 7 not contained in range
   auto split_range2 = rs.split_range(2,7); // SubRun 2, Event 7 not contained " "
-  BOOST_CHECK(split_range1.first == rs.end());
-  BOOST_CHECK(split_range2.first == rs.end());
+  BOOST_CHECK(split_range1.first == rs.end_idx());
+  BOOST_CHECK(split_range2.first == rs.end_idx());
   BOOST_CHECK(!split_range1.second);
   BOOST_CHECK(!split_range2.second);
 }
@@ -118,8 +118,8 @@ BOOST_AUTO_TEST_CASE(splitting3)
   rs.emplace_range(1,2,3);
   auto split_range1 = rs.split_range(1,2);
   auto split_range2 = rs.split_range(1,3);
-  BOOST_CHECK(split_range1.first == rs.end()); // Range too small to split
-  BOOST_CHECK(split_range2.first == rs.end()); // SubRun 1, Event 3 not contained in range
+  BOOST_CHECK(split_range1.first == rs.end_idx()); // Range too small to split
+  BOOST_CHECK(split_range2.first == rs.end_idx()); // SubRun 1, Event 3 not contained in range
   BOOST_CHECK(!split_range1.second);
   BOOST_CHECK(!split_range2.second);
 
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(assigning)
   rs.emplace_range(1,9,14);
   rs.split_range(1,4);
   RangeSet ref {1};
-  ref.assign_ranges(rs.begin(), rs.end());
+  ref.assign_ranges(rs, rs.begin_idx(), rs.end_idx());
   BOOST_CHECK_EQUAL(rs, ref);
 }
 

@@ -30,6 +30,12 @@ namespace art {
     return check;
   }
 
+  ProductID::
+  operator std::size_t() const
+  {
+    return static_cast<std::size_t>(value_);
+  }
+
   std::ostream&
   operator<<(std::ostream& os, ProductID const id)
   {

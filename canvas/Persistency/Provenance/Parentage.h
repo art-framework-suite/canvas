@@ -1,15 +1,8 @@
 #ifndef canvas_Persistency_Provenance_Parentage_h
 #define canvas_Persistency_Provenance_Parentage_h
+// vim: set sw=2 expandtab :
 
-/*----------------------------------------------------------------------
-
-Parentage: The products that were read in producing this product.
-
-definitions:
-Product: The EDProduct to which a provenance object is associated
-Parents: The EDProducts used as input by the creator.
-
-----------------------------------------------------------------------*/
+//  The products that were read in producing this product.
 
 #include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/ParentageID.h"
@@ -18,32 +11,53 @@ Parents: The EDProducts used as input by the creator.
 #include <vector>
 
 namespace art {
-  class Parentage {
-  public:
 
-    Parentage() = default;
-    explicit Parentage(std::vector<ProductID> const& parents);
+class Parentage {
 
-    // Only the 'salient attributes' are encoded into the ID.
-    ParentageID id() const;
+public:
 
-    std::vector<ProductID> const& parents() const {return parents_;}
-    std::vector<ProductID>& parents() {return parents_;}
+  ~Parentage();
 
-  private:
-    std::vector<ProductID> parents_ {};
-  };
+  Parentage();
 
-  inline std::ostream& operator<<(std::ostream& os, Parentage const&)
-  {
-    // Unimplemented
-    return os;
-  }
+  explicit
+  Parentage(std::vector<ProductID> const& parents);
 
-  // Only the 'salient attributes' are testing in equality comparison.
-  bool operator==(Parentage const& a, Parentage const& b);
-  inline bool operator!=(Parentage const& a, Parentage const& b) { return !(a==b); }
-}
+  Parentage(Parentage const&);
+
+  Parentage(Parentage&&);
+
+  Parentage&
+  operator=(Parentage const&);
+
+  Parentage&
+  operator=(Parentage&&);
+
+public:
+
+  ParentageID
+  id() const;
+
+  std::vector<ProductID> const&
+  parents() const;
+
+private:
+
+  std::vector<ProductID> parents_{};
+
+};
+
+std::ostream&
+operator<<(std::ostream& os, Parentage const&);
+
+bool
+operator==(Parentage const& a, Parentage const& b);
+
+bool
+operator!=(Parentage const& a, Parentage const& b);
+
+} // namespace art
+
 #endif /* canvas_Persistency_Provenance_Parentage_h */
 
 // Local Variables:

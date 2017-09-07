@@ -1,5 +1,6 @@
 #ifndef canvas_Persistency_Common_RefCoreStreamer_h
 #define canvas_Persistency_Common_RefCoreStreamer_h
+// vim: set sw=2 expandtab :
 
 #include "cetlib/exempt_ptr.h"
 
@@ -9,28 +10,37 @@ class TBuffer;
 
 namespace art {
 
-  class EDProductGetterFinder;
+class PrincipalBase;
+
+class RefCoreStreamer : public TClassStreamer {
+
+public:
+
+  explicit
+  RefCoreStreamer(cet::exempt_ptr<PrincipalBase const> principal = cet::exempt_ptr<PrincipalBase const>());
 
   void
-  configureRefCoreStreamer(cet::exempt_ptr<EDProductGetterFinder const> finder = {});
+  setPrincipal(cet::exempt_ptr<PrincipalBase const>);
 
-  class RefCoreStreamer : public TClassStreamer {
-  public:
+  virtual
+  TClassStreamer*
+  Generate() const override;
 
-    explicit RefCoreStreamer(cet::exempt_ptr<EDProductGetterFinder const> finder = {})
-      : finder_{finder}
-    {}
+  void
+  operator()(TBuffer&, void*) override;
 
-    void setEDProductGetterFinder(cet::exempt_ptr<EDProductGetterFinder const> finder) {
-      finder_ = finder;
-    }
+private:
 
-    void operator() (TBuffer& R_b, void* objp) override;
+  cet::exempt_ptr<PrincipalBase const>
+  principal_;
 
-  private:
-    cet::exempt_ptr<EDProductGetterFinder const> finder_;
-  };
-}
+};
+
+void
+configureRefCoreStreamer(cet::exempt_ptr<PrincipalBase const> principal = cet::exempt_ptr<PrincipalBase const>());
+
+} // namespace art
+
 #endif /* canvas_Persistency_Common_RefCoreStreamer_h */
 
 // Local Variables:

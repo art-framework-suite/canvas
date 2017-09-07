@@ -1,96 +1,131 @@
 #ifndef canvas_Persistency_Provenance_RunAuxiliary_h
 #define canvas_Persistency_Provenance_RunAuxiliary_h
-
-#include <iosfwd>
-#include <set>
+// vim: set sw=2 expandtab :
 
 #include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/RunID.h"
 #include "canvas/Persistency/Provenance/Timestamp.h"
 
+#include <iosfwd>
+#include <set>
+#include <utility>
+
 // Auxiliary run data that is persistent
 
 namespace art {
-  class RunAuxiliary;
-}
 
-class art::RunAuxiliary {
-public:
+class RunAuxiliary {
+
+public: // TYPES
 
   static constexpr BranchType branch_type = InRun;
 
-  RunAuxiliary() = default;
+public: // MEMBER FUNCTIONS -- Special Member Functions
 
-  RunAuxiliary(RunID const& theId,
-               Timestamp const& theTime,
-               Timestamp const& theEndTime)
-    :
-    id_{theId},
-    beginTime_{theTime},
-    endTime_{theEndTime}
-  {}
+  ~RunAuxiliary();
 
-  RunAuxiliary(RunNumber_t const run,
-               Timestamp const& theTime,
-               Timestamp const& theEndTime)
-    :
-    id_{run},
-    beginTime_{theTime},
-    endTime_{theEndTime}
-  {}
+  RunAuxiliary();
 
-  void write(std::ostream& os) const;
+  RunAuxiliary(RunID const& theId, Timestamp const& theTime, Timestamp const& theEndTime);
 
-  ProcessHistoryID const& processHistoryID() const { return processHistoryID_; }
+  RunAuxiliary(RunNumber_t const& run, Timestamp const& theTime, Timestamp const& theEndTime);
 
-  void setProcessHistoryID(ProcessHistoryID const& phid) const
-  { processHistoryID_ = phid; }
+  RunAuxiliary(RunAuxiliary const&);
 
-  RunID const& id() const { return id_; }
+  RunAuxiliary(RunAuxiliary&&);
 
-  Timestamp const& beginTime() const { return beginTime_; }
+  RunAuxiliary&
+  operator=(RunAuxiliary const&);
 
-  Timestamp const& endTime() const { return endTime_; }
+  RunAuxiliary&
+  operator=(RunAuxiliary&&);
 
-  RunID const& runID() const {return id_;}
-  RunNumber_t run() const { return id_.run(); }
+public:
 
-  void setEndTime(Timestamp const& time) {
-    if (endTime_ == Timestamp::invalidTimestamp()) endTime_ = time;
-  }
+  void
+  write(std::ostream&) const;
 
-  void setRangeSetID(unsigned const id) const { rangeSetID_ = id; }
-  auto rangeSetID() const { return rangeSetID_; }
+  ProcessHistoryID&
+  processHistoryID() const noexcept;
 
-  bool mergeAuxiliary(RunAuxiliary const& aux);
+  void
+  setProcessHistoryID(ProcessHistoryID const&) const;
+
+  unsigned
+  rangeSetID() const noexcept;
+
+  void
+  setRangeSetID(unsigned const id) const;
+
+  RunID const&
+  id() const noexcept;
+
+  RunID const&
+  runID() const noexcept;
+
+  void
+  runID(RunID const&);
+
+  RunNumber_t
+  run() const noexcept;
+
+  Timestamp const&
+  beginTime() const noexcept;
+
+  void
+  beginTime(Timestamp const&);
+
+  Timestamp const&
+  endTime() const noexcept;
+
+  void
+  endTime(Timestamp const&);
+
+  bool
+  mergeAuxiliary(RunAuxiliary const&);
+
+private:
+
+  void
+  mergeNewTimestampsIntoThis_(RunAuxiliary const&);
+
+  void
+  mergeNewProcessHistoryIntoThis_(RunAuxiliary const&);
+
+private:
 
   // most recent process that put a RunProduct into this run
   // is the last on the list, this defines what "latest" is
-  mutable ProcessHistoryID processHistoryID_{};
+  mutable
+  ProcessHistoryID
+  processHistoryID_{};
 
   // allEventsProcessHistories_ contains all the ProcessHistoryIDs for all
   // events in this run seen so far.
-  std::set<ProcessHistoryID> allEventsProcessHistories_{};
+  // Note: The default ctor for set is not noexcept.
+  std::set<ProcessHistoryID>
+  allEventsProcessHistories_{};
 
-  mutable unsigned rangeSetID_{-1u};
+  mutable
+  unsigned
+  rangeSetID_{-1u};
 
-  RunID id_{};
-  // Times from DAQ
-  Timestamp beginTime_{};
-  Timestamp endTime_{};
+  RunID
+  id_{};
 
-private:
-  void mergeNewTimestampsIntoThis_(RunAuxiliary const& newAux);
-  void mergeNewProcessHistoryIntoThis_(RunAuxiliary const& newAux);
+  Timestamp
+  beginTime_{};
+
+  Timestamp
+  endTime_{};
+
 };
 
-inline
 std::ostream&
-operator<<(std::ostream& os, art::RunAuxiliary const& p) {
-  p.write(os);
-  return os;
-}
+operator<<(std::ostream&, const RunAuxiliary&);
+
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_RunAuxiliary_h */
 

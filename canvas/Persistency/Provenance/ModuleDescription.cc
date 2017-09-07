@@ -1,51 +1,173 @@
 #include "canvas/Persistency/Provenance/ModuleDescription.h"
+// vim: set sw=2 expandtab :
+
 #include "cetlib/MD5Digest.h"
 
 #include <atomic>
 #include <ostream>
 
-art::ModuleDescription::ModuleDescription(fhicl::ParameterSetID const parameterSetID,
-                                          std::string const& modName,
-                                          std::string const& modLabel,
-                                          ProcessConfiguration pc,
-                                          ModuleDescriptionID const id) :
-  parameterSetID_{parameterSetID},
-  moduleName_{modName},
-  moduleLabel_{modLabel},
-  processConfiguration_{std::move(pc)},
-  id_{id}
+using namespace std;
+
+namespace art {
+
+ModuleDescription::
+~ModuleDescription()
 {
 }
 
-bool
-art::ModuleDescription::operator<(ModuleDescription const& rh) const
+ModuleDescription::
+ModuleDescription()
+  : parameterSetID_{}
+  , moduleName_{}
+  , moduleLabel_{}
+  , moduleThreadingType_{}
+  , processConfiguration_{}
+  , id_{invalidID()}
 {
-  if (moduleLabel() < rh.moduleLabel()) return true;
-  if (rh.moduleLabel() < moduleLabel()) return false;
-  if (processName() < rh.processName()) return true;
-  if (rh.processName() < processName()) return false;
-  if (moduleName() < rh.moduleName()) return true;
-  if (rh.moduleName() < moduleName()) return false;
-  if (parameterSetID() < rh.parameterSetID()) return true;
-  if (rh.parameterSetID() < parameterSetID()) return false;
-  if (releaseVersion() < rh.releaseVersion()) return true;
+}
+
+ModuleDescription::
+ModuleDescription(fhicl::ParameterSetID const parameterSetID, string const& modName, string const& modLabel,
+                  int moduleThreadingType, ProcessConfiguration pc, ModuleDescriptionID const id)
+  : parameterSetID_{parameterSetID}
+  , moduleName_{modName}
+  , moduleLabel_{modLabel}
+  , moduleThreadingType_{moduleThreadingType}
+  , processConfiguration_{move(pc)}
+  , id_{id}
+{
+}
+
+static atomic<ModuleDescriptionID> s_id{0u};
+
+ModuleDescriptionID
+ModuleDescription::
+id() const
+{
+  return id_;  // Unique only within a process.
+}
+
+fhicl::ParameterSetID const&
+ModuleDescription::
+parameterSetID() const
+{
+  return parameterSetID_;
+}
+
+std::string const&
+ModuleDescription::
+moduleName() const
+{
+  return moduleName_;
+}
+
+std::string const&
+ModuleDescription::
+moduleLabel() const
+{
+  return moduleLabel_;
+}
+
+int
+ModuleDescription::
+moduleThreadingType() const
+{
+  return moduleThreadingType_;
+}
+
+ProcessConfiguration const&
+ModuleDescription::
+processConfiguration() const
+{
+  return processConfiguration_;
+}
+
+ProcessConfigurationID const
+ModuleDescription::
+processConfigurationID() const
+{
+  return processConfiguration().id();
+}
+
+std::string const&
+ModuleDescription::
+processName() const
+{
+  return processConfiguration().processName();
+}
+
+std::string const&
+ModuleDescription::
+releaseVersion() const
+{
+  return processConfiguration().releaseVersion();
+}
+
+fhicl::ParameterSetID const&
+ModuleDescription::
+mainParameterSetID() const
+{
+  return processConfiguration().parameterSetID();
+}
+
+ModuleDescriptionID
+ModuleDescription::
+getUniqueID()
+{
+  return ++s_id;
+}
+
+bool
+ModuleDescription::
+operator<(ModuleDescription const& rh) const
+{
+  if (moduleLabel() < rh.moduleLabel()) {
+    return true;
+  }
+  if (rh.moduleLabel() < moduleLabel()) {
+    return false;
+  }
+  if (processName() < rh.processName()) {
+    return true;
+  }
+  if (rh.processName() < processName()) {
+    return false;
+  }
+  if (moduleName() < rh.moduleName()) {
+    return true;
+  }
+  if (rh.moduleName() < moduleName()) {
+    return false;
+  }
+  if (parameterSetID() < rh.parameterSetID()) {
+    return true;
+  }
+  if (rh.parameterSetID() < parameterSetID()) {
+    return false;
+  }
+  if (releaseVersion() < rh.releaseVersion()) {
+    return true;
+  }
   return false;
 }
 
 bool
-art::ModuleDescription::operator==(ModuleDescription const& rh) const
+ModuleDescription::
+operator==(ModuleDescription const& rh) const
 {
-  return !((*this) < rh || rh < (*this));
+  return !((*this < rh) || (rh < *this));
 }
 
 bool
-art::ModuleDescription::operator!=(ModuleDescription const& rh) const
+ModuleDescription::
+operator!=(ModuleDescription const& rh) const
 {
   return !operator==(rh);
 }
 
 void
-art::ModuleDescription::write(std::ostream& os) const
+ModuleDescription::
+write(ostream& os) const
 {
   os  << "Module type=" << moduleName() << ", "
       << "Module label=" << moduleLabel() << ", "
@@ -55,10 +177,11 @@ art::ModuleDescription::write(std::ostream& os) const
       << "Main Parameter Set ID=" << mainParameterSetID();
 }
 
-static std::atomic<art::ModuleDescriptionID> s_id {0u};
-
-art::ModuleDescriptionID
-art::ModuleDescription::getUniqueID()
+std::ostream&
+operator<<(std::ostream& os, ModuleDescription const& p)
 {
-  return ++s_id;
+  p.write(os);
+  return os;
 }
+
+} // namespace art

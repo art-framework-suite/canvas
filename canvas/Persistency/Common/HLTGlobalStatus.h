@@ -1,147 +1,101 @@
 #ifndef canvas_Persistency_Common_HLTGlobalStatus_h
 #define canvas_Persistency_Common_HLTGlobalStatus_h
-
-/** \class art::HLTGlobalStatus
- *
- *  The HLT global status, summarising the status of the individual
- *  HLT triggers, is implemented as a vector of HLTPathStatus objects.
- *
- *  If the user wants map-like indexing of HLT triggers through their
- *  names as key, s/he must use the TriggerNamesService.
- *
- *  \author Martin Grunewald
- */
+// vim: set sw=2 expandtab :
 
 #include "canvas/Persistency/Common/HLTenums.h"
 #include "canvas/Persistency/Common/HLTPathStatus.h"
-#include "cetlib/container_algorithms.h"
+
+#include <cstddef>
 #include <vector>
 #include <ostream>
 
-// ----------------------------------------------------------------------
-
 namespace art {
 
-  class HLTGlobalStatus {
-    // Status of each HLT path
-    std::vector<HLTPathStatus> paths_{};
+class HLTGlobalStatus {
 
-  public:
+public:
 
-    // Constructor - for n paths
-    HLTGlobalStatus() = default;
-    explicit HLTGlobalStatus(std::size_t const n) : paths_(n) {}
+  ~HLTGlobalStatus();
 
-    // Get number of paths stored
-    std::size_t size() const { return paths_.size(); }
+  explicit
+  HLTGlobalStatus(std::size_t const n = 0);
 
-    // Reset status for all paths
-    void reset() {
-      cet::for_all(paths_, [](auto& path){ path.reset(); });
-    }
+public:
 
-    // global "state" variables calculated on the fly!
+  std::size_t
+  size() const;
 
-    // Was at least one path run?
-    bool wasrun() const {return state_on_demand(0);}
-    // Has at least one path accepted the event? If no paths were
-    // run, or there are no paths, the answer is, "yes."
-    bool accept() const {return state_on_demand(1);}
-    // Has any path encountered an error (exception)
-    bool  error() const {return state_on_demand(2);}
+  void
+  reset();
 
-    // get hold of individual elements, using safe indexing with "at" which throws!
-    HLTPathStatus const& at (std::size_t const i) const { return paths_.at(i); }
-    HLTPathStatus& at (std::size_t const i) { return paths_.at(i); }
+  bool
+  wasrun() const;
 
-    HLTPathStatus const& operator[](std::size_t const i) const { return paths_.at(i); }
-    HLTPathStatus& operator[](std::size_t const i) { return paths_.at(i); }
+  bool
+  accept() const;
 
+  bool
+  error() const;
 
-    // Was ith path run?
-    bool wasrun(std::size_t const i) const { return at(i).wasrun(); }
-    // Has ith path accepted the event?
-    bool accept(std::size_t const i) const { return at(i).accept(); }
-    // Has ith path encountered an error (exception)?
-    bool  error(std::size_t const i) const { return at(i).error() ; }
+  HLTPathStatus const&
+  at(unsigned const i) const;
 
-    // Get status of ith path
-    hlt::HLTState state(std::size_t const i) const { return at(i).state(); }
-    // Get index (slot position) of module giving the decision of the ith path
-    std::size_t  index(std::size_t const i) const { return at(i).index(); }
-    // Reset the ith path
-    void reset(std::size_t const i) { at(i).reset(); }
-    // swap function
-    void swap(HLTGlobalStatus& other) { paths_.swap(other.paths_); }
-    // copy assignment implemented with swap()
-    // Cannot ref-qualify assignment because of GCC_XML.
-    HLTGlobalStatus& operator=(HLTGlobalStatus const& rhs) {
-      HLTGlobalStatus temp(rhs);
-      this->swap(temp);
-      return *this;
-    }
+  HLTPathStatus&
+  at(unsigned const i);
 
-  private:
+  HLTPathStatus const&
+  operator[](unsigned const i) const;
 
-    // Global state variable calculated on the fly
-    bool state_on_demand(std::size_t const icase) const
-    {
-      bool flags[3] {false, false, false};
-      for (std::size_t i{}, n{size()}; i != n; ++i) {
-        auto const s = state(i);
-        if (s!=hlt::Ready) {
-          flags[0]=true;    // at least one trigger was run
-          if (s==hlt::Pass) {
-            flags[1]=true;  // at least one trigger accepted
-          }
-          else if (s==hlt::Exception) {
-            flags[2]=true;  // at least one trigger with error
-          }
-        }
-      }
-      // Change in semantics of flags[1] vs pre-art: now we accept if
-      // no paths were run.
-      flags[1] |= (!flags[0]) | paths_.empty();
-      return flags[icase];
-    }
+  HLTPathStatus&
+  operator[](unsigned const i);
 
-  };  // HLTGlobalStatus
+  bool
+  wasrun(unsigned const i) const;
 
-  // Free swap function
-  inline void
-  swap(HLTGlobalStatus& lhs, HLTGlobalStatus& rhs)
-  {
-    lhs.swap(rhs);
-  }
+  bool
+  accept(unsigned const i) const;
 
-  // Formatted printout of trigger table
-  inline std::ostream&
-  operator<<(std::ostream& ost, HLTGlobalStatus const& hlt)
-  {
-    std::vector<std::string> text(4); text[0]="n"; text[1]="1"; text[2]="0"; text[3]="e";
-    for (std::size_t i{}, n{hlt.size()}; i != n; ++i) ost << text.at(hlt.state(i));
-    return ost;
-  }
+  bool
+  error(unsigned const i) const;
 
-}  // art
+  hlt::HLTState
+  state(unsigned const i) const;
 
-// ----------------------------------------------------------------------
+  unsigned
+  index(unsigned const i) const;
 
-// The standard allows us to specialize std::swap for non-templates.
-// This ensures that HLTGlobalStatus::swap() will be used in algorithms.
+  void
+  reset(unsigned const i);
 
-namespace std {
+  //void
+  //swap(HLTGlobalStatus& other);
 
-  template <>
-  inline void
-  swap(art::HLTGlobalStatus& lhs, art::HLTGlobalStatus& rhs)
-  {
-    lhs.swap(rhs);
-  }
+private:
 
-}
+  std::vector<HLTPathStatus>
+  paths_;
 
-// ======================================================================
+};
+
+//void
+//swap(HLTGlobalStatus& lhs, HLTGlobalStatus& rhs);
+
+std::ostream&
+operator<<(std::ostream& ost, const HLTGlobalStatus& hlt);
+
+} // namespace art
+
+//namespace std {
+//
+//template <>
+//inline
+//void
+//swap(art::HLTGlobalStatus& lhs, art::HLTGlobalStatus& rhs)
+//{
+//  lhs.swap(rhs);
+//}
+//
+//} // namespace std
 
 #endif /* canvas_Persistency_Common_HLTGlobalStatus_h */
 

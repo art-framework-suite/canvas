@@ -1,12 +1,9 @@
 #ifndef canvas_Persistency_Provenance_ProductProvenance_h
 #define canvas_Persistency_Provenance_ProductProvenance_h
+// vim: set sw=2 expandtab :
 
-/*----------------------------------------------------------------------
-
-ProductProvenance: The event dependent portion of the description of a product
-and how it came into existence, plus the status.
-
-----------------------------------------------------------------------*/
+//  The event dependent portion of the description of a product
+//  and how it came into existence, plus the status.
 
 #include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/ParentageID.h"
@@ -19,81 +16,146 @@ and how it came into existence, plus the status.
 #include <vector>
 
 namespace art {
-  class ProductProvenance;
-  typedef std::vector<ProductProvenance> ProductProvenances;
 
-  bool operator<(ProductProvenance const& a, ProductProvenance const& b);
-  std::ostream& operator<<(std::ostream& os, ProductProvenance const& p);
-  bool operator==(ProductProvenance const& a, ProductProvenance const& b);
-  bool operator!=(ProductProvenance const& a, ProductProvenance const& b);
-}
+class ProductProvenance {
 
-class art::ProductProvenance {
-public:
-
-  ProductProvenance() = default;
-  explicit ProductProvenance(ProductID pid);
-
-  ProductProvenance(ProductID pid,
-                    ProductStatus status);
-
-  ProductProvenance(ProductID pid,
-                    ProductStatus status,
-                    std::shared_ptr<Parentage> parentagePtr);
-
-  ProductProvenance(ProductID pid,
-                    ProductStatus status,
-                    ParentageID const& id);
-
-  ProductProvenance(ProductID pid,
-                    ProductStatus status,
-                    std::vector<ProductID> const& parents);
-
-  // use compiler-generated copy c'tor, copy assignment, and d'tor
-
-  void write(std::ostream& os) const;
-
-  ProductID productID() const {return productID_;}
-  ProductStatus const& productStatus() const {return productStatus_;}
-  ParentageID const& parentageID() const {return parentageID_;}
-  Parentage const& parentage() const;
-  void setStatus(ProductStatus status) const {productStatus_ = status;}
-  void setPresent() const;
-  void setNotPresent() const;
-
-  bool noParentage() const {return transients_.get().noParentage_;}
+public: // TYPES
 
   struct Transients {
-    Transients() = default;
-    std::shared_ptr<Parentage> parentagePtr_ {nullptr};
-    bool noParentage_ {false};
+
+  public:
+
+    ~Transients();
+
+    Transients();
+
+    Transients(Transients const&);
+
+    Transients(Transients&&);
+
+    Transients&
+    operator=(Transients const&);
+
+    Transients&
+    operator=(Transients&&);
+
+  public:
+
+    bool noParentage_{false};
+    std::shared_ptr<Parentage> parentagePtr_{nullptr};
+
   };
+
+public: // MEMBER FUNCTIONS -- Special Member Functions
+
+  ~ProductProvenance();
+
+  ProductProvenance();
+
+  ProductProvenance(ProductID const&, ProductStatus);
+
+  ProductProvenance(ProductID const&, ProductStatus, std::vector<ProductID> const& parents);
+
+  ProductProvenance(ProductProvenance const&);
+
+  ProductProvenance(ProductProvenance&&);
+
+  ProductProvenance&
+  operator=(ProductProvenance const&);
+
+  ProductProvenance&
+  operator=(ProductProvenance&&);
+
+public: // MEMBER FUNCTIONS
+
+  void
+  write(std::ostream&) const;
+
+  ProductID const&
+  productID() const;
+
+  ProductStatus const&
+  productStatus() const;
+
+  ParentageID const&
+  parentageID() const;
+
+  Parentage const&
+  parentage() const;
+
+  void
+  setStatus(ProductStatus status) const;
+
+  // Used only by Group::status() to override productstatus::unknown
+  // with the value of the Wrapper present flag.
+  // Note: This should never happen! But a mistake in RootDelayedReader
+  //       would make it happen if there were two or more run/subrun
+  //       fragments in the file index with the same run/subrun number
+  //       where the first fragment had a product with an invalid range
+  //       (because RootOutputFile changed it to invalid to prevent
+  //       double-counting when combining products), and a later fragment
+  //       had the same product with a valid range.
+  //       RootDelayedReader would return the fragment product with the
+  //       valid range as the combined product, but it forgot to update
+  //       provenance, so we would have a product where the wrapper
+  //       present flag was true, but the product provenance status was
+  //       unknown instead of present.  This has since been fixed.
+  //       We leave this routine here so old files with the problem can
+  //       still be read.
+  void
+  setPresent() const;
+
+  // Used only by Group::status() to override productstatus::unknown
+  // with the value of the Wrapper present flag.
+  // Note: This should never happen! But a mistake in RootOutputFile
+  //       would make it happen when it changed a run/subrun product
+  //       range set to invalid to prevent double-counting when combining
+  //       products. It would change the product status to unknown,
+  //       replace it with a dummy object, and write out the dummy with
+  //       the unknown status in the provenance. This has since been fixed
+  //       to write out the dummy with status neverCreated.
+  //       We leave this routine here so old files with the problem can
+  //       still be read.
+  void
+  setNeverCreated() const;
+
+  // Note: This is true for Run, SubRun, and Results products.
+  bool
+  noParentage() const;
 
 private:
 
-  std::shared_ptr<Parentage>& parentagePtr() const
-  {return transients_.get().parentagePtr_;}
+  ProductID
+  productID_{};
 
-  ProductID productID_ {};
-  mutable ProductStatus productStatus_ {productstatus::uninitialized()};
-  ParentageID parentageID_ {};
-  mutable Transient<Transients> transients_ {};
+  mutable
+  ProductStatus
+  productStatus_{productstatus::uninitialized()};
+
+  ParentageID
+  parentageID_{};
+
+  mutable
+  Transient<Transients>
+  transients_{};
+
 };
 
-inline
-bool
-art::operator < (ProductProvenance const& a, ProductProvenance const& b) {
-  return a.productID() < b.productID();
-}
+typedef std::vector<ProductProvenance> ProductProvenances;
 
-inline
 std::ostream&
-art::operator<<(std::ostream& os, ProductProvenance const& p) {
-  p.write(os);
-  return os;
-}
+operator<<(std::ostream& os, ProductProvenance const& p);
 
-inline bool art::operator!=(ProductProvenance const& a, ProductProvenance const& b) { return !(a==b); }
+bool
+operator==(ProductProvenance const& a, ProductProvenance const& b);
+
+bool
+operator!=(ProductProvenance const& a, ProductProvenance const& b);
+
+bool
+operator<(ProductProvenance const& a, ProductProvenance const& b);
+
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_ProductProvenance_h */
 

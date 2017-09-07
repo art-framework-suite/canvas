@@ -1,16 +1,27 @@
 #include "canvas/Persistency/Common/CacheStreamers.h"
+// vim: set sw=2 expandtab :
+
 #include "canvas/Persistency/Common/ConstPtrCache.h"
 #include "canvas/Persistency/Common/BoolCache.h"
 #include "cetlib/exception.h"
 
 #include "TBuffer.h"
 
-// For nullptr:
 #include <memory>
 
 namespace art {
+
+  TClassStreamer*
+  BoolCacheStreamer::
+  Generate() const
+  {
+    return new BoolCacheStreamer{*this};
+  }
+
   void
-  BoolCacheStreamer::operator()(TBuffer &R_b, void *objp) {
+  BoolCacheStreamer::
+  operator()(TBuffer &R_b, void *objp)
+  {
     if (R_b.IsReading()) {
       cl_->ReadBuffer(R_b, objp);
       BoolCache* obj = static_cast<BoolCache *>(objp);
@@ -20,8 +31,17 @@ namespace art {
     }
   }
 
+  TClassStreamer*
+  ConstPtrCacheStreamer::
+  Generate() const
+  {
+    return new ConstPtrCacheStreamer{*this};
+  }
+
   void
-  ConstPtrCacheStreamer::operator()(TBuffer &R_b, void *objp) {
+  ConstPtrCacheStreamer::
+  operator()(TBuffer &R_b, void *objp)
+  {
     if (R_b.IsReading()) {
       cl_->ReadBuffer(R_b, objp);
       ConstPtrCache* obj = static_cast<ConstPtrCache *>(objp);
@@ -31,7 +51,8 @@ namespace art {
     }
   }
 
-  void setCacheStreamers() {
+  void setCacheStreamers()
+  {
     TClass *cl = TClass::GetClass(typeid(BoolCache));
     if (cl == nullptr) {
        throw cet::exception("INTERNAL_ERROR")

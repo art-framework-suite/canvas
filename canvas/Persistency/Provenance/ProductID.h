@@ -27,6 +27,8 @@ namespace art {
     bool isValid() const {return value_ != 0u;}
     auto value() const {return value_;}
 
+    operator std::size_t() const;
+
     bool operator<(ProductID const rh) const {return value_ < rh.value_;}
     bool operator>(ProductID const rh) const {return rh < *this;}
     bool operator==(ProductID const rh) const {return value_ == rh.value_;}

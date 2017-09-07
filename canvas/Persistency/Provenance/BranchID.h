@@ -7,6 +7,7 @@ BranchID: A unique identifier for each branch.
 
 ----------------------------------------------------------------------*/
 
+#include <cstdlib>
 #include <iosfwd>
 #include <string>
 
@@ -23,6 +24,9 @@ namespace art {
     void setID(std::string const& branchName) {id_ = toID(branchName);}
     unsigned int id() const { return id_; }
     bool isValid() const {return id_ != 0;}
+
+    // This is for the use of tbb::hash<BranchID> (and possibly std::hash<BranchID>?)
+    explicit operator std::size_t() const { return static_cast<std::size_t>(id_); }
 
     bool operator<(BranchID const& rh) const {return id_ < rh.id_;}
     bool operator>(BranchID const& rh) const {return id_ > rh.id_;}

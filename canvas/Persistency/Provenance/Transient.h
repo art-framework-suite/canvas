@@ -1,46 +1,80 @@
 #ifndef canvas_Persistency_Provenance_Transient_h
 #define canvas_Persistency_Provenance_Transient_h
-// -*- C++ -*-
-//
-// Package:     Provenance
-// Class  :     Transient
-//
-/**\class Transient Transient.h DataFormats/Provenance/interface/Transient.h
+// vim: set sw=2 expandtab :
 
- Description: ROOT safe bool
-
- Usage:
-    We define a template for transients  in order to guarantee that value_
-    is always reset when ever a new instance of this class is read from a file.
-
-*/
 //
-// Original Author:  Bill Tanenbaum
-//         Created:  Sat Aug 18 17:30:08 EDT 2007
-//
+//  We give all instantiations of this template a 'transient="true"'
+//  attribute for the value_ data member to tell ROOT to never write
+//  it to disk.  We also set all instantiations (by hand!) to have a
+//  custom streamer (TransientStreamer) that makes sure if the ROOT
+//  I/O buffer is reused for reading that the data member _value is
+//  reinitialized with a default-constructed T.
 //
 
-// system include files
 
-// user include files
-
-// forward declarations
 namespace art {
 
-template <typename T>
+template<typename T>
 class Transient {
-public:
+
+public: // TYPES
+
   typedef T value_type;
-  Transient(T value = T()) : value_(value) {}
-  operator T() const { return value_; }
-  // We cannot ref-qualify the assignment operator because of GCC_XML.
-  Transient & operator=(T rh) { value_ = rh; return *this; }
-  T const& get() const { return value_;}
-  T & get() { return value_;}
-private:
-  T value_;
+
+public: // MEMBER FUNCTIONS -- Special Member Functions
+
+  ~Transient() = default;
+
+  Transient(T value = T())
+    : value_(value)
+  {
+  }
+
+  Transient(Transient const&) = default;
+
+  Transient(Transient&&) = default;
+
+  Transient&
+  operator=(Transient const&) = default;
+
+  Transient&
+  operator=(Transient&&) = default;
+
+public: // MEMBER FUNCTIONS -- API for the user
+
+  Transient&
+  operator=(T rh)
+  {
+    value_ = rh;
+    return *this;
+  }
+
+  operator T() const
+  {
+    return value_;
+  }
+
+  T const&
+  get() const noexcept
+  {
+    return value_;
+  }
+
+  T&
+  get() noexcept
+  {
+    return value_;
+  }
+
+private: // MEMBER DATA
+
+  T
+  value_;
+
 };
-}
+
+} // namespace art
+
 #endif /* canvas_Persistency_Provenance_Transient_h */
 
 // Local Variables:
