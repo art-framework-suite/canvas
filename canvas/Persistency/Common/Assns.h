@@ -155,7 +155,7 @@ public:
 
   std::unique_ptr<EDProduct> makePartner(std::type_info const& wanted_wrapper_type) const;
 
-  static short Class_Version() { return 10; }
+  static short Class_Version() { return 11; }
 
   void aggregate(Assns const&) const {}
 
