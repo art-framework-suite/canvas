@@ -82,6 +82,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
+#include "canvas/Persistency/Common/AssnsBase.h"
 #include "canvas/Persistency/Common/AssnsIter.h"
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/Wrapper.h"
@@ -90,11 +91,6 @@
 #include "canvas/Utilities/TypeID.h"
 #include "cetlib/container_algorithms.h"
 #include "cetlib_except/demangle.h"
-
-#include "TBuffer.h"
-#include "TClassStreamer.h" // Temporary
-#include "TClass.h"
-#include "TClassRef.h"
 
 #include <iostream>
 #include <typeinfo>
@@ -117,40 +113,7 @@ namespace art {
   class Assns<L, R, void>; // No data: base class.
 
   namespace detail {
-
-    // The following base class is provided so that the ROOT I/O
-    // system can appropriately handle transient data without having
-    // to use a template, which would introduce more coupling of Assns
-    // with ROOT than is desired.
-    class AssnsBase {
-    public:
-      virtual ~AssnsBase() noexcept = default;
-      virtual void fill_transients() = 0;
-      virtual void fill_from_transients() = 0;
-    };
-
-    // Temporary streamer class until ioread rules are
-    // working again.
-    class AssnsStreamer : public TClassStreamer {
-      std::string className_;
-    public:
-      explicit AssnsStreamer(std::string const& className) :
-        className_{className}
-      {}
-
-      void operator()(TBuffer& R_b, void* objp) {
-        static TClassRef cl{TClass::GetClass(className_.c_str())};
-        auto obj = reinterpret_cast<detail::AssnsBase*>(objp);
-        if (R_b.IsReading()) {
-          cl->ReadBuffer(R_b, objp);
-          obj->fill_transients();
-        }
-        else {
-          obj->fill_from_transients();
-          cl->WriteBuffer(R_b, objp);
-        }
-      }
-    };
+    class AssnsStreamer;
   }
 }
 
@@ -183,6 +146,7 @@ public:
   assn_t const& operator [](size_type index) const;
   assn_t const& at(size_type index) const;
   size_type size() const;
+  std::string className() const;
 
   // Modifier.
   void addSingle(Ptr<left_t> const& left,
@@ -222,8 +186,6 @@ private:
 
   void fill_transients() override;
   void fill_from_transients() override;
-
-  void init_streamer();
 
   ptrs_t ptrs_{}; //! transient
   ptr_data_t ptr_data_1_{};
@@ -290,7 +252,6 @@ template <typename L, typename R>
 inline
 art::Assns<L, R, void>::Assns()
 {
-  init_streamer();
 }
 
 template <typename L, typename R>
@@ -304,7 +265,6 @@ art::Assns<L, R, void>::Assns(partner_t const& other)
                        using pr_t = typename ptrs_t::value_type;
                        return pr_t{pr.second, pr.first};
                      });
-  init_streamer();
 }
 
 template <typename L, typename R>
@@ -345,6 +305,15 @@ typename art::Assns<L, R, void>::size_type
 art::Assns<L, R, void>::size() const
 {
   return ptrs_.size();
+}
+
+template <typename L, typename R>
+inline
+std::string
+art::Assns<L, R, void>::className() const
+{
+  TypeID const assns_type{typeid(Assns<L, R, void>)};
+  return assns_type.className();
 }
 
 template <typename L, typename R>
@@ -448,16 +417,6 @@ art::Assns<L, R, void>::fill_from_transients()
   }
 }
 
-template <typename L, typename R>
-void
-art::Assns<L, R, void>::init_streamer()
-{
-  TypeID const assns_type{typeid(Assns<L, R, void>)};
-  static TClassRef cl{TClass::GetClass(typeid(Assns<L, R, void>))};
-  if (cl->GetStreamer() == nullptr) {
-    cl->AdoptStreamer(new detail::AssnsStreamer{assns_type.className()});
-  }
-}
 
 template <typename L, typename R, typename D>
 inline
