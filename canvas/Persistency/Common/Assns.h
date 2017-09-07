@@ -117,21 +117,37 @@ namespace art {
   class Assns<L, R, void>; // No data: base class.
 
   namespace detail {
+
+    // The following base class is provided so that the ROOT I/O
+    // system can appropriately handle transient data without having
+    // to use a template, which would introduce more coupling of Assns
+    // with ROOT than is desired.
+    class AssnsBase {
+    public:
+      virtual ~AssnsBase() noexcept = default;
+      virtual void fill_transients() = 0;
+      virtual void fill_from_transients() = 0;
+    };
+
     // Temporary streamer class until ioread rules are
     // working again.
-    template <typename L, typename R>
     class AssnsStreamer : public TClassStreamer {
+      std::string className_;
     public:
+      explicit AssnsStreamer(std::string const& className) :
+        className_{className}
+      {}
+
       void operator()(TBuffer& R_b, void* objp) {
-        static TClassRef cl{TClass::GetClass(typeid(Assns<L, R, void>))};
-        auto obj = reinterpret_cast<Assns<L, R, void>*>(objp);
+        static TClassRef cl{TClass::GetClass(className_.c_str())};
+        auto obj = reinterpret_cast<detail::AssnsBase*>(objp);
         if (R_b.IsReading()) {
-          cl->ReadBuffer(R_b, obj);
+          cl->ReadBuffer(R_b, objp);
           obj->fill_transients();
         }
         else {
           obj->fill_from_transients();
-          cl->WriteBuffer(R_b, obj);
+          cl->WriteBuffer(R_b, objp);
         }
       }
     };
@@ -141,7 +157,7 @@ namespace art {
 ////////////////////////////////////////////////////////////////////////
 // Implementation of the specialization (3).
 template <typename L, typename R>
-class art::Assns<L, R, void> {
+class art::Assns<L, R, void> : public art::detail::AssnsBase {
 public:
   using left_t = L;
   using right_t = R;
@@ -185,7 +201,7 @@ protected:
   virtual std::unique_ptr<EDProduct> makePartner_(std::type_info const& wanted_wrapper_type) const;
 
 private:
-  friend class detail::AssnsStreamer<left_t, right_t>;
+  friend class detail::AssnsStreamer;
   friend class art::Assns<right_t, left_t, void>; // partner_t.
 
   // FIXME: The only reason this function is virtual is to cause the
@@ -204,8 +220,8 @@ private:
 #endif
     ;
 
-  void fill_transients();
-  void fill_from_transients();
+  void fill_transients() override;
+  void fill_from_transients() override;
 
   void init_streamer();
 
@@ -254,7 +270,7 @@ public:
   // enable_if_function_exists_t does not detect the base's function.
   std::unique_ptr<EDProduct> makePartner(std::type_info const& wanted_wrapper_type) const;
 
-  static short Class_Version() { return 10; }
+  static short Class_Version() { return 11; }
 
   void aggregate(Assns const&) const {}
 
@@ -436,9 +452,10 @@ template <typename L, typename R>
 void
 art::Assns<L, R, void>::init_streamer()
 {
+  TypeID const assns_type{typeid(Assns<L, R, void>)};
   static TClassRef cl{TClass::GetClass(typeid(Assns<L, R, void>))};
   if (cl->GetStreamer() == nullptr) {
-    cl->AdoptStreamer(new detail::AssnsStreamer<L, R>);
+    cl->AdoptStreamer(new detail::AssnsStreamer{assns_type.className()});
   }
 }
 
