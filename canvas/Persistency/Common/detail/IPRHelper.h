@@ -100,7 +100,7 @@ namespace art {
            std::vector<Bcoll> & bColls) const;
 
     private:
-      InputTag const & assnsTag_;
+      InputTag const assnsTag_;
       std::vector<uint8_t> seen_;
     };
   }
@@ -135,7 +135,7 @@ public:
 
 private:
   EVENT const & event_;
-  InputTag const & assnsTag_;
+  InputTag const assnsTag_;
 };
 
 // 1.
