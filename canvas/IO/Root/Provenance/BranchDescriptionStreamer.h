@@ -5,10 +5,12 @@
 #include "TClassStreamer.h"
 
 namespace art {
+  class BranchDescription;
   namespace detail {
     class BranchDescriptionStreamer : public TClassStreamer {
     public:
       void operator()(TBuffer&, void* objp) override;
+      static void fluffRootTransients(BranchDescription const&);
     };
 
     void setBranchDescriptionStreamer();

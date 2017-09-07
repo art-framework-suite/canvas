@@ -1,13 +1,19 @@
 #ifndef canvas_Persistency_Provenance_BranchDescription_h
 #define canvas_Persistency_Provenance_BranchDescription_h
 
-/*----------------------------------------------------------------------
-
-BranchDescription: The full description of a Branch.  Equivalently,
-                   the event-independent description of an EDProduct.
-This description also applies to every product instance on the branch.
-
-----------------------------------------------------------------------*/
+// ========================================================================
+// BranchDescription: The full description of a Branch.  Equivalently,
+//                    the event-independent description of an EDProduct.
+// This description also applies to every product instance on the branch.
+//
+// FIXME: A better design would be:
+//
+//   BranchDescription --owns--> ProductDescription --owns--> TypeDescription
+//
+// The BranchDescription class is what retains information necessary for
+// interactions with ROOT.  The ProductDescription contains information
+// that is relevant for core framework processing.
+// ========================================================================
 
 #include "canvas/Persistency/Provenance/BranchID.h"
 #include "canvas/Persistency/Provenance/BranchType.h"
@@ -110,6 +116,9 @@ public:
     // dictionary
     bool transient_{false};
 
+    // N.B. ROOT-specific transient information will be fluffed by the
+    //      BranchDescriptionStreamer::fluffRootTransients function.
+
     // The split level of the branch, as marked in the data
     // dictionary.
     int splitLevel_{};
@@ -124,6 +133,8 @@ public:
   };
 
   void setValidity(Transients::validity_state const state) { guts().validity_ = state; }
+
+  void fluffRootTransients() const;
 
 private:
   friend class detail::BranchDescriptionStreamer;
