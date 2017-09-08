@@ -2,51 +2,41 @@
 #define canvas_Persistency_Provenance_TypeLabel_h
 // vim: set sw=2 expandtab :
 
+#include <memory>
 #include <string>
 #include "canvas/Utilities/TypeID.h"
 
 namespace art {
 
-class TypeLabel {
+  class TypeLabel {
+  public:
 
-  friend bool operator<(TypeLabel const& a, TypeLabel const& b);
+    TypeLabel(TypeID const& itemtype,
+              std::string const& instanceName,
+              bool const supportsView);
 
-public: // MEMBER FUNCTIONS -- Special Member Functions
+    TypeLabel(TypeID const& itemtype,
+              std::string const& instanceName,
+              bool const supportsView,
+              std::string emulatedModule);
 
-  TypeLabel(TypeID const& itemtype, std::string const& instanceName, std::string const& emulatedMod = {});
+    auto const& typeID() const { return typeID_; }
+    std::string className() const { return typeID_.className(); }
+    std::string friendlyClassName() const { return typeID_.friendlyClassName(); }
+    std::string const& emulatedModule() const;
+    std::string const& productInstanceName() const { return productInstanceName_; }
+    bool hasEmulatedModule() const { return static_cast<bool>(emulatedModule_); }
+    bool supportsView() const { return supportsView_; }
 
-public: // MEMBER FUNCTIONS
+  private:
+    TypeID      typeID_;
+    std::string productInstanceName_;
+    bool        supportsView_;
+    std::shared_ptr<std::string> emulatedModule_{nullptr}; // shared so TypeLabel is copyable
+    friend bool operator<(TypeLabel const& a, TypeLabel const& b);
+  };
 
-  TypeID const&
-  typeID() const;
-
-  //std::string
-  //className() const;
-
-  //std::string
-  //friendlyClassName() const;
-
-  std::string const&
-  productInstanceName() const;
-
-  std::string const&
-  emulatedModule() const;
-
-  //bool
-  //hasEmulatedModule() const;
-
-private: // MEMBER DATA
-
-  TypeID
-  typeID_;
-
-  std::string
-  productInstanceName_;
-
-  std::string
-  emulatedModule_;
-
-};
+  bool operator<(TypeLabel const& a, TypeLabel const& b);
 
 } // namespace art
 

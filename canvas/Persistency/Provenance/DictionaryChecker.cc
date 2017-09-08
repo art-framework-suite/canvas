@@ -49,9 +49,9 @@ namespace {
 }
 
 void
-art::DictionaryChecker::checkDictionaries(std::string const& name_orig,
-                                          bool const recursive,
-                                          std::size_t const level)
+art::root::DictionaryChecker::checkDictionaries(std::string const& name_orig,
+                                                bool const recursive,
+                                                std::size_t const level)
 {
   using namespace std;
   string name;
@@ -316,7 +316,7 @@ art::DictionaryChecker::checkDictionaries(std::string const& name_orig,
 }
 
 std::vector<std::string>
-art::DictionaryChecker::typesMissingDictionaries()
+art::root::DictionaryChecker::typesMissingDictionaries()
 {
   std::vector<std::string> result;
   for (auto const& mt : missing_types_) {
@@ -328,7 +328,7 @@ art::DictionaryChecker::typesMissingDictionaries()
 }
 
 void
-art::DictionaryChecker::reportMissingDictionaries()
+art::root::DictionaryChecker::reportMissingDictionaries()
 {
   using namespace std;
   if (missing_types_.empty()) {
@@ -355,9 +355,9 @@ art::DictionaryChecker::reportMissingDictionaries()
 }
 
 void
-art::DictionaryChecker::checkDictionariesForArg_(std::string const& name,
-                                                 std::size_t const index,
-                                                 std::size_t const level)
+art::root::DictionaryChecker::checkDictionariesForArg_(std::string const& name,
+                                                       std::size_t const index,
+                                                       std::size_t const level)
 {
   auto const arg = name_of_template_arg(name, index);
   if (arg.empty()) {

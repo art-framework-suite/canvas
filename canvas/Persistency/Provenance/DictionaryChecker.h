@@ -5,11 +5,13 @@
 #include <vector>
 
 namespace art {
-  class DictionaryChecker;
+  namespace root {
+    class DictionaryChecker;
+  }
 }
 
 /// Manage recursive checking of dictionary information for data products.
-class art::DictionaryChecker {
+class art::root::DictionaryChecker {
 public:
 
   /// Check dictionaries (optionally recursively) for named type.
@@ -36,7 +38,7 @@ private:
 
 inline
 void
-art::DictionaryChecker::resetMissingTypes_()
+art::root::DictionaryChecker::resetMissingTypes_()
 {
   using std::swap;
   std::set<std::string> tmp;

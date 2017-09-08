@@ -15,118 +15,52 @@
 #include <vector>
 
 namespace art {
+  namespace root {
 
-  // Expensive: will almost certainly cause a ROOT autoparse.
-  TypeWithDict
-  find_nested_type_named(std::string const& nested_type,
-                         TClass* const type_to_search);
+    // Expensive: will almost certainly cause a ROOT autoparse.
+    TypeWithDict find_nested_type_named(std::string const& nested_type,
+                                        TClass* const type_to_search);
 
-  TypeWithDict
-  value_type_of(TClass* t);
+    TypeWithDict value_type_of(TClass* t);
+    TypeWithDict mapped_type_of(TClass* t);
 
-  TypeWithDict
-  mapped_type_of(TClass* t);
+    std::vector<TClass*> public_base_classes(TClass* cl);
 
-  void
-  public_base_classes(TClass* cl, std::vector<TClass*>& baseTypes);
+    TypeWithDict type_of_template_arg(TClass* template_instance, size_t desired_arg);
+    TypeWithDict type_of_template_arg(std::string const& template_instance,
+                                      size_t desired_arg);
 
-  std::string
-  name_of_template_arg(std::string const & template_instance,
-                       size_t desired_arg);
+    TypeWithDict type_of_assns_partner(std::string const& assns_type_name);
+    TypeWithDict type_of_assns_base(std::string const& assns_type_name);
 
-  TypeWithDict
-  type_of_template_arg(TClass* template_instance, size_t desired_arg);
+    bool is_instantiation_of(TClass* cl, std::string const& template_name);
 
-  TypeWithDict
-  type_of_template_arg(std::string const & template_instance,
-                       size_t desired_arg);
+    [[noreturn]]
+    void throwLateDictionaryError(std::string const& className);
 
-  bool is_assns(TypeID const & tid);
-
-  bool is_assns(std::string const & type_name);
-
-  std::string
-  name_of_assns_partner(std::string assns_type_name);
-
-  TypeWithDict
-  type_of_assns_partner(std::string assns_type_name);
-
-  std::string
-  name_of_assns_base(std::string assns_type_name);
-
-  TypeWithDict
-  type_of_assns_base(std::string assns_type_name);
-
-  bool
-  is_instantiation_of(std::string const & type_name,
-                      std::string const & template_name);
-
-  bool
-  is_instantiation_of(TypeID const & tid, std::string const & template_name);
-
-  bool
-  is_instantiation_of(TClass* cl, std::string const& template_name);
-
-  [[noreturn]]
-  void
-  throwLateDictionaryError(std::string const & className);
-
-  std::string
-  name_of_unwrapped_product(std::string const & wrapped_name);
-
+  } // namespace root
 } // namespace art
 
 inline
-art::TypeWithDict
-art::type_of_template_arg(std::string const & template_instance,
-                          size_t desired_arg)
+auto
+art::root::type_of_template_arg(std::string const& template_instance,
+                                size_t const desired_arg) -> TypeWithDict
 {
-  TypeWithDict found_type(name_of_template_arg(template_instance, desired_arg));
-  return found_type;
+  return TypeWithDict{name_of_template_arg(template_instance, desired_arg)};
 }
 
 inline
-bool
-art::is_assns(TypeID const & tid)
+auto
+art::root::type_of_assns_partner(std::string const& assns_type_name) -> TypeWithDict
 {
-  return is_assns(tid.className());
+  return TypeWithDict{name_of_assns_partner(assns_type_name)};
 }
 
 inline
-bool
-art::is_assns(std::string const & type_name)
+auto
+art::root::type_of_assns_base(std::string const& assns_type_name) -> TypeWithDict
 {
-  using namespace std::string_literals;
-  return is_instantiation_of(type_name, "art::Assns"s);
-}
-
-inline
-art::TypeWithDict
-art::type_of_assns_partner(std::string assns_type_name)
-{
-  TypeWithDict result(name_of_assns_partner(assns_type_name));
-  return result;
-}
-
-inline
-art::TypeWithDict
-art::type_of_assns_base(std::string assns_type_name)
-{
-  TypeWithDict result(name_of_assns_base(assns_type_name));
-  return result;
-}
-
-inline
-bool
-art::is_instantiation_of(std::string const & type_name,
-                         std::string const & template_name) {
-  return type_name.find(template_name + '<') == 0ull;
-}
-
-inline
-bool
-art::is_instantiation_of(TypeID const & tid, std::string const & template_name) {
-  return is_instantiation_of(tid.className(), template_name);
+  return TypeWithDict{name_of_assns_base(assns_type_name)};
 }
 
 #endif /* canvas_Persistency_Provenance_TypeTools_h */

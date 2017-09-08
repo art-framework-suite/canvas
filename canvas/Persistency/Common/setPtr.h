@@ -11,27 +11,27 @@
 namespace art {
   template <class COLLECTION>
   void
-  setPtr(COLLECTION const & coll,
-         const std::type_info & iToType,
+  setPtr(COLLECTION const& coll,
+         std::type_info const& iToType,
          unsigned long iIndex,
-         void const *& oPtr);
+         void const*& oPtr);
 
   template <typename T>
   void
-  setPtr(cet::map_vector<T> const & obj,
-         const std::type_info & iToType,
+  setPtr(cet::map_vector<T> const& obj,
+         std::type_info const& iToType,
          unsigned long iIndex,
-         void const *& oPtr);
+         void const*& oPtr);
 }
 
-template <class COLLECTION>
+template <class Collection>
 void
-art::setPtr(COLLECTION const & coll,
-            const std::type_info & iToType,
+art::setPtr(Collection const& coll,
+            std::type_info const& iToType,
             unsigned long iIndex,
-            void const *& oPtr)
+            void const*& oPtr)
 {
-  typedef COLLECTION product_type;
+  using product_type = Collection;
   auto it = coll.begin();
   advance(it, iIndex);
   oPtr = detail::maybeCastObj(detail::GetProduct<product_type>::address(it), iToType);
@@ -39,10 +39,10 @@ art::setPtr(COLLECTION const & coll,
 
 template <typename T>
 void
-art::setPtr(cet::map_vector<T> const & obj,
-            const std::type_info & iToType,
+art::setPtr(cet::map_vector<T> const& obj,
+            std::type_info const& iToType,
             unsigned long iIndex,
-            void const *& oPtr)
+            void const*& oPtr)
 {
   detail::value_type_helper vh;
   std::string const wanted_type = cet::demangle_symbol(iToType.name());

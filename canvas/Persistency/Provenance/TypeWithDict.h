@@ -14,13 +14,15 @@ class TDictionary;
 class TEnum;
 
 namespace art {
+  TypeID getTypeID(int);
 
-TypeID
-getTypeID(int);
+  namespace root {
+    class TypeWithDict;
+  }
+}
 
-class TypeWithDict {
-
-public: // TYPES
+class art::root::TypeWithDict {
+public:
 
   enum class Category {
     NONE, // 0
@@ -31,107 +33,71 @@ public: // TYPES
 
 public: // MEMBER FUNCTIONS -- Special Member Functions
 
-  ~TypeWithDict() noexcept;
+  TypeWithDict() noexcept = default;
 
-  TypeWithDict() noexcept;
-
-  explicit
-  TypeWithDict(std::type_info const& t);
-
-  explicit
-  TypeWithDict(TypeID const& id);
-
-  explicit
-  TypeWithDict(std::string const& name);
-
-  TypeWithDict(TypeWithDict const&) noexcept;
-
-  TypeWithDict(TypeWithDict&&) noexcept;
-
-  TypeWithDict&
-  operator=(TypeWithDict const&) noexcept;
-
-  TypeWithDict&
-  operator=(TypeWithDict&&) noexcept;
+  explicit TypeWithDict(std::type_info const& t);
+  explicit TypeWithDict(TypeID const& id);
+  explicit TypeWithDict(std::string const& name);
 
 public: // MEMBER FUNCTIONS -- API for the user
 
-  TDictionary*
-  tDictionary() const noexcept;
+  Category category() const noexcept;
 
-  Category
-  category() const noexcept;
+  TypeID const& id() const noexcept;
 
-  TypeID const&
-  id() const noexcept;
+  explicit operator bool() const noexcept;
 
-  explicit
-  operator bool() const noexcept;
+  std::type_info const& typeInfo() const;
 
-  std::type_info const&
-  typeInfo() const;
+  void print(std::ostream& os) const;
 
-  void
-  print(std::ostream& os) const;
+  char const* name() const;
+  std::string className() const;
+  std::string friendlyClassName() const;
 
-  char const*
-  name() const;
+  /// \name ROOT information access.
+  TClass* tClass() const;
+  TEnum* tEnum() const;
+  TDataType* tDataType() const;
+  TDictionary* tDictionary() const noexcept;
 
-  std::string
-  className() const;
+private:
 
-  std::string
-  friendlyClassName() const;
-
-  TClass*
-  tClass() const;
-
-  TEnum*
-  tEnum() const;
-
-  TDataType*
-  tDataType() const;
-
-private: // MEMBER FUNCTIONS -- Implementation details
-
-  static
-  TDictionary*
-  dictFromTypeInfo_(std::type_info const& t);
-
-  static
-  TDictionary*
-  dictFromName_(std::string const& name);
-
-  static
-  Category
-  categoryFromDict_(TDictionary* tDict);
-
-  static
-  TypeID
-  typeIDFromDictAndCategory_(TDictionary* tDict, Category category);
+  static TDictionary* dictFromTypeInfo_(std::type_info const& t);
+  static TDictionary* dictFromName_(std::string const& name);
+  static Category categoryFromDict_(TDictionary* tDict);
+  static TypeID typeIDFromDictAndCategory_(TDictionary* tDict, Category category);
 
 private: // MEMBER DATA
 
-  TDictionary*
-  tDict_{nullptr};
-
-  Category
-  category_{Category::NONE};
-
-  TypeID
-  id_{};
+  TDictionary* tDict_{nullptr};
+  Category category_{Category::NONE};
+  TypeID id_{};
 
 };
 
-std::string
-to_string(TypeWithDict::Category category);
+namespace art {
+  namespace root {
 
-std::ostream&
-operator<<(std::ostream& os, TypeWithDict::Category category);
+    std::string to_string(TypeWithDict::Category category);
 
-std::ostream&
-operator<<(std::ostream& os, TypeWithDict const& ty);
+    inline
+    std::ostream&
+    operator<<(std::ostream& os, TypeWithDict::Category category)
+    {
+      os << to_string(category);
+      return os;
+    }
 
+    inline
+    std::ostream&
+    operator<<(std::ostream& os, TypeWithDict const& ty)
+    {
+      ty.print(os);
+      return os;
+    }
+
+  } //namespace root
 } // namespace art
 
 // Local Variables:

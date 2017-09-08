@@ -1,11 +1,3 @@
-// ======================================================================
-//
-// BranchType.cc
-//
-// ======================================================================
-
-
-// framework support:
 #include "canvas/Persistency/Provenance/BranchType.h"
 
 #include <vector>
@@ -46,10 +38,10 @@ namespace art {
     std::string const eventAuxiliary           = event  + auxiliary;
     std::string const resultsAuxiliary         = results + auxiliary;
 
-    std::string const runProductProvenance        = run    + productProvenance;
-    std::string const subRunProductProvenance     = subRun + productProvenance;
-    std::string const eventProductProvenance      = event  + productProvenance;
-    std::string const resultsProductProvenance    = results  + productProvenance;
+    std::string const runProductProvenance     = run    + productProvenance;
+    std::string const subRunProductProvenance  = subRun + productProvenance;
+    std::string const eventProductProvenance   = event  + productProvenance;
+    std::string const resultsProductProvenance = results  + productProvenance;
 
     std::string const runMajorIndex            = runAuxiliary    + majorIndex;
     std::string const subRunMajorIndex         = subRunAuxiliary + majorIndex;
@@ -60,8 +52,8 @@ namespace art {
     std::string const eventMinorIndex          = eventAuxiliary  + ".id_.event_";
 
     inline
-    std::string const & select(BranchType bt,
-                               std::vector<std::string const *> const & strs)
+    std::string const& select(BranchType const bt,
+                              std::vector<std::string const*> const& strs)
     {
       return (static_cast<size_t>(bt) < strs.size()) ? *strs[bt] : undefinedType;
     }
@@ -69,32 +61,32 @@ namespace art {
   }  // namespace
 
   // Ordering muust match that in art/Persistency/Provenance/BranchType.h.
-  std::string const & BranchTypeToString( BranchType bt ) {
-    return select( bt, { &event, &subRun, &run, &results } );
+  std::string const& BranchTypeToString(BranchType const bt) {
+    return select(bt, {&event, &subRun, &run, &results});
   }
 
-  std::string const & BranchTypeToProductTreeName( BranchType bt ) {
-    return select( bt, { &events, &subRuns, &runs, &resultsTree } );
+  std::string const& BranchTypeToProductTreeName(BranchType const bt) {
+    return select(bt, {&events, &subRuns, &runs, &resultsTree});
   }
 
-  std::string const & BranchTypeToMetaDataTreeName( BranchType bt ) {
-    return select( bt, { &eventMeta, &subRunMeta, &runMeta, &resultsMeta } );
+  std::string const& BranchTypeToMetaDataTreeName(BranchType const bt) {
+    return select(bt, {&eventMeta, &subRunMeta, &runMeta, &resultsMeta});
   }
 
-  std::string const & BranchTypeToAuxiliaryBranchName( BranchType bt ) {
-    return select( bt, { &eventAuxiliary, &subRunAuxiliary, &runAuxiliary, &resultsAuxiliary } );
+  std::string const& BranchTypeToAuxiliaryBranchName(BranchType const bt) {
+    return select(bt, {&eventAuxiliary, &subRunAuxiliary, &runAuxiliary, &resultsAuxiliary});
   }
 
-  std::string const & productProvenanceBranchName( BranchType bt ) {
-    return select( bt, { &eventProductProvenance, &subRunProductProvenance, &runProductProvenance, &resultsProductProvenance } );
+  std::string const& productProvenanceBranchName(BranchType const bt) {
+    return select(bt, {&eventProductProvenance, &subRunProductProvenance, &runProductProvenance, &resultsProductProvenance});
   }
 
-  std::string const & BranchTypeToMajorIndexName( BranchType bt ) {
-    return select( bt, { &eventMajorIndex, &subRunMajorIndex, &runMajorIndex } );
+  std::string const& BranchTypeToMajorIndexName(BranchType const bt) {
+    return select(bt, {&eventMajorIndex, &subRunMajorIndex, &runMajorIndex});
   }
 
-  std::string const & BranchTypeToMinorIndexName( BranchType bt ) {
-    return select( bt, { &eventMinorIndex, &subRunMinorIndex, &runMinorIndex } );
+  std::string const& BranchTypeToMinorIndexName(BranchType const bt) {
+    return select(bt, {&eventMinorIndex, &subRunMinorIndex, &runMinorIndex});
   }
 
 }  // art

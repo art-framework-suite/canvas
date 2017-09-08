@@ -81,8 +81,9 @@ public: // MEMBER FUNCTIONS
 
 public: // MEMBER FUNCTIONS
 
+  // FIXME: Try to find a way to avoid exposing this function!
   std::recursive_mutex&
-  get_mutex();
+  get_mutex() const;
 
   //Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
   // Note: We do not give the strong exception safety guarantee because

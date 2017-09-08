@@ -101,7 +101,7 @@ operator=(ProcessHistory&& rhs)
 
 recursive_mutex&
 ProcessHistory::
-get_mutex()
+get_mutex() const
 {
   return mutex_;
 }
@@ -341,4 +341,3 @@ operator<<(ostream& ost, ProcessHistory const& ph)
 }
 
 } // namespace art
-

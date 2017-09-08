@@ -9,10 +9,22 @@
 #include <map>
 #include "canvas/Persistency/Provenance/BranchDescription.h"
 #include "canvas/Persistency/Provenance/BranchKey.h"
+#include "cetlib/container_algorithms.h"
 
 namespace art
 {
   typedef std::map<BranchKey, BranchDescription> ProductList;
+
+  // FIXME--TEMPORARY INLINE FUNCTION
+  inline
+  auto make_product_descriptions(ProductList const& productList)
+  {
+    ProductDescriptions result;
+    cet::transform_all(productList,
+                       back_inserter(result),
+                       [](auto const& pr) { return pr.second; });
+    return result;
+  }
 }
 
 #endif /* canvas_Persistency_Provenance_ProductList_h */

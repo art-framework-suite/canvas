@@ -1,75 +1,46 @@
 #include "canvas/Persistency/Provenance/TypeLabel.h"
+#include "canvas/Utilities/Exception.h"
 // vim: set sw=2 expandtab :
 
-#include "canvas/Utilities/TypeID.h"
-
-#include <string>
 #include <tuple>
-
-using namespace std;
 
 namespace art {
 
-TypeLabel::
-TypeLabel(TypeID const& itemtype, string const& instanceName, string const& emulatedMod /* = {} */)
-  : typeID_{itemtype}
-  , productInstanceName_{instanceName}
-  , emulatedModule_{emulatedMod}
-{
+  TypeLabel::TypeLabel(TypeID const& itemtype,
+                       std::string const& instanceName,
+                       bool const supportsView) :
+    typeID_{itemtype},
+    productInstanceName_{instanceName},
+    supportsView_{supportsView}
+  {}
+
+  TypeLabel::TypeLabel(TypeID const& itemtype,
+                       std::string const& instanceName,
+                       bool const supportsView,
+                       std::string emulatedModule) :
+    typeID_{itemtype},
+    productInstanceName_{instanceName},
+    supportsView_{supportsView},
+    emulatedModule_{std::make_unique<std::string>(std::move(emulatedModule))}
+  {}
+
+  std::string const&
+  TypeLabel::emulatedModule() const
+  {
+    if (!emulatedModule_) {
+      throw art::Exception(art::errors::NullPointerError, "TypeLabel::emulatedModule\n")
+        << "Attempt to retrieve an emulated module name when one does not exist.\n";
+    }
+    return *emulatedModule_;
+  }
+
+  // Types with the same friendlyClassName are in the same equivalence
+  // class for the purposes of this comparison.
+  bool operator<(TypeLabel const& a, TypeLabel const& b)
+  {
+    auto const& a_class_name = a.className();
+    auto const& b_class_name = b.className();
+    return std::tie(a.emulatedModule_, a.productInstanceName_, a_class_name) <
+           std::tie(b.emulatedModule_, b.productInstanceName_, b_class_name);
+  }
 }
-
-TypeID const&
-TypeLabel::
-typeID() const
-{
-  return typeID_;
-}
-
-//string
-//TypeLabel::
-//className() const
-//{
-//  return typeID_.className();
-//}
-
-//string
-//TypeLabel::
-//friendlyClassName() const
-//{
-//  return typeID_.friendlyClassName();
-//}
-
-string const&
-TypeLabel::
-productInstanceName() const
-{
-  return productInstanceName_;
-}
-
-string const&
-TypeLabel::
-emulatedModule() const
-{
-  return emulatedModule_;
-}
-
-//bool
-//TypeLabel::
-//hasEmulatedModule() const
-//{
-//  return !emulatedModule_.empty();
-//}
-
-// Types with the same friendlyClassName are in the same equivalence
-// class for the purposes of this comparison.
-bool
-operator<(TypeLabel const& a, TypeLabel const& b)
-{
-  auto const& a_class_name = a.typeID().className();
-  auto const& b_class_name = b.typeID().className();
-  return tie(a.emulatedModule_, a.productInstanceName_, a_class_name) <
-         tie(b.emulatedModule_, b.productInstanceName_, b_class_name);
-}
-
-} // namespace art
-

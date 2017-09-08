@@ -23,16 +23,16 @@ using namespace std;
 
 namespace {
 
-// Note: throws
-void
-throwIfUnsupportedType(string const& uname)
-{
-  string reason;
-  static string const constSuffix = " const";
-  static string const constPrefix = "const ";
-  static auto const constSz = constSuffix.size();
-  auto endChar = uname.back();
-  switch (endChar) {
+  // Note: throws
+  void
+  throwIfUnsupportedType(string const& uname)
+  {
+    string reason;
+    static string const constSuffix = " const";
+    static string const constPrefix = "const ";
+    static auto const constSz = constSuffix.size();
+    auto endChar = uname.back();
+    switch (endChar) {
     case '&':
       reason = "reference";
       break;
@@ -42,30 +42,28 @@ throwIfUnsupportedType(string const& uname)
     case ']':
       reason = "array";
       break;
-  }
-  if ((uname.size() > constSz) &&
-      ((uname.substr(0, constSz) == constPrefix) ||
-       (uname.substr(uname.size() - constSz) == constSuffix))) {
-    reason = "const";
-  }
-  if (reason.empty()) {
-    return;
-  }
-  throw Exception(errors::UnimplementedFeature)
+    }
+    if ((uname.size() > constSz) &&
+        ((uname.substr(0, constSz) == constPrefix) ||
+         (uname.substr(uname.size() - constSz) == constSuffix))) {
+      reason = "const";
+    }
+    if (reason.empty()) {
+      return;
+    }
+    throw Exception(errors::UnimplementedFeature)
       << "Attempted to access ROOT type information for type\n"
       << uname
       << "\nwhich is not supported by art due to its being a "
       << reason
       << ".\n";
-}
+  }
 
 } // unnamed namespace
 
-namespace art {
-
 // Note: throws
-TypeID
-getTypeID(int type)
+art::TypeID
+art::getTypeID(int type)
 {
   TypeID result;
   type_info const* t = nullptr;
@@ -73,342 +71,275 @@ getTypeID(int type)
       (type == kCounter/*6*/) || (type == kBits/*15*/) ||
       (type >= kNumDataTypes/*23*/)) {
     throw Exception(errors::LogicError, "getTypeID: ")
-        << "INTERNAL ERROR: encountered invalid type code "
-        << type
-        << ".\n";
+      << "INTERNAL ERROR: encountered invalid type code "
+      << type
+      << ".\n";
   }
   switch (type) {
-    case kChar_t: // 1
-      t = &typeid(char);
-      break;
-    case kShort_t: // 2
-      t = &typeid(short);
-      break;
-    case kInt_t: // 3
-      t = &typeid(int);
-      break;
-    case kLong_t: // 4
-      t = &typeid(long);
-      break;
-    case kFloat_t: // 5
-      t = &typeid(float);
-      break;
-    case kCharStar: // 7
-      t = &typeid(char*);
-      break;
-    case kDouble_t: // 8
-      t = &typeid(double);
-      break;
-    case kDouble32_t: // 9
-      t = &typeid(Double32_t);
-      break;
-    case kchar: // 10
-      t = &typeid(char);
-      break;
-    case kUChar_t: // 11
-      t = &typeid(unsigned char);
-      break;
-    case kUShort_t: // 12
-      t = &typeid(unsigned short);
-      break;
-    case kUInt_t: // 13
-      t = &typeid(unsigned int);
-      break;
-    case kULong_t: // 14
-      t = &typeid(unsigned long);
-      break;
-    case kLong64_t: // 16
-      t = &typeid(long long);
-      break;
-    case kULong64_t: // 17
-      t = &typeid(unsigned long long);
-      break;
-    case kBool_t: // 18
-      t = &typeid(bool);
-      break;
-    case kFloat16_t: // 19
-      t = &typeid(Float16_t);
-      break;
-    case kVoid_t: // 20
-      t = &typeid(void);
-      break;
-    case kDataTypeAliasUnsigned_t: // 21
-      t = &typeid(unsigned int);
-      break;
-    case kDataTypeAliasSignedChar_t: // 22
-      t = &typeid(signed char);
-      break;
+  case kChar_t: // 1
+    t = &typeid(char);
+    break;
+  case kShort_t: // 2
+    t = &typeid(short);
+    break;
+  case kInt_t: // 3
+    t = &typeid(int);
+    break;
+  case kLong_t: // 4
+    t = &typeid(long);
+    break;
+  case kFloat_t: // 5
+    t = &typeid(float);
+    break;
+  case kCharStar: // 7
+    t = &typeid(char*);
+    break;
+  case kDouble_t: // 8
+    t = &typeid(double);
+    break;
+  case kDouble32_t: // 9
+    t = &typeid(Double32_t);
+    break;
+  case kchar: // 10
+    t = &typeid(char);
+    break;
+  case kUChar_t: // 11
+    t = &typeid(unsigned char);
+    break;
+  case kUShort_t: // 12
+    t = &typeid(unsigned short);
+    break;
+  case kUInt_t: // 13
+    t = &typeid(unsigned int);
+    break;
+  case kULong_t: // 14
+    t = &typeid(unsigned long);
+    break;
+  case kLong64_t: // 16
+    t = &typeid(long long);
+    break;
+  case kULong64_t: // 17
+    t = &typeid(unsigned long long);
+    break;
+  case kBool_t: // 18
+    t = &typeid(bool);
+    break;
+  case kFloat16_t: // 19
+    t = &typeid(Float16_t);
+    break;
+  case kVoid_t: // 20
+    t = &typeid(void);
+    break;
+  case kDataTypeAliasUnsigned_t: // 21
+    t = &typeid(unsigned int);
+    break;
+  case kDataTypeAliasSignedChar_t: // 22
+    t = &typeid(signed char);
+    break;
   }
   result = TypeID(*t);
   return result;
 }
 
-TypeWithDict::
-~TypeWithDict() noexcept
-{
-  tDict_ = nullptr;
-}
-
-TypeWithDict::
-TypeWithDict() noexcept
-  : tDict_{nullptr}
-  , category_{Category::NONE}
-  , id_{}
-{
-}
-
 // Note: cannot be noexcept because dictFromTypeInfo_,
 // and categoryFromDict_ throw.
-TypeWithDict::
+art::root::TypeWithDict::
 TypeWithDict(type_info const& t)
   : tDict_{dictFromTypeInfo_(t)}
   , category_{categoryFromDict_(tDict_)}
   , id_{t}
-{
-}
+{}
 
 // Note: cannot be noexcept because dictFromTypeInfo_,
 // categoryFromDict_, and typeIDFromDictAndCategory_ throw.
-TypeWithDict::
+art::root::TypeWithDict::
 TypeWithDict(TypeID const& id)
   : tDict_{id ? dictFromTypeInfo_(id.typeInfo()) : nullptr}
   , category_{categoryFromDict_(tDict_)}
   , id_{typeIDFromDictAndCategory_(tDict_, category_)}
-{
-}
+{}
 
 // Note: cannot be noexcept because dictFromTypeInfo_,
 // categoryFromDict_, and typeIDFromDictAndCategory_ throw.
-TypeWithDict::
+art::root::TypeWithDict::
 TypeWithDict(string const& name)
   : tDict_{dictFromName_(name)}
   , category_{categoryFromDict_(tDict_)}
   , id_{typeIDFromDictAndCategory_(tDict_, category_)}
-{
-}
-
-TypeWithDict::
-TypeWithDict(TypeWithDict const& rhs) noexcept
-  : tDict_{rhs.tDict_}
-  , category_{rhs.category_}
-  , id_{rhs.id_}
-{
-}
-
-TypeWithDict::
-TypeWithDict(TypeWithDict&& rhs) noexcept
-  : tDict_{move(rhs.tDict_)}
-  , category_{move(rhs.category_)}
-  , id_{move(rhs.id_)}
-{
-}
-
-TypeWithDict&
-TypeWithDict::
-operator=(TypeWithDict const& rhs) noexcept
-{
-  if (this != &rhs) {
-    tDict_ = rhs.tDict_;
-    category_ = rhs.category_;
-    id_ = rhs.id_;
-  }
-  return *this;
-}
-
-TypeWithDict&
-TypeWithDict::
-operator=(TypeWithDict&& rhs) noexcept
-{
-  tDict_ = move(rhs.tDict_);
-  category_ = move(rhs.category_);
-  id_ = move(rhs.id_);
-  return *this;
-}
+{}
 
 TDictionary*
-TypeWithDict::
-tDictionary() const noexcept
+art::root::TypeWithDict::tDictionary() const noexcept
 {
   return tDict_;
 }
 
-TypeWithDict::Category
-TypeWithDict::
-category() const noexcept
+art::root::TypeWithDict::Category
+art::root::TypeWithDict::category() const noexcept
 {
   return category_;
 }
 
 TypeID const&
-TypeWithDict::
-id() const noexcept
+art::root::TypeWithDict::id() const noexcept
 {
   return id_;
 }
 
-TypeWithDict::
-operator bool() const noexcept
+art::root::TypeWithDict::operator bool() const noexcept
 {
   return (category_ == Category::ENUMTYPE) || id_;
 }
 
 // Note: throws
 void
-TypeWithDict::
-print(ostream& os) const
+art::root::TypeWithDict::print(ostream& os) const
 {
   switch (category_) {
-    case Category::NONE:
-      os << "NONE";
-      break;
-    case Category::ENUMTYPE:
-      os << "Enumerated type "
-         << dynamic_cast<TEnum*>(tDict_)->GetName();
-      break;
-    default:
-      if (!id_) {
-        throw Exception(errors::LogicError)
-            << "No typeid information for type of category "
-            << to_string(category_)
-            << ".\n";
-      }
-      id_.print(os);
-      break;
+  case Category::NONE:
+    os << "NONE";
+    break;
+  case Category::ENUMTYPE:
+    os << "Enumerated type "
+      << dynamic_cast<TEnum*>(tDict_)->GetName();
+    break;
+  default:
+    if (!id_) {
+      throw Exception(errors::LogicError)
+        << "No typeid information for type of category "
+        << to_string(category_)
+        << ".\n";
+    }
+    id_.print(os);
+    break;
   }
 }
 
 // Note: throws
 char const*
-TypeWithDict::
-name() const
+art::root::TypeWithDict::name() const
 {
   char const* result = "";
   switch (category_) {
-    case Category::NONE:
-      break;
-    case Category::ENUMTYPE:
-      break;
-    default:
-      if (!id_) {
-        throw Exception(errors::LogicError)
-            << "No typeid information for type of category "
-            << to_string(category_)
-            << ".\n";
-      }
-      result = id_.name();
-      break;
+  case Category::NONE:
+    break;
+  case Category::ENUMTYPE:
+    break;
+  default:
+    if (!id_) {
+      throw Exception(errors::LogicError)
+        << "No typeid information for type of category "
+        << to_string(category_)
+        << ".\n";
+    }
+    result = id_.name();
+    break;
   }
   return result;
 }
 
 // Note: throws
 string
-TypeWithDict::
-className() const
+art::root::TypeWithDict::className() const
 {
   string result;
   switch (category_) {
-    case Category::NONE:
-      result = "NONE";
-      break;
-    case Category::ENUMTYPE:
-      result = dynamic_cast<TEnum*>(tDict_)->GetName();
-      break;
-    default:
-      if (!id_) {
-        throw Exception(errors::LogicError)
-            << "No typeid information for type of category "
-            << to_string(category_)
-            << ".\n";
-      }
-      result = id_.className();
-      break;
+  case Category::NONE:
+    result = "NONE";
+    break;
+  case Category::ENUMTYPE:
+    result = dynamic_cast<TEnum*>(tDict_)->GetName();
+    break;
+  default:
+    if (!id_) {
+      throw Exception(errors::LogicError)
+        << "No typeid information for type of category "
+        << to_string(category_)
+        << ".\n";
+    }
+    result = id_.className();
+    break;
   }
   return result;
 }
 
 // Note: throws
 string
-TypeWithDict::
-friendlyClassName() const
+art::root::TypeWithDict::friendlyClassName() const
 {
   string result;
   switch (category_) {
-    case Category::NONE:
-      result = "NONE";
-      break;
-    case Category::ENUMTYPE:
-      result = friendlyname::friendlyName(
-                 dynamic_cast<TEnum*>(tDict_)->GetName());
-      break;
-    default:
-      if (!bool(id_)) {
-        throw Exception(errors::LogicError)
-            << "No typeid information for type of category "
-            << to_string(category_)
-            << ".\n";
-      }
-      result = id_.friendlyClassName();
-      break;
+  case Category::NONE:
+    result = "NONE";
+    break;
+  case Category::ENUMTYPE:
+    result = friendlyname::friendlyName(
+                                        dynamic_cast<TEnum*>(tDict_)->GetName());
+    break;
+  default:
+    if (!bool(id_)) {
+      throw Exception(errors::LogicError)
+        << "No typeid information for type of category "
+        << to_string(category_)
+        << ".\n";
+    }
+    result = id_.friendlyClassName();
+    break;
   }
   return result;
 }
 
 // Note: throws
 TClass*
-TypeWithDict::
-tClass() const
+art::root::TypeWithDict::tClass() const
 {
   if (category_ == Category::CLASSTYPE) {
     return dynamic_cast<TClass*>(tDict_);
   }
   throw Exception(errors::TypeConversion)
-      << "TypeWithDict: requested operation requires category: "
-      << to_string(Category::CLASSTYPE)
-      << ".\n"
-      << "The category of this type is actually: "
-      << to_string(category_)
-      << ".\n";
+    << "TypeWithDict: requested operation requires category: "
+    << to_string(Category::CLASSTYPE)
+    << ".\n"
+    << "The category of this type is actually: "
+    << to_string(category_)
+    << ".\n";
 }
 
 // Note: throws
 TEnum*
-TypeWithDict::
-tEnum() const
+art::root::TypeWithDict::tEnum() const
 {
   if (category_ == Category::ENUMTYPE) {
     return dynamic_cast<TEnum*>(tDict_);
   }
   throw Exception(errors::TypeConversion)
-      << "TypeWithDict: requested operation requires category: "
-      << to_string(Category::ENUMTYPE)
-      << ".\n"
-      << "The category of this type is actually: "
-      << to_string(category_)
-      << ".\n";
+    << "TypeWithDict: requested operation requires category: "
+    << to_string(Category::ENUMTYPE)
+    << ".\n"
+    << "The category of this type is actually: "
+    << to_string(category_)
+    << ".\n";
 }
 
 // Note: throws
 TDataType*
-TypeWithDict::
-tDataType() const
+art::root::TypeWithDict::tDataType() const
 {
   if (category_ == Category::BASICTYPE) {
     return dynamic_cast<TDataType*>(tDict_);
   }
   throw Exception(errors::TypeConversion)
-      << "TypeWithDict: requested operation requires category: "
-      << to_string(Category::BASICTYPE)
-      << ".\n"
-      << "The category of this type is actually: "
-      << to_string(category_)
-      << ".\n";
+    << "TypeWithDict: requested operation requires category: "
+    << to_string(Category::BASICTYPE)
+    << ".\n"
+    << "The category of this type is actually: "
+    << to_string(category_)
+    << ".\n";
 }
 
 // Note: throws
 TDictionary*
-TypeWithDict::
-dictFromTypeInfo_(type_info const& ti)
+art::root::TypeWithDict::dictFromTypeInfo_(type_info const& ti)
 {
   throwIfUnsupportedType(uniform_type_name(ti));
   TDictionary* result = TClass::GetClass(ti);
@@ -425,20 +356,19 @@ dictFromTypeInfo_(type_info const& ti)
     return result;
   }
   throw Exception(errors::DictionaryNotFound)
-      << "TypeWithDict::dictFromTypeInfo_: no dictionary found for type\n"
-      << uniform_type_name(ti)
-      << ".\n"
-      << "Please ensure that it is properly specified in classes_def.xml,\n"
-      << "with the correct header inclusions and template instantiations\n"
-      << "(if appropriate) in classes.h. If this was a transient data "
-      "member,\n"
-      << "ensure that it is properly marked as such in classes_def.xml\n";
+    << "TypeWithDict::dictFromTypeInfo_: no dictionary found for type\n"
+    << uniform_type_name(ti)
+    << ".\n"
+    << "Please ensure that it is properly specified in classes_def.xml,\n"
+    << "with the correct header inclusions and template instantiations\n"
+    << "(if appropriate) in classes.h. If this was a transient data "
+    "member,\n"
+    << "ensure that it is properly marked as such in classes_def.xml\n";
 }
 
 // Note: throws
 TDictionary*
-TypeWithDict::
-dictFromName_(string const& name)
+art::root::TypeWithDict::dictFromName_(string const& name)
 {
   TDictionary* result = nullptr;
   static tbb::concurrent_unordered_map<string, TDictionary*> s_nameToDict;
@@ -467,9 +397,8 @@ dictFromName_(string const& name)
 }
 
 // Note: throws
-TypeWithDict::Category
-TypeWithDict::
-categoryFromDict_(TDictionary* tDict)
+art::root::TypeWithDict::Category
+art::root::TypeWithDict::categoryFromDict_(TDictionary* tDict)
 {
   Category result = Category::NONE;
   if (tDict == nullptr) {
@@ -488,17 +417,16 @@ categoryFromDict_(TDictionary* tDict)
     return result;
   }
   throw Exception(errors::LogicError)
-      << "INTENRAL ERROR: TypeWithDict::categoryFromDict_ encountered a type "
-      << tDict->GetName()
-      << " of unknown category "
-      << tDict->IsA()->GetName()
-      << ".\n";
+    << "INTENRAL ERROR: TypeWithDict::categoryFromDict_ encountered a type "
+    << tDict->GetName()
+    << " of unknown category "
+    << tDict->IsA()->GetName()
+    << ".\n";
 }
 
 // Note: throws
 TypeID
-TypeWithDict::
-typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
+art::root::TypeWithDict::typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
 {
   TypeID result;
   if (category == Category::NONE) {
@@ -522,37 +450,36 @@ typeIDFromDictAndCategory_(TDictionary* tDict, Category category)
       }
       else {
         throw Exception(errors::LogicError)
-            << "Missing dictionary for type: "
-            << nm
-            << '\n';
+          << "Missing dictionary for type: "
+          << nm
+          << '\n';
       }
     }
     return getTypeID(type);
   }
   throw Exception(errors::LogicError)
-      << "INTERNAL ERROR: typeIDFromDictAndCategory_: "
-      << "Unknown type category "
-      << static_cast<unsigned short>(category)
-      << " ("
-      << to_string(category)
-      << ").\n";
+    << "INTERNAL ERROR: typeIDFromDictAndCategory_: "
+    << "Unknown type category "
+    << static_cast<unsigned short>(category)
+    << " ("
+    << to_string(category)
+    << ").\n";
 }
 
 // Note: throws
 type_info const&
-TypeWithDict::
-typeInfo() const
+art::root::TypeWithDict::typeInfo() const
 {
   if (!*this) {
     throw Exception(errors::LogicError)
-        << "TypeWithDict: typeInfo() requested on an invalid object\n.";
+      << "TypeWithDict: typeInfo() requested on an invalid object\n.";
   }
   return id_.typeInfo();
 }
 
 // Note: throws
 string
-to_string(TypeWithDict::Category category)
+art::root::to_string(TypeWithDict::Category category)
 {
   string result;
   if (category == TypeWithDict::Category::NONE) {
@@ -572,27 +499,8 @@ to_string(TypeWithDict::Category category)
     return result;
   }
   throw Exception(errors::LogicError)
-      << "INTENRAL ERROR: to_string(TypeWithDict::Category): "
-      << "Cannot interpret category: "
-      << static_cast<unsigned short>(category)
-      << "\n";
+    << "INTENRAL ERROR: to_string(TypeWithDict::Category): "
+    << "Cannot interpret category: "
+    << static_cast<unsigned short>(category)
+    << "\n";
 }
-
-// Note: throws because to_string does
-ostream&
-operator<<(ostream& os, TypeWithDict::Category category)
-{
-  os << to_string(category);
-  return os;
-}
-
-// Note: throws because print does
-ostream&
-operator<<(ostream& os, TypeWithDict const& ty)
-{
-  ty.print(os);
-  return os;
-}
-
-} // namespace art
-

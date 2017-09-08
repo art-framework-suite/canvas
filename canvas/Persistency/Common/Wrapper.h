@@ -2,10 +2,15 @@
 #define canvas_Persistency_Common_Wrapper_h
 // vim: set sw=2:
 
-////////////////////////////////////////////////////////////////////////
-// Wrapper: A template wrapper around EDProducts to hold the product ID.
-//
-////////////////////////////////////////////////////////////////////////
+// =====================================================================
+// Wrapper: A class template that inherits from art::EDProduct, thus
+//          providing the representation needed for providing products
+//          of type T.  Each instantiation also includes:
+//            - a Boolean value corresponding to the presence of the
+//              product in the file
+//            - the RangeSet corresponding to the set of events
+//              processed in creating the product.
+// =====================================================================
 
 #include "canvas/Persistency/Common/EDProduct.h"
 #include "canvas/Persistency/Common/detail/aggregate.h"
@@ -37,7 +42,7 @@ namespace art {
     struct has_makePartner_member : std::false_type {};
 
     template <typename T>
-    struct has_makePartner_member<T, enable_if_function_exists_t<std::unique_ptr<EDProduct>(T::*)(std::type_info const &) const, &T::makePartner>> : std::true_type {};
+    struct has_makePartner_member<T, enable_if_function_exists_t<std::unique_ptr<EDProduct>(T::*)(std::type_info const&) const, &T::makePartner>> : std::true_type {};
 
   }
 
@@ -63,46 +68,46 @@ namespace art {
 template <typename T>
 class art::Wrapper : public art::EDProduct {
 public:
-  Wrapper();
+  Wrapper() = default;
 
   explicit Wrapper(std::unique_ptr<T> ptr);
   virtual ~Wrapper() = default;
 
-  T const * product() const;
-  T const * operator->() const;
-
-  void fillView(std::vector<void const*>& view) const override;
-
-  std::string productSize() const override;
+  T const* product() const;
+  T const* operator->() const;
 
   // MUST UPDATE WHEN CLASS IS CHANGED!
   static short Class_Version() { return 11; }
 
 private:
 
+  void fillView(std::vector<void const*>& view) const override;
+
+  std::string productSize() const override;
   void do_combine(EDProduct* product) override;
 
   void do_setRangeSetID(unsigned) override;
   unsigned do_getRangeSetID() const override;
 
   std::unique_ptr<EDProduct>
-  do_makePartner(std::type_info const & wanted_type) const override;
+  do_makePartner(std::type_info const& wanted_type) const override;
 
   bool isPresent_() const override {return present;}
+  std::type_info const* typeInfo_() const override;
 
-  void do_setPtr(std::type_info const & toType,
+  void do_setPtr(std::type_info const& toType,
                  unsigned long index,
-                 void const * &ptr) const override;
+                 void const*& ptr) const override;
 
-  void do_getElementAddresses(std::type_info const & toType,
-                              std::vector<unsigned long> const & indices,
-                              std::vector<void const *> &ptr) const override;
+  void do_getElementAddresses(std::type_info const& toType,
+                              std::vector<unsigned long> const& indices,
+                              std::vector<void const*>& ptr) const override;
 
-  T && refOrThrow(T * ptr);
+  T&& refOrThrow(T* ptr);
 
-  bool present;
-  unsigned rangeSetID;
-  T obj;
+  bool present{false};
+  unsigned rangeSetID{-1u};
+  T obj{};
 
 };  // Wrapper<>
 
@@ -130,20 +135,7 @@ private:
 ////////////////////////////////////////////////////////////////////////
 // Wrapper member functions.
 template <typename T>
-art::Wrapper<T>::
-Wrapper()
-  :
-  EDProduct{},
-  present{false},
-  rangeSetID{-1u},
-  obj()
-{
-}
-
-template <typename T>
-art::Wrapper<T>::
-Wrapper(std::unique_ptr<T> ptr) :
-  EDProduct{},
+art::Wrapper<T>::Wrapper(std::unique_ptr<T> ptr) :
   present{ptr.get() != 0},
   rangeSetID{-1u},
   obj(refOrThrow(ptr.get()))
@@ -151,41 +143,43 @@ Wrapper(std::unique_ptr<T> ptr) :
 }
 
 template <typename T>
-T const *
-art::Wrapper<T>::
-product() const
+T const*
+art::Wrapper<T>::product() const
 {
-  return (present ? &obj : nullptr);
+  return present ? &obj : nullptr;
 }
 
 template <typename T>
-T const *
-art::Wrapper<T>::
-operator->() const
+T const*
+art::Wrapper<T>::operator->() const
 {
   return product();
 }
 
 template <typename T>
+std::type_info const*
+art::Wrapper<T>::typeInfo_() const
+{
+  return SupportsView<T>::type_id();
+}
+
+template <typename T>
 void
-art::Wrapper<T>::
-fillView(std::vector<void const*>& view) const
+art::Wrapper<T>::fillView(std::vector<void const*>& view) const
 {
   MaybeFillView<T>::fill(obj, view);
 }
 
 template <typename T>
 std::string
-art::Wrapper<T>::
-productSize() const
+art::Wrapper<T>::productSize() const
 {
   return art::productSize<T>()(obj);
 }
 
 template <typename T>
 void
-art::Wrapper<T>::
-do_combine(art::EDProduct* p)
+art::Wrapper<T>::do_combine(art::EDProduct* p)
 {
   if (!p->isPresent()) return;
 
@@ -206,16 +200,14 @@ art::Wrapper<T>::do_setRangeSetID(unsigned const id)
 
 template <typename T>
 unsigned
-art::Wrapper<T>::
-do_getRangeSetID() const
+art::Wrapper<T>::do_getRangeSetID() const
 {
   return rangeSetID;
 }
 
 template <typename T>
 std::unique_ptr<art::EDProduct>
-art::Wrapper<T>::
-do_makePartner(std::type_info const & wanted_wrapper) const
+art::Wrapper<T>::do_makePartner(std::type_info const& wanted_wrapper) const
 {
   std::unique_ptr<art::EDProduct> retval;
   std::conditional_t<detail::has_makePartner_member<T>::value,
@@ -228,32 +220,29 @@ do_makePartner(std::type_info const & wanted_wrapper) const
 template <typename T>
 inline
 void
-art::Wrapper<T>::
-do_setPtr(std::type_info const & toType,
-          unsigned long index,
-          void const*& ptr) const
+art::Wrapper<T>::do_setPtr(std::type_info const& toType,
+                           unsigned long index,
+                           void const*& ptr) const
 {
-  std::conditional_t< has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T>> maybe_filler;
+  std::conditional_t<has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T>> maybe_filler;
   maybe_filler(this->obj, toType, index, ptr);
 }
 
 template <typename T>
 inline
 void
-art::Wrapper<T>::
-do_getElementAddresses(std::type_info const & toType,
-                       std::vector<unsigned long> const & indices,
-                       std::vector<void const *>& ptrs) const
+art::Wrapper<T>::do_getElementAddresses(std::type_info const& toType,
+                                        std::vector<unsigned long> const& indices,
+                                        std::vector<void const*>& ptrs) const
 {
-  std::conditional_t < has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T> > maybe_filler;
+  std::conditional_t<has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T>> maybe_filler;
   maybe_filler(this->obj, toType, indices, ptrs);
 }
 
 template <typename T>
 inline
-T &&
-art::Wrapper<T>::
-refOrThrow(T * ptr)
+T&&
+art::Wrapper<T>::refOrThrow(T* ptr)
 {
   if (ptr) {
     return std::move(*ptr);
@@ -274,7 +263,7 @@ namespace art {
   template <typename T >
   struct productSize<T, true> {
     std::string
-    operator()(T const & obj) const {
+    operator()(T const& obj) const {
       return boost::lexical_cast<std::string>(obj.size());
     }
   };
@@ -282,7 +271,7 @@ namespace art {
   template <typename T >
   struct productSize<T, false> {
     std::string
-    operator()(T const &) const
+    operator()(T const&) const
     { return "-"; }
   };
 
@@ -319,8 +308,8 @@ namespace art {
   template <typename T>
   struct DoMakePartner {
     std::unique_ptr<EDProduct>
-    operator()(T const & obj,
-               std::type_info const & wanted_wrapper_type) const {
+    operator()(T const& obj,
+               std::type_info const& wanted_wrapper_type) const {
       return obj.makePartner(wanted_wrapper_type);
     }
   };
@@ -328,8 +317,8 @@ namespace art {
   template <typename T>
   struct DoNotMakePartner {
     std::unique_ptr<EDProduct>
-    operator()(T const &,
-               std::type_info const &) const {
+    operator()(T const&,
+               std::type_info const&) const {
       throw Exception(errors::LogicError, "makePartner")
         << "Attempted to make partner of a product ("
         << cet::demangle_symbol(typeid(T).name())
@@ -339,32 +328,33 @@ namespace art {
   };
 
   template <typename T> struct DoSetPtr {
-    void operator()(T const & obj,
-                    const std::type_info & toType,
+    void operator()(T const& obj,
+                    std::type_info const& toType,
                     unsigned long index,
                     void const*& ptr) const;
-    void operator()(T const & obj,
-                    const std::type_info & toType,
-                    const std::vector<unsigned long>& index,
-                    std::vector<void const *>& ptrs) const;
+    void operator()(T const& obj,
+                    std::type_info const& toType,
+                    std::vector<unsigned long> const& index,
+                    std::vector<void const*>& ptrs) const;
   };
 
   template <typename T>
   struct DoNotSetPtr {
-    void operator()(T const &,
-                    const std::type_info &,
+    void operator()(T const&,
+                    std::type_info const&,
                     unsigned long,
-                    void const* &) const {
+                    void const*&) const {
       throw Exception(errors::ProductDoesNotSupportPtr)
         << "The product type "
         << cet::demangle_symbol(typeid(T).name())
         << "\ndoes not support art::Ptr\n";
     }
 
-    void operator()(T const &,
-                    const std::type_info &,
-                    const std::vector<unsigned long>&,
-                    std::vector<void const *>&) const {
+    void operator()(T const&,
+                    std::type_info const&,
+                    std::vector<unsigned long> const&,
+                    std::vector<void const*>&) const
+    {
       throw Exception(errors::ProductDoesNotSupportPtr)
         << "The product type "
         << cet::demangle_symbol(typeid(T).name())
@@ -373,10 +363,10 @@ namespace art {
   };
 
   template <typename T>
-  void DoSetPtr<T>::operator()(T const & obj,
-                               const std::type_info & toType,
-                               unsigned long index,
-                               void const* &ptr) const
+  void DoSetPtr<T>::operator()(T const& obj,
+                               std::type_info const& toType,
+                               unsigned long const index,
+                               void const*& ptr) const
   {
     // setPtr is the name of an overload set; each concrete collection
     // T should supply a setPtr function, in the same namespace at
@@ -385,10 +375,10 @@ namespace art {
   }
 
   template <typename T>
-  void DoSetPtr<T>::operator()(T const & obj,
-                               const std::type_info & toType,
-                               const std::vector<unsigned long> &indices,
-                               std::vector<void const *> &ptr) const
+  void DoSetPtr<T>::operator()(T const& obj,
+                               std::type_info const& toType,
+                               std::vector<unsigned long> const& indices,
+                               std::vector<void const*>& ptr) const
   {
     // getElementAddresses is the name of an overload set; each
     // concrete collection T should supply a getElementAddresses
