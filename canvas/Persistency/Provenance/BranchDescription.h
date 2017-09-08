@@ -40,25 +40,13 @@ class BranchDescription {
 
 public: // TYPES
 
-  static int constexpr invalidSplitLevel = -1;
-  static int constexpr invalidBasketSize = 0;
-  static int constexpr invalidCompression = -1;
+  static int constexpr invalidSplitLevel{-1};
+  static int constexpr invalidBasketSize{0};
+  static int constexpr invalidCompression{-1};
 
   struct Transients {
 
-    ~Transients();
-
-    Transients();
-
-    Transients(Transients const&);
-
-    Transients(Transients&&) noexcept;
-
-    Transients&
-    operator=(Transients const&);
-
-    Transients&
-    operator=(Transients&&) noexcept;
+    Transients() = default;
 
     // The branch name, which is currently derivable fron the other attributes.
     std::string
@@ -97,106 +85,54 @@ public: // TYPES
 
 public:
 
-  ~BranchDescription();
-
-  BranchDescription();
+  BranchDescription() = default;
 
   BranchDescription(BranchType const, TypeLabel const&, ModuleDescription const&);
 
-  BranchDescription(BranchDescription const&);
+  std::string const& moduleLabel() const noexcept;
+  std::string const& processName() const noexcept;
+  std::string const& producedClassName() const noexcept;
+  std::string const& friendlyClassName() const noexcept;
+  std::string const& productInstanceName() const noexcept;
 
-  BranchDescription(BranchDescription&&);
+  bool produced() const noexcept;
+  bool transient() const noexcept;
 
-  BranchDescription&
-  operator=(BranchDescription const&);
+  int splitLevel() const noexcept;
+  int basketSize() const noexcept;
+  int compression() const noexcept;
 
-  BranchDescription&
-  operator=(BranchDescription&&);
+  std::set<fhicl::ParameterSetID> const& psetIDs() const noexcept;
 
-public:
+  ProductID const& productID() const noexcept;
+  BranchType branchType() const noexcept;
+  std::string const& branchName() const noexcept;
+  std::string const& wrappedName() const noexcept;
 
-  std::string const&
-  moduleLabel() const noexcept;
+  void merge(BranchDescription const&);
+  void swap(BranchDescription&);
 
-  std::string const&
-  processName() const noexcept;
-
-  std::string const&
-  producedClassName() const noexcept;
-
-  std::string const&
-  friendlyClassName() const noexcept;
-
-  std::string const&
-  productInstanceName() const noexcept;
-
-  bool
-  produced() const noexcept;
-
-  bool
-  transient() const noexcept;
-
-  int
-  splitLevel() const noexcept;
-
-  int
-  basketSize() const noexcept;
-
-  int
-  compression() const noexcept;
-
-  std::set<fhicl::ParameterSetID> const&
-  psetIDs() const noexcept;
-
-  ProductID const&
-  productID() const noexcept;
-
-  BranchType
-  branchType() const noexcept;
-
-  std::string const&
-  branchName() const noexcept;
-
-  std::string const&
-  wrappedName() const noexcept;
-
-  void
-  merge(BranchDescription const&);
-
-  void
-  swap(BranchDescription&);
-
-  void
-  write(std::ostream&) const;
+  void write(std::ostream&) const;
 
 private:
 
-  fhicl::ParameterSetID const&
-  psetID() const;
+  fhicl::ParameterSetID const& psetID() const;
 
-  void
-  initProductID_();
+  void initProductID_();
 
-  void
-  fluffTransients_() const;
+  void fluffTransients_() const;
 
-  bool
-  transientsFluffed_() const noexcept;
+  bool transientsFluffed_() const noexcept;
 
-  bool
-  isPsetIDUnique() const noexcept;
+  bool isPsetIDUnique() const noexcept;
 
-  std::set<ProcessConfigurationID> const&
-  processConfigurationIDs() const noexcept;
+  std::set<ProcessConfigurationID> const& processConfigurationIDs() const noexcept;
 
-  Transients&
-  guts() noexcept;
+  Transients& guts() noexcept;
 
-  Transients const&
-  guts() const noexcept;
+  Transients const& guts() const noexcept;
 
-  void
-  throwIfInvalid_() const;
+  void throwIfInvalid_() const;
 
 private:
 
