@@ -1,6 +1,5 @@
-#include "canvas/Persistency/Provenance/TransientStreamer.h"
 // vim: set sw=2 expandtab :
-
+#include "canvas/IO/Root/Provenance/TransientStreamer.h"
 #include "canvas/Persistency/Provenance/BranchDescription.h"
 #include "canvas/Persistency/Provenance/FileIndex.h"
 #include "canvas/Persistency/Provenance/ProcessHistory.h"
@@ -19,4 +18,3 @@ setProvenanceTransientStreamers()
 }
 
 } // namespace art
-

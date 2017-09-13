@@ -2,9 +2,19 @@
 #define canvas_Persistency_Provenance_BranchDescription_h
 // vim: set sw=2 expandtab :
 
+// ================================================================================
+// BranchDescription: The full description of a data-product branch.  Equivalently,
+//                    the event-independent description of an EDProduct.
+// This description also applies to every product instance on the branch.
 //
-//  The full description of data product branch.
+// FIXME: A better design would be:
 //
+//   BranchDescription --owns--> ProductDescription --owns--> TypeDescription
+//
+// The BranchDescription class is what retains information necessary for
+// interactions with ROOT.  The ProductDescription contains information
+// that is relevant for core framework processing.
+// ================================================================================
 
 #include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
@@ -20,15 +30,9 @@
 
 namespace art {
 
-
   namespace detail {
-
     class BranchDescriptionStreamer;
-
-    void
-    setBranchDescriptionStreamer();
-
-  } // namespace detail
+  }
 
   class BranchDescription {
 
@@ -98,13 +102,16 @@ namespace art {
       // other attributes.
       std::string wrappedName_{};
 
+      // Is the class of the branch marked as transient in the data
+      // dictionary
+      bool transient_{false};
+
       // Was this branch produced in this process rather than in a
       // previous process
       validity_state validity_{PresentFromSource};
 
-      // Is the class of the branch marked as transient in the data
-      // dictionary
-      bool transient_{false};
+      // N.B. ROOT-specific transient information will be fluffed by the
+      //      BranchDescriptionStreamer::fluffRootTransients function.
 
       // The split level of the branch, as marked in the data
       // dictionary.
@@ -119,9 +126,12 @@ namespace art {
       int compression_{invalidCompression};
     };
 
+    void fluffRootTransients() const;
     void setValidity(Transients::validity_state const state) { guts().validity_ = state; }
 
   private:
+
+    friend class detail::BranchDescriptionStreamer;
 
     fhicl::ParameterSetID const& psetID() const;
 

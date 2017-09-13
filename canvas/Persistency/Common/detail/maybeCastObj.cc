@@ -4,23 +4,21 @@
 #include "canvas/Utilities/Exception.h"
 #include "cetlib_except/demangle.h"
 
-#ifdef __APPLE__
-#include "TClass.h"
-#include "TClassRef.h"
-#endif // __APPLE__
+#ifdef _LIBCPPABI_VERSION
+# include "TClass.h"
+# include "TClassRef.h"
+#else
+# include <cxxabi.h>
+#endif
 
 #include <iomanip>
 #include <iostream>
 #include <typeinfo>
 
-#ifndef __APPLE__
-#include <cxxabi.h>
-#endif // __APPLE__
-
 using namespace art;
 using namespace std;
 
-#ifdef __APPLE__
+#ifdef _LIBCPPABI_VERSION
 
 bool
 detail::upcastAllowed(type_info const& tid_from,
@@ -73,7 +71,7 @@ art::detail::maybeCastObj(void const* address,
     << "\n";
 }
 
-#else // __APPLE__
+#else // _LIBCPPABI_VERSION
 
 namespace {
 
@@ -225,4 +223,4 @@ detail::maybeCastObj(void const* ptr,
   return static_cast<char const*>(ptr) + res.offset;
 }
 
-#endif // __APPLE__
+#endif // _LIBCPPABI_VERSION

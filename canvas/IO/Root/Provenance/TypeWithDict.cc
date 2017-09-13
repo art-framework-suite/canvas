@@ -1,6 +1,5 @@
-#include "canvas/Persistency/Provenance/TypeWithDict.h"
 // vim: set sw=2 expandtab :
-
+#include "canvas/IO/Root/Provenance/TypeWithDict.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/FriendlyName.h"
 #include "canvas/Utilities/TypeID.h"

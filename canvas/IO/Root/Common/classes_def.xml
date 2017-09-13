@@ -1,4 +1,7 @@
 <lcgdict>
+ <class name="art::detail::AssnsBase" ClassVersion="10">
+  <version ClassVersion="10" checksum="2926251495"/>
+ </class>
  <class name="art::EDProduct" ClassVersion="10">
   <version ClassVersion="10" checksum="241049717"/>
  </class>

@@ -1,6 +1,5 @@
-#include "canvas/Persistency/Common/RefCoreStreamer.h"
 // vim: set sw=2 expandtab :
-
+#include "canvas/IO/Root/Common/RefCoreStreamer.h"
 #include "canvas/Persistency/Common/PrincipalBase.h"
 #include "canvas/Persistency/Common/RefCore.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
@@ -69,4 +68,3 @@ configureRefCoreStreamer(cet::exempt_ptr<PrincipalBase const> principal)
 }
 
 } // namespace art
-

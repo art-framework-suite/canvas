@@ -82,6 +82,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
+#include "canvas/Persistency/Common/AssnsBase.h"
 #include "canvas/Persistency/Common/AssnsIter.h"
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/Wrapper.h"
@@ -90,11 +91,6 @@
 #include "canvas/Utilities/TypeID.h"
 #include "cetlib/container_algorithms.h"
 #include "cetlib_except/demangle.h"
-
-#include "TBuffer.h"
-#include "TClassStreamer.h" // Temporary
-#include "TClass.h"
-#include "TClassRef.h"
 
 #include <iostream>
 #include <typeinfo>
@@ -117,31 +113,14 @@ namespace art {
   class Assns<L, R, void>; // No data: base class.
 
   namespace detail {
-    // Temporary streamer class until ioread rules are
-    // working again.
-    template <typename L, typename R>
-    class AssnsStreamer : public TClassStreamer {
-    public:
-      void operator()(TBuffer& R_b, void* objp) {
-        static TClassRef cl{TClass::GetClass(typeid(Assns<L, R, void>))};
-        auto obj = reinterpret_cast<Assns<L, R, void>*>(objp);
-        if (R_b.IsReading()) {
-          cl->ReadBuffer(R_b, obj);
-          obj->fill_transients();
-        }
-        else {
-          obj->fill_from_transients();
-          cl->WriteBuffer(R_b, obj);
-        }
-      }
-    };
+    class AssnsStreamer;
   }
 }
 
 ////////////////////////////////////////////////////////////////////////
 // Implementation of the specialization (3).
 template <typename L, typename R>
-class art::Assns<L, R, void> {
+class art::Assns<L, R, void> : public art::detail::AssnsBase {
 public:
   using left_t = L;
   using right_t = R;
@@ -167,6 +146,7 @@ public:
   assn_t const& operator [](size_type index) const;
   assn_t const& at(size_type index) const;
   size_type size() const;
+  std::string className() const;
 
   // Modifier.
   void addSingle(Ptr<left_t> const& left,
@@ -175,7 +155,7 @@ public:
 
   std::unique_ptr<EDProduct> makePartner(std::type_info const& wanted_wrapper_type) const;
 
-  static short Class_Version() { return 10; }
+  static short Class_Version() { return 11; }
 
   void aggregate(Assns const&) const {}
 
@@ -185,7 +165,7 @@ protected:
   virtual std::unique_ptr<EDProduct> makePartner_(std::type_info const& wanted_wrapper_type) const;
 
 private:
-  friend class detail::AssnsStreamer<left_t, right_t>;
+  friend class detail::AssnsStreamer;
   friend class art::Assns<right_t, left_t, void>; // partner_t.
 
   // FIXME: The only reason this function is virtual is to cause the
@@ -204,10 +184,8 @@ private:
 #endif
     ;
 
-  void fill_transients();
-  void fill_from_transients();
-
-  void init_streamer();
+  void fill_transients() override;
+  void fill_from_transients() override;
 
   ptrs_t ptrs_{}; //! transient
   ptr_data_t ptr_data_1_{};
@@ -254,7 +232,7 @@ public:
   // enable_if_function_exists_t does not detect the base's function.
   std::unique_ptr<EDProduct> makePartner(std::type_info const& wanted_wrapper_type) const;
 
-  static short Class_Version() { return 10; }
+  static short Class_Version() { return 11; }
 
   void aggregate(Assns const&) const {}
 
@@ -274,7 +252,6 @@ template <typename L, typename R>
 inline
 art::Assns<L, R, void>::Assns()
 {
-  init_streamer();
 }
 
 template <typename L, typename R>
@@ -288,7 +265,6 @@ art::Assns<L, R, void>::Assns(partner_t const& other)
                        using pr_t = typename ptrs_t::value_type;
                        return pr_t{pr.second, pr.first};
                      });
-  init_streamer();
 }
 
 template <typename L, typename R>
@@ -329,6 +305,15 @@ typename art::Assns<L, R, void>::size_type
 art::Assns<L, R, void>::size() const
 {
   return ptrs_.size();
+}
+
+template <typename L, typename R>
+inline
+std::string
+art::Assns<L, R, void>::className() const
+{
+  TypeID const assns_type{typeid(Assns<L, R, void>)};
+  return assns_type.className();
 }
 
 template <typename L, typename R>
@@ -432,15 +417,6 @@ art::Assns<L, R, void>::fill_from_transients()
   }
 }
 
-template <typename L, typename R>
-void
-art::Assns<L, R, void>::init_streamer()
-{
-  static TClassRef cl{TClass::GetClass(typeid(Assns<L, R, void>))};
-  if (cl->GetStreamer() == nullptr) {
-    cl->AdoptStreamer(new detail::AssnsStreamer<L, R>);
-  }
-}
 
 template <typename L, typename R, typename D>
 inline

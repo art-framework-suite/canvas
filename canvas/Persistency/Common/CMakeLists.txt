@@ -12,7 +12,5 @@ foreach(ART_IPR_BASE_NAME FindOne FindMany)
     @ONLY)
 endforeach()
 
-art_dictionary(DICTIONARY_LIBRARIES canvas)
-
 install_headers(SUBDIRS detail)
 install_source(SUBDIRS detail)

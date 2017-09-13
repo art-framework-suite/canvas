@@ -1,6 +1,6 @@
-#include "canvas/Persistency/Provenance/ProductIDStreamer.h"
 // vim: set sw=2 expandtab :
 
+#include "canvas/IO/Root/Provenance/ProductIDStreamer.h"
 #include "canvas/Persistency/Provenance/Compatibility/BranchIDList.h"
 #include "canvas/Persistency/Provenance/Compatibility/type_aliases.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
@@ -102,4 +102,3 @@ configureProductIDStreamer(cet::exempt_ptr<BranchIDLists const> bidLists)
 }
 
 } // namespace art
-

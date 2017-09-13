@@ -1,3 +1,4 @@
+#include "canvas/Persistency/Common/AssnsBase.h"
 #include "canvas/Persistency/Common/BoolCache.h"
 #include "canvas/Persistency/Common/ConstPtrCache.h"
 #include "canvas/Persistency/Common/EDProduct.h"

@@ -107,7 +107,7 @@
           targetClass="art::BranchDescription"
           source="std::string producedClassName_"
           target="supportsView_"
-          include="canvas/Persistency/Provenance/TypeWithDict.h">
+          include="canvas/IO/Root/Provenance/TypeWithDict.h">
     <![CDATA[
       // Look in the class of the product for a typedef named "value_type" or "mapped_type".
       using namespace art::root;

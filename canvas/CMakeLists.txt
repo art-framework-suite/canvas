@@ -1,14 +1,15 @@
 include(CetMake)
 
 # cmake will automatically order the library builds according to declared dependencies
-add_subdirectory (Version)
-add_subdirectory (Utilities)
-add_subdirectory (Persistency)
+add_subdirectory(Version)
+add_subdirectory(Utilities)
+add_subdirectory(Persistency)
+add_subdirectory(IO)
 
 find_package(Threads)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
-cet_make ( LIBRARY_NAME canvas
+cet_make(LIBRARY_NAME canvas
   SUBDIRS Version ${CMAKE_CURRENT_BINARY_DIR}/Version
   Utilities
   Utilities/detail
@@ -17,6 +18,9 @@ cet_make ( LIBRARY_NAME canvas
   Persistency/Provenance/detail
   Persistency/Common
   Persistency/Common/detail
+  IO/Root
+  IO/Root/Provenance
+  IO/Root/Common
   LIBRARIES
   MF_MessageLogger
   ${ROOT_CORE}
