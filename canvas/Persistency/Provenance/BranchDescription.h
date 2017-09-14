@@ -84,10 +84,6 @@ namespace art {
     void merge(BranchDescription const& other);
     void swap(BranchDescription& other);
 
-    friend bool combinable(BranchDescription const&, BranchDescription const&);
-    friend bool operator<(BranchDescription const&, BranchDescription const&);
-    friend bool operator==(BranchDescription const&, BranchDescription const&);
-
     struct Transients {
 
       Transients() = default;
@@ -126,12 +122,9 @@ namespace art {
       int compression_{invalidCompression};
     };
 
-    void fluffRootTransients() const;
     void setValidity(Transients::validity_state const state) { guts().validity_ = state; }
 
   private:
-
-    friend class detail::BranchDescriptionStreamer;
 
     fhicl::ParameterSetID const& psetID() const;
 
