@@ -134,8 +134,6 @@ public:
 
   void setValidity(Transients::validity_state const state) { guts().validity_ = state; }
 
-  void fluffRootTransients() const;
-
 private:
   friend class detail::BranchDescriptionStreamer;
 
