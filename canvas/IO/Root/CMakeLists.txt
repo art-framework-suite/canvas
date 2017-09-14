@@ -1,9 +1,0 @@
-add_subdirectory(Common)
-add_subdirectory(Provenance)
-add_subdirectory(Utilities)
-
-add_subdirectory(CLHEPDictionaries)
-add_subdirectory(CetlibDictionaries)
-add_subdirectory(FhiclCppDictionaries)
-add_subdirectory(StdDictionaries)
-add_subdirectory(WrappedStdDictionaries)
