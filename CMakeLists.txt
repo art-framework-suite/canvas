@@ -21,8 +21,6 @@ project(canvas)
 # cetbuildtools contains our cmake modules
 find_package(cetbuildtools REQUIRED)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Modules)
-
 include(CetCMakeEnv)
 cet_cmake_env()
 
@@ -46,29 +44,22 @@ find_ups_product(cetlib v2_01_00)
 find_ups_product(fhiclcpp)
 find_ups_product(messagefacility)
 find_ups_product(tbb)
-find_ups_root()
 find_ups_boost()
 find_ups_product(cetbuildtools)
 
 
 # define CLHEP
-cet_find_library( CLHEP  NAMES CLHEP   PATHS ENV CLHEP_LIB_DIR NO_DEFAULT_PATH )
+cet_find_library(CLHEP  NAMES CLHEP   PATHS ENV CLHEP_LIB_DIR NO_DEFAULT_PATH)
 
 # define cppunit
-cet_find_library( CPPUNIT NAMES cppunit   PATHS ENV CPPUNIT_LIB   NO_DEFAULT_PATH )
-
-# art_dictionary
-include(ArtDictionary)
+cet_find_library(CPPUNIT NAMES cppunit   PATHS ENV CPPUNIT_LIB   NO_DEFAULT_PATH)
 
 # source
-add_subdirectory (canvas)
-add_subdirectory (tools)
+add_subdirectory(canvas)
+add_subdirectory(tools)
 
 # ups - table and config files
 add_subdirectory(ups)
-
-# CMake modules
-add_subdirectory(Modules)
 
 # packaging utility
 include(UseCPack)

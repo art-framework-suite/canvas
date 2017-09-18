@@ -4,15 +4,17 @@
 
 #include "canvas/Utilities/TypeID.h"
 
-// For empty and also_empty
-#include "classes.h"
-
 #include <iostream>
 #include <string>
 
+namespace arttest {
+  struct empty {};
+  struct also_empty {};
+}
+
 BOOST_AUTO_TEST_SUITE ( TypeID_t )
 
-  BOOST_AUTO_TEST_CASE ( TypeID_equality_val )
+BOOST_AUTO_TEST_CASE ( TypeID_equality_val )
 {
   arttest::empty e;
   art::TypeID id1(typeid(e));
