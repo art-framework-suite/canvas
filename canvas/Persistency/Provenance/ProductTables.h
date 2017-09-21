@@ -22,6 +22,7 @@ namespace art {
                           AvailableProducts_t const& availableProducts);
 
     bool isValid{false};
+    ProductDescriptions descriptions{};
     ProductLookup_t productLookup{};
     ViewLookup_t viewLookup{};
     AvailableProducts_t availableProducts{};

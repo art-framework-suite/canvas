@@ -51,12 +51,13 @@ art::ProductTable::ProductTable(ProductDescriptions const& descriptions, BranchT
   ProductTable{descriptions, bt, available_products(descriptions_for_branch_type(bt, descriptions))}
 {}
 
-art::ProductTable::ProductTable(ProductDescriptions const& descriptions,
+art::ProductTable::ProductTable(ProductDescriptions const& descs,
                                 BranchType const bt,
                                 AvailableProducts_t const& availableProducts) :
   isValid{true},
-  productLookup{detail::createProductLookups(descriptions_for_branch_type(bt, descriptions))},
-  viewLookup{detail::createViewLookups(descriptions_for_branch_type(bt, descriptions))},
+  descriptions{descriptions_for_branch_type(bt, descs)},
+  productLookup{detail::createProductLookups(descriptions)},
+  viewLookup{detail::createViewLookups(descriptions)},
   availableProducts{availableProducts}
 {}
 
