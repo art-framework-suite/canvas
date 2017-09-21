@@ -43,7 +43,7 @@ public:
 private:
 
   fhicl::ParameterSetID
-  psetID_;
+  psetid_;
 
 };
 

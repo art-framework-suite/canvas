@@ -17,14 +17,14 @@ TriggerResults::
 TriggerResults::
 TriggerResults()
   : HLTGlobalStatus()
-  , psetID_()
+  , psetid_()
 {
 }
 
 TriggerResults::
 TriggerResults(const HLTGlobalStatus& hlt, const fhicl::ParameterSetID& psetID)
   : HLTGlobalStatus(hlt)
-  , psetID_(psetID)
+  , psetid_(psetID)
 {
 }
 
@@ -41,7 +41,7 @@ fhicl::ParameterSetID const&
 TriggerResults::
 parameterSetID() const
 {
-  return psetID_;
+  return psetid_;
 }
 
 //void
@@ -49,7 +49,7 @@ parameterSetID() const
 //swap(TriggerResults& other)
 //{
 //  this->HLTGlobalStatus::swap(other);
-//  psetID_.swap(other.psetID_);
+//  psetid_.swap(other.psetid_);
 //}
 
 //void
@@ -59,4 +59,3 @@ parameterSetID() const
 //}
 
 } // namespace art
-
