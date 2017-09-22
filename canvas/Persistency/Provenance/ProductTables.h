@@ -3,6 +3,7 @@
 
 #include "canvas/Persistency/Provenance/BranchDescription.h"
 #include "canvas/Persistency/Provenance/type_aliases.h"
+#include "cetlib/exempt_ptr.h"
 
 #include <array>
 
@@ -17,6 +18,8 @@ namespace art {
     ProductTable() = default;
 
     explicit ProductTable(ProductDescriptions const& descriptions, BranchType bt);
+
+    cet::exempt_ptr<BranchDescription const> description(ProductID) const;
 
     bool isValid{false};
     ProductDescriptionsByID descriptions{};

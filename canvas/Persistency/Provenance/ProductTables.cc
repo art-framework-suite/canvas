@@ -39,6 +39,16 @@ art::ProductTable::ProductTable(ProductDescriptions const& descs,
   viewLookup{detail::createViewLookups(descriptions)}
 {}
 
+cet::exempt_ptr<art::BranchDescription const>
+art::ProductTable::description(ProductID const pid) const
+{
+  auto it = descriptions.find(pid);
+  if (it == descriptions.cend()) {
+    return nullptr;
+  }
+  return cet::make_exempt_ptr(&it->second);
+}
+
 art::ProductTables
 art::ProductTables::invalid()
 {
