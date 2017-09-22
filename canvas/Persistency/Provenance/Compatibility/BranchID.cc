@@ -1,4 +1,4 @@
-#include "canvas/Persistency/Provenance/BranchID.h"
+#include "canvas/Persistency/Provenance/Compatibility/BranchID.h"
 #include "cetlib/crc32.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 #include <ostream>

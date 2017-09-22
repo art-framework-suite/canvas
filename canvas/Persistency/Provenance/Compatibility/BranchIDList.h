@@ -11,7 +11,7 @@
 // =======================================================================
 
 #include <vector>
-#include "canvas/Persistency/Provenance/BranchID.h"
+#include "canvas/Persistency/Provenance/Compatibility/BranchID.h"
 
 namespace art {
   typedef std::vector<BranchID::value_type> BranchIDList;

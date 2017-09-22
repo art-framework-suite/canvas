@@ -1,5 +1,5 @@
-#ifndef canvas_Persistency_Provenance_BranchID_h
-#define canvas_Persistency_Provenance_BranchID_h
+#ifndef canvas_Persistency_Provenance_Compatibility_BranchID_h
+#define canvas_Persistency_Provenance_Compatibility_BranchID_h
 
 /*----------------------------------------------------------------------
 
@@ -49,7 +49,7 @@ namespace art {
   std::ostream&
   operator<<(std::ostream& os, BranchID const& id);
 }
-#endif /* canvas_Persistency_Provenance_BranchID_h */
+#endif /* canvas_Persistency_Provenance_Compatibility_BranchID_h */
 
 // Local Variables:
 // mode: c++
