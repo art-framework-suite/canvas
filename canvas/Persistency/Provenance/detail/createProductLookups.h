@@ -6,7 +6,7 @@
 
 namespace art {
   namespace detail {
-    ProductLookup_t createProductLookups(ProductDescriptions const& descriptions);
+    ProductLookup_t createProductLookups(ProductDescriptionsByID const& descriptions);
   }
 }
 

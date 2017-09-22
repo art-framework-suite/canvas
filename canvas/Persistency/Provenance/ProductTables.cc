@@ -8,17 +8,11 @@ using namespace art;
 namespace {
   auto descriptions_for_branch_type(BranchType const bt, ProductDescriptions const& descriptions)
   {
-    ProductDescriptions result;
-    cet::copy_if_all(descriptions, back_inserter(result),
-                     [bt](auto const& pd){ return pd.branchType() == bt; });
-    return result;
-  }
-
-  auto available_products(ProductDescriptions const& descriptions)
-  {
-    AvailableProducts_t result;
-    cet::transform_all(descriptions, inserter(result, begin(result)),
-                       [](auto const& pd){ return pd.productID(); });
+    ProductDescriptionsByID result;
+    for (auto const& pd : descriptions) {
+      if (pd.branchType() != bt) continue;
+      result.emplace(pd.productID(), pd);
+    }
     return result;
   }
 
@@ -33,32 +27,16 @@ namespace {
     return result;
   }
 
-  auto
-  createProductTables(ProductDescriptions const& descriptions,
-                      std::array<AvailableProducts_t, NumBranchTypes> const& availableProducts)
-  {
-    ProductTables_t result{{}};
-    for (std::size_t bt{}; bt < NumBranchTypes; ++bt) {
-      result[bt] = ProductTable{descriptions, static_cast<BranchType>(bt), availableProducts[bt]};
-    }
-    return result;
-  }
 }
 
 // =======================================================================
 
-art::ProductTable::ProductTable(ProductDescriptions const& descriptions, BranchType const bt) :
-  ProductTable{descriptions, bt, available_products(descriptions_for_branch_type(bt, descriptions))}
-{}
-
 art::ProductTable::ProductTable(ProductDescriptions const& descs,
-                                BranchType const bt,
-                                AvailableProducts_t const& availableProducts) :
+                                BranchType const bt) :
   isValid{true},
   descriptions{descriptions_for_branch_type(bt, descs)},
   productLookup{detail::createProductLookups(descriptions)},
-  viewLookup{detail::createViewLookups(descriptions)},
-  availableProducts{availableProducts}
+  viewLookup{detail::createViewLookups(descriptions)}
 {}
 
 art::ProductTables
@@ -69,9 +47,4 @@ art::ProductTables::invalid()
 
 art::ProductTables::ProductTables(ProductDescriptions const& descriptions) :
   tables_{createProductTables(descriptions)}
-{}
-
-art::ProductTables::ProductTables(ProductDescriptions const& descriptions,
-                                  std::array<AvailableProducts_t, NumBranchTypes> const& availableProducts) :
-  tables_{createProductTables(descriptions, availableProducts)}
 {}

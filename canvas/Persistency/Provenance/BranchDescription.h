@@ -25,6 +25,7 @@
 #include "fhiclcpp/ParameterSetID.h"
 
 #include <iosfwd>
+#include <map>
 #include <set>
 #include <string>
 
@@ -209,6 +210,7 @@ namespace art {
   combinable(BranchDescription const&, BranchDescription const&);
 
   using ProductDescriptions = std::vector<BranchDescription>;
+  using ProductDescriptionsByID = std::map<ProductID, BranchDescription>;
 
 } // namespace art
 

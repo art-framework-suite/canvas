@@ -7,7 +7,6 @@
 #include "canvas/Utilities/FriendlyName.h"
 #include "canvas/Utilities/WrappedClassName.h"
 #include "fhiclcpp/ParameterSetID.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
 
 #include <cassert>
 #include <cstdlib>
@@ -43,7 +42,7 @@ namespace art {
     productInstanceName_{tl.productInstanceName()},
     supportsView_{tl.supportsView()}
   {
-    guts().validity_ = Transients::Produced;
+    guts().validity_ = tl.hasEmulatedModule() ? Transients::PresentFromSource : Transients::Produced;
     psetIDs_.insert(md.parameterSetID());
     processConfigurationIDs_.insert(md.processConfigurationID());
     throwIfInvalid_();
