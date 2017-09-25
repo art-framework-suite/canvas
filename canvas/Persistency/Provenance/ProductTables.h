@@ -35,6 +35,9 @@ namespace art {
     static ProductTables invalid();
     explicit ProductTables(ProductDescriptions const& descriptions);
 
+    auto const& descriptions(BranchType const bt) const { return tables_[bt].descriptions; }
+
+    auto& get(BranchType const bt) { return tables_[bt]; }
     auto const& get(BranchType const bt) const { return tables_[bt]; }
     bool isValid() const { return isValid_; }
 
