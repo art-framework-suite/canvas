@@ -11,7 +11,7 @@ using namespace cet;
 using namespace std;
 
 namespace {
-  bool subRunUnspecified(art::EventID const &eID) {
+  bool subRunUnspecified(art::EventID const& eID) {
     // This is nasty, principally because we don't want to be
     // encouraging too many people to do this. Basically, we're
     // checking whether the only reason an EventID is invalid is
@@ -26,14 +26,14 @@ namespace {
 namespace art {
 
   void
-  FileIndex::addEntry(EventID const &eID, EntryNumber_t const entry) {
+  FileIndex::addEntry(EventID const& eID, EntryNumber_t const entry) {
     entries_.emplace_back(eID, entry);
     resultCached() = false;
     sortState() = kNotSorted;
   }
 
   void
-  FileIndex::addEntryOnLoad(EventID const &eID, EntryNumber_t const entry) {
+  FileIndex::addEntryOnLoad(EventID const& eID, EntryNumber_t const entry) {
     entries_.emplace_back(eID, entry);
     resultCached() = false;
   }

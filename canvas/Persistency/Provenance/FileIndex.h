@@ -30,14 +30,11 @@
 #include "canvas/Persistency/Provenance/RunID.h"
 #include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Persistency/Provenance/Transient.h"
-#include <cassert>
 #include <iosfwd>
 #include <vector>
 
 namespace art {
-
   class FileIndex;
-
 }
 
 class art::FileIndex {
@@ -75,14 +72,14 @@ public:
   void sortBy_Run_SubRun_EventEntry();
 
   const_iterator
-  findPosition(EventID const &eID) const;
+  findPosition(EventID const& eID) const;
 
   template <typename ID>
   const_iterator
   findPosition(ID const& id, bool exact) const;
 
   const_iterator
-  findSubRunOrRunPosition(SubRunID const &srID) const;
+  findSubRunOrRunPosition(SubRunID const& srID) const;
 
   template <typename ID>
   bool contains(ID const& id, bool exact) const {
@@ -107,17 +104,17 @@ public:
 
   void print_event_list(std::ostream& os) const;
 
-  enum SortState { kNotSorted, kSorted_Run_SubRun_Event, kSorted_Run_SubRun_EventEntry};
+  enum SortState {kNotSorted, kSorted_Run_SubRun_Event, kSorted_Run_SubRun_EventEntry};
   struct Transients {
-    bool allInEntryOrder_ {false};
-    bool resultCached_ {false};
+    bool allInEntryOrder_{false};
+    bool resultCached_{false};
     // The default value for sortState_ reflects the fact that
     // the index is always sorted using Run, SubRun, and Event
     // number by the RootOutput before being written out.
     // In the other case when we create a new FileIndex, the
     // vector is empty, which is consistent with it having been
     // sorted.
-    SortState sortState_ {kSorted_Run_SubRun_Event};
+    SortState sortState_{kSorted_Run_SubRun_Event};
   };
 
 private:
@@ -127,10 +124,10 @@ private:
   SortState& sortState() const {return transients_.get().sortState_;}
 
   const_iterator
-  findEventForUnspecifiedSubRun(EventID const &eID, bool exact) const;
+  findEventForUnspecifiedSubRun(EventID const& eID, bool exact) const;
 
-  std::vector<Element> entries_ {};
-  mutable Transient<Transients> transients_ {};
+  std::vector<Element> entries_{};
+  mutable Transient<Transients> transients_{};
 };
 
 namespace art {
