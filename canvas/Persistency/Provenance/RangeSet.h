@@ -15,6 +15,8 @@
 
 namespace art {
 
+  class EventID;
+
   class RangeSet {
   public:
 
@@ -49,6 +51,8 @@ namespace art {
     decltype(auto) back() { return ranges_.back(); }
 
     void assign_ranges(const_iterator b, const_iterator e);
+
+    void update(EventID const&);
 
     template <typename ... ARGS>
     void emplace_range(ARGS&& ...);
@@ -93,6 +97,9 @@ namespace art {
   bool operator==(RangeSet const& l, RangeSet const& r);
   bool same_ranges(RangeSet const& l, RangeSet const& r);
   bool disjoint_ranges(RangeSet const& l, RangeSet const& r);
+  void throw_if_not_disjoint(RunNumber_t const rn,
+                             EventRange const& left,
+                             EventRange const& right) noexcept(false);
 
   // If one range-set is a superset of the other, the return value is
   // 'true'.

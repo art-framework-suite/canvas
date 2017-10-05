@@ -1,3 +1,4 @@
+#include "canvas/Persistency/Provenance/EventID.h"
 #include "canvas/Persistency/Provenance/RangeSet.h"
 #include "cetlib/crc32.h"
 
@@ -89,15 +90,9 @@ RangeSet::collapse()
     if (back.is_adjacent(r)) {
       back.merge(r);
     }
-    else if (back.is_disjoint(r)) {
-      result.push_back(r);
-    }
     else {
-      throw art::Exception(art::errors::EventRangeOverlap)
-        << "Attempt to merge event ranges that both contain one or more of the same events\n"
-        << " Run: " << run_ << '\n'
-        << "  " << back << "  vs.\n"
-        << "  " << r;
+      throw_if_not_disjoint(run_, back, r);
+      result.push_back(r);
     }
   }
   std::swap(ranges_, result);
@@ -111,6 +106,24 @@ RangeSet::assign_ranges(RangeSet::const_iterator const b,
 {
   require_not_full_run();
   ranges_.assign(b,e);
+}
+
+void
+art::RangeSet::update(EventID const& id)
+{
+  require_not_full_run();
+  if (ranges_.empty()) {
+    run_ = id.run();
+    ranges_.emplace_back(id.subRun(), id.event(), id.next().event());
+    return;
+  }
+  auto& back = ranges_.back();
+  if (back.subRun() == id.subRun() && back.end() == id.event()) {
+    back.set_end(id.next().event());
+  }
+  else {
+    ranges_.emplace_back(id.subRun(), id.event(), id.next().event());
+  }
 }
 
 RangeSet&
@@ -279,6 +292,19 @@ art::disjoint_ranges(RangeSet const& l, RangeSet const& r)
              std::back_inserter(merged));
 
   return disjoint(merged);
+}
+
+void
+art::throw_if_not_disjoint(RunNumber_t const rn,
+                           EventRange const& left,
+                           EventRange const& right) noexcept(false)
+{
+  if (left.is_disjoint(right)) return;
+  throw art::Exception(art::errors::EventRangeOverlap)
+    << "Attempt to merge event ranges that both contain one or more of the same events\n"
+    << " Run: " << rn << '\n'
+    << "  " << left << "  vs.\n"
+    << "  " << right;
 }
 
 bool
