@@ -21,16 +21,16 @@ struct art::WrappedTypeID {
   static WrappedTypeID make();
   TypeID product_type;
   TypeID wrapped_product_type;
+
 private:
   WrappedTypeID(std::type_info const& product_type,
                 std::type_info const& wrapped_product_type);
 };
 
-inline
-art::WrappedTypeID::WrappedTypeID(std::type_info const& prod_type,
-                                  std::type_info const& wrapped_prod_type)
-  : product_type{prod_type}
-  , wrapped_product_type{wrapped_prod_type}
+inline art::WrappedTypeID::WrappedTypeID(
+  std::type_info const& prod_type,
+  std::type_info const& wrapped_prod_type)
+  : product_type{prod_type}, wrapped_product_type{wrapped_prod_type}
 {}
 
 template <typename T>

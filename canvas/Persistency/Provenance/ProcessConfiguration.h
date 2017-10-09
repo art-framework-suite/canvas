@@ -11,65 +11,53 @@
 
 namespace art {
 
-class ProcessConfiguration {
+  class ProcessConfiguration {
 
-public:
+  public:
+    ~ProcessConfiguration();
 
-  ~ProcessConfiguration();
+    // Note: Cannot be noexcept because the psetid ctor can throw.
+    ProcessConfiguration();
 
-  // Note: Cannot be noexcept because the psetid ctor can throw.
-  ProcessConfiguration();
+    // Note: Cannot be noexcept because the psetid ctor can throw.
+    ProcessConfiguration(ProcessConfiguration const&);
 
-  // Note: Cannot be noexcept because the psetid ctor can throw.
-  ProcessConfiguration(ProcessConfiguration const&);
+    // Note: Cannot be noexcept because the psetid ctor can throw.
+    ProcessConfiguration(ProcessConfiguration&&);
 
-  // Note: Cannot be noexcept because the psetid ctor can throw.
-  ProcessConfiguration(ProcessConfiguration&&);
+    ProcessConfiguration& operator=(ProcessConfiguration const&);
 
-  ProcessConfiguration&
-  operator=(ProcessConfiguration const&);
+    ProcessConfiguration& operator=(ProcessConfiguration&&);
 
-  ProcessConfiguration&
-  operator=(ProcessConfiguration&&);
+    // Note: Cannot be noexcept because the psetid ctor can throw.
+    ProcessConfiguration(std::string const& name,
+                         fhicl::ParameterSetID const&,
+                         ReleaseVersion const&);
 
-  // Note: Cannot be noexcept because the psetid ctor can throw.
-  ProcessConfiguration(std::string const& name, fhicl::ParameterSetID const&, ReleaseVersion const&);
+  public:
+    std::string const& processName() const;
 
-public:
+    fhicl::ParameterSetID const& parameterSetID() const;
 
-  std::string const&
-  processName() const;
+    ReleaseVersion const& releaseVersion() const;
 
-  fhicl::ParameterSetID const&
-  parameterSetID() const;
+    ProcessConfigurationID id() const;
 
-  ReleaseVersion const&
-  releaseVersion() const;
+  private:
+    std::string processName_{};
+    // Note: threading: The psetid constructor can throw!
+    fhicl::ParameterSetID parameterSetID_{};
+    // Note: This is just a std::string!
+    ReleaseVersion releaseVersion_{};
+  };
 
-  ProcessConfigurationID
-  id() const;
+  bool operator<(ProcessConfiguration const& a, ProcessConfiguration const& b);
 
-private:
+  bool operator==(ProcessConfiguration const& a, ProcessConfiguration const& b);
 
-  std::string processName_{};
-  // Note: threading: The psetid constructor can throw!
-  fhicl::ParameterSetID parameterSetID_{};
-  // Note: This is just a std::string!
-  ReleaseVersion releaseVersion_{};
+  bool operator!=(ProcessConfiguration const& a, ProcessConfiguration const& b);
 
-};
-
-bool
-operator<(ProcessConfiguration const& a, ProcessConfiguration const& b);
-
-bool
-operator==(ProcessConfiguration const& a, ProcessConfiguration const& b);
-
-bool
-operator!=(ProcessConfiguration const& a, ProcessConfiguration const& b);
-
-std::ostream&
-operator<<(std::ostream& os, ProcessConfiguration const& pc);
+  std::ostream& operator<<(std::ostream& os, ProcessConfiguration const& pc);
 
 } // namespace art
 

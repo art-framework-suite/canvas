@@ -7,76 +7,63 @@
 
 namespace boost {
 
-class any;
+  class any;
 
 } // namespace boost
 
 namespace art {
 
-class InputTag {
+  class InputTag {
 
-public: // MEMBER FUNCTIONS -- Special Member Functions
+  public: // MEMBER FUNCTIONS -- Special Member Functions
+    ~InputTag();
 
-  ~InputTag();
+    InputTag();
 
-  InputTag();
+    InputTag(std::string const& label,
+             std::string const& instance,
+             std::string const& processName = std::string());
 
-  InputTag(std::string const& label, std::string const& instance, std::string const& processName = std::string());
+    InputTag(char const* label,
+             char const* instance,
+             char const* processName = "");
 
-  InputTag(char const* label, char const* instance, char const* processName = "");
+    InputTag(std::string const&);
 
-  InputTag(std::string const&);
+    InputTag(char const*);
 
-  InputTag(char const*);
+    InputTag(InputTag const&);
 
-  InputTag(InputTag const&);
+    InputTag(InputTag&&);
 
-  InputTag(InputTag&&);
+    InputTag& operator=(InputTag const&);
 
-  InputTag&
-  operator=(InputTag const&);
+    InputTag& operator=(InputTag&&);
 
-  InputTag&
-  operator=(InputTag&&);
+  public: // MEMBER FUNCTIONS -- API for the user
+    bool operator==(InputTag const&) const;
 
-public: // MEMBER FUNCTIONS -- API for the user
+    std::string const& label() const;
 
-  bool
-  operator==(InputTag const&) const;
+    std::string const& instance() const;
 
-  std::string const&
-  label() const;
+    std::string const& process() const;
 
-  std::string const&
-  instance() const;
+    std::string encode() const;
 
-  std::string const&
-  process() const;
+  private: // MEMBER DATA
+    std::string label_{};
 
-  std::string
-  encode() const;
+    std::string instance_{};
 
-private: // MEMBER DATA
+    std::string process_{};
+  };
 
-  std::string
-  label_{};
+  bool operator!=(InputTag const&, InputTag const&);
 
-  std::string
-  instance_{};
+  void decode(boost::any const&, InputTag&);
 
-  std::string
-  process_{};
-
-};
-
-bool
-operator!=(InputTag const&, InputTag const&);
-
-void
-decode(boost::any const&, InputTag&);
-
-std::ostream&
-operator<<(std::ostream&, InputTag const&);
+  std::ostream& operator<<(std::ostream&, InputTag const&);
 
 } // namespace art
 

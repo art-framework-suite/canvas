@@ -3,7 +3,8 @@
 // vim: set sw=2 expandtab :
 
 // ================================================================================
-// BranchDescription: The full description of a data-product branch.  Equivalently,
+// BranchDescription: The full description of a data-product branch.
+// Equivalently,
 //                    the event-independent description of an EDProduct.
 // This description also applies to every product instance on the branch.
 //
@@ -44,7 +45,6 @@ namespace art {
     friend class detail::BranchDescriptionStreamer;
 
   public: // TYPES
-
     static int constexpr invalidSplitLevel{-1};
     static int constexpr invalidBasketSize{0};
     static int constexpr invalidCompression{-1};
@@ -59,28 +59,100 @@ namespace art {
 
     void write(std::ostream& os) const;
 
-    std::string const& moduleLabel() const {return moduleLabel_;}
-    std::string const& processName() const {return processName_;}
-    std::string const& producedClassName() const {return producedClassName_;}
-    std::string const& friendlyClassName() const {return friendlyClassName_;}
-    std::string const& productInstanceName() const {return productInstanceName_;}
+    std::string const&
+    moduleLabel() const
+    {
+      return moduleLabel_;
+    }
+    std::string const&
+    processName() const
+    {
+      return processName_;
+    }
+    std::string const&
+    producedClassName() const
+    {
+      return producedClassName_;
+    }
+    std::string const&
+    friendlyClassName() const
+    {
+      return friendlyClassName_;
+    }
+    std::string const&
+    productInstanceName() const
+    {
+      return productInstanceName_;
+    }
 
-    bool produced() const {return guts().validity_ == Transients::Produced;}
-    bool present() const {return guts().validity_ == Transients::PresentFromSource; }
-    bool dropped() const {return guts().validity_ == Transients::Dropped; }
-    bool transient() const {return guts().transient_;}
+    bool
+    produced() const
+    {
+      return guts().validity_ == Transients::Produced;
+    }
+    bool
+    present() const
+    {
+      return guts().validity_ == Transients::PresentFromSource;
+    }
+    bool
+    dropped() const
+    {
+      return guts().validity_ == Transients::Dropped;
+    }
+    bool
+    transient() const
+    {
+      return guts().transient_;
+    }
 
-    int splitLevel() const {return guts().splitLevel_;}
-    int basketSize() const {return guts().basketSize_;}
-    int compression() const {return guts().compression_;}
+    int
+    splitLevel() const
+    {
+      return guts().splitLevel_;
+    }
+    int
+    basketSize() const
+    {
+      return guts().basketSize_;
+    }
+    int
+    compression() const
+    {
+      return guts().compression_;
+    }
 
-    std::set<fhicl::ParameterSetID> const& psetIDs() const {return psetIDs_;}
+    std::set<fhicl::ParameterSetID> const&
+    psetIDs() const
+    {
+      return psetIDs_;
+    }
 
-    ProductID productID() const {return productID_;}
-    BranchType branchType() const {return branchType_;}
-    bool supportsView() const { return supportsView_; }
-    std::string const& branchName() const {return guts().branchName_;}
-    std::string const& wrappedName() const {return guts().wrappedName_;}
+    ProductID
+    productID() const
+    {
+      return productID_;
+    }
+    BranchType
+    branchType() const
+    {
+      return branchType_;
+    }
+    bool
+    supportsView() const
+    {
+      return supportsView_;
+    }
+    std::string const&
+    branchName() const
+    {
+      return guts().branchName_;
+    }
+    std::string const&
+    wrappedName() const
+    {
+      return guts().wrappedName_;
+    }
 
     void merge(BranchDescription const& other);
     void swap(BranchDescription& other);
@@ -89,7 +161,7 @@ namespace art {
 
       Transients() = default;
 
-      enum validity_state {Produced, PresentFromSource, Dropped, Invalid};
+      enum validity_state { Produced, PresentFromSource, Dropped, Invalid };
 
       // The branch name, which is currently derivable from the other
       // attributes.
@@ -123,10 +195,13 @@ namespace art {
       int compression_{invalidCompression};
     };
 
-    void setValidity(Transients::validity_state const state) { guts().validity_ = state; }
+    void
+    setValidity(Transients::validity_state const state)
+    {
+      guts().validity_ = state;
+    }
 
   private:
-
     fhicl::ParameterSetID const& psetID() const;
 
     void initProductID_();
@@ -137,7 +212,8 @@ namespace art {
 
     bool isPsetIDUnique() const noexcept;
 
-    std::set<ProcessConfigurationID> const& processConfigurationIDs() const noexcept;
+    std::set<ProcessConfigurationID> const& processConfigurationIDs() const
+      noexcept;
 
     Transients& guts() noexcept;
 
@@ -146,68 +222,51 @@ namespace art {
     void throwIfInvalid_() const;
 
   private:
-
     // What tree is the branch in?
-    BranchType
-    branchType_{InEvent};
+    BranchType branchType_{InEvent};
 
     // A human-friendly string that uniquely identifies the EDProducer
     // and becomes part of the identity of a product that it produces
-    std::string
-    moduleLabel_{};
+    std::string moduleLabel_{};
 
     // the physical process that this program was part of (e.g. production)
-    std::string
-    processName_{};
+    std::string processName_{};
 
     // An ID uniquely identifying the product
-    ProductID
-    productID_{};
+    ProductID productID_{};
 
     // the full name of the type of product this is
-    std::string
-    producedClassName_{};
+    std::string producedClassName_{};
 
     // a readable name of the type of product this is
-    std::string
-    friendlyClassName_{};
+    std::string friendlyClassName_{};
 
     // a user-supplied name to distinguish multiple products of the same type
     // that are produced by the same producer
-    std::string
-    productInstanceName_{};
+    std::string productInstanceName_{};
 
     // Does this product support the concept of a view?
     bool supportsView_{false};
 
     // ID's of parameter set of the creators of products
     // on this branch
-    std::set<fhicl::ParameterSetID>
-    psetIDs_{};
+    std::set<fhicl::ParameterSetID> psetIDs_{};
 
     // ID's of process configurations for products
     // on this branch
-    std::set<ProcessConfigurationID>
-    processConfigurationIDs_{};
+    std::set<ProcessConfigurationID> processConfigurationIDs_{};
 
     // The things we do not want saved to disk.
-    mutable
-    Transient<Transients>
-    transients_{};
-
+    mutable Transient<Transients> transients_{};
   };
 
-  std::ostream&
-  operator<<(std::ostream&, BranchDescription const&);
+  std::ostream& operator<<(std::ostream&, BranchDescription const&);
 
-  bool
-  operator<(BranchDescription const&, BranchDescription const&);
+  bool operator<(BranchDescription const&, BranchDescription const&);
 
-  bool
-  operator==(BranchDescription const&, BranchDescription const&);
+  bool operator==(BranchDescription const&, BranchDescription const&);
 
-  bool
-  combinable(BranchDescription const&, BranchDescription const&);
+  bool combinable(BranchDescription const&, BranchDescription const&);
 
   using ProductDescriptions = std::vector<BranchDescription>;
   using ProductDescriptionsByID = std::map<ProductID, BranchDescription>;

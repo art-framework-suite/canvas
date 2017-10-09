@@ -32,56 +32,53 @@
 
 namespace art {
 
-class RNGsnapshot {
+  class RNGsnapshot {
 
-public:
+  public:
+    static_assert(std::numeric_limits<unsigned>::digits == 32,
+                  "std::numeric_limits<unsigned>::digits != 32");
+    static_assert(sizeof(unsigned) <= sizeof(unsigned long),
+                  "sizeof(unsigned) > sizeof(unsigned long)");
 
-  static_assert(std::numeric_limits<unsigned>::digits == 32, "std::numeric_limits<unsigned>::digits != 32");
-  static_assert(sizeof(unsigned) <= sizeof(unsigned long), "sizeof(unsigned) > sizeof(unsigned long)");
+    RNGsnapshot() = default;
 
-  RNGsnapshot() = default;
+    explicit RNGsnapshot(std::string const& ekind,
+                         std::string const& label,
+                         std::vector<unsigned long> const& est);
 
-  explicit
-  RNGsnapshot(std::string const& ekind, std::string const& label, std::vector<unsigned long> const& est);
+    // -- Access
+    std::string const&
+    ekind() const
+    {
+      return engine_kind_;
+    }
 
-  // -- Access
-  std::string const&
-  ekind() const
-  {
-    return engine_kind_;
-  }
+    std::string const&
+    label() const
+    {
+      return label_;
+    }
 
-  std::string const&
-  label() const
-  {
-    return label_;
-  }
+    std::vector<unsigned> const&
+    state() const
+    {
+      return state_;
+    }
 
-  std::vector<unsigned> const&
-  state() const
-  {
-    return state_;
-  }
+    // -- Save/restore
+    void saveFrom(std::string const&,
+                  std::string const&,
+                  std::vector<unsigned long> const&);
 
-  // -- Save/restore
-  void
-  saveFrom(std::string const&, std::string const&, std::vector<unsigned long> const&);
+    std::vector<unsigned long> restoreState() const;
 
-  std::vector<unsigned long>
-  restoreState() const;
+  private:
+    std::string engine_kind_{};
 
-private:
+    std::string label_{};
 
-  std::string
-  engine_kind_{};
-
-  std::string
-  label_{};
-
-  std::vector<unsigned>
-  state_{};
-
-};
+    std::vector<unsigned> state_{};
+  };
 
 } // namespace art
 

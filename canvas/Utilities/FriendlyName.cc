@@ -1,5 +1,5 @@
-#include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/FriendlyName.h"
+#include "canvas/Utilities/Exception.h"
 #include "tbb/concurrent_unordered_map.h"
 
 #include <regex>
@@ -36,23 +36,28 @@ namespace {
 
   std::string const emptyString{};
 
-  std::string removeExtraSpaces(std::string const& in)
+  std::string
+  removeExtraSpaces(std::string const& in)
   {
     return std::regex_replace(std::regex_replace(in, reBeginSpace, emptyString),
-                              reEndSpace, emptyString);
+                              reEndSpace,
+                              emptyString);
   }
 
-  std::string removeAllSpaces(std::string const& in)
+  std::string
+  removeAllSpaces(std::string const& in)
   {
     return std::regex_replace(in, reAllSpaces, emptyString);
   }
 
-  std::string escapeParens(std::string const& in)
+  std::string
+  escapeParens(std::string const& in)
   {
     return std::regex_replace(in, reParens, "\\$1");
   }
 
-  std::string standardRenames(std::string const& in)
+  std::string
+  standardRenames(std::string const& in)
   {
     std::string name{std::regex_replace(in, reWrapper, "$1")};
     name = std::regex_replace(name, reString, "String");
@@ -69,7 +74,8 @@ namespace {
   // Declaration required here because handleTemplateArguments and
   // subFriendlyName call each other.
   std::string handleTemplateArguments(std::string const&, std::string const&);
-  std::string subFriendlyName(std::string const& iFullName)
+  std::string
+  subFriendlyName(std::string const& iFullName)
   {
     std::string result{removeExtraSpaces(iFullName)};
 
@@ -82,13 +88,15 @@ namespace {
       // the demangled typename can be (anonymous namespace)::A.  The
       // parentheses must be escaped so that they do not interfere
       // with the regex library.
-      std::regex const eMatch{std::string{"^"} + escapeParens(cMatch) + '<' + escapeParens(aMatch) + '>'};
-      result = std::regex_replace(result, eMatch, theSub+cMatch);
+      std::regex const eMatch{std::string{"^"} + escapeParens(cMatch) + '<' +
+                              escapeParens(aMatch) + '>'};
+      result = std::regex_replace(result, eMatch, theSub + cMatch);
     }
     return result;
   }
 
-  void maybeSwapFirstTwoArgs(std::string& result)
+  void
+  maybeSwapFirstTwoArgs(std::string& result)
   {
     std::smatch theMatch;
     if (std::regex_search(result, theMatch, reFirstTwoArgs) &&
@@ -97,7 +105,8 @@ namespace {
     }
   }
 
-  std::string handleTemplateArguments(std::string const& cName, std::string const& tArgs)
+  std::string
+  handleTemplateArguments(std::string const& cName, std::string const& tArgs)
   {
     std::string result{removeExtraSpaces(tArgs)};
     bool shouldStop{false};
@@ -106,18 +115,16 @@ namespace {
         std::smatch theMatch;
         if (std::regex_search(result, theMatch, reTemplateClass)) {
           std::string const templateClass{theMatch.str(1)};
-          std::string const friendlierName{removeAllSpaces(subFriendlyName(templateClass))};
-          result = std::regex_replace(result, std::regex(templateClass), friendlierName);
-        }
-        else {
+          std::string const friendlierName{
+            removeAllSpaces(subFriendlyName(templateClass))};
+          result = std::regex_replace(
+            result, std::regex(templateClass), friendlierName);
+        } else {
           throw art::Exception(art::errors::LogicError)
-            << "No template match for \""
-            << result
-            << '"';
+            << "No template match for \"" << result << '"';
         }
-      }
-      else {
-        shouldStop=true;
+      } else {
+        shouldStop = true;
       }
     }
     if (std::regex_match(cName, reAssns)) {
@@ -128,12 +135,15 @@ namespace {
   }
 }
 
-std::string art::friendlyname::friendlyName(std::string const& iFullName)
+std::string
+art::friendlyname::friendlyName(std::string const& iFullName)
 {
   static tbb::concurrent_unordered_map<std::string, std::string> s_nameMap;
   auto entry = s_nameMap.find(iFullName);
   if (s_nameMap.end() == entry) {
-    entry = s_nameMap.emplace(iFullName, subFriendlyName(standardRenames(iFullName))).first;
+    entry =
+      s_nameMap.emplace(iFullName, subFriendlyName(standardRenames(iFullName)))
+        .first;
   }
   return entry->second;
 }

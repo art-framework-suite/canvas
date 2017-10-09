@@ -3,23 +3,16 @@
 
 namespace art {
 
-PrincipalBase::
-~PrincipalBase()
-{
-}
+  PrincipalBase::~PrincipalBase() {}
 
-PrincipalBase::
-PrincipalBase()
-{
-}
+  PrincipalBase::PrincipalBase() {}
 
-// Note: Used only by canvas RefCoreStreamer.cc through PrincipalBase::getEDProductGetter!
-EDProductGetter const*
-PrincipalBase::
-getEDProductGetter(ProductID const& pid) const
-{
-  return getEDProductGetter_(pid);
-}
+  // Note: Used only by canvas RefCoreStreamer.cc through
+  // PrincipalBase::getEDProductGetter!
+  EDProductGetter const*
+  PrincipalBase::getEDProductGetter(ProductID const& pid) const
+  {
+    return getEDProductGetter_(pid);
+  }
 
 } // namespace art
-

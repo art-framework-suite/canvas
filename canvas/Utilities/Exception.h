@@ -30,7 +30,7 @@ namespace art {
       DictionaryNotFound,
       ProductPutFailure,
       Configuration,
-      LogicError,    // = 10
+      LogicError, // = 10
       UnimplementedFeature,
       InvalidReference,
       TypeConversion,
@@ -56,17 +56,18 @@ namespace art {
       EventRangeOverlap
     };
 
-  }  // errors
+  } // errors
 
   namespace ExceptionDetail {
     std::string translate(errors::ErrorCodes);
   }
 
-  using Exception = cet::coded_exception<errors::ErrorCodes, ExceptionDetail::translate>;
+  using Exception =
+    cet::coded_exception<errors::ErrorCodes, ExceptionDetail::translate>;
 
-}  // art
+} // art
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Utilities_Exception_h */
 

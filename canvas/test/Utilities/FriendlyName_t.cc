@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE ( FriendlyName_t )
+#define BOOST_TEST_MODULE (FriendlyName_t)
 #include "cetlib/quiet_unit_test.hpp"
 
 #include "canvas/Utilities/FriendlyName.h"
@@ -16,16 +16,16 @@ struct FriendlyNameTestFixture {
   fnmap_t nameMap;
 };
 
-FriendlyNameTestFixture::FriendlyNameTestFixture()
-  :
-  nameMap()
+FriendlyNameTestFixture::FriendlyNameTestFixture() : nameMap()
 {
   nameMap.insert(std::make_pair("Foo", "Foo"));
   nameMap.insert(std::make_pair("bar::Foo", "bar::Foo"));
   nameMap.insert(std::make_pair("std::vector<Foo>", "Foos"));
   nameMap.insert(std::make_pair("std::vector<bar::Foo>", "bar::Foos"));
   nameMap.insert(std::make_pair("V<A,B>", "ABV"));
-  nameMap.insert(std::make_pair("art::Wrapper<MuonDigiCollection<CSCDetId,CSCALCTDigi> >", "CSCDetIdCSCALCTDigiMuonDigiCollection"));
+  nameMap.insert(
+    std::make_pair("art::Wrapper<MuonDigiCollection<CSCDetId,CSCALCTDigi> >",
+                   "CSCDetIdCSCALCTDigiMuonDigiCollection"));
   nameMap.insert(std::make_pair("A<B<C>,D<E> >", "CBEDA"));
   nameMap.insert(std::make_pair("A<B<C<D> > >", "DCBA"));
   nameMap.insert(std::make_pair("A<B<C,D>,E<F> >", "CDBFEA"));

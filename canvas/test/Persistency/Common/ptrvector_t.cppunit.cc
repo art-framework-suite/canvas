@@ -1,5 +1,5 @@
-#include "canvas/Persistency/Common/PtrVector.h"
 #include "art/Persistency/Common/TestHandle.h"
+#include "canvas/Persistency/Common/PtrVector.h"
 #include "canvas/Persistency/Common/Wrapper.h"
 
 #include "canvas/test/Persistency/Common/IntValues.h"
@@ -14,9 +14,14 @@ class testPtrVector : public CppUnit::TestFixture {
   CPPUNIT_TEST(check);
   CPPUNIT_TEST(get);
   CPPUNIT_TEST_SUITE_END();
+
 public:
-  void setUp() {}
-  void tearDown() {}
+  void
+  setUp()
+  {}
+  void
+  tearDown()
+  {}
   void check();
   void get();
 };
@@ -26,25 +31,39 @@ CPPUNIT_TEST_SUITE_REGISTRATION(testPtrVector);
 namespace testPtr {
   struct Base {
     virtual ~Base() {}
-    virtual int val() const=0;
-    bool operator==(Base const& other) const { return val() == other.val(); }
+    virtual int val() const = 0;
+    bool
+    operator==(Base const& other) const
+    {
+      return val() == other.val();
+    }
   };
 
   struct Inherit1 : public Base {
-    virtual int val() const { return 1;}
+    virtual int
+    val() const
+    {
+      return 1;
+    }
   };
   struct Inherit2 : public Base {
-    virtual int val() const {return 2;}
+    virtual int
+    val() const
+    {
+      return 2;
+    }
   };
 
-    struct TestGetter : public art::EDProductGetter {
-      art::EDProduct const* hold_;
-      art::EDProduct const* getIt(art::ProductID const&) const {
-        return hold_;
-      }
+  struct TestGetter : public art::EDProductGetter {
+    art::EDProduct const* hold_;
+    art::EDProduct const*
+    getIt(art::ProductID const&) const
+    {
+      return hold_;
+    }
 
-      TestGetter() : hold_(0) {}
-    };
+    TestGetter() : hold_(0) {}
+  };
 }
 
 using namespace testPtr;
@@ -56,10 +75,10 @@ do_some_tests(const art::PtrVector<Base>& x)
 
   CPPUNIT_ASSERT(x.empty() == copy.empty());
   CPPUNIT_ASSERT(x.size() == copy.size());
-  art::PtrVector<Base>::const_iterator
-    b = x.begin(), e = x.end(), cb = copy.begin(), ce = copy.end();
-  CPPUNIT_ASSERT( e - b == ce - cb );
-  CPPUNIT_ASSERT(std::distance(b, e) == std::distance(cb, ce) );
+  art::PtrVector<Base>::const_iterator b = x.begin(), e = x.end(),
+                                       cb = copy.begin(), ce = copy.end();
+  CPPUNIT_ASSERT(e - b == ce - cb);
+  CPPUNIT_ASSERT(std::distance(b, e) == std::distance(cb, ce));
 }
 
 void
@@ -67,49 +86,49 @@ testPtrVector::check()
 {
   using namespace art;
 
-  std::vector<Inherit1> v1(2,Inherit1());
-  std::vector<Inherit2> v2(2,Inherit2());
+  std::vector<Inherit1> v1(2, Inherit1());
+  std::vector<Inherit2> v2(2, Inherit2());
 
-  TestHandle<std::vector<Inherit1> > h1(&v1, ProductID(1, 1));
-  PtrVector<Inherit1 > rv1;
-  rv1.push_back( Ptr<Inherit1 >( h1, 0 ) );
-  rv1.push_back( Ptr<Inherit1 >( h1, 1 ) );
-  TestHandle<std::vector<Inherit2> > h2(&v2, ProductID(1, 2));
-  PtrVector<Inherit2 > rv2;
-  rv2.push_back( Ptr<Inherit2 >( h2, 0 ) );
-  rv2.push_back( Ptr<Inherit2 >( h2, 1 ) );
+  TestHandle<std::vector<Inherit1>> h1(&v1, ProductID(1, 1));
+  PtrVector<Inherit1> rv1;
+  rv1.push_back(Ptr<Inherit1>(h1, 0));
+  rv1.push_back(Ptr<Inherit1>(h1, 1));
+  TestHandle<std::vector<Inherit2>> h2(&v2, ProductID(1, 2));
+  PtrVector<Inherit2> rv2;
+  rv2.push_back(Ptr<Inherit2>(h2, 0));
+  rv2.push_back(Ptr<Inherit2>(h2, 1));
 
   PtrVector<Base> empty;
   PtrVector<Base> copy_of_empty(empty);
 
   CPPUNIT_ASSERT(empty == copy_of_empty);
 
-  PtrVector<Base> bv1( rv1 );
-  Ptr<Base> r1_0 = bv1[ 0 ];
-  Ptr<Base> r1_1 = bv1[ 1 ];
-  PtrVector<Base> bv2( rv2 );
-  Ptr<Base> r2_0 = bv2[ 0 ];
-  Ptr<Base> r2_1 = bv2[ 1 ];
+  PtrVector<Base> bv1(rv1);
+  Ptr<Base> r1_0 = bv1[0];
+  Ptr<Base> r1_1 = bv1[1];
+  PtrVector<Base> bv2(rv2);
+  Ptr<Base> r2_0 = bv2[0];
+  Ptr<Base> r2_1 = bv2[1];
 
-  CPPUNIT_ASSERT( bv1.empty() == false );
-  CPPUNIT_ASSERT( bv1.size() == 2 );
-  CPPUNIT_ASSERT( bv2.size() == 2 );
-  CPPUNIT_ASSERT( r1_0->val() == 1 );
-  CPPUNIT_ASSERT( r1_1->val() == 1 );
-  CPPUNIT_ASSERT( r2_0->val() == 2 );
-  CPPUNIT_ASSERT( r2_1->val() == 2 );
+  CPPUNIT_ASSERT(bv1.empty() == false);
+  CPPUNIT_ASSERT(bv1.size() == 2);
+  CPPUNIT_ASSERT(bv2.size() == 2);
+  CPPUNIT_ASSERT(r1_0->val() == 1);
+  CPPUNIT_ASSERT(r1_1->val() == 1);
+  CPPUNIT_ASSERT(r2_0->val() == 2);
+  CPPUNIT_ASSERT(r2_1->val() == 2);
 
   PtrVector<Base>::const_iterator b = bv1.begin(), e = bv1.end();
   PtrVector<Base>::const_iterator i = b;
-  CPPUNIT_ASSERT( (*i)->val() == 1 );
-  CPPUNIT_ASSERT( i != e );
-  CPPUNIT_ASSERT( i - b == 0 );
+  CPPUNIT_ASSERT((*i)->val() == 1);
+  CPPUNIT_ASSERT(i != e);
+  CPPUNIT_ASSERT(i - b == 0);
   ++i;
-  CPPUNIT_ASSERT( (*i)->val() == 1 );
-  CPPUNIT_ASSERT( i != e );
-  CPPUNIT_ASSERT( i - b == 1 );
-  ++ i;
-  CPPUNIT_ASSERT( i == e );
+  CPPUNIT_ASSERT((*i)->val() == 1);
+  CPPUNIT_ASSERT(i != e);
+  CPPUNIT_ASSERT(i - b == 1);
+  ++i;
+  CPPUNIT_ASSERT(i == e);
 
   PtrVector<Base> assigned_from_bv1;
   do_some_tests(assigned_from_bv1);
@@ -123,17 +142,17 @@ testPtrVector::check()
 
   /// creation of empty vector adding with push_back
   PtrVector<Base> bv3;
-  bv3.push_back( r1_0 );
+  bv3.push_back(r1_0);
   CPPUNIT_ASSERT(bv3.size() == 1);
-  CPPUNIT_ASSERT( &(*r1_0) == &(*bv3[0]) );
-  bv3.push_back( r1_1 );
+  CPPUNIT_ASSERT(&(*r1_0) == &(*bv3[0]));
+  bv3.push_back(r1_1);
   CPPUNIT_ASSERT(bv3.size() == 2);
-  CPPUNIT_ASSERT( &(*r1_1) == &(*bv3[1]) );
+  CPPUNIT_ASSERT(&(*r1_1) == &(*bv3[1]));
 
   /// clearing, then pushing in Ptr with other product ID
   bv3.clear();
   CPPUNIT_ASSERT(bv3.size() == 0);
-  bv3.push_back( r2_0 );
+  bv3.push_back(r2_0);
   CPPUNIT_ASSERT(bv3.size() == 1);
 }
 
@@ -155,27 +174,28 @@ testPtrVector::get()
 
   art::ProductID const pid(1, 1);
 
-  IntCollection const* wptr = dynamic_cast<IntCollection const*>(wrapper.product());
+  IntCollection const* wptr =
+    dynamic_cast<IntCollection const*>(wrapper.product());
 
   art::PtrVector<IntValue> iVec;
-  std::cerr << "pre push_backs" <<std::endl;
-  iVec.push_back( art::Ptr<IntValue>(pid,0,&tester));
-  iVec.push_back( art::Ptr<IntValue>(pid,2,&tester));
-  std::cerr << "post push_backs" <<std::endl;
+  std::cerr << "pre push_backs" << std::endl;
+  iVec.push_back(art::Ptr<IntValue>(pid, 0, &tester));
+  iVec.push_back(art::Ptr<IntValue>(pid, 2, &tester));
+  std::cerr << "post push_backs" << std::endl;
 
   iVec.setProductGetter(&tester);
 
-  std::cerr << "pre size" <<std::endl;
+  std::cerr << "pre size" << std::endl;
   CPPUNIT_ASSERT(iVec.size() == 2);
-  std::cerr << "pre iterator diff" <<std::endl;
-  CPPUNIT_ASSERT(static_cast<size_t>(iVec.end()-iVec.begin()) == iVec.size());
-  std::cerr << "address compare" <<std::endl;
+  std::cerr << "pre iterator diff" << std::endl;
+  CPPUNIT_ASSERT(static_cast<size_t>(iVec.end() - iVec.begin()) == iVec.size());
+  std::cerr << "address compare" << std::endl;
   CPPUNIT_ASSERT(&(*(*(iVec.begin()))) == &(*(wptr->begin())));
-  std::cerr << "pre value deref" <<std::endl;
+  std::cerr << "pre value deref" << std::endl;
   CPPUNIT_ASSERT((*(*(iVec.begin()))).value_ == 0);
-  std::cerr << "pre value ->" <<std::endl;
+  std::cerr << "pre value ->" << std::endl;
   CPPUNIT_ASSERT((*(iVec.begin()))->value_ == 0);
-  std::cerr << "post everything" <<std::endl;
+  std::cerr << "post everything" << std::endl;
 
   /*
   typedef std::vector<Inherit1> I1Collection;

@@ -14,99 +14,75 @@
 
 namespace art {
 
-class SubRunAuxiliary {
+  class SubRunAuxiliary {
 
-public:
+  public:
+    static constexpr BranchType branch_type = InSubRun;
 
-  static constexpr BranchType branch_type = InSubRun;
+  public:
+    ~SubRunAuxiliary();
 
-public:
+    SubRunAuxiliary();
 
-  ~SubRunAuxiliary();
+    SubRunAuxiliary(SubRunID const& theId,
+                    Timestamp const& theTime,
+                    Timestamp const& theEndTime);
 
-  SubRunAuxiliary();
+    SubRunAuxiliary(RunNumber_t const theRun,
+                    SubRunNumber_t const theSubRun,
+                    Timestamp const& theTime,
+                    Timestamp const& theEndTime);
 
-  SubRunAuxiliary(SubRunID const& theId, Timestamp const& theTime, Timestamp const& theEndTime);
+    SubRunAuxiliary(SubRunAuxiliary const&);
 
-  SubRunAuxiliary(RunNumber_t const theRun, SubRunNumber_t const theSubRun, Timestamp const& theTime, Timestamp const& theEndTime);
+    SubRunAuxiliary(SubRunAuxiliary&&);
 
-  SubRunAuxiliary(SubRunAuxiliary const&);
+    SubRunAuxiliary& operator=(SubRunAuxiliary const&);
 
-  SubRunAuxiliary(SubRunAuxiliary&&);
+    SubRunAuxiliary& operator=(SubRunAuxiliary&&);
 
-  SubRunAuxiliary&
-  operator=(SubRunAuxiliary const&);
+  public:
+    void write(std::ostream& os) const;
 
-  SubRunAuxiliary&
-  operator=(SubRunAuxiliary&&);
+    ProcessHistoryID const& processHistoryID() const noexcept;
 
-public:
+    void setProcessHistoryID(ProcessHistoryID const& phid) const;
 
-  void
-  write(std::ostream& os) const;
+    SubRunID const& id() const noexcept;
 
-  ProcessHistoryID const&
-  processHistoryID() const noexcept;
+    SubRunID const& subRunID() const noexcept;
 
-  void
-  setProcessHistoryID(ProcessHistoryID const& phid) const;
+    RunID const& runID() const noexcept;
 
-  SubRunID const&
-  id() const noexcept;
+    RunNumber_t run() const noexcept;
 
-  SubRunID const&
-  subRunID() const noexcept;
+    SubRunNumber_t subRun() const noexcept;
 
-  RunID const&
-  runID() const noexcept;
+    Timestamp const& beginTime() const noexcept;
 
-  RunNumber_t
-  run() const noexcept;
+    Timestamp const& endTime() const noexcept;
 
-  SubRunNumber_t
-  subRun() const noexcept;
+    void setEndTime(Timestamp const& time);
 
-  Timestamp const&
-  beginTime() const noexcept;
+    void setRangeSetID(unsigned const id) const;
 
-  Timestamp const&
-  endTime() const noexcept;
+    unsigned rangeSetID() const noexcept;
 
-  void
-  setEndTime(Timestamp const& time);
+    bool mergeAuxiliary(SubRunAuxiliary const&);
 
-  void
-  setRangeSetID(unsigned const id) const;
+  public:
+    mutable ProcessHistoryID processHistoryID_{};
 
-  unsigned
-  rangeSetID() const noexcept;
+    mutable unsigned rangeSetID_{-1u};
 
-  bool
-  mergeAuxiliary(SubRunAuxiliary const&);
+    SubRunID id_{};
 
-public:
+    Timestamp beginTime_{};
 
-  mutable
-  ProcessHistoryID
-  processHistoryID_{};
+    Timestamp endTime_{};
+  };
 
-  mutable
-  unsigned
-  rangeSetID_{-1u};
-
-  SubRunID
-  id_{};
-
-  Timestamp
-  beginTime_{};
-
-  Timestamp
-  endTime_{};
-
-};
-
-std::ostream&
-operator<<(std::ostream&, SubRunAuxiliary const&);
+  std::ostream& operator<<(std::ostream&, SubRunAuxiliary const&);
 
 } // namespace art
 

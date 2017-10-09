@@ -19,36 +19,30 @@
 
 namespace art {
 
-class TriggerResults : public HLTGlobalStatus {
+  class TriggerResults : public HLTGlobalStatus {
 
-public:
+  public:
+    ~TriggerResults();
 
-  ~TriggerResults();
+    TriggerResults();
 
-  TriggerResults();
+    TriggerResults(const HLTGlobalStatus& hlt,
+                   const fhicl::ParameterSetID& psetid);
 
-  TriggerResults(const HLTGlobalStatus& hlt, const fhicl::ParameterSetID& psetid);
+    // TriggerResults&
+    // operator=(TriggerResults const&);
 
-  //TriggerResults&
-  //operator=(TriggerResults const&);
+  public:
+    fhicl::ParameterSetID const& parameterSetID() const;
 
-public:
+    // void
+    // swap(TriggerResults& other);
 
-  fhicl::ParameterSetID const&
-  parameterSetID() const;
+  private:
+    fhicl::ParameterSetID psetid_;
+  };
 
-  //void
-  //swap(TriggerResults& other);
-
-private:
-
-  fhicl::ParameterSetID
-  psetid_;
-
-};
-
-void
-swap(TriggerResults& lhs, TriggerResults& rhs);
+  void swap(TriggerResults& lhs, TriggerResults& rhs);
 
 } // namespace art
 

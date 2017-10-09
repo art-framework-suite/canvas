@@ -28,17 +28,21 @@ namespace art {
   }
 
   void
-  BranchChildren::insertEmpty(ProductID const parent) {
+  BranchChildren::insertEmpty(ProductID const parent)
+  {
     childLookup_.emplace(parent, ProductIDSet{});
   }
 
   void
-  BranchChildren::insertChild(ProductID const parent, ProductID const child) {
+  BranchChildren::insertChild(ProductID const parent, ProductID const child)
+  {
     childLookup_[parent].insert(child);
   }
 
   void
-  BranchChildren::appendToDescendants(ProductID const parent, ProductIDSet& descendants) const {
+  BranchChildren::appendToDescendants(ProductID const parent,
+                                      ProductIDSet& descendants) const
+  {
     descendants.insert(parent);
     append_(childLookup_, parent, descendants);
   }

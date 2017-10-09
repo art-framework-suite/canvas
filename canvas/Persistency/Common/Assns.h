@@ -143,26 +143,33 @@ public:
   // Accessors.
   assn_iterator begin() const;
   assn_iterator end() const;
-  assn_t const& operator [](size_type index) const;
+  assn_t const& operator[](size_type index) const;
   assn_t const& at(size_type index) const;
   size_type size() const;
   std::string className() const;
 
   // Modifier.
-  void addSingle(Ptr<left_t> const& left,
-                 Ptr<right_t> const& right);
+  void addSingle(Ptr<left_t> const& left, Ptr<right_t> const& right);
   void swap(art::Assns<L, R, void>& other);
 
-  std::unique_ptr<EDProduct> makePartner(std::type_info const& wanted_wrapper_type) const;
+  std::unique_ptr<EDProduct> makePartner(
+    std::type_info const& wanted_wrapper_type) const;
 
-  static short Class_Version() { return 11; }
+  static short
+  Class_Version()
+  {
+    return 11;
+  }
 
-  void aggregate(Assns const&) const {}
+  void
+  aggregate(Assns const&) const
+  {}
 
 protected:
   virtual void swap_(art::Assns<L, R, void>& other);
 
-  virtual std::unique_ptr<EDProduct> makePartner_(std::type_info const& wanted_wrapper_type) const;
+  virtual std::unique_ptr<EDProduct> makePartner_(
+    std::type_info const& wanted_wrapper_type) const;
 
 private:
   friend class detail::AssnsStreamer;
@@ -178,9 +185,10 @@ private:
 #else
   virtual
 #endif
-  bool left_first()
+    bool
+    left_first()
 #ifndef ROOT_CAN_REGISTER_IOREADS_PROPERLY
-    const
+      const
 #endif
     ;
 
@@ -199,13 +207,16 @@ template <typename L, typename R, typename D>
 class art::Assns : private art::Assns<L, R> {
 private:
   using base = Assns<L, R>;
+
 public:
   using left_t = typename base::left_t;
   using right_t = typename base::right_t;
   using data_t = D;
   using partner_t = art::Assns<right_t, left_t, data_t>;
-  using const_iterator = typename art::const_AssnsIter<L, R, D, Direction::Forward>;
-  using const_reverse_iterator = typename art::const_AssnsIter<L, R, D, Direction::Reverse>;
+  using const_iterator =
+    typename art::const_AssnsIter<L, R, D, Direction::Forward>;
+  using const_reverse_iterator =
+    typename art::const_AssnsIter<L, R, D, Direction::Reverse>;
   using size_type = typename base::size_type;
 
   Assns();
@@ -230,17 +241,25 @@ public:
 
   // This is needed (as opposed to using base::makePartner) because
   // enable_if_function_exists_t does not detect the base's function.
-  std::unique_ptr<EDProduct> makePartner(std::type_info const& wanted_wrapper_type) const;
+  std::unique_ptr<EDProduct> makePartner(
+    std::type_info const& wanted_wrapper_type) const;
 
-  static short Class_Version() { return 11; }
+  static short
+  Class_Version()
+  {
+    return 11;
+  }
 
-  void aggregate(Assns const&) const {}
+  void
+  aggregate(Assns const&) const
+  {}
 
 private:
   friend class art::Assns<right_t, left_t, data_t>; // partner_t.
 
   void swap_(art::Assns<L, R, void>& other) override;
-  std::unique_ptr<EDProduct> makePartner_(std::type_info const& wanted_wrapper_type) const override;
+  std::unique_ptr<EDProduct> makePartner_(
+    std::type_info const& wanted_wrapper_type) const override;
 
   std::vector<data_t> data_;
 };
@@ -249,67 +268,57 @@ private:
 
 ////////////////////////////////////////////////////////////////////////
 template <typename L, typename R>
-inline
-art::Assns<L, R, void>::Assns()
-{
-}
+inline art::Assns<L, R, void>::Assns()
+{}
 
 template <typename L, typename R>
-inline
-art::Assns<L, R, void>::Assns(partner_t const& other)
+inline art::Assns<L, R, void>::Assns(partner_t const& other)
 {
   ptrs_.reserve(other.ptrs_.size());
-  cet::transform_all(other.ptrs_,
-                     std::back_inserter(ptrs_),
-                     [](auto const& pr){
-                       using pr_t = typename ptrs_t::value_type;
-                       return pr_t{pr.second, pr.first};
-                     });
+  cet::transform_all(
+    other.ptrs_, std::back_inserter(ptrs_), [](auto const& pr) {
+      using pr_t = typename ptrs_t::value_type;
+      return pr_t{pr.second, pr.first};
+    });
 }
 
 template <typename L, typename R>
-inline
-typename art::Assns<L, R, void>::assn_iterator
+inline typename art::Assns<L, R, void>::assn_iterator
 art::Assns<L, R, void>::begin() const
 {
   return ptrs_.begin();
 }
 
 template <typename L, typename R>
-inline
-typename art::Assns<L, R, void>::assn_iterator
+inline typename art::Assns<L, R, void>::assn_iterator
 art::Assns<L, R, void>::end() const
 {
   return ptrs_.end();
 }
 
 template <typename L, typename R>
-inline
-typename art::Assns<L, R, void>::assn_t const&
-art::Assns<L, R, void>::operator[](size_type const index) const
+inline typename art::Assns<L, R, void>::assn_t const& art::Assns<L, R, void>::
+operator[](size_type const index) const
 {
   return ptrs_[index];
 }
 
 template <typename L, typename R>
-inline
-typename art::Assns<L, R, void>::assn_t const&
+inline typename art::Assns<L, R, void>::assn_t const&
 art::Assns<L, R, void>::at(size_type const index) const
 {
   return ptrs_.at(index);
 }
 
 template <typename L, typename R>
-inline
-typename art::Assns<L, R, void>::size_type
+inline typename art::Assns<L, R, void>::size_type
 art::Assns<L, R, void>::size() const
 {
   return ptrs_.size();
 }
 
 template <typename L, typename R>
-inline
-std::string
+inline std::string
 art::Assns<L, R, void>::className() const
 {
   TypeID const assns_type{typeid(Assns<L, R, void>)};
@@ -317,8 +326,7 @@ art::Assns<L, R, void>::className() const
 }
 
 template <typename L, typename R>
-inline
-void
+inline void
 art::Assns<L, R, void>::addSingle(Ptr<left_t> const& left,
                                   Ptr<right_t> const& right)
 {
@@ -326,24 +334,22 @@ art::Assns<L, R, void>::addSingle(Ptr<left_t> const& left,
 }
 
 template <typename L, typename R>
-inline
-void
+inline void
 art::Assns<L, R, void>::swap(art::Assns<L, R, void>& other)
 {
   swap_(other);
 }
 
 template <typename L, typename R>
-inline
-std::unique_ptr<art::EDProduct>
-art::Assns<L, R, void>::makePartner(std::type_info const& wanted_wrapper_type) const
+inline std::unique_ptr<art::EDProduct>
+art::Assns<L, R, void>::makePartner(
+  std::type_info const& wanted_wrapper_type) const
 {
   return makePartner_(wanted_wrapper_type);
 }
 
 template <typename L, typename R>
-inline
-void
+inline void
 art::Assns<L, R, void>::swap_(art::Assns<L, R, void>& other)
 {
   using std::swap;
@@ -354,17 +360,18 @@ art::Assns<L, R, void>::swap_(art::Assns<L, R, void>& other)
 
 template <typename L, typename R>
 std::unique_ptr<art::EDProduct>
-art::Assns<L, R, void>::makePartner_(std::type_info const& wanted_wrapper_type) const
+art::Assns<L, R, void>::makePartner_(
+  std::type_info const& wanted_wrapper_type) const
 {
   if (wanted_wrapper_type != typeid(Wrapper<partner_t>)) {
     detail::throwPartnerException(typeid(*this), wanted_wrapper_type);
   }
-  return std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
+  return std::make_unique<Wrapper<partner_t>>(
+    std::make_unique<partner_t>(*this));
 }
 
 template <typename L, typename R>
-inline
-bool
+inline bool
 art::Assns<L, R, void>::left_first() const
 {
   static bool lf_s = (art::TypeID{typeid(left_t)}.friendlyClassName() <
@@ -381,13 +388,11 @@ art::Assns<L, R, void>::fill_transients()
   ptrs_.reserve(ptr_data_1_.size());
   ptr_data_t const& l_ref = left_first() ? ptr_data_1_ : ptr_data_2_;
   ptr_data_t const& r_ref = left_first() ? ptr_data_2_ : ptr_data_1_;
-  for (auto l = cbegin(l_ref),
-         e = cend(l_ref),
-         r = cbegin(r_ref);
-       l != e;
+  for (auto l = cbegin(l_ref), e = cend(l_ref), r = cbegin(r_ref); l != e;
        ++l, ++r) {
-    ptrs_.emplace_back(Ptr<left_t>{l->first.id(), l->second, l->first.productGetter()},
-                       Ptr<right_t>{r->first.id(), r->second, r->first.productGetter()});
+    ptrs_.emplace_back(
+      Ptr<left_t>{l->first.id(), l->second, l->first.productGetter()},
+      Ptr<right_t>{r->first.id(), r->second, r->first.productGetter()});
   }
   // Empty persistent representation.
   ptr_data_t tmp1, tmp2;
@@ -402,7 +407,8 @@ art::Assns<L, R, void>::fill_from_transients()
   if (!ptr_data_1_.empty()) {
     assert(ptr_data_1_.size() == ptr_data_2_.size() &&
            ptr_data_2_.size() == ptrs_.size() &&
-           "Assns: internal inconsistency between transient and persistent member data.");
+           "Assns: internal inconsistency between transient and persistent "
+           "member data.");
     // Multiple output modules: nothing to do on second and subsequent
     // calls.
     return;
@@ -417,79 +423,69 @@ art::Assns<L, R, void>::fill_from_transients()
   }
 }
 
-
 template <typename L, typename R, typename D>
-inline
-art::Assns<L, R, D>::Assns()
+inline art::Assns<L, R, D>::Assns()
 {
-  static_assert((!std::is_pointer<D>::value), "Data template argument must not be pointer type!");
+  static_assert((!std::is_pointer<D>::value),
+                "Data template argument must not be pointer type!");
 }
 
 template <typename L, typename R, typename D>
 art::Assns<L, R, D>::Assns(partner_t const& other)
-  : base(other)
-  , data_(other.data_)
+  : base(other), data_(other.data_)
 {}
 
 template <typename L, typename R, typename D>
-inline
-typename art::Assns<L, R, void>::size_type
+inline typename art::Assns<L, R, void>::size_type
 art::Assns<L, R, D>::size() const
 {
   return base::size();
 }
 
 template <typename L, typename R, typename D>
-inline
-typename art::Assns<L, R, D>::const_iterator
+inline typename art::Assns<L, R, D>::const_iterator
 art::Assns<L, R, D>::begin() const
 {
   return const_iterator{*this, 0};
 }
 
 template <typename L, typename R, typename D>
-inline
-typename art::Assns<L, R, D>::const_iterator
+inline typename art::Assns<L, R, D>::const_iterator
 art::Assns<L, R, D>::end() const
 {
   return const_iterator{*this};
 }
 
 template <typename L, typename R, typename D>
-inline
-typename art::Assns<L, R, D>::const_reverse_iterator
+inline typename art::Assns<L, R, D>::const_reverse_iterator
 art::Assns<L, R, D>::rbegin() const
 {
   return const_reverse_iterator{*this, size()};
 }
 
 template <typename L, typename R, typename D>
-inline
-typename art::Assns<L, R, D>::const_reverse_iterator
+inline typename art::Assns<L, R, D>::const_reverse_iterator
 art::Assns<L, R, D>::rend() const
 {
   return const_reverse_iterator{*this, 0};
 }
 
 template <typename L, typename R, typename D>
-inline
-typename art::Assns<L, R, D>::data_t const&
+inline typename art::Assns<L, R, D>::data_t const&
 art::Assns<L, R, D>::data(typename std::vector<data_t>::size_type index) const
 {
   return data_.at(index);
 }
 
 template <typename L, typename R, typename D>
-inline
-typename art::Assns<L, R, D>::data_t const&
+inline typename art::Assns<L, R, D>::data_t const&
 art::Assns<L, R, D>::data(const_iterator it) const
 {
   return data_.at(it.getIndex());
 }
 
 template <typename L, typename R, typename D>
-inline
-void
+inline void
 art::Assns<L, R, D>::addSingle(Ptr<left_t> const& left,
                                Ptr<right_t> const& right,
                                data_t const& data)
@@ -499,8 +495,7 @@ art::Assns<L, R, D>::addSingle(Ptr<left_t> const& left,
 }
 
 template <typename L, typename R, typename D>
-inline
-void
+inline void
 art::Assns<L, R, D>::swap(Assns<L, R, D>& other)
 {
   using std::swap;
@@ -509,16 +504,15 @@ art::Assns<L, R, D>::swap(Assns<L, R, D>& other)
 }
 
 template <typename L, typename R, typename D>
-inline
-std::unique_ptr<art::EDProduct>
-art::Assns<L, R, D>::makePartner(std::type_info const& wanted_wrapper_type) const
+inline std::unique_ptr<art::EDProduct>
+art::Assns<L, R, D>::makePartner(
+  std::type_info const& wanted_wrapper_type) const
 {
   return makePartner_(wanted_wrapper_type);
 }
 
 template <typename L, typename R, typename D>
-inline
-void
+inline void
 art::Assns<L, R, D>::swap_(Assns<L, R, void>& other)
 {
   try {
@@ -532,16 +526,20 @@ art::Assns<L, R, D>::swap_(Assns<L, R, void>& other)
 
 template <typename L, typename R, typename D>
 std::unique_ptr<art::EDProduct>
-art::Assns<L, R, D>::makePartner_(std::type_info const& wanted_wrapper_type) const
+art::Assns<L, R, D>::makePartner_(
+  std::type_info const& wanted_wrapper_type) const
 {
   using bp = typename base::partner_t;
   std::unique_ptr<art::EDProduct> result;
   if (wanted_wrapper_type == typeid(Wrapper<partner_t>)) { // Partner.
-    result = std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
+    result =
+      std::make_unique<Wrapper<partner_t>>(std::make_unique<partner_t>(*this));
   } else if (wanted_wrapper_type == typeid(Wrapper<base>)) { // Base.
-    result = std::make_unique<Wrapper<base>>(std::make_unique<base>(static_cast<base>(*this)));
+    result = std::make_unique<Wrapper<base>>(
+      std::make_unique<base>(static_cast<base>(*this)));
   } else if (wanted_wrapper_type == typeid(Wrapper<bp>)) { // Base of partner.
-    result = std::make_unique<Wrapper<bp>>(std::make_unique<bp>(static_cast<base>(*this)));
+    result = std::make_unique<Wrapper<bp>>(
+      std::make_unique<bp>(static_cast<base>(*this)));
   } else { // Oops.
     detail::throwPartnerException(typeid(*this), wanted_wrapper_type);
   }

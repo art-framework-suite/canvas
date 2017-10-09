@@ -11,43 +11,45 @@
 #include <set>
 
 namespace art {
-   class ResultsAuxiliary;
+  class ResultsAuxiliary;
 }
 
 class art::ResultsAuxiliary {
 public:
-
   static constexpr BranchType branch_type = InResults;
 
-  ResultsAuxiliary()
-      :
-      processHistoryID_(),
-      allEventsProcessHistories_()
-   {}
+  ResultsAuxiliary() : processHistoryID_(), allEventsProcessHistories_() {}
 
-   void write(std::ostream& os) const;
+  void write(std::ostream& os) const;
 
-   ProcessHistoryID& processHistoryID() const { return processHistoryID_; }
+  ProcessHistoryID&
+  processHistoryID() const
+  {
+    return processHistoryID_;
+  }
 
-   void setProcessHistoryID(ProcessHistoryID const &phid) const
-   { processHistoryID_ = phid; }
+  void
+  setProcessHistoryID(ProcessHistoryID const& phid) const
+  {
+    processHistoryID_ = phid;
+  }
 
-   bool mergeAuxiliary(ResultsAuxiliary const &aux);
+  bool mergeAuxiliary(ResultsAuxiliary const& aux);
 
-   // most recent process that put a RunProduct into this run
-   // is the last on the list, this defines what "latest" is
-   mutable ProcessHistoryID processHistoryID_;
+  // most recent process that put a RunProduct into this run
+  // is the last on the list, this defines what "latest" is
+  mutable ProcessHistoryID processHistoryID_;
 
-   // allEventsProcessHistories_ contains all the ProcessHistoryIDs for all
-   // events in this run seen so far.
-   std::set<ProcessHistoryID> allEventsProcessHistories_;
+  // allEventsProcessHistories_ contains all the ProcessHistoryIDs for all
+  // events in this run seen so far.
+  std::set<ProcessHistoryID> allEventsProcessHistories_;
 };
 
-inline
-std::ostream&
-operator<<(std::ostream& os, const art::ResultsAuxiliary &p) {
-   p.write(os);
-   return os;
+inline std::ostream&
+operator<<(std::ostream& os, const art::ResultsAuxiliary& p)
+{
+  p.write(os);
+  return os;
 }
 
 #endif /* canvas_Persistency_Provenance_ResultsAuxiliary_h */

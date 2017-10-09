@@ -6,11 +6,14 @@
 using namespace art;
 
 namespace {
-  auto descriptions_for_branch_type(BranchType const bt, ProductDescriptions const& descriptions)
+  auto
+  descriptions_for_branch_type(BranchType const bt,
+                               ProductDescriptions const& descriptions)
   {
     ProductDescriptionsByID result;
     for (auto const& pd : descriptions) {
-      if (pd.branchType() != bt) continue;
+      if (pd.branchType() != bt)
+        continue;
       result.emplace(pd.productID(), pd);
     }
     return result;
@@ -26,17 +29,16 @@ namespace {
     }
     return result;
   }
-
 }
 
 // =======================================================================
 
 art::ProductTable::ProductTable(ProductDescriptions const& descs,
-                                BranchType const bt) :
-  isValid{true},
-  descriptions{descriptions_for_branch_type(bt, descs)},
-  productLookup{detail::createProductLookups(descriptions)},
-  viewLookup{detail::createViewLookups(descriptions)}
+                                BranchType const bt)
+  : isValid{true}
+  , descriptions{descriptions_for_branch_type(bt, descs)}
+  , productLookup{detail::createProductLookups(descriptions)}
+  , viewLookup{detail::createViewLookups(descriptions)}
 {}
 
 cet::exempt_ptr<art::BranchDescription const>
@@ -55,6 +57,6 @@ art::ProductTables::invalid()
   return ProductTables{};
 }
 
-art::ProductTables::ProductTables(ProductDescriptions const& descriptions) :
-  tables_{createProductTables(descriptions)}
+art::ProductTables::ProductTables(ProductDescriptions const& descriptions)
+  : tables_{createProductTables(descriptions)}
 {}

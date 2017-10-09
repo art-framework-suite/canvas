@@ -5,12 +5,10 @@
 
 namespace art {
 
-  ProductID::ProductID(value_type const value) :
-    value_{value}
-  {}
+  ProductID::ProductID(value_type const value) : value_{value} {}
 
-  ProductID::ProductID(std::string const& canonicalProductName) :
-    ProductID{toID(canonicalProductName)}
+  ProductID::ProductID(std::string const& canonicalProductName)
+    : ProductID{toID(canonicalProductName)}
   {}
 
   void
@@ -30,8 +28,7 @@ namespace art {
     return check;
   }
 
-  ProductID::
-  operator std::size_t() const
+  ProductID::operator std::size_t() const
   {
     return static_cast<std::size_t>(value_);
   }
@@ -42,5 +39,4 @@ namespace art {
     os << id.value();
     return os;
   }
-
 }

@@ -17,7 +17,8 @@ namespace art {
     // table.
     ProductTable() = default;
 
-    explicit ProductTable(ProductDescriptions const& descriptions, BranchType bt);
+    explicit ProductTable(ProductDescriptions const& descriptions,
+                          BranchType bt);
 
     cet::exempt_ptr<BranchDescription const> description(ProductID) const;
 
@@ -31,22 +32,36 @@ namespace art {
   // ProductTable objects: one for each BranchType value.
   class ProductTables {
   public:
-
     static ProductTables invalid();
     explicit ProductTables(ProductDescriptions const& descriptions);
 
-    auto const& descriptions(BranchType const bt) const { return tables_[bt].descriptions; }
+    auto const&
+    descriptions(BranchType const bt) const
+    {
+      return tables_[bt].descriptions;
+    }
 
-    auto& get(BranchType const bt) { return tables_[bt]; }
-    auto const& get(BranchType const bt) const { return tables_[bt]; }
-    bool isValid() const { return isValid_; }
+    auto&
+    get(BranchType const bt)
+    {
+      return tables_[bt];
+    }
+    auto const&
+    get(BranchType const bt) const
+    {
+      return tables_[bt];
+    }
+    bool
+    isValid() const
+    {
+      return isValid_;
+    }
 
   private:
     explicit ProductTables() = default;
     bool isValid_{false};
     std::array<ProductTable, NumBranchTypes> tables_{{}};
   };
-
 }
 
 #endif /* canvas_Persistency_Provenance_ProductTables_h */

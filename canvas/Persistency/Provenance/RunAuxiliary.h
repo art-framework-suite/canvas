@@ -15,115 +15,86 @@
 
 namespace art {
 
-class RunAuxiliary {
+  class RunAuxiliary {
 
-public: // TYPES
+  public: // TYPES
+    static constexpr BranchType branch_type = InRun;
 
-  static constexpr BranchType branch_type = InRun;
+  public: // MEMBER FUNCTIONS -- Special Member Functions
+    ~RunAuxiliary();
 
-public: // MEMBER FUNCTIONS -- Special Member Functions
+    RunAuxiliary();
 
-  ~RunAuxiliary();
+    RunAuxiliary(RunID const& theId,
+                 Timestamp const& theTime,
+                 Timestamp const& theEndTime);
 
-  RunAuxiliary();
+    RunAuxiliary(RunNumber_t const& run,
+                 Timestamp const& theTime,
+                 Timestamp const& theEndTime);
 
-  RunAuxiliary(RunID const& theId, Timestamp const& theTime, Timestamp const& theEndTime);
+    RunAuxiliary(RunAuxiliary const&);
 
-  RunAuxiliary(RunNumber_t const& run, Timestamp const& theTime, Timestamp const& theEndTime);
+    RunAuxiliary(RunAuxiliary&&);
 
-  RunAuxiliary(RunAuxiliary const&);
+    RunAuxiliary& operator=(RunAuxiliary const&);
 
-  RunAuxiliary(RunAuxiliary&&);
+    RunAuxiliary& operator=(RunAuxiliary&&);
 
-  RunAuxiliary&
-  operator=(RunAuxiliary const&);
+  public:
+    void write(std::ostream&) const;
 
-  RunAuxiliary&
-  operator=(RunAuxiliary&&);
+    ProcessHistoryID& processHistoryID() const noexcept;
 
-public:
+    void setProcessHistoryID(ProcessHistoryID const&) const;
 
-  void
-  write(std::ostream&) const;
+    unsigned rangeSetID() const noexcept;
 
-  ProcessHistoryID&
-  processHistoryID() const noexcept;
+    void setRangeSetID(unsigned const id) const;
 
-  void
-  setProcessHistoryID(ProcessHistoryID const&) const;
+    RunID const& id() const noexcept;
 
-  unsigned
-  rangeSetID() const noexcept;
+    RunID const& runID() const noexcept;
 
-  void
-  setRangeSetID(unsigned const id) const;
+    void runID(RunID const&);
 
-  RunID const&
-  id() const noexcept;
+    RunNumber_t run() const noexcept;
 
-  RunID const&
-  runID() const noexcept;
+    Timestamp const& beginTime() const noexcept;
 
-  void
-  runID(RunID const&);
+    void beginTime(Timestamp const&);
 
-  RunNumber_t
-  run() const noexcept;
+    Timestamp const& endTime() const noexcept;
 
-  Timestamp const&
-  beginTime() const noexcept;
+    void endTime(Timestamp const&);
 
-  void
-  beginTime(Timestamp const&);
+    bool mergeAuxiliary(RunAuxiliary const&);
 
-  Timestamp const&
-  endTime() const noexcept;
+  private:
+    void mergeNewTimestampsIntoThis_(RunAuxiliary const&);
 
-  void
-  endTime(Timestamp const&);
+    void mergeNewProcessHistoryIntoThis_(RunAuxiliary const&);
 
-  bool
-  mergeAuxiliary(RunAuxiliary const&);
+  private:
+    // most recent process that put a RunProduct into this run
+    // is the last on the list, this defines what "latest" is
+    mutable ProcessHistoryID processHistoryID_{};
 
-private:
+    // allEventsProcessHistories_ contains all the ProcessHistoryIDs for all
+    // events in this run seen so far.
+    // Note: The default ctor for set is not noexcept.
+    std::set<ProcessHistoryID> allEventsProcessHistories_{};
 
-  void
-  mergeNewTimestampsIntoThis_(RunAuxiliary const&);
+    mutable unsigned rangeSetID_{-1u};
 
-  void
-  mergeNewProcessHistoryIntoThis_(RunAuxiliary const&);
+    RunID id_{};
 
-private:
+    Timestamp beginTime_{};
 
-  // most recent process that put a RunProduct into this run
-  // is the last on the list, this defines what "latest" is
-  mutable
-  ProcessHistoryID
-  processHistoryID_{};
+    Timestamp endTime_{};
+  };
 
-  // allEventsProcessHistories_ contains all the ProcessHistoryIDs for all
-  // events in this run seen so far.
-  // Note: The default ctor for set is not noexcept.
-  std::set<ProcessHistoryID>
-  allEventsProcessHistories_{};
-
-  mutable
-  unsigned
-  rangeSetID_{-1u};
-
-  RunID
-  id_{};
-
-  Timestamp
-  beginTime_{};
-
-  Timestamp
-  endTime_{};
-
-};
-
-std::ostream&
-operator<<(std::ostream&, const RunAuxiliary&);
+  std::ostream& operator<<(std::ostream&, const RunAuxiliary&);
 
 } // namespace art
 

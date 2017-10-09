@@ -2,100 +2,78 @@
 #define canvas_Persistency_Common_HLTGlobalStatus_h
 // vim: set sw=2 expandtab :
 
-#include "canvas/Persistency/Common/HLTenums.h"
 #include "canvas/Persistency/Common/HLTPathStatus.h"
+#include "canvas/Persistency/Common/HLTenums.h"
 
 #include <cstddef>
-#include <vector>
 #include <ostream>
+#include <vector>
 
 namespace art {
 
-class HLTGlobalStatus {
+  class HLTGlobalStatus {
 
-public:
+  public:
+    ~HLTGlobalStatus();
 
-  ~HLTGlobalStatus();
+    explicit HLTGlobalStatus(std::size_t const n = 0);
 
-  explicit
-  HLTGlobalStatus(std::size_t const n = 0);
+  public:
+    std::size_t size() const;
 
-public:
+    void reset();
 
-  std::size_t
-  size() const;
+    bool wasrun() const;
 
-  void
-  reset();
+    bool accept() const;
 
-  bool
-  wasrun() const;
+    bool error() const;
 
-  bool
-  accept() const;
+    HLTPathStatus const& at(unsigned const i) const;
 
-  bool
-  error() const;
+    HLTPathStatus& at(unsigned const i);
 
-  HLTPathStatus const&
-  at(unsigned const i) const;
+    HLTPathStatus const& operator[](unsigned const i) const;
 
-  HLTPathStatus&
-  at(unsigned const i);
+    HLTPathStatus& operator[](unsigned const i);
 
-  HLTPathStatus const&
-  operator[](unsigned const i) const;
+    bool wasrun(unsigned const i) const;
 
-  HLTPathStatus&
-  operator[](unsigned const i);
+    bool accept(unsigned const i) const;
 
-  bool
-  wasrun(unsigned const i) const;
+    bool error(unsigned const i) const;
 
-  bool
-  accept(unsigned const i) const;
+    hlt::HLTState state(unsigned const i) const;
 
-  bool
-  error(unsigned const i) const;
+    unsigned index(unsigned const i) const;
 
-  hlt::HLTState
-  state(unsigned const i) const;
+    void reset(unsigned const i);
 
-  unsigned
-  index(unsigned const i) const;
+    // void
+    // swap(HLTGlobalStatus& other);
 
-  void
-  reset(unsigned const i);
+  private:
+    std::vector<HLTPathStatus> paths_;
+  };
 
-  //void
-  //swap(HLTGlobalStatus& other);
+  // void
+  // swap(HLTGlobalStatus& lhs, HLTGlobalStatus& rhs);
 
-private:
-
-  std::vector<HLTPathStatus>
-  paths_;
-
-};
-
-//void
-//swap(HLTGlobalStatus& lhs, HLTGlobalStatus& rhs);
-
-std::ostream&
-operator<<(std::ostream& ost, const HLTGlobalStatus& hlt);
+  std::ostream& operator<<(std::ostream& ost, const HLTGlobalStatus& hlt);
 
 } // namespace art
 
-//namespace std {
-//
-//template <>
-//inline
-//void
-//swap(art::HLTGlobalStatus& lhs, art::HLTGlobalStatus& rhs)
-//{
-//  lhs.swap(rhs);
-//}
-//
-//} // namespace std
+  // namespace std {
+  //
+  // template <>
+  // inline
+  // void
+  // swap(art::HLTGlobalStatus& lhs, art::HLTGlobalStatus& rhs)
+  //{
+  //  lhs.swap(rhs);
+  //}
+  //
+  //} // namespace std
 
 #endif /* canvas_Persistency_Common_HLTGlobalStatus_h */
 

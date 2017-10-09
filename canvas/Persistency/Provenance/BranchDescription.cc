@@ -21,28 +21,32 @@ using fhicl::ParameterSetID;
 namespace {
 
   // Note: throws
-  void throwExceptionWithText(char const* txt)
+  void
+  throwExceptionWithText(char const* txt)
   {
     throw art::Exception(art::errors::LogicError)
       << "Problem using an incomplete BranchDescription\n"
-      << txt
-      << "\nPlease report this error to the ART developers\n";
+      << txt << "\nPlease report this error to the ART developers\n";
   }
 
 } // unnamed namespace
 
 namespace art {
 
-  BranchDescription::BranchDescription(BranchType const bt, TypeLabel const& tl, ModuleDescription const& md) :
-    branchType_{bt},
-    moduleLabel_{tl.hasEmulatedModule() ? tl.emulatedModule() : md.moduleLabel()},
-    processName_{md.processName()},
-    producedClassName_{tl.className()},
-    friendlyClassName_{tl.friendlyClassName()},
-    productInstanceName_{tl.productInstanceName()},
-    supportsView_{tl.supportsView()}
+  BranchDescription::BranchDescription(BranchType const bt,
+                                       TypeLabel const& tl,
+                                       ModuleDescription const& md)
+    : branchType_{bt}
+    , moduleLabel_{tl.hasEmulatedModule() ? tl.emulatedModule() :
+                                            md.moduleLabel()}
+    , processName_{md.processName()}
+    , producedClassName_{tl.className()}
+    , friendlyClassName_{tl.friendlyClassName()}
+    , productInstanceName_{tl.productInstanceName()}
+    , supportsView_{tl.supportsView()}
   {
-    guts().validity_ = tl.hasEmulatedModule() ? Transients::PresentFromSource : Transients::Produced;
+    guts().validity_ = tl.hasEmulatedModule() ? Transients::PresentFromSource :
+                                                Transients::Produced;
     psetIDs_.insert(md.parameterSetID());
     processConfigurationIDs_.insert(md.processConfigurationID());
     throwIfInvalid_();
@@ -52,8 +56,7 @@ namespace art {
 
   // Note: throws
   void
-  BranchDescription::
-  initProductID_()
+  BranchDescription::initProductID_()
   {
     if (!transientsFluffed_()) {
       return;
@@ -65,16 +68,13 @@ namespace art {
 
   // Note: throws
   void
-  BranchDescription::
-  fluffTransients_() const
+  BranchDescription::fluffTransients_() const
   {
     if (transientsFluffed_()) {
       return;
     }
-    transients_.get().branchName_ = canonicalProductName(friendlyClassName(),
-                                                         moduleLabel(),
-                                                         productInstanceName(),
-                                                         processName());
+    transients_.get().branchName_ = canonicalProductName(
+      friendlyClassName(), moduleLabel(), productInstanceName(), processName());
   }
 
   ParameterSetID const&
@@ -86,7 +86,7 @@ namespace art {
         << "Your application requires all events on Branch '"
         << guts().branchName_
         << "'\n to have the same provenance. This file has events with "
-        "mixed provenance\n"
+           "mixed provenance\n"
         << "on this branch.  Use a different input file.\n";
     }
     return *psetIDs().begin();
@@ -94,8 +94,7 @@ namespace art {
 
   // Note: throws
   void
-  BranchDescription::
-  merge(BranchDescription const& other)
+  BranchDescription::merge(BranchDescription const& other)
   {
     psetIDs_.insert(other.psetIDs().begin(), other.psetIDs().end());
     processConfigurationIDs_.insert(other.processConfigurationIDs().begin(),
@@ -115,8 +114,7 @@ namespace art {
 
   // Note: throws
   void
-  BranchDescription::
-  write(ostream& os) const
+  BranchDescription::write(ostream& os) const
   {
     os << "Branch Type = " << branchType_ << endl;
     os << "Process Name = " << processName() << endl;
@@ -129,8 +127,7 @@ namespace art {
 
   // Note: throws
   void
-  BranchDescription::
-  swap(BranchDescription& other)
+  BranchDescription::swap(BranchDescription& other)
   {
     using std::swap;
     swap(branchType_, other.branchType_);
@@ -148,8 +145,7 @@ namespace art {
 
   // Note: throws
   void
-  BranchDescription::
-  throwIfInvalid_() const
+  BranchDescription::throwIfInvalid_() const
   {
     constexpr char underscore('_');
     if (transientsFluffed_()) {
@@ -172,65 +168,56 @@ namespace art {
     }
     if (friendlyClassName_.find(underscore) != string::npos) {
       throw Exception(errors::LogicError, "IllegalCharacter")
-        << "Class name '"
-        << friendlyClassName()
+        << "Class name '" << friendlyClassName()
         << "' contains an underscore ('_'), which is illegal in the "
         << "name of a product.\n";
     }
     if (moduleLabel_.find(underscore) != string::npos) {
       throw Exception(errors::Configuration, "IllegalCharacter")
-        << "Module label '"
-        << moduleLabel()
+        << "Module label '" << moduleLabel()
         << "' contains an underscore ('_'), which is illegal in a "
         << "module label.\n";
     }
     if (productInstanceName_.find(underscore) != string::npos) {
       throw Exception(errors::Configuration, "IllegalCharacter")
-        << "Product instance name '"
-        << productInstanceName()
+        << "Product instance name '" << productInstanceName()
         << "' contains an underscore ('_'), which is illegal in a "
         << "product instance name.\n";
     }
     if (processName_.find(underscore) != string::npos) {
       throw Exception(errors::Configuration, "IllegalCharacter")
-        << "Process name '"
-        << processName()
+        << "Process name '" << processName()
         << "' contains an underscore ('_'), which is illegal in a "
         << "process name.\n";
     }
   }
 
   bool
-  BranchDescription::
-  transientsFluffed_() const noexcept
+  BranchDescription::transientsFluffed_() const noexcept
   {
     return !guts().branchName_.empty();
   }
 
   bool
-  BranchDescription::
-  isPsetIDUnique() const noexcept
+  BranchDescription::isPsetIDUnique() const noexcept
   {
     return psetIDs().size() == 1;
   }
 
   set<ProcessConfigurationID> const&
-  BranchDescription::
-  processConfigurationIDs() const noexcept
+  BranchDescription::processConfigurationIDs() const noexcept
   {
     return processConfigurationIDs_;
   }
 
   BranchDescription::Transients&
-  BranchDescription::
-  guts() noexcept
+  BranchDescription::guts() noexcept
   {
     return transients_.get();
   }
 
   BranchDescription::Transients const&
-  BranchDescription::
-  guts() const noexcept
+  BranchDescription::guts() const noexcept
   {
     return transients_.get();
   }
@@ -298,22 +285,20 @@ namespace art {
   bool
   combinable(BranchDescription const& a, BranchDescription const& b)
   {
-    return
-      (a.branchType() == b.branchType()) &&
-      (a.processName() == b.processName()) &&
-      (a.producedClassName() == b.producedClassName()) &&
-      (a.friendlyClassName() == b.friendlyClassName()) &&
-      (a.productInstanceName() == b.productInstanceName()) &&
-      (a.moduleLabel() == b.moduleLabel()) &&
-      (a.productID() == b.productID());
+    return (a.branchType() == b.branchType()) &&
+           (a.processName() == b.processName()) &&
+           (a.producedClassName() == b.producedClassName()) &&
+           (a.friendlyClassName() == b.friendlyClassName()) &&
+           (a.productInstanceName() == b.productInstanceName()) &&
+           (a.moduleLabel() == b.moduleLabel()) &&
+           (a.productID() == b.productID());
   }
 
   bool
   operator==(BranchDescription const& a, BranchDescription const& b)
   {
-    return combinable(a, b) &&
-      (a.psetIDs() == b.psetIDs()) &&
-      (a.processConfigurationIDs() == b.processConfigurationIDs());
+    return combinable(a, b) && (a.psetIDs() == b.psetIDs()) &&
+           (a.processConfigurationIDs() == b.processConfigurationIDs());
   }
 
   std::ostream&

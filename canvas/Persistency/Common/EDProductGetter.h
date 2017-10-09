@@ -7,39 +7,29 @@
 
 namespace art {
 
-class EDProduct;
+  class EDProduct;
 
-class EDProductGetter {
+  class EDProductGetter {
 
-public:
+  public:
+    virtual ~EDProductGetter();
 
-  virtual
-  ~EDProductGetter();
+    EDProductGetter();
 
-  EDProductGetter();
+    EDProductGetter(EDProductGetter const&) = delete;
 
-  EDProductGetter(EDProductGetter const&) = delete;
+    EDProductGetter(EDProductGetter&&) = delete;
 
-  EDProductGetter(EDProductGetter&&) = delete;
+    EDProductGetter& operator=(EDProductGetter const&) = delete;
 
-  EDProductGetter&
-  operator=(EDProductGetter const&) = delete;
+    EDProductGetter& operator=(EDProductGetter&&) = delete;
 
-  EDProductGetter&
-  operator=(EDProductGetter&&) = delete;
+  public:
+    EDProduct const* getIt() const;
 
-public:
-
-  EDProduct const*
-  getIt() const;
-
-private:
-
-  virtual
-  EDProduct const*
-  getIt_() const;
-
-};
+  private:
+    virtual EDProduct const* getIt_() const;
+  };
 
 } // namespace art
 

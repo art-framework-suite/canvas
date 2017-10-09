@@ -37,130 +37,107 @@
 
 namespace art {
 
-class FileIndex {
+  class FileIndex {
 
-public: // TYPES
+  public: // TYPES
+    using EntryNumber_t = long long;
 
-  using EntryNumber_t = long long;
-
-  enum EntryType {
+    enum EntryType {
       kRun /* 0 */
-    , kSubRun /* 1 */
-    , kEvent /* 2 */
-    , kEnd /* 3 */
-  };
+      ,
+      kSubRun /* 1 */
+      ,
+      kEvent /* 2 */
+      ,
+      kEnd /* 3 */
+    };
 
-  class Element {
+    class Element {
 
-  public: // MEMBER DATA -- Static
+    public: // MEMBER DATA -- Static
+      static constexpr EntryNumber_t invalidEntry{-1};
 
-    static constexpr EntryNumber_t invalidEntry{-1};
+    public: // MEMBER FUNCTIONS -- Special Member Functions
+      ~Element();
+
+      Element();
+
+      Element(EventID const& eID);
+
+      Element(EventID const& eID, EntryNumber_t const entry);
+
+      Element(Element const&);
+
+      Element(Element&&) noexcept;
+
+      Element& operator=(Element const&) &;
+
+      Element& operator=(Element&&) & noexcept;
+
+    public: // MEMBER FUNCTIONS
+      EntryType getEntryType() const;
+
+    public: // MEMBER DATA
+      EventID eventID_{};
+
+      EntryNumber_t entry_{invalidEntry};
+    };
+
+    using const_iterator = std::vector<Element>::const_iterator;
+    using iterator = std::vector<Element>::iterator;
+
+    enum SortState {
+      kNotSorted /* 0 */
+      ,
+      kSorted_Run_SubRun_Event /* 1 */
+      ,
+      kSorted_Run_SubRun_EventEntry /* 2 */
+    };
+
+    struct Transients {
+
+    public: // MEMBER FUNCTIONS -- Special Member Functions
+      ~Transients();
+
+      Transients();
+
+    public: // MEMBER DATA
+      bool allInEntryOrder_{false};
+
+      bool resultCached_{false};
+
+      // The default value for sortState_ reflects the fact that
+      // the index is always sorted using Run, SubRun, and Event
+      // number by the RootOutput before being written out.
+      // In the other case when we create a new FileIndex, the
+      // vector is empty, which is consistent with it having been
+      // sorted.
+      SortState sortState_{kSorted_Run_SubRun_Event};
+    };
 
   public: // MEMBER FUNCTIONS -- Special Member Functions
+    ~FileIndex();
 
-    ~Element();
-
-    Element();
-
-    Element(EventID const& eID);
-
-    Element(EventID const &eID, EntryNumber_t const entry);
-
-    Element(Element const&);
-
-    Element(Element&&) noexcept;
-
-    Element&
-    operator=(Element const&) &;
-
-    Element&
-    operator=(Element&&) & noexcept;
+    FileIndex();
 
   public: // MEMBER FUNCTIONS
+    void addEntry(EventID const& eID, EntryNumber_t entry);
 
-    EntryType
-    getEntryType() const;
+    void addEntryOnLoad(EventID const& eID, EntryNumber_t entry);
 
-  public: // MEMBER DATA
+    void sortBy_Run_SubRun_Event();
 
-    EventID
-    eventID_{};
+    void sortBy_Run_SubRun_EventEntry();
 
-    EntryNumber_t
-    entry_{invalidEntry};
+    const_iterator findPosition(EventID const& eID) const;
 
-  };
+    const_iterator findPosition(EventID const& eID, bool exact) const;
 
-  using const_iterator = std::vector<Element>::const_iterator;
-  using iterator = std::vector<Element>::iterator;
+    const_iterator findPosition(SubRunID const& srID, bool exact) const;
 
-  enum SortState {
-      kNotSorted /* 0 */
-    , kSorted_Run_SubRun_Event /* 1 */
-    , kSorted_Run_SubRun_EventEntry /* 2 */
-  };
+    const_iterator findPosition(RunID const& rID, bool exact) const;
 
-  struct Transients {
-
-  public: // MEMBER FUNCTIONS -- Special Member Functions
-
-    ~Transients();
-
-    Transients();
-
-  public: // MEMBER DATA
-
-    bool
-    allInEntryOrder_{false};
-
-    bool
-    resultCached_{false};
-
-    // The default value for sortState_ reflects the fact that
-    // the index is always sorted using Run, SubRun, and Event
-    // number by the RootOutput before being written out.
-    // In the other case when we create a new FileIndex, the
-    // vector is empty, which is consistent with it having been
-    // sorted.
-    SortState
-    sortState_{kSorted_Run_SubRun_Event};
-
-  };
-
-public: // MEMBER FUNCTIONS -- Special Member Functions
-
-  ~FileIndex();
-
-  FileIndex();
-
-public: // MEMBER FUNCTIONS
-
-  void
-  addEntry(EventID const &eID, EntryNumber_t entry);
-
-  void
-  addEntryOnLoad(EventID const &eID, EntryNumber_t entry);
-
-  void
-  sortBy_Run_SubRun_Event();
-
-  void
-  sortBy_Run_SubRun_EventEntry();
-
-  const_iterator
-  findPosition(EventID const &eID) const;
-
-  const_iterator
-  findPosition(EventID const &eID, bool exact) const;
-
-  const_iterator
-  findPosition(SubRunID const &srID, bool exact) const;
-
-  const_iterator
-  findPosition(RunID const &rID, bool exact) const;
-
-  const_iterator
-  findSubRunOrRunPosition(SubRunID const &srID) const;
+    const_iterator findSubRunOrRunPosition(SubRunID const& srID) const;
 
 #if 0
   template <typename ID>
@@ -171,105 +148,71 @@ public: // MEMBER FUNCTIONS
   }
 #endif // 0
 
-  bool
-  contains(EventID const& id, bool exact) const;
+    bool contains(EventID const& id, bool exact) const;
 
-  bool
-  contains(SubRunID const& id, bool exact) const;
+    bool contains(SubRunID const& id, bool exact) const;
 
-  bool
-  contains(RunID const& id, bool exact) const;
+    bool contains(RunID const& id, bool exact) const;
 
-  iterator
-  begin();
+    iterator begin();
 
-  const_iterator
-  begin() const;
+    const_iterator begin() const;
 
-  const_iterator
-  cbegin() const;
+    const_iterator cbegin() const;
 
-  iterator
-  end();
+    iterator end();
 
-  const_iterator
-  end() const;
+    const_iterator end() const;
 
-  const_iterator
-  cend() const;
+    const_iterator cend() const;
 
-  std::vector<Element>::size_type
-  size() const;
+    std::vector<Element>::size_type size() const;
 
-  bool
-  empty() const;
+    bool empty() const;
 
-  bool
-  allEventsInEntryOrder() const;
+    bool allEventsInEntryOrder() const;
 
-  bool
-  eventsUniqueAndOrdered() const;
+    bool eventsUniqueAndOrdered() const;
 
-  void
-  print_event_list(std::ostream& os) const;
+    void print_event_list(std::ostream& os) const;
 
-private: // MEMBER FUNCTIONS -- Implementation details
+  private: // MEMBER FUNCTIONS -- Implementation details
+    bool& allInEntryOrder() const;
 
-  bool&
-  allInEntryOrder() const;
+    bool& resultCached() const;
 
-  bool&
-  resultCached() const;
+    SortState& sortState() const;
 
-  SortState&
-  sortState() const;
+    const_iterator findEventForUnspecifiedSubRun(EventID const& eID,
+                                                 bool exact) const;
 
-  const_iterator
-  findEventForUnspecifiedSubRun(EventID const &eID, bool exact) const;
+  private: // MEMBER DATA
+    std::vector<Element> entries_{};
 
-private: // MEMBER DATA
+    mutable Transient<Transients> transients_{};
+  };
 
-  std::vector<Element>
-  entries_{};
+  bool operator<(FileIndex::Element const& lh, FileIndex::Element const& rh);
 
-  mutable
-  Transient<Transients>
-  transients_{};
+  bool operator>(FileIndex::Element const& lh, FileIndex::Element const& rh);
 
-};
+  bool operator>=(FileIndex::Element const& lh, FileIndex::Element const& rh);
 
-bool
-operator<(FileIndex::Element const& lh, FileIndex::Element const& rh);
+  bool operator<=(FileIndex::Element const& lh, FileIndex::Element const& rh);
 
-bool
-operator>(FileIndex::Element const& lh, FileIndex::Element const& rh);
+  bool operator==(FileIndex::Element const& lh, FileIndex::Element const& rh);
 
-bool
-operator>=(FileIndex::Element const& lh, FileIndex::Element const& rh);
+  bool operator!=(FileIndex::Element const& lh, FileIndex::Element const& rh);
 
-bool
-operator<=(FileIndex::Element const& lh, FileIndex::Element const& rh);
+  class Compare_Run_SubRun_EventEntry {
 
-bool
-operator==(FileIndex::Element const& lh, FileIndex::Element const& rh);
+  public:
+    bool operator()(FileIndex::Element const& lh, FileIndex::Element const& rh);
+  };
 
-bool
-operator!=(FileIndex::Element const& lh, FileIndex::Element const& rh);
+  std::ostream& operator<<(std::ostream& os, FileIndex::Element const& el);
 
-class Compare_Run_SubRun_EventEntry {
-
-public:
-
-  bool
-  operator()(FileIndex::Element const& lh, FileIndex::Element const& rh);
-
-};
-
-std::ostream&
-operator<<(std::ostream& os, FileIndex::Element const& el);
-
-std::ostream&
-operator<<(std::ostream& os, FileIndex const& fileIndex);
+  std::ostream& operator<<(std::ostream& os, FileIndex const& fileIndex);
 
 } // namespace art
 

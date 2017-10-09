@@ -14,30 +14,25 @@
 
 namespace art {
 
-class EDProductGetter;
-class ProductID;
+  class EDProductGetter;
+  class ProductID;
 
-class PrincipalBase {
+  class PrincipalBase {
 
-public:
+  public:
+    virtual ~PrincipalBase() = 0;
 
-  virtual
-  ~PrincipalBase() = 0;
+    PrincipalBase();
 
-  PrincipalBase();
+    // Note: Used only by canvas RefCoreStreamer.cc
+    EDProductGetter const* getEDProductGetter(ProductID const& pid) const;
 
-  // Note: Used only by canvas RefCoreStreamer.cc
-  EDProductGetter const*
-  getEDProductGetter(ProductID const& pid) const;
-
-private:
-
-  // Note: Used only by canvas RefCoreStreamer.cc through PrincipalBase::getEDProductGetter!
-  virtual
-  EDProductGetter const*
-  getEDProductGetter_(ProductID const&) const = 0;
-
-};
+  private:
+    // Note: Used only by canvas RefCoreStreamer.cc through
+    // PrincipalBase::getEDProductGetter!
+    virtual EDProductGetter const* getEDProductGetter_(
+      ProductID const&) const = 0;
+  };
 
 } // namespace art
 

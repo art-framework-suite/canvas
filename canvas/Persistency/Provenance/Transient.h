@@ -18,9 +18,23 @@ namespace art {
     typedef T value_type;
     Transient(T value = T()) : value_(value) {}
     operator T() const { return value_; }
-    Transient& operator=(T rh) { value_ = rh; return *this; }
-    T const& get() const { return value_;}
-    T& get() { return value_;}
+    Transient&
+    operator=(T rh)
+    {
+      value_ = rh;
+      return *this;
+    }
+    T const&
+    get() const
+    {
+      return value_;
+    }
+    T&
+    get()
+    {
+      return value_;
+    }
+
   private:
     T value_;
   };

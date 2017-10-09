@@ -3,9 +3,8 @@
 #include "cetlib_except/demangle.h"
 
 void
-art::detail::
-throwPartnerException(std::type_info const & generator,
-                      std::type_info const & wanted_wrapper_type)
+art::detail::throwPartnerException(std::type_info const& generator,
+                                   std::type_info const& wanted_wrapper_type)
 {
   throw Exception(errors::LogicError, "makePartner")
     << "Attempted to make type "

@@ -12,10 +12,8 @@ art::canonicalProductName(std::string const& friendlyClassName,
                           std::string const& processName)
 {
   std::string result;
-  result.reserve(friendlyClassName.size() +
-                 moduleLabel.size() +
-                 productInstanceName.size() +
-                 processName.size() + 4);
+  result.reserve(friendlyClassName.size() + moduleLabel.size() +
+                 productInstanceName.size() + processName.size() + 4);
   result += friendlyClassName;
   result += underscore;
   result += moduleLabel;

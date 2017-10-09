@@ -10,29 +10,29 @@ using namespace std;
 
 namespace art {
 
-RNGsnapshot::
-RNGsnapshot(std::string const& ekind, std::string const& lbl, std::vector<unsigned long> const& est)
-{
-  saveFrom(ekind, lbl, est);
-}
+  RNGsnapshot::RNGsnapshot(std::string const& ekind,
+                           std::string const& lbl,
+                           std::vector<unsigned long> const& est)
+  {
+    saveFrom(ekind, lbl, est);
+  }
 
-void
-RNGsnapshot::
-saveFrom(std::string const& ekind, std::string const& lbl, std::vector<unsigned long> const& est)
-{
-  engine_kind_ = ekind;
-  label_ = lbl;
-  cet::copy_all(est, std::back_inserter(state_));
-}
+  void
+  RNGsnapshot::saveFrom(std::string const& ekind,
+                        std::string const& lbl,
+                        std::vector<unsigned long> const& est)
+  {
+    engine_kind_ = ekind;
+    label_ = lbl;
+    cet::copy_all(est, std::back_inserter(state_));
+  }
 
-std::vector<unsigned long>
-RNGsnapshot::
-restoreState() const
-{
-  std::vector<unsigned long> est;
-  cet::copy_all(state_, std::back_inserter(est));
-  return est;
-}
+  std::vector<unsigned long>
+  RNGsnapshot::restoreState() const
+  {
+    std::vector<unsigned long> est;
+    cet::copy_all(state_, std::back_inserter(est));
+    return est;
+  }
 
 } // namespace art
-

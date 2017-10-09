@@ -15,63 +15,48 @@
 
 namespace art {
 
-class History {
+  class History {
 
-public:
+  public:
+    typedef std::size_t size_type;
 
-  typedef std::size_t size_type;
+  public:
+    ~History();
 
-public:
+    History();
 
-  ~History();
+    History(History const&) = default;
 
-  History();
+    History(History&&) = delete;
 
-  History(History const&) = default;
+    History& operator=(History const&) = delete;
 
-  History(History&&) = delete;
+    History& operator=(History&&) = delete;
 
-  History&
-  operator=(History const&) = delete;
+  public:
+    size_type size() const;
 
-  History&
-  operator=(History&&) = delete;
+    void addEventSelectionEntry(EventSelectionID const& eventSelection);
 
-public:
+    void addBranchListIndexEntry(BranchListIndex const& branchListIndex);
 
-  size_type size() const;
+    EventSelectionID const& getEventSelectionID(size_type i) const;
 
-  void
-  addEventSelectionEntry(EventSelectionID const& eventSelection);
+    EventSelectionIDVector const& eventSelectionIDs() const;
 
-  void
-  addBranchListIndexEntry(BranchListIndex const& branchListIndex);
+    ProcessHistoryID const& processHistoryID() const;
 
-  EventSelectionID const&
-  getEventSelectionID(size_type i) const;
+    void setProcessHistoryID(ProcessHistoryID const& phid) const;
 
-  EventSelectionIDVector const&
-  eventSelectionIDs() const;
+    BranchListIndexes const& branchListIndexes() const;
 
-  ProcessHistoryID const&
-  processHistoryID() const;
+    BranchListIndexes& branchListIndexes();
 
-  void
-  setProcessHistoryID(ProcessHistoryID const& phid) const;
-
-  BranchListIndexes const&
-  branchListIndexes() const;
-
-  BranchListIndexes&
-  branchListIndexes();
-
-private:
-
-  EventSelectionIDVector eventSelections_;
-  BranchListIndexes branchListIndexes_;
-  mutable ProcessHistoryID processHistoryID_;
-
-};
+  private:
+    EventSelectionIDVector eventSelections_;
+    BranchListIndexes branchListIndexes_;
+    mutable ProcessHistoryID processHistoryID_;
+  };
 
 } // namespace art
 

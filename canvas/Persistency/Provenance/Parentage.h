@@ -4,57 +4,45 @@
 
 //  The products that were read in producing this product.
 
-#include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/ParentageID.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
 
 #include <iosfwd>
 #include <vector>
 
 namespace art {
 
-class Parentage {
+  class Parentage {
 
-public:
+  public:
+    ~Parentage();
 
-  ~Parentage();
+    Parentage();
 
-  Parentage();
+    explicit Parentage(std::vector<ProductID> const& parents);
 
-  explicit
-  Parentage(std::vector<ProductID> const& parents);
+    Parentage(Parentage const&);
 
-  Parentage(Parentage const&);
+    Parentage(Parentage&&);
 
-  Parentage(Parentage&&);
+    Parentage& operator=(Parentage const&);
 
-  Parentage&
-  operator=(Parentage const&);
+    Parentage& operator=(Parentage&&);
 
-  Parentage&
-  operator=(Parentage&&);
+  public:
+    ParentageID id() const;
 
-public:
+    std::vector<ProductID> const& parents() const;
 
-  ParentageID
-  id() const;
+  private:
+    std::vector<ProductID> parents_{};
+  };
 
-  std::vector<ProductID> const&
-  parents() const;
+  std::ostream& operator<<(std::ostream& os, Parentage const&);
 
-private:
+  bool operator==(Parentage const& a, Parentage const& b);
 
-  std::vector<ProductID> parents_{};
-
-};
-
-std::ostream&
-operator<<(std::ostream& os, Parentage const&);
-
-bool
-operator==(Parentage const& a, Parentage const& b);
-
-bool
-operator!=(Parentage const& a, Parentage const& b);
+  bool operator!=(Parentage const& a, Parentage const& b);
 
 } // namespace art
 

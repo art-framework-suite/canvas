@@ -8,49 +8,46 @@
 
 namespace art {
 
-struct DebugValue {
+  struct DebugValue {
 
-  DebugValue();
+    DebugValue();
 
-  int
-  operator()()
-  {
-    return value_;
-  }
+    int
+    operator()()
+    {
+      return value_;
+    }
 
-  char const*
-  cvalue_;
+    char const* cvalue_;
 
-  int
-  value_;
+    int value_;
+  };
 
-};
+  struct DebugTasksValue {
 
-struct DebugTasksValue {
+    DebugTasksValue();
 
-  DebugTasksValue();
+    int
+    operator()()
+    {
+      return value_;
+    }
 
-  int
-  operator()()
-  {
-    return value_;
-  }
+    char const* cvalue_;
 
-  char const*
-  cvalue_;
+    int value_;
+  };
 
-  int
-  value_;
-
-};
-
-extern DebugValue debugit;
-extern DebugTasksValue debugTasks;
-
+  extern DebugValue debugit;
+  extern DebugTasksValue debugTasks;
 }
 
-#define FDEBUG(LEVEL) if ((LEVEL) <= art::debugit()) std::cerr
-#define TDEBUG(LEVEL) if ((LEVEL) <= art::debugTasks()) std::cerr
+#define FDEBUG(LEVEL)                                                          \
+  if ((LEVEL) <= art::debugit())                                               \
+  std::cerr
+#define TDEBUG(LEVEL)                                                          \
+  if ((LEVEL) <= art::debugTasks())                                            \
+  std::cerr
 
 #endif /* canvas_Utilities_DebugMacros_h */
 
