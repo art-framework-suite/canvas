@@ -5,6 +5,7 @@
 
 #include <ostream>
 #include <sstream>
+#include <tuple>
 
 using namespace std;
 
@@ -94,14 +95,6 @@ namespace art {
   }
 
   bool
-  operator==(ProcessConfiguration const& a, ProcessConfiguration const& b)
-  {
-    return (a.processName() == b.processName()) &&
-           (a.parameterSetID() == b.parameterSetID()) &&
-           (a.releaseVersion() == b.releaseVersion());
-  }
-
-  bool
   operator!=(ProcessConfiguration const& a, ProcessConfiguration const& b)
   {
     return !(a == b);
@@ -110,32 +103,23 @@ namespace art {
   bool
   operator<(ProcessConfiguration const& a, ProcessConfiguration const& b)
   {
-    if (a.processName() < b.processName()) {
-      return true;
-    }
-    if (b.processName() < a.processName()) {
-      return false;
-    }
-    if (a.parameterSetID() < b.parameterSetID()) {
-      return true;
-    }
-    if (b.parameterSetID() < a.parameterSetID()) {
-      return false;
-    }
-    if (a.releaseVersion() < b.releaseVersion()) {
-      return true;
-    }
-    if (b.releaseVersion() < a.releaseVersion()) {
-      return false;
-    }
-    return false;
+    return std::tie(a.processName(), a.parameterSetID(), a.releaseVersion()) <
+           std::tie(b.processName(), b.parameterSetID(), b.releaseVersion());
   }
 
-  ostream&
-  operator<<(ostream& os, ProcessConfiguration const& pc)
+  bool
+  operator==(ProcessConfiguration const& a, ProcessConfiguration const& b)
+  {
+    return std::tie(a.processName(), a.parameterSetID(), a.releaseVersion()) ==
+           std::tie(b.processName(), b.parameterSetID(), b.releaseVersion());
+  }
+
+  std::ostream&
+  operator<<(std::ostream& os, ProcessConfiguration const& pc)
   {
     os << pc.processName() << ' ' << pc.parameterSetID() << ' '
-       << pc.releaseVersion() << ' ';
+       << pc.releaseVersion()
+       << ' '; // Retain the last space for backwards compatibility
     return os;
   }
 

@@ -3,7 +3,6 @@
 
 #include "cetlib/MD5Digest.h"
 #include "cetlib/container_algorithms.h"
-
 #include <iterator>
 #include <mutex>
 #include <ostream>
@@ -213,7 +212,8 @@ namespace art {
     ostringstream oss;
     for (auto I = data_.begin(), E = data_.end(); I != E; ++I) {
       oss << I->processName() << ' ' << I->parameterSetID() << ' '
-          << I->releaseVersion() << ' ' << ' ';
+          << I->releaseVersion() << ' '
+          << ' '; // retain extra spaces for backwards compatibility
     }
     string stringrep = oss.str();
     cet::MD5Digest md5alg(stringrep);

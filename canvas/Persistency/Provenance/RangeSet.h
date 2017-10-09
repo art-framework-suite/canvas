@@ -18,6 +18,8 @@
 
 namespace art {
 
+  class EventID;
+
   class RangeSet {
 
   public: // TYPES
@@ -104,6 +106,8 @@ namespace art {
                        std::size_t const b,
                        std::size_t const e);
 
+    void update(EventID const&);
+
     template <typename... ARGS>
     void emplace_range(ARGS&&...);
 
@@ -150,6 +154,9 @@ namespace art {
   bool same_ranges(RangeSet const& l, RangeSet const& r);
 
   bool disjoint_ranges(RangeSet const& l, RangeSet const& r);
+  void throw_if_not_disjoint(RunNumber_t const rn,
+                             EventRange const& left,
+                             EventRange const& right) noexcept(false);
 
   // If one range-set is a superset of the other, the return value is
   // 'true'.

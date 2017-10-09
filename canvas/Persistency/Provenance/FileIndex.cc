@@ -31,48 +31,12 @@ namespace art {
 
   FileIndex::EntryNumber_t constexpr FileIndex::Element::invalidEntry;
 
-  FileIndex::Element::~Element() {}
-
-  FileIndex::Element::Element() : eventID_{}, entry_{invalidEntry} {}
-
   FileIndex::Element::Element(EventID const& eID) : Element(eID, invalidEntry)
   {}
 
   FileIndex::Element::Element(EventID const& eID, EntryNumber_t const entry)
     : eventID_{eID}, entry_{entry}
   {}
-
-  FileIndex::Element::Element(Element const& rhs)
-    : eventID_{rhs.eventID_}, entry_{rhs.entry_}
-  {}
-
-  FileIndex::Element&
-  FileIndex::Element::operator=(Element const& rhs) &
-  {
-    if (this != &rhs) {
-      eventID_ = rhs.eventID_;
-      entry_ = rhs.entry_;
-    }
-    return *this;
-  }
-
-  FileIndex::Element::Element(Element&& rhs) noexcept
-    : eventID_{move(rhs.eventID_)}, entry_{rhs.entry_}
-  {
-    // rhs.eventID_ = EventID();
-    // rhs.entry_ = invalidEntry;
-  }
-
-  FileIndex::Element&
-    FileIndex::Element::operator=(Element&& rhs) &
-    noexcept
-  {
-    eventID_ = move(rhs.eventID_);
-    entry_ = rhs.entry_;
-    // rhs.eventID_ = EventID();
-    // rhs.entry_ = invalidEntry;
-    return *this;
-  }
 
   FileIndex::EntryType
   FileIndex::Element::getEntryType() const
@@ -405,6 +369,7 @@ namespace art {
     if (it == itEnd) {
       return it;
     }
+
     // Starting with it, jump to the first event of each subrun until
     // we find either:
     //

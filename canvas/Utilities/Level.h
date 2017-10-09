@@ -12,17 +12,12 @@ namespace art {
   // The outer-most level must be 0.
   enum class Level {
     Job = 0,
-    InputFile // 1
-    ,
-    Run // 2
-    ,
-    SubRun // 3
-    ,
-    Event // 4
-    ,
-    NumNestingLevels // 5
-    ,
-    ReadyToAdvance // 6
+    InputFile,
+    Run,
+    SubRun,
+    Event,
+    NumNestingLevels,
+    ReadyToAdvance
   };
 
   // The following facility is to translate from the scoped enumerator

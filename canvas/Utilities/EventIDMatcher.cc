@@ -232,7 +232,7 @@ namespace art {
         //*/printf(" event part -- ");
         //*/}
         //*/printf("run: %u  subRun: %u  event: %u\n", eid.run(), eid.subRun(),
-        //eid.event());
+        // eid.event());
         for (auto const& val : parsed_pattern[i]) {
           if (val.wildcard_) {
             // Wildcards always match

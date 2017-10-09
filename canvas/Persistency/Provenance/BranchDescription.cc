@@ -54,7 +54,6 @@ namespace art {
     initProductID_();
   }
 
-  // Note: throws
   void
   BranchDescription::initProductID_()
   {
@@ -66,7 +65,6 @@ namespace art {
     }
   }
 
-  // Note: throws
   void
   BranchDescription::fluffTransients_() const
   {
@@ -92,7 +90,6 @@ namespace art {
     return *psetIDs().begin();
   }
 
-  // Note: throws
   void
   BranchDescription::merge(BranchDescription const& other)
   {
@@ -112,7 +109,6 @@ namespace art {
     }
   }
 
-  // Note: throws
   void
   BranchDescription::write(ostream& os) const
   {
@@ -125,7 +121,6 @@ namespace art {
     os << "Product Instance Name = " << productInstanceName() << endl;
   }
 
-  // Note: throws
   void
   BranchDescription::swap(BranchDescription& other)
   {

@@ -63,18 +63,6 @@ namespace art {
 
 } // namespace art
 
-  // namespace std {
-  //
-  // template <>
-  // inline
-  // void
-  // swap(art::HLTGlobalStatus& lhs, art::HLTGlobalStatus& rhs)
-  //{
-  //  lhs.swap(rhs);
-  //}
-  //
-  //} // namespace std
-
 #endif /* canvas_Persistency_Common_HLTGlobalStatus_h */
 
 // Local Variables:

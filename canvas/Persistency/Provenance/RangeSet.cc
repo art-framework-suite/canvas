@@ -1,6 +1,7 @@
 #include "canvas/Persistency/Provenance/RangeSet.h"
 // vim: set sw=2 expandtab :
 
+#include "canvas/Persistency/Provenance/EventID.h"
 #include "canvas/Persistency/Provenance/EventRange.h"
 #include "canvas/Persistency/Provenance/IDNumber.h"
 #include "canvas/Persistency/Provenance/RunID.h"
@@ -234,18 +235,6 @@ namespace art {
     return ranges_.empty();
   }
 
-  RangeSet::const_iterator
-  RangeSet::begin() const
-  {
-    return ranges_.cbegin();
-  }
-
-  RangeSet::const_iterator
-  RangeSet::end() const
-  {
-    return ranges_.cend();
-  }
-
   size_t
   RangeSet::begin_idx() const
   {
@@ -256,6 +245,18 @@ namespace art {
   RangeSet::end_idx() const
   {
     return static_cast<size_t>(ranges_.cend() - ranges_.cbegin());
+  }
+
+  RangeSet::const_iterator
+  RangeSet::begin() const
+  {
+    return ranges_.cbegin();
+  }
+
+  RangeSet::const_iterator
+  RangeSet::end() const
+  {
+    return ranges_.cend();
   }
 
   unsigned
@@ -307,15 +308,6 @@ namespace art {
     return result;
   }
 
-  void
-  RangeSet::assign_ranges(RangeSet const& rs, size_t const b, size_t const e)
-  {
-    require_not_full_run();
-    if (!rs.ranges_.empty() && (e >= 1) && (e <= rs.ranges_.size())) {
-      ranges_.assign(rs.ranges_.cbegin() + b, rs.ranges_.cbegin() + e);
-    }
-  }
-
   RangeSet&
   RangeSet::collapse()
   {
@@ -326,31 +318,25 @@ namespace art {
       isCollapsed_ = true;
       return *this;
     }
-    if (!is_sorted()) {
-      throw Exception(errors::LogicError, "RangeSet::collapse()")
+    if (!is_sorted())
+      throw art::Exception(art::errors::LogicError, "RangeSet::collapse()")
         << "A range set must be sorted before it is collapsed.\n";
-    }
+
     auto processing = ranges_;
     decltype(ranges_) result;
     result.reserve(ranges_.size());
     result.push_back(ranges_.front());
-    for (auto ir = (ranges_.cbegin() + 1), e = ranges_.cend(); ir != e; ++ir) {
+    for (auto ir = ranges_.cbegin() + 1, e = ranges_.cend(); ir != e; ++ir) {
       auto const& r = *ir;
       auto& back = result.back();
       if (back.is_adjacent(r)) {
         back.merge(r);
-      } else if (back.is_disjoint(r)) {
-        result.push_back(r);
       } else {
-        throw Exception(errors::EventRangeOverlap)
-          << "Attempt to merge event ranges that both contain one or more of "
-             "the same events\n"
-          << " Run: " << run_ << '\n'
-          << "  " << back << "  vs.\n"
-          << "  " << r;
+        throw_if_not_disjoint(run_, back, r);
+        result.push_back(r);
       }
     }
-    swap(ranges_, result);
+    std::swap(ranges_, result);
     isCollapsed_ = true;
     return *this;
   }
@@ -377,9 +363,35 @@ namespace art {
     return *this;
   }
 
+  void
+  RangeSet::assign_ranges(RangeSet const& rs, size_t const b, size_t const e)
+  {
+    require_not_full_run();
+    if (!rs.ranges_.empty() && (e >= 1) && (e <= rs.ranges_.size())) {
+      ranges_.assign(rs.ranges_.cbegin() + b, rs.ranges_.cbegin() + e);
+    }
+  }
+
+  void
+  RangeSet::update(EventID const& id)
+  {
+    require_not_full_run();
+    if (ranges_.empty()) {
+      run_ = id.run();
+      ranges_.emplace_back(id.subRun(), id.event(), id.next().event());
+      return;
+    }
+    auto& back = ranges_.back();
+    if (back.subRun() == id.subRun() && back.end() == id.event()) {
+      back.set_end(id.next().event());
+    } else {
+      ranges_.emplace_back(id.subRun(), id.event(), id.next().event());
+    }
+  }
+
   // For a range [1,6) split into [1,3) and [3,6) the specified
   // event number is the new 'end' of the left range (3).
-  pair<size_t, bool>
+  pair<std::size_t, bool>
   RangeSet::split_range(SubRunNumber_t const s, EventNumber_t const e)
   {
     require_not_full_run();
@@ -476,6 +488,21 @@ namespace art {
           rranges.cend(),
           back_inserter(merged));
     return disjoint(merged);
+  }
+
+  void
+  throw_if_not_disjoint(RunNumber_t const rn,
+                        EventRange const& left,
+                        EventRange const& right) noexcept(false)
+  {
+    if (left.is_disjoint(right))
+      return;
+    throw art::Exception(art::errors::EventRangeOverlap)
+      << "Attempt to merge event ranges that both contain one or more of the "
+         "same events\n"
+      << " Run: " << rn << '\n'
+      << "  " << left << "  vs.\n"
+      << "  " << right;
   }
 
   bool

@@ -46,6 +46,7 @@ namespace art {
     {
       return tables_[bt];
     }
+
     auto const&
     get(BranchType const bt) const
     {

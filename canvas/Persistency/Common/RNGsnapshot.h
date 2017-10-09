@@ -33,54 +33,55 @@
 namespace art {
 
   class RNGsnapshot {
-
   public:
-    static_assert(std::numeric_limits<unsigned>::digits == 32,
-                  "std::numeric_limits<unsigned>::digits != 32");
-    static_assert(sizeof(unsigned) <= sizeof(unsigned long),
-                  "sizeof(unsigned) > sizeof(unsigned long)");
+    // --- CLHEP engine state characteristics:
+    using CLHEP_t = unsigned long;
+    using engine_state_t = std::vector<CLHEP_t>;
+
+    // --- Our state characteristics:
+    using saved_t = unsigned int;
+    using snapshot_state_t = std::vector<saved_t>;
+    using label_t = std::string;
+
+    static_assert(std::numeric_limits<saved_t>::digits == 32,
+                  "std::numeric_limits<saved_t>::digits != 32");
+    static_assert(sizeof(saved_t) <= sizeof(CLHEP_t),
+                  "sizeof(saved_t) > sizeof(CLHEP_t)");
 
     RNGsnapshot() = default;
-
     explicit RNGsnapshot(std::string const& ekind,
-                         std::string const& label,
-                         std::vector<unsigned long> const& est);
+                         label_t const& label,
+                         engine_state_t const& est);
 
-    // -- Access
+    // --- Access:
     std::string const&
     ekind() const
     {
       return engine_kind_;
     }
-
-    std::string const&
+    label_t const&
     label() const
     {
       return label_;
     }
-
-    std::vector<unsigned> const&
+    snapshot_state_t const&
     state() const
     {
       return state_;
     }
 
-    // -- Save/restore
-    void saveFrom(std::string const&,
-                  std::string const&,
-                  std::vector<unsigned long> const&);
-
-    std::vector<unsigned long> restoreState() const;
+    // --- Save/restore:
+    void saveFrom(std::string const&, label_t const&, engine_state_t const&);
+    engine_state_t restoreState() const;
 
   private:
     std::string engine_kind_{};
+    label_t label_{};
+    snapshot_state_t state_{};
 
-    std::string label_{};
+  }; // RNGsnapshot
 
-    std::vector<unsigned> state_{};
-  };
-
-} // namespace art
+} // art
 
 #endif /* canvas_Persistency_Common_RNGsnapshot_h */
 

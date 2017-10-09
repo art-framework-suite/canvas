@@ -31,7 +31,6 @@
 #include "canvas/Persistency/Provenance/RunID.h"
 #include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Persistency/Provenance/Transient.h"
-#include <cassert>
 #include <iosfwd>
 #include <vector>
 
@@ -58,21 +57,11 @@ namespace art {
       static constexpr EntryNumber_t invalidEntry{-1};
 
     public: // MEMBER FUNCTIONS -- Special Member Functions
-      ~Element();
-
-      Element();
+      Element() = default;
 
       Element(EventID const& eID);
 
       Element(EventID const& eID, EntryNumber_t const entry);
-
-      Element(Element const&);
-
-      Element(Element&&) noexcept;
-
-      Element& operator=(Element const&) &;
-
-      Element& operator=(Element&&) & noexcept;
 
     public: // MEMBER FUNCTIONS
       EntryType getEntryType() const;
@@ -138,15 +127,6 @@ namespace art {
     const_iterator findPosition(RunID const& rID, bool exact) const;
 
     const_iterator findSubRunOrRunPosition(SubRunID const& srID) const;
-
-#if 0
-  template <typename ID>
-  bool
-  contains(ID const& id, bool exact) const
-  {
-    return findPosition(id, exact) != entries_.end();
-  }
-#endif // 0
 
     bool contains(EventID const& id, bool exact) const;
 
