@@ -14,12 +14,12 @@
 
 namespace art {
 
-  typedef  fhicl::ParameterSetID          EventSelectionID;
-  typedef  std::vector<EventSelectionID>  EventSelectionIDVector;
+  typedef fhicl::ParameterSetID EventSelectionID;
+  typedef std::vector<EventSelectionID> EventSelectionIDVector;
 
-}  // art
+} // art
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Persistency_Provenance_EventSelectionID_h */
 

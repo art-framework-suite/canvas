@@ -2,8 +2,8 @@
 #include "cetlib/quiet_unit_test.hpp"
 
 #include <iostream>
-#include <typeinfo>
 #include <string>
+#include <typeinfo>
 #include <vector>
 
 #include "canvas/Persistency/Common/Assns.h"
@@ -14,11 +14,13 @@ namespace {
   // has "(anonymous namespace)::" in its name.  This tests the
   // friendly-name calculation with parentheses contained in the
   // demangled name.
-  struct A{};
-  struct B{};
-  struct D{};
+  struct A {
+  };
+  struct B {
+  };
+  struct D {
+  };
 }
-
 
 using namespace art;
 

@@ -30,21 +30,24 @@ namespace art {
     fhicl::ParameterSetID psetid_{};
 
   public:
-
     TriggerResults() = default;
 
     // Standard contructor
     TriggerResults(HLTGlobalStatus const& hlt,
                    fhicl::ParameterSetID const& psetid)
-      : HLTGlobalStatus{hlt}
-      , psetid_{psetid}
-    { }
+      : HLTGlobalStatus{hlt}, psetid_{psetid}
+    {}
 
     // Get stored parameter set id
-    fhicl::ParameterSetID const& parameterSetID() const { return psetid_; }
+    fhicl::ParameterSetID const&
+    parameterSetID() const
+    {
+      return psetid_;
+    }
 
     // swap function
-    void swap(TriggerResults& other)
+    void
+    swap(TriggerResults& other)
     {
       this->HLTGlobalStatus::swap(other);
       psetid_.swap(other.psetid_);
@@ -52,25 +55,26 @@ namespace art {
 
     // Copy assignment using swap.
     // We can't ref-qualify assignment because of GCC_XML.
-    TriggerResults& operator=(TriggerResults const& rhs)
+    TriggerResults&
+    operator=(TriggerResults const& rhs)
     {
       TriggerResults temp{rhs};
       this->swap(temp);
       return *this;
     }
 
-  };  // TriggerResults
+  }; // TriggerResults
 
   // Free swap function
-  inline
-  void swap(TriggerResults& lhs, TriggerResults& rhs)
+  inline void
+  swap(TriggerResults& lhs, TriggerResults& rhs)
   {
     lhs.swap(rhs);
   }
 
-}  // art
+} // art
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Persistency_Common_TriggerResults_h */
 

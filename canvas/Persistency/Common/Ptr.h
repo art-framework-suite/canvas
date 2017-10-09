@@ -61,25 +61,29 @@ namespace art {
   class Ptr;
 
   template <typename T, typename U>
-  std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
-  operator == (Ptr<T> const& lhs, Ptr<U> const& rhs);
+  std::enable_if_t<std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
+                     std::is_base_of<U, T>::value,
+                   bool>
+  operator==(Ptr<T> const& lhs, Ptr<U> const& rhs);
   template <typename T, typename U>
-  std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
-  operator != (Ptr<T> const& lhs, Ptr<U> const& rhs);
+  std::enable_if_t<std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
+                     std::is_base_of<U, T>::value,
+                   bool>
+  operator!=(Ptr<T> const& lhs, Ptr<U> const& rhs);
   template <typename T, typename U>
-  std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
-  operator < (Ptr<T> const& lhs, Ptr<U> const& rhs);
+  std::enable_if_t<std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
+                     std::is_base_of<U, T>::value,
+                   bool>
+  operator<(Ptr<T> const& lhs, Ptr<U> const& rhs);
 
   // Fill a vector of Ptrs from a persistent collection. Alternatively,
   // construct a PtrVector.
   template <typename T, typename H>
-  void
-  fill_ptr_vector(std::vector<Ptr<T>>& ptrs, H const& h);
+  void fill_ptr_vector(std::vector<Ptr<T>>& ptrs, H const& h);
 
   // Fill a list of Ptrs from a persistent collection.
   template <typename T, typename H>
-  void
-  fill_ptr_list(std::list<Ptr<T>>& ptrs, H const& h);
+  void fill_ptr_list(std::list<Ptr<T>>& ptrs, H const& h);
 
   // Specialize EnsurePointer for Ptr.
   namespace detail {
@@ -88,7 +92,7 @@ namespace art {
   }
 
   template <typename T>
-  std::ostream& operator << (std::ostream&, Ptr<T> const&);
+  std::ostream& operator<<(std::ostream&, Ptr<T> const&);
 }
 
 template <typename T>
@@ -110,21 +114,25 @@ public:
   explicit Ptr(ProductID const id);
 
   // 3B.
-  Ptr(ProductID const productID, key_type itemKey, EDProductGetter const* prodGetter);
+  Ptr(ProductID const productID,
+      key_type itemKey,
+      EDProductGetter const* prodGetter);
 
   // 4.
   template <typename U>
-  Ptr(Ptr<U> const& iOther, std::enable_if_t<std::is_base_of<T, U>::value>* dummy = nullptr);
+  Ptr(Ptr<U> const& iOther,
+      std::enable_if_t<std::is_base_of<T, U>::value>* dummy = nullptr);
 
   template <typename U>
-  Ptr(Ptr<U> const& iOther, std::enable_if_t<std::is_base_of<U, T>::value>* dummy = nullptr);
+  Ptr(Ptr<U> const& iOther,
+      std::enable_if_t<std::is_base_of<U, T>::value>* dummy = nullptr);
 
   // 5. See notes above.
   Ptr(ProductID const productID, T const* item, key_type itemKey);
 
   // Accessors.
-  T const& operator* () const;
-  T const* operator -> () const;
+  T const& operator*() const;
+  T const* operator->() const;
   T const* get() const;
   bool isNull() const; // Checks for valid key.
   bool isNonnull() const;
@@ -138,14 +146,18 @@ public:
   bool hasCache() const;
   RefCore const& refCore() const;
 
-  explicit operator bool () const;
+  explicit operator bool() const;
   EDProductGetter const* productGetter() const;
 
   // MUST UPDATE WHEN CLASS IS CHANGED!
-  static short Class_Version() { return 10; }
+  static short
+  Class_Version()
+  {
+    return 10;
+  }
 
 private:
-  template<typename C>
+  template <typename C>
   T const* getItem_(C const* product, key_type iKey);
   void getData_() const;
 
@@ -155,10 +167,8 @@ private:
 
 template <typename TO, typename PTRVAL>
 struct art::detail::EnsurePointer<TO, art::Ptr<PTRVAL>> {
-  TO
-  operator()(Ptr<PTRVAL>& from) const;
-  TO
-  operator()(Ptr<PTRVAL> const& from) const;
+  TO operator()(Ptr<PTRVAL>& from) const;
+  TO operator()(Ptr<PTRVAL> const& from) const;
 };
 
 namespace art {
@@ -181,16 +191,13 @@ namespace art {
 template <typename T, typename C>
 class art::detail::ItemGetter {
 public:
-  T const* operator()(C const* product,
-                       typename Ptr<T>::key_type iKey) const;
+  T const* operator()(C const* product, typename Ptr<T>::key_type iKey) const;
 };
 
 template <typename T, typename C>
-inline
-T const*
-art::detail::
-ItemGetter<T, C>::operator()(C const* product,
-                             typename Ptr<T>::key_type iKey) const
+inline T const*
+art::detail::ItemGetter<T, C>::operator()(C const* product,
+                                          typename Ptr<T>::key_type iKey) const
 {
   assert(product != nullptr);
   auto it = product->begin();
@@ -203,15 +210,14 @@ template <typename T>
 class art::detail::ItemGetter<T, cet::map_vector<T>> {
 public:
   T const* operator()(cet::map_vector<T> const* product,
-                       typename Ptr<T>::key_type iKey) const;
+                      typename Ptr<T>::key_type iKey) const;
 };
 
 template <typename T>
-inline
-T const*
-art::detail::ItemGetter<T, cet::map_vector<T>>::
-operator()(cet::map_vector<T> const* product,
-           typename Ptr<T>::key_type iKey) const
+inline T const*
+art::detail::ItemGetter<T, cet::map_vector<T>>::operator()(
+  cet::map_vector<T> const* product,
+  typename Ptr<T>::key_type iKey) const
 {
   assert(product != nullptr);
   cet::map_vector_key k(iKey);
@@ -219,18 +225,17 @@ operator()(cet::map_vector<T> const* product,
 }
 
 template <typename T>
-class art::detail::ItemGetter<std::pair<cet::map_vector_key, T>, cet::map_vector<T>> {
+class art::detail::ItemGetter<std::pair<cet::map_vector_key, T>,
+                              cet::map_vector<T>> {
 public:
-  std::pair<cet::map_vector_key, T> const*
-  operator()(cet::map_vector<T> const* product,
-             typename Ptr<T>::key_type iKey) const;
+  std::pair<cet::map_vector_key, T> const* operator()(
+    cet::map_vector<T> const* product,
+    typename Ptr<T>::key_type iKey) const;
 };
 
 template <typename T>
-inline
-std::pair<cet::map_vector_key, T> const*
-art::detail::
-ItemGetter<std::pair<cet::map_vector_key, T>, cet::map_vector<T>>::
+inline std::pair<cet::map_vector_key, T> const*
+art::detail::ItemGetter<std::pair<cet::map_vector_key, T>, cet::map_vector<T>>::
 operator()(cet::map_vector<T> const* product,
            typename Ptr<T>::key_type const iKey) const
 {
@@ -239,8 +244,7 @@ operator()(cet::map_vector<T> const* product,
   auto it = product->find(k);
   if (it == product->end()) {
     return nullptr;
-  }
-  else {
+  } else {
     return &(*it);
   }
 }
@@ -250,241 +254,208 @@ operator()(cet::map_vector<T> const* product,
 
 template <typename T>
 template <typename H>
-inline
-art::Ptr<T>::Ptr(H const& handle,
-                 typename Ptr<T>::key_type const idx)
-  :
-  core_{handle.id(), getItem_(handle.product(), idx), nullptr},
-  key_{idx}
+inline art::Ptr<T>::Ptr(H const& handle, typename Ptr<T>::key_type const idx)
+  : core_{handle.id(), getItem_(handle.product(), idx), nullptr}, key_{idx}
 {
   if (core_.isNull()) {
     throw Exception(errors::InvalidReference)
       << "Attempt to construct a Ptr from a Handle with invalid ProductID. "
-      "Perhaps a\ndefault-constructed Ptr is what you want?";
+         "Perhaps a\ndefault-constructed Ptr is what you want?";
   }
 }
 
 template <typename T>
-inline
-art::Ptr<T>::Ptr(ProductID const productID)
-:
-  core_{productID, 0, nullptr},
-  key_{key_traits<key_type>::value}
+inline art::Ptr<T>::Ptr(ProductID const productID)
+  : core_{productID, 0, nullptr}, key_{key_traits<key_type>::value}
 {}
 
 template <typename T>
-inline
-art::Ptr<T>::Ptr(ProductID const productID, key_type const itemKey, EDProductGetter const* prodGetter)
-:
-  core_{productID, 0, prodGetter},
-  key_{itemKey}
+inline art::Ptr<T>::Ptr(ProductID const productID,
+                        key_type const itemKey,
+                        EDProductGetter const* prodGetter)
+  : core_{productID, 0, prodGetter}, key_{itemKey}
 {}
 
 template <typename T>
 template <typename U>
-inline
-art::Ptr<T>::
-Ptr(Ptr<U> const& iOther, std::enable_if_t<std::is_base_of<T, U>::value>*):
-  core_(iOther.id(),
-        (iOther.hasCache() ? static_cast<T const*>(iOther.get()) : static_cast<T const*>(nullptr)),
-        iOther.productGetter()),
-  key_{iOther.key()}
+inline art::Ptr<T>::Ptr(Ptr<U> const& iOther,
+                        std::enable_if_t<std::is_base_of<T, U>::value>*)
+  : core_(iOther.id(),
+          (iOther.hasCache() ? static_cast<T const*>(iOther.get()) :
+                               static_cast<T const*>(nullptr)),
+          iOther.productGetter())
+  , key_{iOther.key()}
 {}
 
 template <typename T>
 template <typename U>
-inline
-art::Ptr<T>::
-Ptr(Ptr<U> const& iOther, std::enable_if_t<std::is_base_of<U, T>::value>*)
-  :
-  core_{iOther.id(), dynamic_cast<T const*>(iOther.get()), nullptr},
-  key_{iOther.key()}
+inline art::Ptr<T>::Ptr(Ptr<U> const& iOther,
+                        std::enable_if_t<std::is_base_of<U, T>::value>*)
+  : core_{iOther.id(), dynamic_cast<T const*>(iOther.get()), nullptr}
+  , key_{iOther.key()}
 {}
 
 template <typename T>
-inline
-art::Ptr<T>::Ptr(ProductID const productID, T const* item, key_type const itemKey)
-:
-  core_{productID, item, nullptr},
-  key_{itemKey}
+inline art::Ptr<T>::Ptr(ProductID const productID,
+                        T const* item,
+                        key_type const itemKey)
+  : core_{productID, item, nullptr}, key_{itemKey}
 {}
 
 template <typename T>
-inline
-T const&
-art::Ptr<T>::operator*() const
+inline T const& art::Ptr<T>::operator*() const
 {
   return *get();
 }
 
 template <typename T>
-inline
-T const*
-art::Ptr<T>::operator->() const
+inline T const* art::Ptr<T>::operator->() const
 {
   getData_();
   return reinterpret_cast<T const*>(core_.productPtr());
 }
 
 template <typename T>
-inline
-T const*
+inline T const*
 art::Ptr<T>::get() const
 {
   return isNull() ? nullptr : this->operator->();
 }
 
 template <typename T>
-inline
-bool
-art::Ptr<T>::
-isNull() const
+inline bool
+art::Ptr<T>::isNull() const
 {
   return !isNonnull();
 }
 
 template <typename T>
-inline
-bool
-art::Ptr<T>::
-isNonnull() const
+inline bool
+art::Ptr<T>::isNonnull() const
 {
   return key_traits<key_type>::value != key_;
 }
 
 template <typename T>
-inline
-bool
-art::Ptr<T>::
-isAvailable() const
+inline bool
+art::Ptr<T>::isAvailable() const
 {
   return core_.isAvailable();
 }
 
 template <typename T>
-inline
-auto
-art::Ptr<T>::
-id() const
--> ProductID
+inline auto
+art::Ptr<T>::id() const -> ProductID
 {
   return core_.id();
 }
 
 template <typename T>
-inline
-auto
-art::Ptr<T>::
-key() const
--> key_type
+inline auto
+art::Ptr<T>::key() const -> key_type
 {
   return key_;
 }
 
 template <typename T>
-inline
-bool
-art::Ptr<T>::
-hasCache() const
+inline bool
+art::Ptr<T>::hasCache() const
 {
   return nullptr != core_.productPtr();
 }
 
 template <typename T>
-inline
-auto
-art::Ptr<T>::
-refCore() const
--> RefCore const&
+inline auto
+art::Ptr<T>::refCore() const -> RefCore const&
 {
   return core_;
 }
 
 template <typename T>
-inline
-art::Ptr<T>::
-operator bool() const
+inline art::Ptr<T>::operator bool() const
 {
   return isNonnull() && isAvailable();
 }
 
 template <typename T>
-inline
-auto
-art::Ptr<T>::
-productGetter() const
--> EDProductGetter const*
+inline auto
+art::Ptr<T>::productGetter() const -> EDProductGetter const*
 {
   return core_.productGetter();
 }
 
 template <typename T>
 template <typename C>
-inline
-T const*
-art::Ptr<T>::
-getItem_(C const* product, key_type iKey)
+inline T const*
+art::Ptr<T>::getItem_(C const* product, key_type iKey)
 {
   return detail::ItemGetter<T, C>()(product, iKey);
 }
 
 template <typename T>
 void
-art::Ptr<T>::
-getData_() const
+art::Ptr<T>::getData_() const
 {
   if (!hasCache()) {
-    EDProduct const* prod = productGetter() ? productGetter()->getIt() : nullptr;
+    EDProduct const* prod =
+      productGetter() ? productGetter()->getIt() : nullptr;
     if (prod == nullptr) {
       art::Exception e(errors::ProductNotFound);
-      e << "A request to resolve an art::Ptr to a product containing items of type: "
-        << cet::demangle_symbol(typeid(T).name())
-        << " with ProductID "
+      e << "A request to resolve an art::Ptr to a product containing items of "
+           "type: "
+        << cet::demangle_symbol(typeid(T).name()) << " with ProductID "
         << core_.id()
         << "\ncannot be satisfied because the product cannot be found.\n";
       if (productGetter() == nullptr) {
-        e << "The productGetter was not set -- are you trying to dereference a Ptr during mixing?\n";
-      }
-      else {
-        e << "Probably the branch containing the product is not stored in the input file.\n";
+        e << "The productGetter was not set -- are you trying to dereference a "
+             "Ptr during mixing?\n";
+      } else {
+        e << "Probably the branch containing the product is not stored in the "
+             "input file.\n";
       }
       throw e;
     }
     void const* ad = nullptr;
-    prod->setPtr(typeid(T),
-                 key_,
-                 ad);
+    prod->setPtr(typeid(T), key_, ad);
     core_.setProductPtr(ad);
   }
 }
 
 template <typename T, typename U>
-inline
-auto
-art::operator == (Ptr<T> const& lhs, Ptr<U> const& rhs)
--> std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
+inline auto
+art::operator==(Ptr<T> const& lhs, Ptr<U> const& rhs)
+  -> std::enable_if_t<std::is_same<T, U>::value ||
+                        std::is_base_of<T, U>::value ||
+                        std::is_base_of<U, T>::value,
+                      bool>
 {
   return lhs.refCore() == rhs.refCore() && lhs.key() == rhs.key();
 }
 
 template <typename T, typename U>
-inline
-auto
-art::operator != (Ptr<T> const& lhs, Ptr<U> const& rhs)
--> std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
+inline auto
+art::operator!=(Ptr<T> const& lhs, Ptr<U> const& rhs)
+  -> std::enable_if_t<std::is_same<T, U>::value ||
+                        std::is_base_of<T, U>::value ||
+                        std::is_base_of<U, T>::value,
+                      bool>
 {
-  return ! (lhs == rhs);
+  return !(lhs == rhs);
 }
 
 template <typename T, typename U>
-inline
-auto
-art::operator < (Ptr<T> const& lhs, Ptr<U> const& rhs)
--> std::enable_if_t<std::is_same<T,U>::value || std::is_base_of<T,U>::value || std::is_base_of<U,T>::value, bool>
+inline auto
+art::operator<(Ptr<T> const& lhs, Ptr<U> const& rhs)
+  -> std::enable_if_t<std::is_same<T, U>::value ||
+                        std::is_base_of<T, U>::value ||
+                        std::is_base_of<U, T>::value,
+                      bool>
 {
   // The ordering of integer keys guarantees that the ordering of Ptrs within
-  // a collection will be identical to the ordering of the referenced objects in the collection.
-  return (lhs.refCore() == rhs.refCore() ? lhs.key() < rhs.key() : lhs.refCore() < rhs.refCore());
+  // a collection will be identical to the ordering of the referenced objects in
+  // the collection.
+  return (lhs.refCore() == rhs.refCore() ? lhs.key() < rhs.key() :
+                                           lhs.refCore() < rhs.refCore());
 }
 
 template <typename T, typename H>
@@ -507,22 +478,23 @@ art::fill_ptr_list(std::list<Ptr<T>>& ptrs, H const& h)
 
 template <typename TO, typename PTRVAL>
 TO
-art::detail::EnsurePointer<TO, art::Ptr<PTRVAL>>::
-operator () (Ptr<PTRVAL>& from) const
+art::detail::EnsurePointer<TO, art::Ptr<PTRVAL>>::operator()(
+  Ptr<PTRVAL>& from) const
 {
   return detail::addr<TO, PTRVAL const>(*from);
 }
 
 template <typename TO, typename PTRVAL>
 TO
-art::detail::EnsurePointer<TO, art::Ptr<PTRVAL>>::
-operator () (Ptr<PTRVAL> const& from) const
+art::detail::EnsurePointer<TO, art::Ptr<PTRVAL>>::operator()(
+  Ptr<PTRVAL> const& from) const
 {
   return detail::addr<TO, PTRVAL const>(*from);
 }
 
 template <typename T>
-std::ostream& art::operator << (std::ostream& os, Ptr<T> const& p)
+std::ostream&
+art::operator<<(std::ostream& os, Ptr<T> const& p)
 {
   os << "(" << p.id() << ", " << p.key() << ")";
   return os;

@@ -4,7 +4,7 @@
 #include <string>
 
 namespace art {
-  std::string const &  getCanvasReleaseVersion();
+  std::string const& getCanvasReleaseVersion();
 }
 
 #endif /* canvas_Version_GetReleaseVersion_h */

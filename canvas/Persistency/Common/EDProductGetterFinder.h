@@ -19,10 +19,11 @@ namespace art {
 
   class EDProductGetterFinder {
   public:
-
     virtual ~EDProductGetterFinder() = default;
 
-    EDProductGetter const* getEDProductGetter(ProductID const pid) const {
+    EDProductGetter const*
+    getEDProductGetter(ProductID const pid) const
+    {
       return getEDProductGetterImpl(pid);
     }
 

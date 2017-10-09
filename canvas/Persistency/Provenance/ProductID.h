@@ -20,20 +20,49 @@ namespace art {
     explicit ProductID(std::string const& canonicalProductName);
     explicit ProductID(value_type const value);
 
-    static ProductID invalid() { return ProductID{}; }
+    static ProductID
+    invalid()
+    {
+      return ProductID{};
+    }
 
     void setID(std::string const& canonicalProductName);
 
-    bool isValid() const {return value_ != 0u;}
-    auto value() const {return value_;}
+    bool
+    isValid() const
+    {
+      return value_ != 0u;
+    }
+    auto
+    value() const
+    {
+      return value_;
+    }
 
-    bool operator<(ProductID const rh) const {return value_ < rh.value_;}
-    bool operator>(ProductID const rh) const {return rh < *this;}
-    bool operator==(ProductID const rh) const {return value_ == rh.value_;}
-    bool operator!=(ProductID const rh) const {return !(*this == rh); }
+    bool
+    operator<(ProductID const rh) const
+    {
+      return value_ < rh.value_;
+    }
+    bool
+    operator>(ProductID const rh) const
+    {
+      return rh < *this;
+    }
+    bool
+    operator==(ProductID const rh) const
+    {
+      return value_ == rh.value_;
+    }
+    bool
+    operator!=(ProductID const rh) const
+    {
+      return !(*this == rh);
+    }
 
     struct Hash {
-      std::size_t operator()(ProductID const pid) const
+      std::size_t
+      operator()(ProductID const pid) const
       {
         return pid.value(); // since the ID is already a checksum, don't
                             // worry about further hashing
@@ -41,7 +70,6 @@ namespace art {
     };
 
   private:
-
     static value_type toID(std::string const& branchName);
     friend class ProductIDStreamer;
 
@@ -50,9 +78,7 @@ namespace art {
     value_type value_{0u};
   };
 
-  std::ostream&
-  operator<<(std::ostream& os, ProductID const id);
-
+  std::ostream& operator<<(std::ostream& os, ProductID const id);
 }
 #endif /* canvas_Persistency_Provenance_ProductID_h */
 

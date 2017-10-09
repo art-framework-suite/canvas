@@ -15,8 +15,6 @@ bool
 art::RefCore::isAvailable() const
 {
   return productPtr() != nullptr ||
-    (id_.isValid() &&
-     productGetter() != 0 &&
-     productGetter()->isReady() &&
-     productGetter()->getIt() != nullptr);
+         (id_.isValid() && productGetter() != 0 && productGetter()->isReady() &&
+          productGetter()->getIt() != nullptr);
 }

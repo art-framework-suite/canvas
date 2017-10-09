@@ -3,7 +3,8 @@
 
 /*----------------------------------------------------------------------
 
-ParameterSetBlob: A string in which to store a parameter set so that it can be made persistent.
+ParameterSetBlob: A string in which to store a parameter set so that it can be
+made persistent.
 
 The ParameterSetBlob is a concatenation of the names and values of the
 tracked parameters within a ParameterSet,
@@ -17,8 +18,7 @@ tracked parameters within a ParameterSet,
 
 namespace art {
 
-  struct ParameterSetBlob
-  {
+  struct ParameterSetBlob {
     typedef std::string value_t;
 
     ParameterSetBlob() : pset_() {}
@@ -27,12 +27,11 @@ namespace art {
     value_t pset_;
   };
 
-  std::ostream&
-  operator<<(std::ostream& os, ParameterSetBlob const& blob);
+  std::ostream& operator<<(std::ostream& os, ParameterSetBlob const& blob);
 
-}  // art
+} // art
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Persistency_Provenance_ParameterSetBlob_h */
 

@@ -18,9 +18,7 @@ namespace {
   /// \param[format] format The specified format string for the
   /// replacement.
   void
-  reformat(std::string& input,
-           std::regex const& exp,
-           std::string const& format)
+  reformat(std::string& input, std::regex const& exp, std::string const& format)
   {
     while (1) {
       std::string const formatted = std::regex_replace(input, exp, format);
@@ -50,7 +48,7 @@ namespace {
     if (asize == 0ul) {
       return;
     }
-    char const * const delimiters = "<>";
+    char const* const delimiters = "<>";
     auto index = std::string::npos;
     while ((index = name.find(toRemove)) != std::string::npos) {
       int depth = initDepth;
@@ -61,8 +59,7 @@ namespace {
         } else {
           if (--depth == 0) {
             name.erase(index, inx + 1 - index);
-            if (name[index] == ' ' &&
-                (index == 0 || name[index - 1] != '>')) {
+            if (name[index] == ' ' && (index == 0 || name[index - 1] != '>')) {
               name.erase(index, 1);
             }
             break;
@@ -115,7 +112,8 @@ namespace {
   /// For example, libc++'s inline namespace "std::__1::" means that
   /// demangling a std::string argument will return
   ///
-  /// std::__1::basic_string<char, std::char_traits<char>, std::allocator<char> >
+  /// std::__1::basic_string<char, std::char_traits<char>, std::allocator<char>
+  /// >
   ///
   /// instead of
   ///
@@ -134,7 +132,8 @@ namespace {
   ///
   ///   http://mentorembedded.github.io/cxx-abi/abi.html#mangling-compression
   ///
-  void translateInlineNamespace(std::string& name)
+  void
+  translateInlineNamespace(std::string& name)
   {
     // libc++/libstdc++ std::ABI_TAG -> std::
     {
@@ -146,13 +145,18 @@ namespace {
     // Apply Itanium abbreviations
     // FIXME: If the need arises, may need to apply other abbreviations:
     // http://mentorembedded.github.io/cxx-abi/abi.html#mangling-compression
-    cet::replace_all(name, "std::basic_string<char, std::char_traits<char>, std::allocator<char> >", "std::string");
-    cet::replace_all(name, "std::basic_string<char, std::char_traits<char> >", "std::string");
+    cet::replace_all(
+      name,
+      "std::basic_string<char, std::char_traits<char>, std::allocator<char> >",
+      "std::string");
+    cet::replace_all(
+      name, "std::basic_string<char, std::char_traits<char> >", "std::string");
   }
 }
 
 std::string
-art::uniform_type_name(std::string name) {
+art::uniform_type_name(std::string name)
+{
   using namespace std::string_literals;
   // We must use the same conventions previously used by Reflex.
   // The order is important.

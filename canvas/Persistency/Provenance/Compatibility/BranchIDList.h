@@ -10,12 +10,12 @@
 // retained for converting old on-disk ProductID schemas to new ones.
 // =======================================================================
 
-#include <vector>
 #include "canvas/Persistency/Provenance/BranchID.h"
+#include <vector>
 
 namespace art {
   typedef std::vector<BranchID::value_type> BranchIDList;
-  typedef std::vector<BranchIDList>         BranchIDLists;
+  typedef std::vector<BranchIDList> BranchIDLists;
 }
 #endif /* canvas_Persistency_Provenance_Compatibility_BranchIDList_h */
 

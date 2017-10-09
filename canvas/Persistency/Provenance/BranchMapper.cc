@@ -8,8 +8,7 @@
 
 using art::BranchMapper;
 
-BranchMapper::BranchMapper(bool const delayedRead) :
-  delayedRead_{delayedRead}
+BranchMapper::BranchMapper(bool const delayedRead) : delayedRead_{delayedRead}
 {}
 
 void
@@ -35,8 +34,7 @@ BranchMapper::branchToProductProvenance(ProductID const pid) const
 {
   readProvenance();
   auto it = entryInfoSet_.find(pid);
-  return it == entryInfoSet_.end() ? result_t()
-    : result_t(it->second.get());
+  return it == entryInfoSet_.end() ? result_t() : result_t(it->second.get());
 }
 
 // ======================================================================

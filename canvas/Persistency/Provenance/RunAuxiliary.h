@@ -17,7 +17,6 @@ namespace art {
 
 class art::RunAuxiliary {
 public:
-
   static constexpr BranchType branch_type = InRun;
 
   RunAuxiliary() = default;
@@ -25,43 +24,75 @@ public:
   RunAuxiliary(RunID const& theId,
                Timestamp const& theTime,
                Timestamp const& theEndTime)
-    :
-    id_{theId},
-    beginTime_{theTime},
-    endTime_{theEndTime}
+    : id_{theId}, beginTime_{theTime}, endTime_{theEndTime}
   {}
 
   RunAuxiliary(RunNumber_t const run,
                Timestamp const& theTime,
                Timestamp const& theEndTime)
-    :
-    id_{run},
-    beginTime_{theTime},
-    endTime_{theEndTime}
+    : id_{run}, beginTime_{theTime}, endTime_{theEndTime}
   {}
 
   void write(std::ostream& os) const;
 
-  ProcessHistoryID const& processHistoryID() const { return processHistoryID_; }
-
-  void setProcessHistoryID(ProcessHistoryID const& phid) const
-  { processHistoryID_ = phid; }
-
-  RunID const& id() const { return id_; }
-
-  Timestamp const& beginTime() const { return beginTime_; }
-
-  Timestamp const& endTime() const { return endTime_; }
-
-  RunID const& runID() const {return id_;}
-  RunNumber_t run() const { return id_.run(); }
-
-  void setEndTime(Timestamp const& time) {
-    if (endTime_ == Timestamp::invalidTimestamp()) endTime_ = time;
+  ProcessHistoryID const&
+  processHistoryID() const
+  {
+    return processHistoryID_;
   }
 
-  void setRangeSetID(unsigned const id) const { rangeSetID_ = id; }
-  auto rangeSetID() const { return rangeSetID_; }
+  void
+  setProcessHistoryID(ProcessHistoryID const& phid) const
+  {
+    processHistoryID_ = phid;
+  }
+
+  RunID const&
+  id() const
+  {
+    return id_;
+  }
+
+  Timestamp const&
+  beginTime() const
+  {
+    return beginTime_;
+  }
+
+  Timestamp const&
+  endTime() const
+  {
+    return endTime_;
+  }
+
+  RunID const&
+  runID() const
+  {
+    return id_;
+  }
+  RunNumber_t
+  run() const
+  {
+    return id_.run();
+  }
+
+  void
+  setEndTime(Timestamp const& time)
+  {
+    if (endTime_ == Timestamp::invalidTimestamp())
+      endTime_ = time;
+  }
+
+  void
+  setRangeSetID(unsigned const id) const
+  {
+    rangeSetID_ = id;
+  }
+  auto
+  rangeSetID() const
+  {
+    return rangeSetID_;
+  }
 
   bool mergeAuxiliary(RunAuxiliary const& aux);
 
@@ -85,9 +116,9 @@ private:
   void mergeNewProcessHistoryIntoThis_(RunAuxiliary const& newAux);
 };
 
-inline
-std::ostream&
-operator<<(std::ostream& os, art::RunAuxiliary const& p) {
+inline std::ostream&
+operator<<(std::ostream& os, art::RunAuxiliary const& p)
+{
   p.write(os);
   return os;
 }

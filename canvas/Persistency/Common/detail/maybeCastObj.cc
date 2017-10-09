@@ -5,10 +5,10 @@
 #include "cetlib_except/demangle.h"
 
 #ifdef _LIBCPPABI_VERSION
-# include "TClass.h"
-# include "TClassRef.h"
+#include "TClass.h"
+#include "TClassRef.h"
 #else
-# include <cxxabi.h>
+#include <cxxabi.h>
 #endif
 
 #include <iomanip>
@@ -21,8 +21,7 @@ using namespace std;
 #ifdef _LIBCPPABI_VERSION
 
 bool
-detail::upcastAllowed(type_info const& tid_from,
-                      type_info const& tid_to)
+detail::upcastAllowed(type_info const& tid_from, type_info const& tid_to)
 {
   if (tid_from == tid_to) {
     return true;
@@ -47,15 +46,12 @@ art::detail::maybeCastObj(void const* address,
   if (clFrom->InheritsFrom(clTo)) {
     // The upcast case, let ROOT do it.
     castAddr = clFrom->DynamicCast(clTo, const_cast<void*>(address), true);
-  }
-  else if (clTo->InheritsFrom(clFrom)) {
+  } else if (clTo->InheritsFrom(clFrom)) {
     // The downcast case is forbidden.
     throw Exception(errors::TypeConversion)
       << "art::Wrapper<> : unable to convert type "
-      << cet::demangle_symbol(tiFrom.name())
-      << " to "
-      << cet::demangle_symbol(tiTo.name())
-      << ", which is a subclass.\n";
+      << cet::demangle_symbol(tiFrom.name()) << " to "
+      << cet::demangle_symbol(tiTo.name()) << ", which is a subclass.\n";
   }
   if (castAddr != nullptr) {
     // ROOT succeeded, done.
@@ -65,10 +61,8 @@ art::detail::maybeCastObj(void const* address,
   // relationship between the classes, die.
   throw Exception(errors::TypeConversion)
     << "art::Wrapper<> : unable to convert type "
-    << cet::demangle_symbol(tiFrom.name())
-    << " to "
-    << cet::demangle_symbol(tiTo.name())
-    << "\n";
+    << cet::demangle_symbol(tiFrom.name()) << " to "
+    << cet::demangle_symbol(tiTo.name()) << "\n";
 }
 
 #else // _LIBCPPABI_VERSION
@@ -81,9 +75,10 @@ namespace {
     bool found = false;
     bool is_ambiguous = false;
     long offset = 0L;
+
   public:
-    void print [[gnu::unused]] () const;
-    void reset [[gnu::unused]] ();
+    void print[[gnu::unused]]() const;
+    void reset[[gnu::unused]]();
   };
 
   void
@@ -106,18 +101,17 @@ namespace {
   void
   visit_class_for_upcast(abi::__class_type_info const* ci,
                          abi::__class_type_info const* dest,
-                         long offset, upcast_result& res)
+                         long offset,
+                         upcast_result& res)
   {
     if (res.first_call) {
       res.first_call = false;
-    }
-    else if (ci == dest) {
+    } else if (ci == dest) {
       // We found a possible answer.
       if (!res.found) {
         res.found = true;
         res.offset = offset;
-      }
-      else {
+      } else {
         res.is_ambiguous = true;
       }
     }
@@ -135,8 +129,8 @@ namespace {
         if (base.__offset_flags & abi::__base_class_type_info::__public_mask) {
           is_public = true;
         }
-        long boff = (base.__offset_flags >>
-                     abi::__base_class_type_info::__offset_shift);
+        long boff =
+          (base.__offset_flags >> abi::__base_class_type_info::__offset_shift);
         if (is_public && (boff > -1)) {
           // Base is public access, and boff is not the offset to the
           // virtual base offset.
@@ -151,8 +145,7 @@ namespace {
 } // unnamed namespace
 
 bool
-detail::upcastAllowed(type_info const& tid_from,
-                      type_info const& tid_to)
+detail::upcastAllowed(type_info const& tid_from, type_info const& tid_to)
 {
   if (tid_from == tid_to) {
     // Trivial, nothing to do.
@@ -206,18 +199,14 @@ detail::maybeCastObj(void const* ptr,
     throw Exception(errors::TypeConversion)
       << "maybeCastObj : unable to convert type: "
       << cet::demangle_symbol(tid_from.name())
-      << "\nto: "
-      << cet::demangle_symbol(tid_to.name())
-      << "\n"
+      << "\nto: " << cet::demangle_symbol(tid_to.name()) << "\n"
       << "No suitable base found.\n";
   }
   if (res.is_ambiguous) {
     throw Exception(errors::TypeConversion)
       << "MaybeCastObj : unable to convert type: "
       << cet::demangle_symbol(tid_from.name())
-      << "\nto: "
-      << cet::demangle_symbol(tid_to.name())
-      << "\n"
+      << "\nto: " << cet::demangle_symbol(tid_to.name()) << "\n"
       << "Base class is ambiguous.\n";
   }
   return static_cast<char const*>(ptr) + res.offset;

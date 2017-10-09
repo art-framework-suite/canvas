@@ -43,7 +43,7 @@ art::operator<<(ostream& os, TypeID const& tid)
 }
 
 std::string
-art::name_of_template_arg(std::string const & template_instance,
+art::name_of_template_arg(std::string const& template_instance,
                           size_t desired_arg)
 {
   std::string result;
@@ -64,11 +64,11 @@ art::name_of_template_arg(std::string const & template_instance,
       case '>':
         --template_level;
         if ((desired_arg == comma_count) && (template_level == 0ul)) {
-          // Found the end of the desired template arg -- trim trailing whitespace
-          auto const arg_end = template_instance.find_last_not_of(" \t", pos - 1) + 1;
-          result =
-            template_instance.substr(arg_start,
-                                     arg_end - arg_start);
+          // Found the end of the desired template arg -- trim trailing
+          // whitespace
+          auto const arg_end =
+            template_instance.find_last_not_of(" \t", pos - 1) + 1;
+          result = template_instance.substr(arg_start, arg_end - arg_start);
           return result;
         }
         break;
@@ -96,7 +96,8 @@ art::name_of_template_arg(std::string const & template_instance,
 }
 
 std::string
-art::name_of_assns_partner(std::string assns_type_name) {
+art::name_of_assns_partner(std::string assns_type_name)
+{
   std::string result;
   if (!is_assns(assns_type_name)) {
     return result;
@@ -110,7 +111,8 @@ art::name_of_assns_partner(std::string assns_type_name) {
 }
 
 std::string
-art::name_of_assns_base(std::string assns_type_name) {
+art::name_of_assns_base(std::string assns_type_name)
+{
   std::string result;
   if (!is_assns(assns_type_name)) {
     return result;
@@ -121,11 +123,8 @@ art::name_of_assns_base(std::string assns_type_name) {
     // Doesn't have the base we're looking for.
     return result;
   }
-  result = assns_start +
-           name_of_template_arg(assns_type_name, 0) +
-           ',' +
-           name_of_template_arg(assns_type_name, 1) +
-           ",void>";
+  result = assns_start + name_of_template_arg(assns_type_name, 0) + ',' +
+           name_of_template_arg(assns_type_name, 1) + ",void>";
   return result;
 }
 

@@ -4,8 +4,8 @@
 #include <iosfwd>
 
 #include "canvas/Persistency/Provenance/BranchType.h"
-#include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/EventID.h"
+#include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/Timestamp.h"
 
 // Auxiliary event data that is persistent
@@ -16,7 +16,6 @@ namespace art {
 
 class art::EventAuxiliary {
 public:
-
   static constexpr BranchType branch_type = InEvent;
 
   // These types are very tentative for now
@@ -37,34 +36,66 @@ public:
                  Timestamp const& theTime,
                  bool const isReal,
                  ExperimentType const eType = Any)
-    :
-    id_{theId},
-    time_{theTime},
-    isRealData_{isReal},
-    experimentType_{eType}
+    : id_{theId}, time_{theTime}, isRealData_{isReal}, experimentType_{eType}
   {}
 
   void write(std::ostream& os) const;
 
-  Timestamp const& time() const { return time_; }
+  Timestamp const&
+  time() const
+  {
+    return time_;
+  }
 
-  EventID const& id() const { return id_; }
-  RunID const& runID() const { return id_.runID(); }
-  SubRunID const& subRunID() const { return id_.subRunID(); }
-  RunNumber_t run() const { return id_.run(); }
-  SubRunNumber_t subRun() const { return id_.subRun(); }
-  EventNumber_t event() const { return id_.event(); }
+  EventID const&
+  id() const
+  {
+    return id_;
+  }
+  RunID const&
+  runID() const
+  {
+    return id_.runID();
+  }
+  SubRunID const&
+  subRunID() const
+  {
+    return id_.subRunID();
+  }
+  RunNumber_t
+  run() const
+  {
+    return id_.run();
+  }
+  SubRunNumber_t
+  subRun() const
+  {
+    return id_.subRun();
+  }
+  EventNumber_t
+  event() const
+  {
+    return id_.event();
+  }
 
-  bool isRealData() const { return isRealData_; }
+  bool
+  isRealData() const
+  {
+    return isRealData_;
+  }
 
-  ExperimentType experimentType() const { return experimentType_; }
+  ExperimentType
+  experimentType() const
+  {
+    return experimentType_;
+  }
 
-  bool operator==(EventAuxiliary const& other) const {
-    return
-      id_ == other.id_ &&
-      time_ == other.time_ &&
-      isRealData_ == other.isRealData_ &&
-      experimentType_ == other.experimentType_;
+  bool
+  operator==(EventAuxiliary const& other) const
+  {
+    return id_ == other.id_ && time_ == other.time_ &&
+           isRealData_ == other.isRealData_ &&
+           experimentType_ == other.experimentType_;
   }
 
 private:
@@ -78,10 +109,9 @@ private:
   ExperimentType experimentType_{Any};
 };
 
-
-inline
-std::ostream&
-operator<<(std::ostream& os, art::EventAuxiliary const& p) {
+inline std::ostream&
+operator<<(std::ostream& os, art::EventAuxiliary const& p)
+{
   p.write(os);
   return os;
 }

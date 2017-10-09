@@ -1,29 +1,28 @@
 #include "canvas/Persistency/Provenance/ProcessHistory.h"
 
-#include "cetlib/container_algorithms.h"
 #include "cetlib/MD5Digest.h"
+#include "cetlib/container_algorithms.h"
 #include <iterator>
 #include <ostream>
 #include <sstream>
-
 
 using namespace cet;
 using namespace std;
 
 namespace art {
   ProcessHistoryID
-  ProcessHistory::id() const {
-    if(phid().isValid()) {
+  ProcessHistory::id() const
+  {
+    if (phid().isValid()) {
       return phid();
     }
     // This implementation is ripe for optimization.
     // We do not use operator<< because it does not write out everything.
     ostringstream oss;
     for (const_iterator i = begin(), e = end(); i != e; ++i) {
-      oss << i->processName() << ' '
-          << i->parameterSetID() << ' '
+      oss << i->processName() << ' ' << i->parameterSetID() << ' '
           << i->releaseVersion() << ' '
-          << ' ';  // retain extra spaces for backwards compatibility
+          << ' '; // retain extra spaces for backwards compatibility
     }
     string stringrep = oss.str();
     cet::MD5Digest md5alg(stringrep);
@@ -47,20 +46,27 @@ namespace art {
   }
 
   bool
-  isAncestor(ProcessHistory const& a, ProcessHistory const& b) {
-    if (a.size() >= b.size()) return false;
+  isAncestor(ProcessHistory const& a, ProcessHistory const& b)
+  {
+    if (a.size() >= b.size())
+      return false;
     typedef ProcessHistory::collection_type::const_iterator const_iterator;
-    for (const_iterator itA = a.data().begin(), itB = b.data().begin(),
-         itAEnd = a.data().end(); itA != itAEnd; ++itA, ++itB) {
-      if (*itA != *itB) return false;
+    for (const_iterator itA = a.data().begin(),
+                        itB = b.data().begin(),
+                        itAEnd = a.data().end();
+         itA != itAEnd;
+         ++itA, ++itB) {
+      if (*itA != *itB)
+        return false;
     }
     return true;
   }
 
   ostream&
-  operator<<(ostream& ost, ProcessHistory const& ph) {
+  operator<<(ostream& ost, ProcessHistory const& ph)
+  {
     ost << "Process History = ";
-    copy_all(ph, ostream_iterator<ProcessHistory::value_type>(ost,";"));
+    copy_all(ph, ostream_iterator<ProcessHistory::value_type>(ost, ";"));
     return ost;
   }
 }

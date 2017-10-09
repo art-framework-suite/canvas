@@ -18,21 +18,26 @@ namespace art {
     return ProcessConfigurationID(md5alg.digest().toString());
   }
 
-  bool operator<(ProcessConfiguration const& a, ProcessConfiguration const& b) {
+  bool
+  operator<(ProcessConfiguration const& a, ProcessConfiguration const& b)
+  {
     return std::tie(a.processName_, a.parameterSetID_, a.releaseVersion_) <
            std::tie(b.processName_, b.parameterSetID_, b.releaseVersion_);
   }
 
-  bool operator==(ProcessConfiguration const& a, ProcessConfiguration const& b) {
+  bool
+  operator==(ProcessConfiguration const& a, ProcessConfiguration const& b)
+  {
     return std::tie(a.processName_, a.parameterSetID_, a.releaseVersion_) ==
            std::tie(b.processName_, b.parameterSetID_, b.releaseVersion_);
   }
 
   std::ostream&
-  operator<< (std::ostream& os, ProcessConfiguration const& pc) {
-    os << pc.processName_ << ' '
-       << pc.parameterSetID_ << ' '
-       << pc.releaseVersion_ << ' '; // Retain the last space for backwards compatibility
+  operator<<(std::ostream& os, ProcessConfiguration const& pc)
+  {
+    os << pc.processName_ << ' ' << pc.parameterSetID_ << ' '
+       << pc.releaseVersion_
+       << ' '; // Retain the last space for backwards compatibility
     return os;
   }
 }

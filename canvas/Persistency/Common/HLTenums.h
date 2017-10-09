@@ -7,23 +7,21 @@
  *
  */
 
-namespace art
-{
-  namespace hlt
-    {
+namespace art {
+  namespace hlt {
 
-      /// status of a trigger path
-      enum HLTState {Ready=0,     ///< not [yet] run
-                     Pass =1,     ///< accept
-                     Fail =2,     ///< reject
-                     Exception=3,  ///< error
-                     UNKNOWN
-      };
-
-    }
+    /// status of a trigger path
+    enum HLTState {
+      Ready = 0,     ///< not [yet] run
+      Pass = 1,      ///< accept
+      Fail = 2,      ///< reject
+      Exception = 3, ///< error
+      UNKNOWN
+    };
+  }
 }
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Persistency_Common_HLTenums_h */
 

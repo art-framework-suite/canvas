@@ -3,11 +3,10 @@
 #include <ostream>
 #include <sstream>
 
-
 namespace art {
 
-  Parentage::Parentage(std::vector<ProductID> const& parents):
-    parents_{parents}
+  Parentage::Parentage(std::vector<ProductID> const& parents)
+    : parents_{parents}
   {}
 
   ParentageID
@@ -19,10 +18,9 @@ namespace art {
       oss << pid << ' ';
     }
 
-    std::string const stringrep {oss.str()};
+    std::string const stringrep{oss.str()};
     return ParentageID{cet::MD5Digest{stringrep}.digest().toString()};
   }
-
 
   bool
   operator==(Parentage const& a, Parentage const& b)

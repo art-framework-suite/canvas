@@ -18,9 +18,9 @@ namespace art {
   class EDProduct;
   class RefCore;
 
-  bool operator == (RefCore const&, RefCore const&);
-  bool operator != (RefCore const&, RefCore const&);
-  bool operator < (RefCore const&, RefCore const&);
+  bool operator==(RefCore const&, RefCore const&);
+  bool operator!=(RefCore const&, RefCore const&);
+  bool operator<(RefCore const&, RefCore const&);
 
   void swap(art::RefCore&, art::RefCore&);
 }
@@ -35,7 +35,7 @@ public:
   // Observers.
   bool isNonnull() const;
   bool isNull() const;
-  bool operator !() const;
+  bool operator!() const;
 
   // Checks if collection is in memory or available
   // in the Event; no type checking is done.
@@ -53,7 +53,7 @@ public:
   struct RefCoreTransients {
     // itemPtr_ is the address of the item for which the Ptr in which
     // this RefCoreTransients object resides is a pointer.
-    mutable void const* itemPtr_{nullptr}; // transient
+    mutable void const* itemPtr_{nullptr};               // transient
     mutable EDProductGetter const* prodGetter_{nullptr}; // transient
 
     RefCoreTransients() = default;
@@ -66,75 +66,60 @@ private:
   RefCoreTransients transients_{};
 };
 
-inline
-art::RefCore::RefCore(ProductID const id,
-                      void const* prodPtr,
-                      EDProductGetter const* prodGetter)
-  :
-  id_{id},
-  transients_{prodPtr, prodGetter}
+inline art::RefCore::RefCore(ProductID const id,
+                             void const* prodPtr,
+                             EDProductGetter const* prodGetter)
+  : id_{id}, transients_{prodPtr, prodGetter}
 {}
 
-inline
-bool
+inline bool
 art::RefCore::isNonnull() const
 {
   return id_.isValid();
 }
 
-inline
-bool
+inline bool
 art::RefCore::isNull() const
 {
   return !isNonnull();
 }
 
-inline
-bool
-art::RefCore::operator !() const
+inline bool art::RefCore::operator!() const
 {
   return isNull();
 }
 
-inline
-auto
-art::RefCore::id() const
-  -> ProductID
+inline auto
+art::RefCore::id() const -> ProductID
 {
   return id_;
 }
 
-inline
-void const*
+inline void const*
 art::RefCore::productPtr() const
 {
   return transients_.itemPtr_;
 }
 
-inline
-auto
-art::RefCore::productGetter() const
-  -> EDProductGetter const*
+inline auto
+art::RefCore::productGetter() const -> EDProductGetter const*
 {
   return transients_.prodGetter_;
 }
 
-inline
-void
+inline void
 art::RefCore::setProductPtr(void const* prodPtr) const
 {
   transients_.itemPtr_ = prodPtr;
 }
 
-inline
-void
+inline void
 art::RefCore::setProductGetter(EDProductGetter const* prodGetter) const
 {
   transients_.prodGetter_ = prodGetter;
 }
 
-inline
-void
+inline void
 art::RefCore::swap(RefCore& other)
 {
   using std::swap;
@@ -142,33 +127,35 @@ art::RefCore::swap(RefCore& other)
   swap(transients_, other.transients_);
 }
 
-inline
-art::RefCore::RefCoreTransients::RefCoreTransients(void const* prodPtr,
-                                                   EDProductGetter const* prodGetter)
-  :
-  itemPtr_{prodPtr},
-  prodGetter_{prodGetter}
+inline art::RefCore::RefCoreTransients::RefCoreTransients(
+  void const* prodPtr,
+  EDProductGetter const* prodGetter)
+  : itemPtr_{prodPtr}, prodGetter_{prodGetter}
 {}
 
-inline
-bool
-art::operator == (RefCore const& lhs, RefCore const& rhs)
-{ return lhs.id() == rhs.id(); }
+inline bool
+art::operator==(RefCore const& lhs, RefCore const& rhs)
+{
+  return lhs.id() == rhs.id();
+}
 
-inline
-bool
-art::operator != (RefCore const& lhs, RefCore const& rhs)
-{ return !(lhs == rhs); }
+inline bool
+art::operator!=(RefCore const& lhs, RefCore const& rhs)
+{
+  return !(lhs == rhs);
+}
 
-inline
-bool
-art::operator < (RefCore const& lhs, RefCore const& rhs)
-{ return lhs.id() < rhs.id(); }
+inline bool
+art::operator<(RefCore const& lhs, RefCore const& rhs)
+{
+  return lhs.id() < rhs.id();
+}
 
 inline void
 art::swap(art::RefCore& lhs, art::RefCore& rhs)
-{ lhs.swap(rhs); }
-
+{
+  lhs.swap(rhs);
+}
 
 #endif /* canvas_Persistency_Common_RefCore_h */
 

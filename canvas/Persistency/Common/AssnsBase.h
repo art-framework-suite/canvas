@@ -15,7 +15,6 @@ namespace art {
       virtual void fill_transients() = 0;
       virtual void fill_from_transients() = 0;
     };
-
   }
 }
 #endif /* canvas_Persistency_Common_AssnsBase_h */

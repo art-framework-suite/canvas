@@ -11,24 +11,29 @@
 
 namespace art {
 
-  template <typename L, typename R, typename D> class Assns;
-  template <typename L, typename R> class Assns<L, R, void>;
+  template <typename L, typename R, typename D>
+  class Assns;
+  template <typename L, typename R>
+  class Assns<L, R, void>;
   class EDProduct;
   class EDProductGetter;
   class GroupQueryResult;
   class HLTGlobalStatus;
   class HLTPathStatus;
   class OutputHandle;
-  template <typename T> class Ptr;
-  template <typename T> class PtrVector;
+  template <typename T>
+  class Ptr;
+  template <typename T>
+  class PtrVector;
   class PtrVectorBase;
   class ProductID;
   class RefCore;
-  template <typename T> class Wrapper;
+  template <typename T>
+  class Wrapper;
 
-}  // art
+} // art
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Persistency_Common_fwd_h */
 

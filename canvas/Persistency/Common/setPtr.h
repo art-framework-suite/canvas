@@ -10,18 +10,16 @@
 
 namespace art {
   template <class COLLECTION>
-  void
-  setPtr(COLLECTION const& coll,
-         std::type_info const& iToType,
-         unsigned long iIndex,
-         void const*& oPtr);
+  void setPtr(COLLECTION const& coll,
+              std::type_info const& iToType,
+              unsigned long iIndex,
+              void const*& oPtr);
 
   template <typename T>
-  void
-  setPtr(cet::map_vector<T> const& obj,
-         std::type_info const& iToType,
-         unsigned long iIndex,
-         void const*& oPtr);
+  void setPtr(cet::map_vector<T> const& obj,
+              std::type_info const& iToType,
+              unsigned long iIndex,
+              void const*& oPtr);
 }
 
 template <class Collection>
@@ -34,7 +32,8 @@ art::setPtr(Collection const& coll,
   using product_type = Collection;
   auto it = coll.begin();
   advance(it, iIndex);
-  oPtr = detail::maybeCastObj(detail::GetProduct<product_type>::address(it), iToType);
+  oPtr = detail::maybeCastObj(detail::GetProduct<product_type>::address(it),
+                              iToType);
 }
 
 template <typename T>
@@ -50,10 +49,10 @@ art::setPtr(cet::map_vector<T> const& obj,
   if ((pos < wanted_type.size()) && vh.starts_with_pair(wanted_type, pos)) {
     // Want value_type, not mapped_type;
     auto it = obj.find(cet::map_vector_key(iIndex));
-    oPtr = detail::maybeCastObj((it == obj.end()) ? 0 : & (*it), iToType);
-  }
-  else {
-    oPtr = detail::maybeCastObj(obj.getOrNull(cet::map_vector_key(iIndex)), iToType);
+    oPtr = detail::maybeCastObj((it == obj.end()) ? 0 : &(*it), iToType);
+  } else {
+    oPtr =
+      detail::maybeCastObj(obj.getOrNull(cet::map_vector_key(iIndex)), iToType);
   }
 }
 

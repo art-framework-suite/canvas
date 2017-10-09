@@ -21,25 +21,33 @@
 
 namespace art {
 
-  template <typename T> class ProductToken;
-  template <typename T> class ViewToken;
+  template <typename T>
+  class ProductToken;
+  template <typename T>
+  class ViewToken;
 
   // Forward declarations needed for granting friendship
   class DataViewImpl;
   class Consumer;
 
   namespace detail {
-    template <typename T> InputTag input_tag(ProductToken<T> const&);
-    template <typename T> InputTag input_tag(ViewToken<T> const&);
+    template <typename T>
+    InputTag input_tag(ProductToken<T> const&);
+    template <typename T>
+    InputTag input_tag(ViewToken<T> const&);
   }
 
   template <typename T>
   class ProductToken {
   public:
     using product_type = T;
-  private:
 
-    static ProductToken<T> invalid() { return ProductToken<T>{}; }
+  private:
+    static ProductToken<T>
+    invalid()
+    {
+      return ProductToken<T>{};
+    }
     explicit ProductToken() = default;
     explicit ProductToken(InputTag const& t) : inputTag_{t} {}
 
@@ -61,9 +69,13 @@ namespace art {
   class ViewToken {
   public:
     using element_type = Element;
-  private:
 
-    static ViewToken<Element> invalid() { return ViewToken<Element>{}; }
+  private:
+    static ViewToken<Element>
+    invalid()
+    {
+      return ViewToken<Element>{};
+    }
     explicit ViewToken() = default;
     explicit ViewToken(InputTag const& t) : inputTag_{t} {}
 
@@ -74,7 +86,6 @@ namespace art {
     // See notes in ProductToken re. the representation.
     InputTag inputTag_{};
   };
-
 }
 
 #endif /* canvas_Persistency_Provenance_ProductToken_h */

@@ -1,8 +1,8 @@
 #ifndef canvas_Persistency_Provenance_type_aliases_h
 #define canvas_Persistency_Provenance_type_aliases_h
 
-#include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/BranchType.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
 
 #include <array>
 #include <map>
@@ -12,7 +12,7 @@
 
 namespace art {
   // The key is the process name
-  using ProcessLookup  = std::map<std::string const, std::vector<ProductID>>;
+  using ProcessLookup = std::map<std::string const, std::vector<ProductID>>;
 
   using ViewLookup_t = ProcessLookup;
 

@@ -26,15 +26,14 @@ namespace art {
   ///
   /// \param[in] tid A reference to the std::type_info for the type in
   /// question.
-  std::string uniform_type_name(std::type_info const & tid);
+  std::string uniform_type_name(std::type_info const& tid);
   ///
   /// \param[in] name The already-demangled name for a type.
   std::string uniform_type_name(std::string name);
 }
 
-inline
-std::string
-art::uniform_type_name(std::type_info const & tid)
+inline std::string
+art::uniform_type_name(std::type_info const& tid)
 {
   return uniform_type_name(cet::demangle_symbol(tid.name()));
 }

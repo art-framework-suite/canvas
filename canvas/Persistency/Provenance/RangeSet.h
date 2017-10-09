@@ -19,7 +19,6 @@ namespace art {
 
   class RangeSet {
   public:
-
     static RangeSet invalid();
     static RangeSet forRun(RunID);
     static RangeSet forSubRun(SubRunID);
@@ -29,66 +28,120 @@ namespace art {
 
     using const_iterator = std::vector<EventRange>::const_iterator;
 
-    RunNumber_t run() const { return run_; }
-    std::vector<EventRange> const& ranges() const { return ranges_; }
+    RunNumber_t
+    run() const
+    {
+      return run_;
+    }
+    std::vector<EventRange> const&
+    ranges() const
+    {
+      return ranges_;
+    }
     bool contains(RunNumber_t, SubRunNumber_t, EventNumber_t) const;
 
     bool is_valid() const;
-    bool is_full_run() const { return fullRun_; }
+    bool
+    is_full_run() const
+    {
+      return fullRun_;
+    }
     bool is_full_subRun() const;
     bool is_sorted() const;
-    bool is_collapsed() const { return isCollapsed_; }
+    bool
+    is_collapsed() const
+    {
+      return isCollapsed_;
+    }
     std::string to_compact_string() const;
     bool has_disjoint_ranges() const;
 
-    bool empty() const { return ranges_.empty(); }
-    auto begin() const { return ranges_.begin(); }
-    auto end() const { return ranges_.end(); }
+    bool
+    empty() const
+    {
+      return ranges_.empty();
+    }
+    auto
+    begin() const
+    {
+      return ranges_.begin();
+    }
+    auto
+    end() const
+    {
+      return ranges_.end();
+    }
 
     unsigned checksum() const;
 
-    decltype(auto) front() { return ranges_.front(); }
-    decltype(auto) back() { return ranges_.back(); }
+    decltype(auto)
+    front()
+    {
+      return ranges_.front();
+    }
+    decltype(auto)
+    back()
+    {
+      return ranges_.back();
+    }
 
     void assign_ranges(const_iterator b, const_iterator e);
 
     void update(EventID const&);
 
-    template <typename ... ARGS>
-    void emplace_range(ARGS&& ...);
+    template <typename... ARGS>
+    void emplace_range(ARGS&&...);
 
     RangeSet& collapse();
     RangeSet& merge(RangeSet const& other);
 
     // For a range [1,6) split into [1,3) and [3,6) the specified
     // event number is the new 'end' of the left range (3).
-    std::pair<const_iterator,bool> split_range(SubRunNumber_t, EventNumber_t);
-    void set_run(RunNumber_t const r) { run_ = r; }
+    std::pair<const_iterator, bool> split_range(SubRunNumber_t, EventNumber_t);
+    void
+    set_run(RunNumber_t const r)
+    {
+      run_ = r;
+    }
 
-    void sort() { cet::sort_all(ranges_); }
-    void clear() { ranges_.clear(); }
+    void
+    sort()
+    {
+      cet::sort_all(ranges_);
+    }
+    void
+    clear()
+    {
+      ranges_.clear();
+    }
 
-    static constexpr unsigned invalidChecksum() { return std::numeric_limits<unsigned>::max(); }
+    static constexpr unsigned
+    invalidChecksum()
+    {
+      return std::numeric_limits<unsigned>::max();
+    }
 
   private:
-
     explicit RangeSet() = default;
     explicit RangeSet(RunNumber_t const r, bool fullRun);
 
-    void require_not_full_run()
+    void
+    require_not_full_run()
     {
       if (fullRun_)
-        throw art::Exception(art::errors::LogicError,"RangeSet::require_not_full_run")
-          << "\nA RangeSet created using RangeSet::forRun cannot be modified.\n";
+        throw art::Exception(art::errors::LogicError,
+                             "RangeSet::require_not_full_run")
+          << "\nA RangeSet created using RangeSet::forRun cannot be "
+             "modified.\n";
     }
 
-    RunNumber_t run_ {IDNumber<Level::Run>::invalid()};
-    std::vector<EventRange> ranges_ {};
+    RunNumber_t run_{IDNumber<Level::Run>::invalid()};
+    std::vector<EventRange> ranges_{};
 
     // Auxiliary info
-    bool fullRun_ {false};
-    bool isCollapsed_ {false};
-    mutable unsigned checksum_ {invalidChecksum()};
+    bool fullRun_{false};
+    bool isCollapsed_{false};
+    mutable unsigned checksum_{invalidChecksum()};
   };
 
   //==========================================================
@@ -109,15 +162,14 @@ namespace art {
   //==========================================================
   // RangeSet implementation details
 
-  template <typename ... ARGS>
+  template <typename... ARGS>
   void
-  RangeSet::emplace_range(ARGS&& ... args)
+  RangeSet::emplace_range(ARGS&&... args)
   {
     require_not_full_run();
     ranges_.emplace_back(std::forward<ARGS>(args)...);
     isCollapsed_ = false;
   }
-
 }
 
 #endif /* canvas_Persistency_Provenance_RangeSet_h */

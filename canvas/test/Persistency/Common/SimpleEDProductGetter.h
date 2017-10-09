@@ -8,10 +8,8 @@
 #include <map>
 #include <memory>
 
-class SimpleEDProductGetter : public art::EDProductGetter
-{
+class SimpleEDProductGetter : public art::EDProductGetter {
 public:
-
   using map_t = std::map<art::ProductID, std::shared_ptr<art::EDProduct>>;
   template <class T>
   void
@@ -20,21 +18,24 @@ public:
     database[id] = std::shared_ptr<art::Wrapper<T>>(p.release());
   }
 
-  size_t size() const
-  { return database.size(); }
+  size_t
+  size() const
+  {
+    return database.size();
+  }
 
-  virtual art::EDProduct const* getIt(art::ProductID const id) const
+  virtual art::EDProduct const*
+  getIt(art::ProductID const id) const
   {
     map_t::const_iterator i = database.find(id);
     if (i == database.end())
       throw art::Exception(art::errors::ProductNotFound, "InvalidID")
-        << "No product with ProductID "
-        << id
+        << "No product with ProductID " << id
         << " is available from this EDProductGetter\n";
     return i->second.get();
   }
 
- private:
+private:
   map_t database;
 };
 

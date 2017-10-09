@@ -36,8 +36,8 @@ namespace art {
 
   std::ostream& operator<<(std::ostream& os, BranchDescription const& p);
 
-  bool operator <  (BranchDescription const& a, BranchDescription const& b);
-  bool operator == (BranchDescription const& a, BranchDescription const& b);
+  bool operator<(BranchDescription const& a, BranchDescription const& b);
+  bool operator==(BranchDescription const& a, BranchDescription const& b);
 
   bool combinable(BranchDescription const& a, BranchDescription const& b);
 
@@ -50,7 +50,6 @@ namespace art {
 
 class art::BranchDescription {
 public:
-
   static int constexpr invalidSplitLevel{-1};
   static int constexpr invalidBasketSize{0};
   static int constexpr invalidCompression{-1};
@@ -65,28 +64,100 @@ public:
 
   void write(std::ostream& os) const;
 
-  std::string const& moduleLabel() const {return moduleLabel_;}
-  std::string const& processName() const {return processName_;}
-  std::string const& producedClassName() const {return producedClassName_;}
-  std::string const& friendlyClassName() const {return friendlyClassName_;}
-  std::string const& productInstanceName() const {return productInstanceName_;}
+  std::string const&
+  moduleLabel() const
+  {
+    return moduleLabel_;
+  }
+  std::string const&
+  processName() const
+  {
+    return processName_;
+  }
+  std::string const&
+  producedClassName() const
+  {
+    return producedClassName_;
+  }
+  std::string const&
+  friendlyClassName() const
+  {
+    return friendlyClassName_;
+  }
+  std::string const&
+  productInstanceName() const
+  {
+    return productInstanceName_;
+  }
 
-  bool produced() const {return guts().validity_ == Transients::Produced;}
-  bool present() const {return guts().validity_ == Transients::PresentFromSource; }
-  bool dropped() const {return guts().validity_ == Transients::Dropped; }
-  bool transient() const {return guts().transient_;}
+  bool
+  produced() const
+  {
+    return guts().validity_ == Transients::Produced;
+  }
+  bool
+  present() const
+  {
+    return guts().validity_ == Transients::PresentFromSource;
+  }
+  bool
+  dropped() const
+  {
+    return guts().validity_ == Transients::Dropped;
+  }
+  bool
+  transient() const
+  {
+    return guts().transient_;
+  }
 
-  int splitLevel() const {return guts().splitLevel_;}
-  int basketSize() const {return guts().basketSize_;}
-  int compression() const {return guts().compression_;}
+  int
+  splitLevel() const
+  {
+    return guts().splitLevel_;
+  }
+  int
+  basketSize() const
+  {
+    return guts().basketSize_;
+  }
+  int
+  compression() const
+  {
+    return guts().compression_;
+  }
 
-  std::set<fhicl::ParameterSetID> const& psetIDs() const {return psetIDs_;}
+  std::set<fhicl::ParameterSetID> const&
+  psetIDs() const
+  {
+    return psetIDs_;
+  }
 
-  ProductID productID() const {return productID_;}
-  BranchType branchType() const {return branchType_;}
-  bool supportsView() const { return supportsView_; }
-  std::string const& branchName() const {return guts().branchName_;}
-  std::string const& wrappedName() const {return guts().wrappedName_;}
+  ProductID
+  productID() const
+  {
+    return productID_;
+  }
+  BranchType
+  branchType() const
+  {
+    return branchType_;
+  }
+  bool
+  supportsView() const
+  {
+    return supportsView_;
+  }
+  std::string const&
+  branchName() const
+  {
+    return guts().branchName_;
+  }
+  std::string const&
+  wrappedName() const
+  {
+    return guts().wrappedName_;
+  }
 
   void merge(BranchDescription const& other);
   void swap(BranchDescription& other);
@@ -98,7 +169,7 @@ public:
   struct Transients {
     Transients() = default;
 
-    enum validity_state {Produced, PresentFromSource, Dropped, Invalid};
+    enum validity_state { Produced, PresentFromSource, Dropped, Invalid };
 
     // The branch name, which is currently derivable from the other
     // attributes.
@@ -132,21 +203,45 @@ public:
     int compression_{invalidCompression};
   };
 
-  void setValidity(Transients::validity_state const state) { guts().validity_ = state; }
+  void
+  setValidity(Transients::validity_state const state)
+  {
+    guts().validity_ = state;
+  }
 
 private:
   friend class detail::BranchDescriptionStreamer;
 
-  bool transientsFluffed_() const {return !guts().branchName_.empty(); }
+  bool
+  transientsFluffed_() const
+  {
+    return !guts().branchName_.empty();
+  }
   void initProductID_();
   void fluffTransients_() const;
 
   fhicl::ParameterSetID const& psetID() const;
-  bool isPsetIDUnique() const {return psetIDs().size() == 1;}
-  std::set<ProcessConfigurationID> const& processConfigurationIDs() const {return processConfigurationIDs_;}
+  bool
+  isPsetIDUnique() const
+  {
+    return psetIDs().size() == 1;
+  }
+  std::set<ProcessConfigurationID> const&
+  processConfigurationIDs() const
+  {
+    return processConfigurationIDs_;
+  }
 
-  Transients& guts() {return transients_.get(); }
-  Transients const& guts() const {return transients_.get(); }
+  Transients&
+  guts()
+  {
+    return transients_.get();
+  }
+  Transients const&
+  guts() const
+  {
+    return transients_.get();
+  }
 
   void throwIfInvalid_() const;
 
@@ -185,7 +280,7 @@ private:
   std::set<ProcessConfigurationID> processConfigurationIDs_{};
 
   mutable Transient<Transients> transients_{};
-};  // BranchDescription
+}; // BranchDescription
 
 namespace art {
   using ProductDescriptions = std::vector<BranchDescription>;

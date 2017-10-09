@@ -15,7 +15,6 @@ namespace art {
 
   class EventRange {
   public:
-
     explicit EventRange() = default;
 
     static EventRange invalid();
@@ -29,11 +28,31 @@ namespace art {
     bool operator==(EventRange const& other) const;
     bool operator!=(EventRange const& other) const;
 
-    auto subRun() const { return subRun_; }
-    bool empty() const { return begin_ == end_; }
-    auto begin() const { return begin_; }
-    auto end()   const { return end_; }
-    auto size()  const { return is_valid() ? end_-begin_ : -1ull; }
+    auto
+    subRun() const
+    {
+      return subRun_;
+    }
+    bool
+    empty() const
+    {
+      return begin_ == end_;
+    }
+    auto
+    begin() const
+    {
+      return begin_;
+    }
+    auto
+    end() const
+    {
+      return end_;
+    }
+    auto
+    size() const
+    {
+      return is_valid() ? end_ - begin_ : -1ull;
+    }
 
     static bool are_valid(EventRange const& l, EventRange const& r);
 
@@ -55,21 +74,21 @@ namespace art {
     void set_end(EventNumber_t const e);
 
   private:
-
-    void require_not_full_SubRun()
+    void
+    require_not_full_SubRun()
     {
       if (is_full_subRun())
         throw art::Exception{art::errors::LogicError}
-        << "\nAn EventRange created using EventRange::forSubRun cannot be modified.\n";
+          << "\nAn EventRange created using EventRange::forSubRun cannot be "
+             "modified.\n";
     }
 
-    SubRunNumber_t subRun_ { IDNumber<Level::SubRun>::invalid() };
-    EventNumber_t begin_ { IDNumber<Level::Event>::invalid() };
-    EventNumber_t end_ { IDNumber<Level::Event>::invalid() };
+    SubRunNumber_t subRun_{IDNumber<Level::SubRun>::invalid()};
+    EventNumber_t begin_{IDNumber<Level::Event>::invalid()};
+    EventNumber_t end_{IDNumber<Level::Event>::invalid()};
   };
 
   std::ostream& operator<<(std::ostream& os, EventRange const& r);
-
 }
 
 #endif /* canvas_Persistency_Provenance_EventRange_h */

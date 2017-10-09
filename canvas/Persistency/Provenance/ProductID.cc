@@ -5,12 +5,10 @@
 
 namespace art {
 
-  ProductID::ProductID(value_type const value) :
-    value_{value}
-  {}
+  ProductID::ProductID(value_type const value) : value_{value} {}
 
-  ProductID::ProductID(std::string const& canonicalProductName) :
-    ProductID{toID(canonicalProductName)}
+  ProductID::ProductID(std::string const& canonicalProductName)
+    : ProductID{toID(canonicalProductName)}
   {}
 
   void
@@ -36,5 +34,4 @@ namespace art {
     os << id.value();
     return os;
   }
-
 }

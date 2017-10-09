@@ -17,8 +17,8 @@ namespace art {
   class BranchChildren {
   private:
     using ProductIDSet = std::set<ProductID>;
-  public:
 
+  public:
     // Clear all information.
     void clear();
 
@@ -38,11 +38,11 @@ namespace art {
     using map_t = std::map<ProductID, ProductIDSet>;
 
   private:
-
     map_t childLookup_;
-    void append_(map_t const& lookup, ProductID item, ProductIDSet& itemSet) const;
+    void append_(map_t const& lookup,
+                 ProductID item,
+                 ProductIDSet& itemSet) const;
   };
-
 }
 #endif /* canvas_Persistency_Provenance_BranchChildren_h */
 
