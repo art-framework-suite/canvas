@@ -8,7 +8,7 @@ perllib  product_dir
 #
 product		version
 clhep		v2_3_4_5
-cppunit		v1_13_2
+cppunit		v1_13_2a
 messagefacility	v2_01_01
 cetbuildtools	v5_14_03	-	only_for_build
 end_product_list
@@ -18,6 +18,10 @@ e14:debug	e14:debug	e14:debug	e14:debug	gcc
 e14:prof	e14:prof	e14:prof	e14:prof	gcc
 nu:e14:debug	e14:debug	e14:debug	e14:debug	gcc
 nu:e14:prof	e14:prof	e14:prof	e14:prof	gcc
+e15:debug	e15:debug	e15:debug	e15:debug	gcc
+e15:prof	e15:prof	e15:prof	e15:prof	gcc
+nu:e15:debug	e15:debug	e15:debug	e15:debug	gcc
+nu:e15:prof	e15:prof	e15:prof	e15:prof	gcc
 end_qualifier_list
 
 # Local Variables:
