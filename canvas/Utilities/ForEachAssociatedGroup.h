@@ -6,7 +6,7 @@
  * 
  * Provided functions:
  * 
- * * `util::for_each_associated_group()` executing the provided function on each
+ * * `util::for_each_group()` executing the provided function on each
  *   of the elements associated to the same object, for each object
  * * `util::associated_groups()` providing a sequence of objects associated to
  *   the same object, for each object
@@ -14,8 +14,8 @@
  */
 
 
-#ifndef CANVAS_UTILITIES_FOR_EACH_ASSOCIATED_GROUP_H
-#define CANVAS_UTILITIES_FOR_EACH_ASSOCIATED_GROUP_H
+#ifndef CANVAS_UTILITIES_FOR_EACH_GROUP_H
+#define CANVAS_UTILITIES_FOR_EACH_GROUP_H
 
 // range library
 #include "range/v3/algorithm/for_each.hpp"
@@ -55,7 +55,7 @@ namespace util {
    *   (fTrackTag);
    * 
    * std::vector<double> totalCharge;
-   * util::for_each_associated_group(*assns,
+   * util::for_each_group(*assns,
    *   [&totalCharge](auto hits)
    *     {
    *       double total = 0.;
@@ -99,7 +99,7 @@ namespace util {
    *     
    *     (T1,H1) (T1,H2) (T2,H4) (T2,H6) (T1,H5)
    *     
-   * the function `for_each_associated_group()` will execute two calls:
+   * the function `for_each_group()` will execute two calls:
    *     
    *     func({ H1, H2 })
    *     func({ H4, H6, H5 })
@@ -107,7 +107,7 @@ namespace util {
    * dealing with the hits associated to `T1` first, and `T2` next.
    */
   template <class A, class F>
-  void for_each_associated_group(A const & assns, F & func) {
+  void for_each_group(A const & assns, F & func) {
      ranges::for_each(assns |
                       ranges::view::all |
                       ranges::view::group_by([](auto a1, auto a2) { return a1.first == a2.first;}) |
@@ -116,4 +116,4 @@ namespace util {
   }
 } // namespace util
 
-#endif // CANVAS_UTILITIES_FOR_EACH_ASSOCIATED_GROUP_H
+#endif // CANVAS_UTILITIES_FOR_EACH_GROUP_H
