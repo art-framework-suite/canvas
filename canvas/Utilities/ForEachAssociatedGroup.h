@@ -6,10 +6,8 @@
  * 
  * Provided functions:
  * 
- * * `util::for_each_group()` executing the provided function on each
+ * * `art::for_each_group()` executing the provided function on each
  *   of the elements associated to the same object, for each object
- * * `util::associated_groups()` providing a sequence of objects associated to
- *   the same object, for each object
  * 
  */
 
@@ -28,14 +26,13 @@
 #include <iterator> // std::next()
 
 
-namespace util {
+namespace art {
   /**
    * @brief  Helper functions to access associations in order
    * @tparam A type of association being read
    * @tparam F type of functor to be called on each associated group
    * @param assns the association being read
    * @param func functor to be called on each associated group
-   * @see associated_groups()
    *
    * This function takes two input arguments, a constant reference to 
    * the association data product itself (`assns`), and the function
