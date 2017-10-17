@@ -111,6 +111,30 @@ namespace art {
                       ranges::view::transform([] (auto pairs) {return pairs | ranges::view::values;}),
                       func);
   }
+  
+  // Utility functions to iterate through association collection 
+  // using range v3 library. It allows access to both left and 
+  // right hand side in the collection
+  template <class A, class F>
+  void for_each_group_with_left(A const & assns, F func) {
+    for_each_pair(assns, 
+                  [&func](auto rng) {
+                                     auto rights = rng | ranges::view::values;
+                                     auto lefts = rng | ranges::view::keys;
+                                     auto const & left = **ranges::begin(lefts);
+                                     func(left, rights);
+                                    }
+                 );
+  }
+
+  template <class A, class F>
+  void for_each_pair(A const & assns, F && func) {
+    ranges::for_each(assns |
+                     ranges::view::all |
+                     ranges::view::group_by([](auto a1, auto a2) { return a1.first == a2.first;}),
+                     std::forward<F>(func));
+     }
+
 } // namespace art
 
 #endif // CANVAS_UTILITIES_RANGE_ALGORITHMS_H
