@@ -1,6 +1,7 @@
 #include "canvas/Persistency/Common/Assns.h"
 #include "canvas/Persistency/Common/AssnsIter.h"
 #include "canvas/Persistency/Common/Ptr.h"
+#include "canvas/Utilities/RangeAlgorithms.h"
 
 #include <cassert>
 #include <forward_list>
@@ -43,6 +44,21 @@ main()
 
   // use of art::for_each_group 
 
+   floatvec_t fvec;
+   auto floats = [&fvec](auto fs) {
+      for(auto f=begin(fs); f!=end(fs); ++f) {
+         fvec.push_back(**f);
+      }
+   };
 
+  art::for_each_group(a1, floats);
+  //floats should be same as vf
+  for(auto i=0; i<5; ++i) {
+    if(fvec[i] != vf[i]) {
+      throw art::Exception(art::errors::LogicError) 
+        << "Float #" << i << "expected to be '" << vf[i] 
+        << "', got '" << fvec[i] << "' instead!\n";
+    }
+  }
   return 0;
 }
