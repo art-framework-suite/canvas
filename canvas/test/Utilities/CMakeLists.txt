@@ -48,3 +48,6 @@ cet_test(EventIDMatcher_test HANDBUILT
 
 cet_test(test_ForEachGroup
   LIBRARIES canvas)
+
+cet_test(test_ForEachGroupWithLeft
+  LIBRARIES canvas)
