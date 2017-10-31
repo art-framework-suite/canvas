@@ -112,9 +112,23 @@ namespace art {
                       func);
   }
   
-  // Utility functions to iterate through association collection 
-  // using range v3 library. It allows access to both left and 
-  // right hand side in the collection
+
+  /*
+  * @brief  Helper functions to access associations in order
+  * @tparam A type of association being read
+  * @tparam F type of functor to be called on each LHS and associated RHS
+  * @param assns the association being read
+  * @param func functor to be called on each LHS and associated RHS 
+  * 
+  * This function performs the following: 
+  *  -- takes an association collection as the first argument
+  *  -- calls the provided callable object
+  * For example, given an art::Assns<L, R>, it will transform this 
+  * collection to a form that supports calling a function with two arguments
+  * (auto const & left, auto rights)
+  * The provided callable is invoked for each unique left.  
+  *                
+  */
   template <class A, class F>
   void for_each_group_with_left(A const & assns, F func) {
     for_each_pair(assns, 
