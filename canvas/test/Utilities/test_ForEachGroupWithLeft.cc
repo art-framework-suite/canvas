@@ -5,8 +5,8 @@
 
 #include <cassert>
 #include <forward_list>
-#include <type_traits>
 #include <iostream>
+#include <type_traits>
 
 using intvec_t = std::vector<int>;
 using shortvec_t = std::vector<short>;
@@ -43,24 +43,24 @@ main()
     }
   }
 
-  // use of art::for_each_group_with_left 
+  // use of art::for_each_group_with_left
 
   floatvec_t fvec;
-  auto floats = [&fvec](auto const &l, auto rs) {
-     for(auto f=begin(rs); f!=end(rs); ++f) {
-         //std::cout << l; 
-         fvec.push_back((**f)+l);
-      }
+  auto floats = [&fvec](auto const& l, auto rs) {
+    for (auto f = begin(rs); f != end(rs); ++f) {
+      // std::cout << l;
+      fvec.push_back((**f) + l);
+    }
   };
 
   art::for_each_group_with_left(a1, floats);
-  //floats should be same as vf
-  for(auto i=0; i<6; ++i) {
+  // floats should be same as vf
+  for (auto i = 0; i < 6; ++i) {
     std::cout << fvec[i] << "\n";
-    if(fvec[i] != vtest[i]) {
-      throw art::Exception(art::errors::LogicError) 
-        << "Float #" << i << "expected to be '" << vtest[i] 
-        << "', got '" << fvec[i] << "' instead!\n";
+    if (fvec[i] != vtest[i]) {
+      throw art::Exception(art::errors::LogicError)
+        << "Float #" << i << "expected to be '" << vtest[i] << "', got '"
+        << fvec[i] << "' instead!\n";
     }
   }
   return 0;
