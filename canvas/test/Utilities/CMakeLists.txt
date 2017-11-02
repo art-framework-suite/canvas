@@ -45,3 +45,9 @@ cet_make_exec(EventIDMatcher_t
 cet_test(EventIDMatcher_test HANDBUILT
   TEST_EXEC EventIDMatcher_t
 )
+
+cet_test(test_ForEachGroup
+  LIBRARIES canvas)
+
+cet_test(test_ForEachGroupWithLeft
+  LIBRARIES canvas)
