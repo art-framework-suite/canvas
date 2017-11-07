@@ -11,7 +11,7 @@ clhep		v2_3_4_5
 cppunit		v1_13_2a
 range		v3_0_3_0
 messagefacility	v2_01_02
-cetbuildtools	v5_14_03	-	only_for_build
+cetbuildtools	v6_00_01	-	only_for_build
 end_product_list
 
 qualifier	messagefacility	clhep		cppunit		range	compiler	notes
