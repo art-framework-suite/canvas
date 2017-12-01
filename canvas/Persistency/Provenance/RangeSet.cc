@@ -259,7 +259,13 @@ art::disjoint_ranges(RangeSet const& l, RangeSet const& r)
 {
   if (!both_valid(l,r)) return false;
 
-  if (l == r) return false;
+  // Empty RangeSets are disjoint wrt. other RangeSets.  Must handle
+  // this case separately than l == r case.
+  if (l.empty() || r.empty())
+    return true;
+
+  if (l == r)
+    return false;
 
   // If either RangeSet by itself is not disjoint, return false
   if (!l.has_disjoint_ranges() || !r.has_disjoint_ranges()) return false;

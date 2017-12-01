@@ -13,7 +13,21 @@ using art::RunID;
 
 BOOST_AUTO_TEST_SUITE(RangeSet_t)
 
-BOOST_AUTO_TEST_CASE(empty)
+BOOST_AUTO_TEST_CASE(empty1)
+{
+  RangeSet const rs{1};
+  BOOST_CHECK(rs.has_disjoint_ranges());
+  BOOST_CHECK(rs.is_sorted());
+}
+
+BOOST_AUTO_TEST_CASE(empty2)
+{
+  RangeSet const rs1{1};
+  RangeSet const rs2{1};
+  BOOST_CHECK(art::disjoint_ranges(rs1, rs2));
+}
+
+BOOST_AUTO_TEST_CASE(empty3)
 {
   auto rs = RangeSet::forRun(RunID{72});
   BOOST_CHECK(rs.has_disjoint_ranges());
@@ -205,6 +219,24 @@ BOOST_AUTO_TEST_CASE(merging3)
   };
 
   RangeSet const ref {2, ref_ranges};
+  BOOST_CHECK_EQUAL(rs1, ref);
+}
+
+BOOST_AUTO_TEST_CASE(merging4)
+{
+  // Range: [1,3)
+  RangeSet rs1{2};
+  rs1.emplace_range(1, 1, 3);
+  rs1.collapse();
+  auto const ref = rs1;
+
+  // Empty range
+  RangeSet rs2{2};
+  rs2.collapse();
+
+  BOOST_REQUIRE(art::disjoint_ranges(rs1, rs2));
+  rs1.merge(rs2);
+
   BOOST_CHECK_EQUAL(rs1, ref);
 }
 
