@@ -466,6 +466,11 @@ namespace art {
     if (!(l.is_valid() && r.is_valid())) {
       return false;
     }
+    // Empty RangeSets are disjoint wrt. other RangeSets.  Must handle
+    // this case separately than l == r case.
+    if (l.empty() || r.empty()) {
+      return true;
+    }
     if (l == r) {
       return false;
     }
