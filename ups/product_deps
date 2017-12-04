@@ -7,7 +7,7 @@ fcldir -
 perllib  product_dir
 #
 product		version
-clhep		v2_3_4_5
+clhep		v2_3_4_5a
 cppunit		v1_13_2a
 messagefacility	v2_01_03
 cetbuildtools	v6_00_02	-	only_for_build
