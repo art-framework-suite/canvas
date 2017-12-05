@@ -18,12 +18,6 @@ namespace art {
       return value_ >= 0;
     }
 
-    bool
-    fastCopyPossible() const
-    {
-      return true;
-    }
-
     int value_{-1};
     std::string era_{};
   };
