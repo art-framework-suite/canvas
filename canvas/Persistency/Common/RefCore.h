@@ -10,30 +10,29 @@ namespace art {
   class EDProductGetter;
 
   class RefCore {
-
   public: // TYPES
+
     struct RefCoreTransients {
 
       RefCoreTransients();
       explicit RefCoreTransients(void const* prodPtr,
                                  EDProductGetter const* prodGetter);
 
-      mutable void const* itemPtr_;
-      EDProductGetter const* prodGetter_;
+      mutable void const* itemPtr_{nullptr};
+      EDProductGetter const* prodGetter_{nullptr};
     };
 
   public: // MEMBER FUNCTIONS -- Special Member Functions
-    RefCore() = default;
 
+    RefCore();
     RefCore(ProductID const& theId,
             void const* prodPtr,
             EDProductGetter const* prodGetter);
 
   public:
+
     bool isNonnull() const;
-
     bool isNull() const;
-
     bool operator!() const;
 
     // Checks if collection is in memory or available
@@ -44,7 +43,6 @@ namespace art {
     bool isAvailable() const;
 
     ProductID id() const;
-
     void const* productPtr() const;
 
     // Used by isAvailable() to actually read the data product
@@ -59,12 +57,11 @@ namespace art {
     // Note: prodGetter_ is actually a Group for art,
     //       and a BranchData or AssnsBranchData for gallery.
     void setProductGetter(EDProductGetter const*);
-
     void swap(RefCore& other);
 
   private:
-    ProductID id_;
-    RefCoreTransients transients_;
+    ProductID id_{};
+    RefCoreTransients transients_{};
   };
 
   bool operator==(RefCore const&, RefCore const&);

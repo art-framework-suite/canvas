@@ -33,70 +33,52 @@ namespace art {
     }
 
     static RangeSet invalid();
-
     static RangeSet forRun(RunID);
-
     static RangeSet forSubRun(SubRunID);
 
   public: // MEMBER FUNCTIONS -- Special Member Functions
+
     ~RangeSet();
 
     explicit RangeSet();
-
     explicit RangeSet(RunNumber_t);
-
     explicit RangeSet(RunNumber_t, std::vector<EventRange> const& eventRanges);
 
     RangeSet(RangeSet const&);
-
     RangeSet(RangeSet&&);
-
     RangeSet& operator=(RangeSet const&);
-
     RangeSet& operator=(RangeSet&&);
 
   private: // MEMBER FUNCTIONS -- Special Member Functions
     explicit RangeSet(RunNumber_t const r, bool fullRun);
 
   public: // MEMBER FUNCTIONS -- API provided to user
-    RunNumber_t run() const;
 
+    RunNumber_t run() const;
     std::vector<EventRange> const& ranges() const;
 
     bool contains(RunNumber_t, SubRunNumber_t, EventNumber_t) const;
 
     bool is_valid() const;
-
     bool is_full_run() const;
-
     bool is_full_subRun() const;
-
     bool is_sorted() const;
-
     bool is_collapsed() const;
 
     std::string to_compact_string() const;
-
     bool has_disjoint_ranges() const;
-
     bool empty() const;
 
     const_iterator begin() const;
-
     const_iterator end() const;
-
     std::size_t begin_idx() const;
-
     std::size_t end_idx() const;
 
     unsigned checksum() const;
-
     std::size_t next_subrun_or_end(std::size_t const b) const;
 
     EventRange& front();
-
     EventRange& back();
-
     EventRange& at(std::size_t);
 
     std::vector<EventRange> extract_ranges(std::size_t const b,
@@ -112,7 +94,6 @@ namespace art {
     void emplace_range(ARGS&&...);
 
     RangeSet& collapse();
-
     RangeSet& merge(RangeSet const& other);
 
     // For a range [1,6) split into [1,3) and [3,6) the specified
@@ -120,9 +101,7 @@ namespace art {
     std::pair<std::size_t, bool> split_range(SubRunNumber_t, EventNumber_t);
 
     void set_run(RunNumber_t const r);
-
     void sort();
-
     void clear();
 
   private: // MEMBER FUNCTIONS -- Implementation details

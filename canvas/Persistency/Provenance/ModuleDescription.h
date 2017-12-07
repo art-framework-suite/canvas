@@ -23,10 +23,9 @@ namespace art {
     }
 
   public:
+
     ~ModuleDescription();
-
     explicit ModuleDescription();
-
     explicit ModuleDescription(fhicl::ParameterSetID parameterSetID,
                                std::string const& modName,
                                std::string const& modLabel,
@@ -35,31 +34,22 @@ namespace art {
                                ModuleDescriptionID id = getUniqueID());
 
     ModuleDescriptionID id() const;
-
     void write(std::ostream& os) const;
 
     fhicl::ParameterSetID const& parameterSetID() const;
-
     std::string const& moduleName() const;
-
     std::string const& moduleLabel() const;
 
     int moduleThreadingType() const;
 
     ProcessConfiguration const& processConfiguration() const;
-
     ProcessConfigurationID const processConfigurationID() const;
-
     std::string const& processName() const;
-
     std::string const& releaseVersion() const;
-
     fhicl::ParameterSetID const& mainParameterSetID() const;
 
     bool operator<(ModuleDescription const& rh) const;
-
     bool operator==(ModuleDescription const& rh) const;
-
     bool operator!=(ModuleDescription const& rh) const;
 
   private:

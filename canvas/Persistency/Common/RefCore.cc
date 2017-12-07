@@ -10,20 +10,20 @@
 
 namespace art {
 
-  RefCore::RefCoreTransients::RefCoreTransients()
-    : itemPtr_(nullptr), prodGetter_(nullptr)
-  {}
+  RefCore::RefCoreTransients::RefCoreTransients() = default;
 
   RefCore::RefCoreTransients::RefCoreTransients(
     void const* prodPtr,
     EDProductGetter const* prodGetter)
-    : itemPtr_(prodPtr), prodGetter_(prodGetter)
+    : itemPtr_{prodPtr}, prodGetter_{prodGetter}
   {}
+
+  RefCore::RefCore() = default;
 
   RefCore::RefCore(ProductID const& id,
                    void const* prodPtr,
                    EDProductGetter const* prodGetter)
-    : id_(id), transients_(prodPtr, prodGetter)
+    : id_{id}, transients_{prodPtr, prodGetter}
   {}
 
   bool

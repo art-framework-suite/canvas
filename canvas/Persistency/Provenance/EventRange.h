@@ -17,15 +17,14 @@ namespace art {
   class EventRange {
 
   public: // MEMBER FUNCTIONS -- Static API
+
     static EventRange invalid() noexcept;
-
     static EventRange forSubRun(SubRunNumber_t s) noexcept;
-
     static bool are_valid(EventRange const& l, EventRange const& r) noexcept;
 
   public: // MEMBER FUNCTIONS -- Special Member Functions
-    ~EventRange() noexcept;
 
+    ~EventRange() noexcept;
     explicit EventRange() noexcept;
 
     // Note: Throws LogicError if begin > end.
@@ -34,49 +33,34 @@ namespace art {
                         EventNumber_t end);
 
     EventRange(EventRange const&) noexcept;
-
     EventRange(EventRange&&) noexcept;
-
     EventRange& operator=(EventRange const&) noexcept;
-
     EventRange& operator=(EventRange&&) noexcept;
 
   public: // MEMBER FUNCTIONS -- API for the user
+
     bool operator<(EventRange const& other) const noexcept;
-
     bool operator==(EventRange const& other) const noexcept;
-
     bool operator!=(EventRange const& other) const noexcept;
 
     SubRunNumber_t subRun() const noexcept;
-
-    bool empty() const noexcept;
-
     EventNumber_t begin() const noexcept;
-
     EventNumber_t end() const noexcept;
 
-    bool is_valid() const noexcept;
-
     unsigned long long size() const noexcept;
-
+    bool empty() const noexcept;
+    bool is_valid() const noexcept;
     bool is_full_subRun() const noexcept;
-
     bool contains(SubRunNumber_t s, EventNumber_t e) const noexcept;
 
     // is_same(other) == true:
     //     implies is_subset(other) == true
     //     implies is_superset(other) == true
     bool is_same(EventRange const& other) const noexcept;
-
     bool is_adjacent(EventRange const& other) const noexcept;
-
     bool is_disjoint(EventRange const& other) const noexcept;
-
     bool is_subset(EventRange const& other) const noexcept;
-
     bool is_superset(EventRange const& other) const noexcept;
-
     bool is_overlapping(EventRange const& other) const noexcept;
 
     // Throws LogicError if we are a full SubRun range.
@@ -92,9 +76,7 @@ namespace art {
 
   private: // MEMBER DATA
     SubRunNumber_t subRun_{IDNumber<Level::SubRun>::invalid()};
-
     EventNumber_t begin_{IDNumber<Level::Event>::invalid()};
-
     EventNumber_t end_{IDNumber<Level::Event>::invalid()};
   };
 

@@ -10,16 +10,8 @@ using namespace std;
 
 namespace art {
 
-  ModuleDescription::~ModuleDescription() {}
-
-  ModuleDescription::ModuleDescription()
-    : parameterSetID_{}
-    , moduleName_{}
-    , moduleLabel_{}
-    , moduleThreadingType_{}
-    , processConfiguration_{}
-    , id_{invalidID()}
-  {}
+  ModuleDescription::~ModuleDescription() = default;
+  ModuleDescription::ModuleDescription() = default;
 
   ModuleDescription::ModuleDescription(
     fhicl::ParameterSetID const parameterSetID,

@@ -60,84 +60,32 @@ namespace art {
     return RangeSet{srid.run(), {EventRange::forSubRun(srid.subRun())}};
   }
 
-  // Cannot be noexcept because ranges_ is a vector.
-  RangeSet::~RangeSet() {}
+  // The special member functions cannot be noexcept because ranges_
+  // is a vector.
+  RangeSet::~RangeSet() = default;
+  RangeSet::RangeSet() = default;
+  RangeSet::RangeSet(RangeSet const& rhs) = default;
+  RangeSet::RangeSet(RangeSet&& rhs) = default;
+  RangeSet&
+  RangeSet::operator=(RangeSet const& rhs) = default;
+  RangeSet&
+  RangeSet::operator=(RangeSet&& rhs) = default;
 
-  // Cannot be noexcept because ranges_ is a vector.
-  RangeSet::RangeSet()
-    : run_{IDNumber<Level::Run>::invalid()}
-    , ranges_()
-    , fullRun_{false}
-    , isCollapsed_{false}
-    , checksum_{invalidChecksum()}
-  {}
-
-  // Cannot be noexcept because ranges_ is a vector.
   RangeSet::RangeSet(RunNumber_t const r, bool const fullRun)
     : run_{r}
-    , ranges_()
     , fullRun_{fullRun}
     , isCollapsed_{fullRun}
     , checksum_{cet::crc32{to_compact_string()}.digest()}
   {}
 
-  // Cannot be noexcept because ranges_ is a vector.
   RangeSet::RangeSet(RunNumber_t const r) : RangeSet{r, {}} {}
 
-  // Cannot be noexcept because ranges_ is a vector.
   RangeSet::RangeSet(RunNumber_t const r, vector<EventRange> const& eventRanges)
     : run_{r}
     , ranges_{eventRanges}
-    , fullRun_{false}
-    , isCollapsed_{false}
-    , checksum_{invalidChecksum()}
   {
     sort();
     collapse();
-  }
-
-  // Cannot be noexcept because ranges_ is a vector.
-  RangeSet::RangeSet(RangeSet const& rhs)
-    : run_{rhs.run_}
-    , ranges_(rhs.ranges_)
-    , fullRun_{rhs.fullRun_}
-    , isCollapsed_{rhs.isCollapsed_}
-    , checksum_{rhs.checksum_}
-  {}
-
-  // Cannot be noexcept because ranges_ is a vector.
-  RangeSet::RangeSet(RangeSet&& rhs)
-    : run_{move(rhs.run_)}
-    , ranges_(move(rhs.ranges_))
-    , fullRun_{move(rhs.fullRun_)}
-    , isCollapsed_{move(rhs.isCollapsed_)}
-    , checksum_{move(rhs.checksum_)}
-  {}
-
-  // Cannot be noexcept because ranges_ is a vector.
-  RangeSet&
-  RangeSet::operator=(RangeSet const& rhs)
-  {
-    if (this != &rhs) {
-      run_ = rhs.run_;
-      ranges_ = rhs.ranges_;
-      fullRun_ = rhs.fullRun_;
-      isCollapsed_ = rhs.isCollapsed_;
-      checksum_ = rhs.checksum_;
-    }
-    return *this;
-  }
-
-  // Cannot be noexcept because ranges_ is a vector.
-  RangeSet&
-  RangeSet::operator=(RangeSet&& rhs)
-  {
-    run_ = move(rhs.run_);
-    ranges_ = move(rhs.ranges_);
-    fullRun_ = move(rhs.fullRun_);
-    isCollapsed_ = move(rhs.isCollapsed_);
-    checksum_ = move(rhs.checksum_);
-    return *this;
   }
 
   RunNumber_t

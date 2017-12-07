@@ -46,13 +46,8 @@ namespace art {
     return l.is_valid() && r.is_valid();
   }
 
-  EventRange::~EventRange() noexcept {}
-
-  EventRange::EventRange() noexcept
-    : subRun_{IDNumber<Level::SubRun>::invalid()}
-    , begin_{IDNumber<Level::Event>::invalid()}
-    , end_{IDNumber<Level::Event>::invalid()}
-  {}
+  EventRange::~EventRange() noexcept = default;
+  EventRange::EventRange() noexcept = default;
 
   EventRange::EventRange(SubRunNumber_t const s,
                          EventNumber_t const b,
@@ -62,33 +57,14 @@ namespace art {
     require_ordering(begin_, end_);
   }
 
-  EventRange::EventRange(EventRange const& rhs) noexcept
-    : subRun_{rhs.subRun_}, begin_{rhs.begin_}, end_{rhs.end_}
-  {}
-
-  EventRange::EventRange(EventRange&& rhs) noexcept
-    : subRun_{rhs.subRun_}, begin_{rhs.begin_}, end_{rhs.end_}
-  {}
+  EventRange::EventRange(EventRange const& rhs) noexcept = default;
+  EventRange::EventRange(EventRange&& rhs) noexcept = default;
 
   EventRange&
-  EventRange::operator=(EventRange const& rhs) noexcept
-  {
-    if (this != &rhs) {
-      subRun_ = rhs.subRun_;
-      begin_ = rhs.begin_;
-      end_ = rhs.end_;
-    }
-    return *this;
-  }
+  EventRange::operator=(EventRange const& rhs) noexcept = default;
 
   EventRange&
-  EventRange::operator=(EventRange&& rhs) noexcept
-  {
-    subRun_ = rhs.subRun_;
-    begin_ = rhs.begin_;
-    end_ = rhs.end_;
-    return *this;
-  }
+  EventRange::operator=(EventRange&& rhs) noexcept = default;
 
   bool
   EventRange::operator<(EventRange const& other) const noexcept
