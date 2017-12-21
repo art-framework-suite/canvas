@@ -8,10 +8,12 @@ namespace art {
 
   TypeLabel::TypeLabel(TypeID const& itemtype,
                        std::string const& instanceName,
-                       bool const supportsView)
+                       bool const supportsView,
+                       bool const transient)
     : typeID_{itemtype}
     , productInstanceName_{instanceName}
     , supportsView_{supportsView}
+    , transient_{transient}
   {}
 
   TypeLabel::TypeLabel(TypeID const& itemtype,

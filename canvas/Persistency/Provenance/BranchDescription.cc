@@ -47,6 +47,7 @@ namespace art {
   {
     guts().validity_ = tl.hasEmulatedModule() ? Transients::PresentFromSource :
                                                 Transients::Produced;
+    guts().transient_ = tl.transient();
     psetIDs_.insert(md.parameterSetID());
     processConfigurationIDs_.insert(md.processConfigurationID());
     throwIfInvalid_();

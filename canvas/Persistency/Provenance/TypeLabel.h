@@ -12,7 +12,8 @@ namespace art {
   public:
     TypeLabel(TypeID const& itemtype,
               std::string const& instanceName,
-              bool const supportsView);
+              bool const supportsView,
+              bool const transient);
 
     TypeLabel(TypeID const& itemtype,
               std::string const& instanceName,
@@ -50,11 +51,17 @@ namespace art {
     {
       return supportsView_;
     }
+    bool
+    transient() const
+    {
+      return transient_;
+    }
 
   private:
     TypeID typeID_;
     std::string productInstanceName_;
     bool supportsView_;
+    bool transient_;
     std::shared_ptr<std::string> emulatedModule_{
       nullptr}; // shared so TypeLabel is copyable
     friend bool operator<(TypeLabel const& a, TypeLabel const& b);
