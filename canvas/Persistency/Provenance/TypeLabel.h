@@ -1,7 +1,10 @@
 #ifndef canvas_Persistency_Provenance_TypeLabel_h
 #define canvas_Persistency_Provenance_TypeLabel_h
+// vim: set sw=2 expandtab :
 
 #include "canvas/Utilities/TypeID.h"
+
+#include <iosfwd>
 #include <memory>
 #include <string>
 
@@ -60,14 +63,17 @@ namespace art {
     TypeID typeID_;
     std::string productInstanceName_;
     bool supportsView_;
-    bool transient_;
+    bool transient_{false};
     std::shared_ptr<std::string> emulatedModule_{
       nullptr}; // shared so TypeLabel is copyable
     friend bool operator<(TypeLabel const& a, TypeLabel const& b);
+    friend std::ostream& operator<<(std::ostream& os, TypeLabel const& tl);
   };
 
   bool operator<(TypeLabel const& a, TypeLabel const& b);
-}
+  std::ostream& operator<<(std::ostream& os, TypeLabel const& tl);
+
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_TypeLabel_h */
 

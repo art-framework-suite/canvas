@@ -1,5 +1,8 @@
 #include "canvas/Persistency/Provenance/TypeLabel.h"
+#include "canvas/Utilities/Exception.h"
+// vim: set sw=2 expandtab :
 
+#include <ostream>
 #include <tuple>
 
 namespace art {
@@ -43,7 +46,21 @@ namespace art {
   {
     auto const& a_class_name = a.className();
     auto const& b_class_name = b.className();
-    return std::tie(a.emulatedModule_, a.productInstanceName_, a_class_name) <
-           std::tie(b.emulatedModule_, b.productInstanceName_, b_class_name);
+    auto const& a_emulated_module = a.hasEmulatedModule() ? *a.emulatedModule_ : "<none>";
+    auto const& b_emulated_module = b.hasEmulatedModule() ? *b.emulatedModule_ : "<none>";
+    return std::tie(a_emulated_module, a.productInstanceName_, a_class_name) <
+           std::tie(b_emulated_module, b.productInstanceName_, b_class_name);
   }
+
+  std::ostream&
+  operator<<(std::ostream& os, TypeLabel const& tl)
+  {
+    os << "Emulated module:       '" << (tl.hasEmulatedModule() ? tl.emulatedModule() : "<none>") << "'\n"
+       << "Product instance name: '" << tl.productInstanceName() << "'\n"
+       << "Class name:            '" << tl.className() << "'\n"
+       << "Supports views:        '" << std::boolalpha << tl.supportsView() << '\n'
+       << "Transient:             '" << tl.transient();
+    return os;
+  }
+
 }
