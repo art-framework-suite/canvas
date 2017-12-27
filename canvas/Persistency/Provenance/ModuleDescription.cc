@@ -19,12 +19,14 @@ namespace art {
     string const& modLabel,
     int moduleThreadingType,
     ProcessConfiguration pc,
+    bool const isEmulated,
     ModuleDescriptionID const id)
     : parameterSetID_{parameterSetID}
     , moduleName_{modName}
     , moduleLabel_{modLabel}
     , moduleThreadingType_{moduleThreadingType}
     , processConfiguration_{move(pc)}
+    , isEmulated_{isEmulated}
     , id_{id}
   {}
 
@@ -52,6 +54,12 @@ namespace art {
   ModuleDescription::moduleLabel() const
   {
     return moduleLabel_;
+  }
+
+  bool
+  ModuleDescription::isEmulatedModule() const
+  {
+    return isEmulated_;
   }
 
   int

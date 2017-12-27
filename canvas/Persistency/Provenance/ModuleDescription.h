@@ -31,6 +31,7 @@ namespace art {
                                std::string const& modLabel,
                                int moduleThreadingType,
                                ProcessConfiguration pc,
+                               bool isEmulated = false,
                                ModuleDescriptionID id = getUniqueID());
 
     ModuleDescriptionID id() const;
@@ -39,6 +40,7 @@ namespace art {
     fhicl::ParameterSetID const& parameterSetID() const;
     std::string const& moduleName() const;
     std::string const& moduleLabel() const;
+    bool isEmulatedModule() const;
 
     int moduleThreadingType() const;
 
@@ -68,6 +70,9 @@ namespace art {
 
     // The process configuration.
     ProcessConfiguration processConfiguration_{};
+
+    // Does this object describe an emulated module?
+    bool isEmulated_{false};
 
     // Unique ID.
     ModuleDescriptionID id_{};
