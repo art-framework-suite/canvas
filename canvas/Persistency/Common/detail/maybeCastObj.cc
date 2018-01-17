@@ -4,11 +4,11 @@
 #include "canvas/Utilities/Exception.h"
 #include "cetlib_except/demangle.h"
 
+#include <cxxabi.h>
+
 #ifdef _LIBCPPABI_VERSION
 #include "TClass.h"
 #include "TClassRef.h"
-#else
-#include <cxxabi.h>
 #endif
 
 #include <iomanip>
@@ -26,8 +26,14 @@ detail::upcastAllowed(type_info const& tid_from, type_info const& tid_to)
   if (tid_from == tid_to) {
     return true;
   }
-  TClassRef const clFrom{TClass::GetClass(tid_from)};
-  TClassRef const clTo{TClass::GetClass(tid_to)};
+  auto const clFrom = TClass::GetClass(tid_from);
+  if (!clFrom) {
+    return false;
+  }
+  auto const clTo = TClass::GetClass(tid_to);
+  if (!clTo) {
+    return false;
+  }
   return clFrom->InheritsFrom(clTo);
 }
 
@@ -40,22 +46,24 @@ art::detail::maybeCastObj(void const* address,
     // The do nothing case.
     return address;
   }
-  TClassRef const clFrom{TClass::GetClass(tiFrom)};
-  TClassRef const clTo{TClass::GetClass(tiTo)};
-  void const* castAddr(nullptr);
-  if (clFrom->InheritsFrom(clTo)) {
-    // The upcast case, let ROOT do it.
-    castAddr = clFrom->DynamicCast(clTo, const_cast<void*>(address), true);
-  } else if (clTo->InheritsFrom(clFrom)) {
-    // The downcast case is forbidden.
-    throw Exception(errors::TypeConversion)
-      << "art::Wrapper<> : unable to convert type "
-      << cet::demangle_symbol(tiFrom.name()) << " to "
-      << cet::demangle_symbol(tiTo.name()) << ", which is a subclass.\n";
-  }
-  if (castAddr != nullptr) {
-    // ROOT succeeded, done.
-    return castAddr;
+  auto const clFrom = TClass::GetClass(tiFrom);
+  auto const clTo = TClass::GetClass(tiTo);
+  if (clFrom && clTo) {
+    void const* castAddr(nullptr);
+    if (clFrom->InheritsFrom(clTo)) {
+      // The upcast case, let ROOT do it.
+      castAddr = clFrom->DynamicCast(clTo, const_cast<void*>(address), true);
+    } else if (clTo->InheritsFrom(clFrom)) {
+      // The downcast case is forbidden.
+      throw Exception(errors::TypeConversion)
+        << "art::Wrapper<> : unable to convert type "
+        << cet::demangle_symbol(tiFrom.name()) << " to "
+        << cet::demangle_symbol(tiTo.name()) << ", which is a subclass.\n";
+    }
+    if (castAddr != nullptr) {
+      // ROOT succeeded, done.
+      return castAddr;
+    }
   }
   // ROOT could not do the upcast, or there was no inheritance
   // relationship between the classes, die.

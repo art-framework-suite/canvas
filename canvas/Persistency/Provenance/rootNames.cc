@@ -12,10 +12,10 @@ namespace {
   std::string const eventHistory = "EventHistory";
   std::string const eventBranchMapper = "EventBranchMapper";
 
-  std::array<std::string const, art::NumBranchTypes> dataTrees = {"Events"s,
-                                                                  "SubRuns"s,
-                                                                  "Runs"s,
-                                                                  "Results"s};
+  std::array<std::string const, art::NumBranchTypes> dataTrees = {{"Events"s,
+                                                                   "SubRuns"s,
+                                                                   "Runs"s,
+                                                                   "Results"s}};
   std::string const eventMeta = "EventMetaData";
 }
 

@@ -136,8 +136,8 @@ BOOST_AUTO_TEST_CASE(array)
 {
   using histo_t = std::array<int, 3>;
   MockRun r;
-  r.put<histo_t>(histo_t{1, 4, 7});
-  r.put<histo_t>(histo_t{-1, 6, 92});
+  r.put<histo_t>(histo_t{{1, 4, 7}});
+  r.put<histo_t>(histo_t{{-1, 6, 92}});
   auto ref = {0, 10, 99};
   AGGREGATE_CHECK_EQUAL_COLLECTIONS(r.get<histo_t>(), ref);
 }

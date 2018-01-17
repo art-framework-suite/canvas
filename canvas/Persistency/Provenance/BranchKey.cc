@@ -5,8 +5,8 @@
 #include <ostream>
 
 namespace {
-  constexpr char underscore{'_'};
-  constexpr char period{'.'};
+  constexpr char underscore [[gnu::unused]] {'_'};
+  constexpr char period [[gnu::unused]] {'.'};
 }
 
 namespace art {

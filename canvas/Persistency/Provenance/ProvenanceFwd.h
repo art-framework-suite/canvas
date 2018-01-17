@@ -11,13 +11,13 @@ namespace art {
 
   class BranchDescription;
   class BranchID;
-  class BranchKey;
+  struct BranchKey;
   class BranchMapper;
   class EventAuxiliary;
   class EventID;
   class ModuleDescription;
   class Parentage;
-  class ProcessConfiguration;
+  struct ProcessConfiguration;
   class ProcessHistory;
   class ProductID;
   class ProductProvenance;
