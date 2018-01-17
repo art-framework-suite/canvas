@@ -66,10 +66,8 @@ namespace art {
   RangeSet::RangeSet() = default;
   RangeSet::RangeSet(RangeSet const& rhs) = default;
   RangeSet::RangeSet(RangeSet&& rhs) = default;
-  RangeSet&
-  RangeSet::operator=(RangeSet const& rhs) = default;
-  RangeSet&
-  RangeSet::operator=(RangeSet&& rhs) = default;
+  RangeSet& RangeSet::operator=(RangeSet const& rhs) = default;
+  RangeSet& RangeSet::operator=(RangeSet&& rhs) = default;
 
   RangeSet::RangeSet(RunNumber_t const r, bool const fullRun)
     : run_{r}
@@ -81,8 +79,7 @@ namespace art {
   RangeSet::RangeSet(RunNumber_t const r) : RangeSet{r, {}} {}
 
   RangeSet::RangeSet(RunNumber_t const r, vector<EventRange> const& eventRanges)
-    : run_{r}
-    , ranges_{eventRanges}
+    : run_{r}, ranges_{eventRanges}
   {
     sort();
     collapse();

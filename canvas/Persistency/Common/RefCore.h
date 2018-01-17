@@ -11,7 +11,6 @@ namespace art {
 
   class RefCore {
   public: // TYPES
-
     struct RefCoreTransients {
 
       RefCoreTransients();
@@ -23,14 +22,12 @@ namespace art {
     };
 
   public: // MEMBER FUNCTIONS -- Special Member Functions
-
     RefCore();
     RefCore(ProductID const& theId,
             void const* prodPtr,
             EDProductGetter const* prodGetter);
 
   public:
-
     bool isNonnull() const;
     bool isNull() const;
     bool operator!() const;

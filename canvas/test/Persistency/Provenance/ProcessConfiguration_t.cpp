@@ -4,7 +4,8 @@
 
 using namespace std;
 
-int main()
+int
+main()
 {
   art::ProcessConfiguration pc1;
   assert(pc1 == pc1);

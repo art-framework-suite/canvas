@@ -23,7 +23,6 @@ namespace art {
     }
 
   public:
-
     ~ModuleDescription();
     explicit ModuleDescription();
     explicit ModuleDescription(fhicl::ParameterSetID parameterSetID,

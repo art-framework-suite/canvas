@@ -17,13 +17,11 @@ namespace art {
   class EventRange {
 
   public: // MEMBER FUNCTIONS -- Static API
-
     static EventRange invalid() noexcept;
     static EventRange forSubRun(SubRunNumber_t s) noexcept;
     static bool are_valid(EventRange const& l, EventRange const& r) noexcept;
 
   public: // MEMBER FUNCTIONS -- Special Member Functions
-
     ~EventRange() noexcept;
     explicit EventRange() noexcept;
 
@@ -38,7 +36,6 @@ namespace art {
     EventRange& operator=(EventRange&&) noexcept;
 
   public: // MEMBER FUNCTIONS -- API for the user
-
     bool operator<(EventRange const& other) const noexcept;
     bool operator==(EventRange const& other) const noexcept;
     bool operator!=(EventRange const& other) const noexcept;

@@ -60,11 +60,9 @@ namespace art {
   EventRange::EventRange(EventRange const& rhs) noexcept = default;
   EventRange::EventRange(EventRange&& rhs) noexcept = default;
 
-  EventRange&
-  EventRange::operator=(EventRange const& rhs) noexcept = default;
+  EventRange& EventRange::operator=(EventRange const& rhs) noexcept = default;
 
-  EventRange&
-  EventRange::operator=(EventRange&& rhs) noexcept = default;
+  EventRange& EventRange::operator=(EventRange&& rhs) noexcept = default;
 
   bool
   EventRange::operator<(EventRange const& other) const noexcept

@@ -37,7 +37,6 @@ namespace art {
     static RangeSet forSubRun(SubRunID);
 
   public: // MEMBER FUNCTIONS -- Special Member Functions
-
     ~RangeSet();
 
     explicit RangeSet();
@@ -53,7 +52,6 @@ namespace art {
     explicit RangeSet(RunNumber_t const r, bool fullRun);
 
   public: // MEMBER FUNCTIONS -- API provided to user
-
     RunNumber_t run() const;
     std::vector<EventRange> const& ranges() const;
 

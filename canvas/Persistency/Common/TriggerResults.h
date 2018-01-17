@@ -21,7 +21,6 @@ namespace art {
 
   class TriggerResults : public HLTGlobalStatus {
   public:
-
     ~TriggerResults();
     TriggerResults();
 
