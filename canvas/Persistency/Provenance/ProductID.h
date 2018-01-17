@@ -8,6 +8,7 @@
 #include "cetlib/crc32.h"
 
 #include <iosfwd>
+#include <functional> // for std::hash
 #include <string>
 
 namespace art {
@@ -82,6 +83,18 @@ namespace art {
 
   std::ostream& operator<<(std::ostream& os, ProductID const id);
 }
+
+namespace std {
+  template <>
+  struct hash<art::ProductID> {
+    std::size_t
+    operator()(art::ProductID id) const
+    {
+      return id.value();
+    }
+  };
+}
+
 #endif /* canvas_Persistency_Provenance_ProductID_h */
 
 // Local Variables:
