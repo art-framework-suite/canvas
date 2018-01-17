@@ -51,6 +51,7 @@
 
 #include <cassert>
 #include <cstddef>
+#include <functional> // for std::hash
 #include <list>
 #include <ostream>
 #include <type_traits>
@@ -498,6 +499,21 @@ art::operator<<(std::ostream& os, Ptr<T> const& p)
 {
   os << "(" << p.id() << ", " << p.key() << ")";
   return os;
+}
+
+// Specialization of std::hash for art::Ptr
+namespace std {
+  template <class T>
+  struct hash<art::Ptr<T>> {
+    using ptr_t = art::Ptr<T>;
+    using key_t = typename ptr_t::key_type;
+
+    size_t
+    operator()(ptr_t const& p) const
+    {
+      return std::hash<art::ProductID>()(p.id()) ^ std::hash<key_t>()(p.key());
+    }
+  };
 }
 
 #endif /* canvas_Persistency_Common_Ptr_h */
