@@ -185,13 +185,8 @@ art::detail::IPRHelper<ProdA, ProdB, Data, DATACOLL, EVENT>::operator()(
 //
 // If one were to provide an implementation that did this, one would
 // change the unordered_multimap to key on the full ptr instead of the
-// pointer. This would involve defining a hashing function, something
-// along the lines of:
-//
-// auto hasher = [](typename Acoll::value_type::const_pointer const & ptr)
-//               { return std::hash((ptr.key() && 0xffffffff) +
-//                                  (ptr.id().productIndex() << 32) +
-//                                  (ptr.id().processIndex() << 48)); };
+// pointer. There is a specialization of std::hash<T> for T =
+// art::Ptr<X> to support this.
 //
 // However, it would be problematic to do the lookup if the reference
 // item was not in fact a Ptr. Maybe it would be relatively efficient if
