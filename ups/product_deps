@@ -7,12 +7,12 @@ fcldir -
 perllib  product_dir
 #
 product		version
-clhep		v2_3_4_5b
+clhep		v2_3_4_5c
 cppunit		v1_13_2b
 range		v3_0_3_0
 messagefacility	v2_01_04
 cetbuildtools	v7_00_02	-	only_for_build
-root		v6_12_04c	c2
+root		v6_12_04d	c2
 end_product_list
 
 qualifier	messagefacility	clhep		root		cppunit		range		notes
