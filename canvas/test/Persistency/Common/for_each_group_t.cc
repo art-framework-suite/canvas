@@ -1,7 +1,7 @@
 #include "canvas/Persistency/Common/Assns.h"
+#include "canvas/Persistency/Common/AssnsAlgorithms.h"
 #include "canvas/Persistency/Common/AssnsIter.h"
 #include "canvas/Persistency/Common/Ptr.h"
-#include "canvas/Utilities/RangeAlgorithms.h"
 
 #include <cassert>
 #include <forward_list>

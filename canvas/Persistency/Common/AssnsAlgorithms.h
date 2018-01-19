@@ -9,10 +9,15 @@
  * * `art::for_each_group()` executing the provided function on each
  *   of the elements associated to the same object, for each object
  *
+ * * `art::for_each_group_with_left()` executing the provided function
+ *   on each of the elements associated to the same object, for each
+ *   object, while also providing a reference to the object.
  */
 
-#ifndef CANVAS_UTILITIES_RANGE_ALGORITHMS_H
-#define CANVAS_UTILITIES_RANGE_ALGORITHMS_H
+#ifndef canvas_Persistency_Common_AssnsAlgorithms_h
+#define canvas_Persistency_Common_AssnsAlgorithms_h
+
+#include "canvas/Persistency/Common/Assns.h"
 
 // range library
 #include "range/v3/algorithm/for_each.hpp"
@@ -101,9 +106,9 @@ namespace art {
    *
    * dealing with the hits associated to `T1` first, and `T2` next.
    */
-  template <class A, class F>
+  template <typename A, typename B, typename D, typename F>
   void
-  for_each_group(A const& assns, F& func)
+  for_each_group(art::Assns<A, B, D> const& assns, F func)
   {
     ranges::for_each(assns | ranges::view::all |
                        ranges::view::group_by([](auto a1, auto a2) {
@@ -131,9 +136,9 @@ namespace art {
    * The provided callable is invoked for each unique left.
    *
    */
-  template <class A, class F>
+  template <typename A, typename B, typename D, typename F>
   void
-  for_each_group_with_left(A const& assns, F func)
+  for_each_group_with_left(art::Assns<A, B, D> const& assns, F func)
   {
     for_each_pair(assns, [&func](auto rng) {
       auto rights = rng | ranges::view::values;
@@ -143,16 +148,20 @@ namespace art {
     });
   }
 
-  template <class A, class F>
+  template <typename A, typename B, typename D, typename F>
   void
-  for_each_pair(A const& assns, F&& func)
+  for_each_pair(art::Assns<A, B, D> const& assns, F func)
   {
     ranges::for_each(assns | ranges::view::all |
                        ranges::view::group_by(
                          [](auto a1, auto a2) { return a1.first == a2.first; }),
-                     std::forward<F>(func));
+                     func);
   }
 
 } // namespace art
 
-#endif // CANVAS_UTILITIES_RANGE_ALGORITHMS_H
+#endif /* canvas_Persistency_Common_AssnsAlgorithms_h */
+
+// Local Variables:
+// mode: c++
+// End:
