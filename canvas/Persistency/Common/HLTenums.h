@@ -13,6 +13,8 @@ namespace art {
       Fail = 2 // rejected
       ,
       Exception = 3 // threw an exception
+      ,
+      N_STATES = 4
     };
 
   } // namespace hlt

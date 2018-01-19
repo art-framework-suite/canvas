@@ -21,7 +21,7 @@ namespace art {
 
   class TriggerResults : public HLTGlobalStatus {
   public:
-    ~TriggerResults();
+    ~TriggerResults() noexcept;
     TriggerResults();
 
     TriggerResults(HLTGlobalStatus const& hlt,

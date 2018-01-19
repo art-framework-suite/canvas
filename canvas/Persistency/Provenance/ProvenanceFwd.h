@@ -16,7 +16,7 @@ namespace art {
   class EventID;
   class ModuleDescription;
   class Parentage;
-  struct ProcessConfiguration;
+  class ProcessConfiguration;
   class ProcessHistory;
   class ProductID;
   class ProductProvenance;

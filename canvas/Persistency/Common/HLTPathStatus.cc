@@ -17,14 +17,14 @@ namespace art {
 
   HLTPathStatus::HLTPathStatus(hlt::HLTState const state) : status_(state)
   {
-    assert(state < 4);
+    assert(state < hlt::HLTState::N_STATES);
   }
 
   HLTPathStatus::HLTPathStatus(hlt::HLTState const state, size_t const index)
     : status_((static_cast<uint16_t>(index) << 2) |
               static_cast<uint16_t>(state))
   {
-    assert(state < 4);
+    assert(state < hlt::HLTState::N_STATES);
     assert(index < (1 << 14));
   }
 
