@@ -2,6 +2,7 @@
 #define canvas_Persistency_Common_getElementAddresses_h
 
 #include "canvas/Persistency/Common/detail/maybeCastObj.h"
+#include "canvas/Utilities/uniform_type_name.h"
 
 #include <string>
 #include <typeinfo>
@@ -91,7 +92,7 @@ art::getElementAddresses(cet::map_vector<T> const& obj,
   typedef cet::map_vector<T> product_type;
   typedef typename product_type::const_iterator iter;
   detail::value_type_helper vh;
-  std::string const wanted_type = cet::demangle_symbol(iToType.name());
+  std::string const wanted_type = uniform_type_name(cet::demangle_symbol(iToType.name()));
   static size_t pos = vh.look_past_pair<T>();
   oPtr.reserve(iIndices.size());
   if ((pos < wanted_type.size()) && vh.starts_with_pair(wanted_type, pos)) {

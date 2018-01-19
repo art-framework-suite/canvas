@@ -17,7 +17,7 @@ main()
   vr.reserve(n);
   typedef tbb::blocked_range<typename std::vector<double>::const_iterator> br_t;
   tbb::parallel_for(br_t(v.cbegin(), v.cend()),
-                    [&v, &vr](br_t const& r) -> void {
+                    [&vr](br_t const& r) -> void {
                       for (auto i : r) {
                         vr.emplace_back(i * 2.0);
                       }

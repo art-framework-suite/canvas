@@ -2,6 +2,7 @@
 #define canvas_Persistency_Common_setPtr_h
 
 #include "canvas/Persistency/Common/detail/maybeCastObj.h"
+#include "canvas/Utilities/uniform_type_name.h"
 #include "cetlib/map_vector.h"
 #include "cetlib_except/demangle.h"
 
@@ -44,7 +45,7 @@ art::setPtr(cet::map_vector<T> const& obj,
             void const*& oPtr)
 {
   detail::value_type_helper vh;
-  std::string const wanted_type = cet::demangle_symbol(iToType.name());
+  std::string const wanted_type = uniform_type_name(cet::demangle_symbol(iToType.name()));
   static size_t pos = vh.look_past_pair<T>();
   if ((pos < wanted_type.size()) && vh.starts_with_pair(wanted_type, pos)) {
     // Want value_type, not mapped_type;

@@ -13,7 +13,7 @@ namespace art {
   template <typename T>
   class Wrapper;
 
-  class WrappedTypeID;
+  struct WrappedTypeID;
 }
 
 struct art::WrappedTypeID {

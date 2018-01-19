@@ -15,7 +15,7 @@
 #include <typeinfo>
 
 namespace art {
-  class FileFormatVersion;
+  struct FileFormatVersion;
   class History;
 
   namespace rootNames {
