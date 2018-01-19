@@ -45,7 +45,8 @@ art::setPtr(cet::map_vector<T> const& obj,
             void const*& oPtr)
 {
   detail::value_type_helper vh;
-  std::string const wanted_type = uniform_type_name(cet::demangle_symbol(iToType.name()));
+  std::string const wanted_type =
+    uniform_type_name(cet::demangle_symbol(iToType.name()));
   static size_t pos = vh.look_past_pair<T>();
   if ((pos < wanted_type.size()) && vh.starts_with_pair(wanted_type, pos)) {
     // Want value_type, not mapped_type;

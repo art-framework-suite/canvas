@@ -42,8 +42,7 @@ namespace {
     std::string process_;
   };
 
-  [[gnu::unused]]
-  inline bool
+  [[gnu::unused]] inline bool
   operator==(CheapTag const& left, CheapTag const& right)
   {
     return left.label() == right.label() &&
@@ -51,8 +50,7 @@ namespace {
            left.process() == right.process();
   }
 
-  [[gnu::unused]]
-  inline bool
+  [[gnu::unused]] inline bool
   operator!=(CheapTag const& left, CheapTag const& right)
   {
     return !(left == right);

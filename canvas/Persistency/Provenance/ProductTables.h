@@ -66,3 +66,7 @@ namespace art {
 }
 
 #endif /* canvas_Persistency_Provenance_ProductTables_h */
+
+// Local Variables:
+// mode: c++
+// End:

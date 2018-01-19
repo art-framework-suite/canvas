@@ -7,8 +7,8 @@
 
 #include "cetlib/crc32.h"
 
-#include <iosfwd>
 #include <functional> // for std::hash
+#include <iosfwd>
 #include <string>
 
 namespace art {
