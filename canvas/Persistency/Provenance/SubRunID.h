@@ -16,7 +16,7 @@ namespace art {
 
 class art::SubRunID {
 public:
-  constexpr SubRunID();
+  constexpr SubRunID() noexcept;
   SubRunID(RunID rID, SubRunNumber_t srID);
   SubRunID(RunNumber_t rID, SubRunNumber_t srID);
 
@@ -36,7 +36,7 @@ public:
   static SubRunID firstSubRun();
   static SubRunID firstSubRun(RunID const& rID);
   static SubRunID invalidSubRun(RunID const& rID);
-  static constexpr SubRunID flushSubRun();
+  static constexpr SubRunID flushSubRun() noexcept;
   static SubRunID flushSubRun(RunID const& rID);
 
   // Comparison operators.
@@ -53,7 +53,7 @@ private:
   struct FlushFlag {
   };
 
-  explicit constexpr SubRunID(FlushFlag);
+  explicit constexpr SubRunID(FlushFlag) noexcept;
   SubRunID(RunID rID, FlushFlag);
 
   SubRunNumber_t inRangeOrInvalid(SubRunNumber_t sr);
@@ -64,7 +64,7 @@ private:
   SubRunNumber_t subRun_;
 };
 
-inline constexpr art::SubRunID::SubRunID()
+inline constexpr art::SubRunID::SubRunID() noexcept
   : run_(), subRun_(IDNumber<Level::SubRun>::invalid())
 {}
 
@@ -167,7 +167,7 @@ art::SubRunID::invalidSubRun(RunID const& rID)
 }
 
 inline constexpr art::SubRunID
-art::SubRunID::flushSubRun()
+art::SubRunID::flushSubRun() noexcept
 {
   return SubRunID(FlushFlag());
 }
@@ -223,7 +223,7 @@ art::SubRunID::operator>=(SubRunID const& other) const
   return !(*this < other);
 }
 
-inline constexpr art::SubRunID::SubRunID(FlushFlag)
+inline constexpr art::SubRunID::SubRunID(FlushFlag) noexcept
   : run_(RunID::flushRun()), subRun_(IDNumber<Level::SubRun>::flush_value())
 {}
 
