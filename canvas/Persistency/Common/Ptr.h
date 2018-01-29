@@ -17,22 +17,22 @@
 //
 //  2. From a handle to a collection and an index into that collection.
 //       template<typename H>
-//       Ptr(H const &, key_type);
+//       Ptr(H const&, key_type);
 //
 //  3. From a ProductID.
-//       Ptr(ProductID const &); // Invalid ("null") Ptr.
+//       Ptr(ProductID const&); // Invalid ("null") Ptr.
 //
-//       Ptr(Product ID const &, key_type, EDProductGetter const *);
+//       Ptr(Product ID const&, key_type, EDProductGetter const*);
 //
 //     Obtain the ProductID from the collection handle or the result of
 //     Event::put(). Obtain the EDProductGetter from the event using the
 //     ProductID.
 //
 //  4. From a Ptr<U> where U is a base or sub class of T.
-//       Ptr(Ptr<U> const &);
+//       Ptr(Ptr<U> const&);
 //
 //  5. From a ProductID and an existing resolved pointer.
-//       Ptr(ProductID const &, T const *, key_type)
+//       Ptr(ProductID const&, T const*, key_type)
 //
 //     This signature is for expert-level or internal use only: it is a
 //     pre-condition that the pointer must be the item at the index
@@ -87,13 +87,13 @@ namespace art {
 
     template <typename H>
     Ptr(H const& handle, typename Ptr<T>::key_type key)
-      : core_(
+      : core_{
           handle.id(),
           detail::ItemGetter<T,
                              std::remove_const_t<std::remove_pointer_t<decltype(
                                handle.product())>>>()(handle.product(), key),
-          nullptr)
-      , key_(key)
+          nullptr}
+      , key_{key}
     {
       if (core_.isNull()) {
         throw Exception(errors::InvalidReference)
@@ -105,40 +105,36 @@ namespace art {
 
     // 3A.
     explicit Ptr(ProductID const& productID)
-      : core_(productID, nullptr, nullptr), key_(key_traits<key_type>::value)
+      : core_{productID, nullptr, nullptr}, key_{key_traits<key_type>::value}
     {}
 
     // 3B.
     Ptr(ProductID const& productID,
         key_type itemKey,
         EDProductGetter const* prodGetter)
-      : core_(productID, nullptr, prodGetter), key_(itemKey)
+      : core_{productID, nullptr, prodGetter}, key_{itemKey}
     {}
 
     // 4.
     template <typename U>
     Ptr(Ptr<U> const& pu,
-        std::enable_if_t<std::is_base_of<T, U>::value>* dummy = nullptr)
-      : core_(pu.id(),
+        std::enable_if_t<std::is_base_of<T, U>::value>* = nullptr)
+      : core_{pu.id(),
               (pu.hasCache() ? static_cast<T const*>(pu.get()) : nullptr),
-              pu.productGetter())
-      , key_(pu.key())
-    {
-      (void)dummy;
-    }
+              pu.productGetter()}
+      , key_{pu.key()}
+    {}
 
     template <typename U>
     Ptr(Ptr<U> const& pu,
-        std::enable_if_t<std::is_base_of<U, T>::value>* dummy = nullptr)
-      : core_(pu.id(), dynamic_cast<T const*>(pu.get()), nullptr)
-      , key_(pu.key())
-    {
-      (void)dummy;
-    }
+        std::enable_if_t<std::is_base_of<U, T>::value>* = nullptr)
+      : core_{pu.id(), dynamic_cast<T const*>(pu.get()), nullptr}
+      , key_{pu.key()}
+    {}
 
     // 5. See notes above.
     Ptr(ProductID const& productID, T const* item, key_type itemKey)
-      : core_(productID, item, nullptr), key_(itemKey)
+      : core_{productID, item, nullptr}, key_{itemKey}
     {}
 
     //
@@ -161,10 +157,9 @@ namespace art {
     T const* operator->() const
     {
       if (core_.productPtr() == nullptr) {
-        const EDProduct* prod = nullptr;
+        EDProduct const* prod{nullptr};
         if (productGetter()) {
           prod = productGetter()->getIt();
-          // prod = productGetter()->getIt(core_.id());
         }
         if (prod == nullptr) {
           Exception e(errors::ProductNotFound);
@@ -182,7 +177,7 @@ namespace art {
           }
           throw e;
         }
-        void const* ad = nullptr;
+        void const* ad{nullptr};
         prod->setPtr(typeid(T), key_, ad);
         core_.setProductPtr(ad);
       }
