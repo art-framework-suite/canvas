@@ -68,6 +68,7 @@ namespace art {
     }
     transients_.get().branchName_ = canonicalProductName(
       friendlyClassName(), moduleLabel(), productInstanceName(), processName());
+    transients_.get().wrappedName_ = wrappedClassName(producedClassName_);
   }
 
   ParameterSetID const&
