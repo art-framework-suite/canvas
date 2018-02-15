@@ -272,21 +272,38 @@ art::disjoint_ranges(RangeSet const& l, RangeSet const& r)
   if (!both_valid(l, r))
     return false;
 
+  if (!l.has_disjoint_ranges() || !r.has_disjoint_ranges())
+    return false;
+
+  if (l.run() != r.run())
+    return true;
+
+  // If we get here, the run numbers of both ranges are guaranteed to
+  // be the same.
+
+  // If both RangeSets correspond to a full run, then they overlap.
+  if (l.is_full_run() && r.is_full_run())
+    return false;
+
+  // If one of the RangeSets represents a fullRun, then there is an
+  // overlap unless with the other RangeSet if it is non-empty.
+  auto full_run_overlap = [](auto const& a, auto const& b) {
+    return a.is_full_run() && !b.empty();
+  };
+
+  if (full_run_overlap(l, r))
+    return false;
+  if (full_run_overlap(r, l))
+    return false;
+
   // Empty RangeSets are disjoint wrt. other RangeSets.  Must handle
   // this case separately than l == r case.
   if (l.empty() || r.empty())
     return true;
 
+  // If we get this far, then neither RangeSet is empty.
   if (l == r)
     return false;
-
-  // If either RangeSet by itself is not disjoint, return false
-  if (!l.has_disjoint_ranges() || !r.has_disjoint_ranges())
-    return false;
-
-  if (l.run() != r.run())
-    return true; // Can't imagine that anyone would be presented with
-                 // two RangeSets from different runs.  But just in case....
 
   RangeSet ltmp{l};
   RangeSet rtmp{r};
