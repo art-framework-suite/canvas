@@ -2,7 +2,7 @@
 #include "canvas/Persistency/Provenance/EventID.h"
 #include "cetlib/crc32.h"
 
-using art::RangeSet;
+using namespace art;
 
 namespace {
 
@@ -13,13 +13,13 @@ namespace {
   }
 
   bool
-  both_valid(art::RangeSet const& l, art::RangeSet const& r)
+  both_valid(RangeSet const& l, RangeSet const& r)
   {
     return l.is_valid() && r.is_valid();
   }
 
   bool
-  disjoint(std::vector<art::EventRange> const& ranges)
+  disjoint(std::vector<EventRange> const& ranges)
   {
     if (ranges.size() < 2ull)
       return true;
@@ -34,6 +34,14 @@ namespace {
   }
 }
 
+EventRange
+detail::full_run_event_range()
+{
+  static EventRange const range{
+    IDNumber<Level::SubRun>::invalid(), 0, IDNumber<Level::Event>::invalid()};
+  return range;
+}
+
 RangeSet
 RangeSet::invalid()
 {
@@ -43,7 +51,7 @@ RangeSet::invalid()
 RangeSet
 RangeSet::forRun(RunID const rid)
 {
-  return RangeSet{rid.run(), true};
+  return RangeSet{rid.run(), {detail::full_run_event_range()}};
 }
 
 RangeSet
@@ -193,6 +201,16 @@ RangeSet::has_disjoint_ranges() const
 }
 
 bool
+RangeSet::empty() const
+{
+  for (auto const& range : ranges_) {
+    if (!range.empty())
+      return false;
+  }
+  return true;
+}
+
+bool
 RangeSet::contains(RunNumber_t const r,
                    SubRunNumber_t const s,
                    EventNumber_t const e) const
@@ -211,7 +229,24 @@ RangeSet::contains(RunNumber_t const r,
 bool
 RangeSet::is_valid() const
 {
-  return run_ != IDNumber<Level::Run>::invalid();
+  if (run_ == IDNumber<Level::Run>::invalid()) {
+    return false;
+  }
+  if (is_full_run()) {
+    return true;
+  }
+  for (auto const& range : ranges_) {
+    if (!range.is_valid())
+      return false;
+  }
+  return true;
+}
+
+bool
+RangeSet::is_full_run() const
+{
+  return ranges_.size() == 1ull &&
+         ranges_.front() == detail::full_run_event_range();
 }
 
 bool
@@ -244,14 +279,6 @@ RangeSet::to_compact_string() const
   return s;
 }
 
-// private c'tor
-RangeSet::RangeSet(RunNumber_t const r, bool const fullRun)
-  : run_{r}
-  , fullRun_{fullRun}
-  , isCollapsed_{fullRun}
-  , checksum_{::checksum(to_compact_string())}
-{}
-
 bool
 art::operator==(RangeSet const& l, RangeSet const& r)
 {
@@ -277,24 +304,6 @@ art::disjoint_ranges(RangeSet const& l, RangeSet const& r)
 
   if (l.run() != r.run())
     return true;
-
-  // If we get here, the run numbers of both ranges are guaranteed to
-  // be the same.
-
-  // If both RangeSets correspond to a full run, then they overlap.
-  if (l.is_full_run() && r.is_full_run())
-    return false;
-
-  // If one of the RangeSets represents a fullRun, then there is an
-  // overlap unless with the other RangeSet if it is non-empty.
-  auto full_run_overlap = [](auto const& a, auto const& b) {
-    return a.is_full_run() && !b.empty();
-  };
-
-  if (full_run_overlap(l, r))
-    return false;
-  if (full_run_overlap(r, l))
-    return false;
 
   // Empty RangeSets are disjoint wrt. other RangeSets.  Must handle
   // this case separately than l == r case.
@@ -340,15 +349,17 @@ art::overlapping_ranges(RangeSet const& l, RangeSet const& r)
 {
   if (!both_valid(l, r))
     return false;
-  return !same_ranges(l, r) && !disjoint_ranges(l, r);
+  return !disjoint_ranges(l, r);
 }
 
 std::ostream&
 art::operator<<(std::ostream& os, RangeSet const& rs)
 {
   os << " Run: " << rs.run();
-  if (rs.is_full_run())
+  if (rs.is_full_run()) {
     os << " (full run)";
+    return os;
+  }
   for (auto const& er : rs.ranges()) {
     os << "\n  " << er;
   }

@@ -4,7 +4,6 @@
 using art::EventRange;
 
 namespace {
-
   void
   require_ordering(art::EventNumber_t const b, art::EventNumber_t const e)
   {

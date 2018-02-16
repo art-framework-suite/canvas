@@ -17,6 +17,10 @@ namespace art {
 
   class EventID;
 
+  namespace detail {
+    EventRange full_run_event_range();
+  }
+
   class RangeSet {
   public:
     static RangeSet invalid();
@@ -33,34 +37,35 @@ namespace art {
     {
       return run_;
     }
+
     std::vector<EventRange> const&
     ranges() const
     {
       return ranges_;
     }
+
     bool contains(RunNumber_t, SubRunNumber_t, EventNumber_t) const;
 
     bool is_valid() const;
-    bool
-    is_full_run() const
-    {
-      return fullRun_;
-    }
+
+    bool is_full_run() const;
     bool is_full_subRun() const;
     bool is_sorted() const;
+
     bool
     is_collapsed() const
     {
       return isCollapsed_;
     }
+
     std::string to_compact_string() const;
     bool has_disjoint_ranges() const;
 
-    bool
-    empty() const
-    {
-      return ranges_.empty();
-    }
+    // Empty means that no events are represented by this RangeSet.
+    // It does not necessarily mean that the ranges_ data member is
+    // empty.
+    bool empty() const;
+
     auto
     begin() const
     {
@@ -98,6 +103,7 @@ namespace art {
     // For a range [1,6) split into [1,3) and [3,6) the specified
     // event number is the new 'end' of the left range (3).
     std::pair<const_iterator, bool> split_range(SubRunNumber_t, EventNumber_t);
+
     void
     set_run(RunNumber_t const r)
     {
@@ -109,6 +115,7 @@ namespace art {
     {
       cet::sort_all(ranges_);
     }
+
     void
     clear()
     {
@@ -123,12 +130,11 @@ namespace art {
 
   private:
     explicit RangeSet() = default;
-    explicit RangeSet(RunNumber_t const r, bool fullRun);
 
     void
     require_not_full_run()
     {
-      if (fullRun_)
+      if (is_full_run())
         throw art::Exception(art::errors::LogicError,
                              "RangeSet::require_not_full_run")
           << "\nA RangeSet created using RangeSet::forRun cannot be "
@@ -139,7 +145,6 @@ namespace art {
     std::vector<EventRange> ranges_{};
 
     // Auxiliary info
-    bool fullRun_{false};
     bool isCollapsed_{false};
     mutable unsigned checksum_{invalidChecksum()};
   };
@@ -155,7 +160,8 @@ namespace art {
                              EventRange const& right) noexcept(false);
 
   // If one range-set is a superset of the other, the return value is
-  // 'true'.
+  // 'true'.  If two range-sets are the same, then they are also
+  // overlapping.
   bool overlapping_ranges(RangeSet const& l, RangeSet const& r);
   std::ostream& operator<<(std::ostream& os, RangeSet const& rs);
 
