@@ -30,6 +30,7 @@ BOOST_AUTO_TEST_CASE(empty2)
 BOOST_AUTO_TEST_CASE(empty3)
 {
   auto rs = RangeSet::forRun(RunID{72});
+  BOOST_CHECK(rs.empty());
   BOOST_CHECK(rs.has_disjoint_ranges());
   BOOST_CHECK(rs.is_sorted());
   BOOST_CHECK(rs.is_collapsed());
@@ -38,6 +39,31 @@ BOOST_AUTO_TEST_CASE(empty3)
   std::ostringstream oss;
   oss << rs;
   BOOST_CHECK_EQUAL(oss.str(), " Run: 72 (full run)"s);
+}
+
+BOOST_AUTO_TEST_CASE(fullRun1)
+{
+  auto const rs1 = RangeSet::forRun(RunID{1});
+  auto const rs2 = RangeSet::forRun(RunID{2});
+
+  BOOST_CHECK(rs1.is_full_run());
+  BOOST_CHECK(rs2.is_full_run());
+  BOOST_CHECK(rs1.has_disjoint_ranges());
+  BOOST_CHECK(rs2.has_disjoint_ranges());
+  BOOST_CHECK(art::disjoint_ranges(rs1, rs2));
+}
+
+BOOST_AUTO_TEST_CASE(fullRun2)
+{
+  RangeSet rs1{1};
+  rs1.emplace_range(1, 1, 2);
+  auto const rs2 = RangeSet::forRun(RunID{1});
+
+  BOOST_CHECK(!rs1.is_full_run());
+  BOOST_CHECK(rs2.is_full_run());
+  BOOST_CHECK(rs1.has_disjoint_ranges());
+  BOOST_CHECK(rs2.has_disjoint_ranges());
+  BOOST_CHECK(!art::disjoint_ranges(rs1, rs2));
 }
 
 BOOST_AUTO_TEST_CASE(disjoint1)
@@ -228,6 +254,22 @@ BOOST_AUTO_TEST_CASE(merging4)
   RangeSet rs1{2};
   rs1.emplace_range(1, 1, 3);
   rs1.collapse();
+  auto const ref = rs1;
+
+  // Empty range
+  RangeSet rs2{2};
+  rs2.collapse();
+
+  BOOST_REQUIRE(art::disjoint_ranges(rs1, rs2));
+  rs1.merge(rs2);
+
+  BOOST_CHECK_EQUAL(rs1, ref);
+}
+
+BOOST_AUTO_TEST_CASE(merging5)
+{
+  // Range for full run
+  auto rs1 = RangeSet::forRun(RunID{2});
   auto const ref = rs1;
 
   // Empty range
