@@ -390,7 +390,7 @@ namespace art {
   void
   RangeSet::require_not_full_run()
   {
-    if (fullRun_) {
+    if (is_full_run()) {
       throw Exception(errors::LogicError, "RangeSet::require_not_full_run")
         << "\nA RangeSet created using RangeSet::forRun cannot be modified.\n";
     }

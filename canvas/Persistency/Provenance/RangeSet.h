@@ -52,9 +52,6 @@ namespace art {
     RangeSet& operator=(RangeSet const&);
     RangeSet& operator=(RangeSet&&);
 
-  private: // MEMBER FUNCTIONS -- Special Member Functions
-    explicit RangeSet(RunNumber_t const r, bool fullRun);
-
   public: // MEMBER FUNCTIONS -- API provided to user
     RunNumber_t run() const;
     std::vector<EventRange> const& ranges() const;
