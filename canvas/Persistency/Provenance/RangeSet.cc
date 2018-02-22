@@ -51,7 +51,7 @@ namespace art {
   RangeSet
   RangeSet::forRun(RunID const rid)
   {
-    return RangeSet{rid.run(), true};
+    return RangeSet{rid.run(), {detail::full_run_event_range()}};
   }
 
   RangeSet
@@ -69,13 +69,6 @@ namespace art {
   RangeSet& RangeSet::operator=(RangeSet const& rhs) = default;
   RangeSet& RangeSet::operator=(RangeSet&& rhs) = default;
 
-  RangeSet::RangeSet(RunNumber_t const r, bool const fullRun)
-    : run_{r}
-    , fullRun_{fullRun}
-    , isCollapsed_{fullRun}
-    , checksum_{cet::crc32{to_compact_string()}.digest()}
-  {}
-
   RangeSet::RangeSet(RunNumber_t const r) : RangeSet{r, {}} {}
 
   RangeSet::RangeSet(RunNumber_t const r, vector<EventRange> const& eventRanges)
@@ -83,6 +76,14 @@ namespace art {
   {
     sort();
     collapse();
+  }
+
+  EventRange
+  detail::full_run_event_range()
+  {
+    static EventRange const range{
+      IDNumber<Level::SubRun>::invalid(), 0, IDNumber<Level::Event>::invalid()};
+    return range;
   }
 
   RunNumber_t
@@ -122,7 +123,8 @@ namespace art {
   bool
   RangeSet::is_full_run() const
   {
-    return fullRun_;
+    return ranges_.size() == 1ull &&
+           ranges_.front() == detail::full_run_event_range();
   }
 
   bool
@@ -177,7 +179,11 @@ namespace art {
   bool
   RangeSet::empty() const
   {
-    return ranges_.empty();
+    for (auto const& range : ranges_) {
+      if (!range.empty())
+        return false;
+    }
+    return true;
   }
 
   size_t
@@ -420,21 +426,6 @@ namespace art {
     // If we get here, the run numbers of both ranges are guaranteed to
     // be the same.
 
-    // If both RangeSets correspond to a full run, then they overlap.
-    if (l.is_full_run() && r.is_full_run())
-      return false;
-
-    // If one of the RangeSets represents a fullRun, then there is an
-    // overlap unless with the other RangeSet if it is non-empty.
-    auto full_run_overlap = [](auto const& a, auto const& b) {
-      return a.is_full_run() && !b.empty();
-    };
-
-    if (full_run_overlap(l, r))
-      return false;
-    if (full_run_overlap(r, l))
-      return false;
-
     // Empty RangeSets are disjoint wrt. other RangeSets.  Must handle
     // this case separately than l == r case.
     if (l.empty() || r.empty())
@@ -454,7 +445,7 @@ namespace art {
                lranges.end(),
                rranges.begin(),
                rranges.end(),
-               std::back_inserter(merged));
+               back_inserter(merged));
 
     return disjoint(merged);
   }
@@ -480,7 +471,7 @@ namespace art {
     if (!(l.is_valid() && r.is_valid())) {
       return false;
     }
-    return !same_ranges(l, r) && !disjoint_ranges(l, r);
+    return !disjoint_ranges(l, r);
   }
 
   ostream&
@@ -489,6 +480,7 @@ namespace art {
     os << " Run: " << rs.run();
     if (rs.is_full_run()) {
       os << " (full run)";
+      return os;
     }
     for (auto const& er : rs.ranges()) {
       os << "\n  " << er;

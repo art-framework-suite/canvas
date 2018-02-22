@@ -16,6 +16,7 @@ BOOST_AUTO_TEST_SUITE(RangeSet_t)
 BOOST_AUTO_TEST_CASE(empty1)
 {
   RangeSet const rs{1};
+  BOOST_CHECK(rs.empty());
   BOOST_CHECK(rs.has_disjoint_ranges());
   BOOST_CHECK(rs.is_sorted());
 }
@@ -29,19 +30,28 @@ BOOST_AUTO_TEST_CASE(empty2)
 
 BOOST_AUTO_TEST_CASE(empty3)
 {
-  auto rs = RangeSet::forRun(RunID{72});
+  RangeSet rs{1};
+  rs.emplace_range(1, 2, 2);
+  rs.emplace_range(1, 7, 7);
+  rs.emplace_range(1, 7, 7);
   BOOST_CHECK(rs.empty());
+}
+
+BOOST_AUTO_TEST_CASE(fullRun1)
+{
+  auto rs = RangeSet::forRun(RunID{72});
+  BOOST_CHECK(!rs.empty());
   BOOST_CHECK(rs.has_disjoint_ranges());
+  BOOST_CHECK(rs.is_valid());
   BOOST_CHECK(rs.is_sorted());
   BOOST_CHECK(rs.is_collapsed());
   BOOST_CHECK(rs.is_full_run());
-  BOOST_CHECK_EQUAL(rs.to_compact_string(), "72"s);
   std::ostringstream oss;
   oss << rs;
   BOOST_CHECK_EQUAL(oss.str(), " Run: 72 (full run)"s);
 }
 
-BOOST_AUTO_TEST_CASE(fullRun1)
+BOOST_AUTO_TEST_CASE(fullRun2)
 {
   auto const rs1 = RangeSet::forRun(RunID{1});
   auto const rs2 = RangeSet::forRun(RunID{2});
@@ -53,7 +63,7 @@ BOOST_AUTO_TEST_CASE(fullRun1)
   BOOST_CHECK(art::disjoint_ranges(rs1, rs2));
 }
 
-BOOST_AUTO_TEST_CASE(fullRun2)
+BOOST_AUTO_TEST_CASE(fullRun3)
 {
   RangeSet rs1{1};
   rs1.emplace_range(1, 1, 2);
@@ -64,6 +74,16 @@ BOOST_AUTO_TEST_CASE(fullRun2)
   BOOST_CHECK(rs1.has_disjoint_ranges());
   BOOST_CHECK(rs2.has_disjoint_ranges());
   BOOST_CHECK(!art::disjoint_ranges(rs1, rs2));
+}
+
+BOOST_AUTO_TEST_CASE(fullRun4)
+{
+  // Mimic constructing a full-run range set based on its internal
+  // representation (this is how a full-run range set would be
+  // constructed from reading from a file).
+  RangeSet const rs1{1, {art::detail::full_run_event_range()}};
+  auto const rs2 = RangeSet::forRun(RunID{1});
+  BOOST_CHECK_EQUAL(rs1, rs2);
 }
 
 BOOST_AUTO_TEST_CASE(disjoint1)
@@ -280,6 +300,23 @@ BOOST_AUTO_TEST_CASE(merging5)
   rs1.merge(rs2);
 
   BOOST_CHECK_EQUAL(rs1, ref);
+}
+
+BOOST_AUTO_TEST_CASE(merging6)
+{
+  // Test merging of empty event ranges
+  RangeSet rs1{1};
+  rs1.emplace_range(1, 2, 2);
+  rs1.emplace_range(1, 2, 2);
+  rs1.emplace_range(1, 2, 2);
+  rs1.collapse(); // Should all collapse to (1, 2, 2).
+
+  RangeSet const rs2{1, {EventRange{1, 2, 2}}};
+  BOOST_CHECK_EQUAL(rs1, rs2);
+
+  // Now merge the RangeSets and confirm that it equals rs2.
+  rs1.merge(rs2);
+  BOOST_CHECK_EQUAL(rs1, rs2);
 }
 
 BOOST_AUTO_TEST_CASE(overlapping_ranges)

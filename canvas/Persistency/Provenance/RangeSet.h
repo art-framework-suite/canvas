@@ -20,6 +20,10 @@ namespace art {
 
   class EventID;
 
+  namespace detail {
+    EventRange full_run_event_range();
+  }
+
   class RangeSet {
 
   public: // TYPES
@@ -65,6 +69,9 @@ namespace art {
 
     std::string to_compact_string() const;
     bool has_disjoint_ranges() const;
+    // Empty means that no events are represented by this RangeSet.
+    // It does not necessarily mean that the ranges_ data member is
+    // empty.
     bool empty() const;
 
     const_iterator begin() const;
@@ -102,18 +109,14 @@ namespace art {
     void sort();
     void clear();
 
-  private: // MEMBER FUNCTIONS -- Implementation details
+  private:
     void require_not_full_run();
 
-  private: // MEMBER DATA
     RunNumber_t run_{IDNumber<Level::Run>::invalid()};
-
     std::vector<EventRange> ranges_{};
 
-    bool fullRun_{false};
-
+    // Auxiliary info
     bool isCollapsed_{false};
-
     mutable unsigned checksum_{invalidChecksum()};
   };
 
@@ -136,7 +139,8 @@ namespace art {
                              EventRange const& right) noexcept(false);
 
   // If one range-set is a superset of the other, the return value is
-  // 'true'.
+  // 'true'.  If two range-sets are the same, then they are also
+  // overlapping.
   bool overlapping_ranges(RangeSet const& l, RangeSet const& r);
 
   std::ostream& operator<<(std::ostream& os, RangeSet const& rs);

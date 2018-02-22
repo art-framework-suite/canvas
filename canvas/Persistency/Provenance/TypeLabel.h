@@ -2,6 +2,15 @@
 #define canvas_Persistency_Provenance_TypeLabel_h
 // vim: set sw=2 expandtab :
 
+//================================================================
+// TypeLabel provides in-memory type information for use in
+// constructing BranchDescription objects, etc.
+//
+// FIXME: A cleanup of the abstractions is required:
+//   - Does the 'transient' data mamber belong here?  If so, what
+//     values should it have?
+//================================================================
+
 #include "canvas/Utilities/TypeID.h"
 
 #include <iosfwd>
