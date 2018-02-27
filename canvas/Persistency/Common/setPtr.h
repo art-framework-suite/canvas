@@ -32,6 +32,13 @@ art::setPtr(Collection const& coll,
 {
   using product_type = Collection;
   auto it = coll.begin();
+  if (iIndex >= coll.size()) {
+    throw Exception{errors::LogicError,
+                    "An out-of-bounds error was encountered while setting an art::Ptr.\n"}
+      << "An attempt was made to access an element with index " << iIndex
+      << " for a container with a size of " << coll.size() << ".\n"
+      << "The container is of type "+cet::demangle_symbol(typeid(Collection).name()) << ".\n";
+  }
   advance(it, iIndex);
   oPtr = detail::maybeCastObj(detail::GetProduct<product_type>::address(it),
                               iToType);
@@ -48,13 +55,14 @@ art::setPtr(cet::map_vector<T> const& obj,
   std::string const wanted_type =
     uniform_type_name(cet::demangle_symbol(iToType.name()));
   static size_t pos = vh.look_past_pair<T>();
+  auto const it = obj.findOrThrow(cet::map_vector_key{iIndex});
+  assert(it != obj.end());
   if ((pos < wanted_type.size()) && vh.starts_with_pair(wanted_type, pos)) {
     // Want value_type, not mapped_type;
-    auto it = obj.find(cet::map_vector_key(iIndex));
-    oPtr = detail::maybeCastObj((it == obj.end()) ? 0 : &(*it), iToType);
+    oPtr = detail::maybeCastObj(&*it, iToType);
   } else {
     oPtr =
-      detail::maybeCastObj(obj.getOrNull(cet::map_vector_key(iIndex)), iToType);
+      detail::maybeCastObj(&it->second, iToType);
   }
 }
 
