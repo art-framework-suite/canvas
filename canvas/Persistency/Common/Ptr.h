@@ -87,12 +87,13 @@ namespace art {
 
     template <typename H>
     Ptr(H const& handle, typename Ptr<T>::key_type key)
-      : core_{
-          handle.id(),
-          detail::ItemGetter<T,
-                             std::remove_const_t<std::remove_pointer_t<decltype(
-                               handle.product())>>>()(handle.product(), key),
-          nullptr}
+      : core_{handle.id(),
+              detail::ItemGetter<T,
+                                 std::remove_const_t<std::remove_pointer_t<
+                                   decltype(handle.product())>>>()(
+                handle.product(),
+                key),
+              nullptr}
       , key_{key}
     {
       if (core_.isNull()) {

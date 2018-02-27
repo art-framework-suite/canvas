@@ -10,10 +10,16 @@ main()
   assert(md1 == md1);
   art::ModuleDescription md2;
   assert(md1 == md2);
-  md2 = art::ModuleDescription(
-    fhicl::ParameterSet().id(), "class2", "", true, art::ProcessConfiguration());
-  art::ModuleDescription md3(
-    fhicl::ParameterSet().id(), "class3", "", true, art::ProcessConfiguration());
+  md2 = art::ModuleDescription(fhicl::ParameterSet().id(),
+                               "class2",
+                               "",
+                               true,
+                               art::ProcessConfiguration());
+  art::ModuleDescription md3(fhicl::ParameterSet().id(),
+                             "class3",
+                             "",
+                             true,
+                             art::ProcessConfiguration());
 
   art::ModuleDescriptionID id1 = md1.id();
   art::ModuleDescriptionID id2 = md2.id();
@@ -23,8 +29,11 @@ main()
   assert(id2 != id3);
   assert(id3 != id1);
 
-  art::ModuleDescription md4(
-    fhicl::ParameterSet().id(), "class2", "", true, art::ProcessConfiguration());
+  art::ModuleDescription md4(fhicl::ParameterSet().id(),
+                             "class2",
+                             "",
+                             true,
+                             art::ProcessConfiguration());
   art::ModuleDescriptionID id4 = md4.id();
   assert(md4 == md2);
   assert(id4 != id2);

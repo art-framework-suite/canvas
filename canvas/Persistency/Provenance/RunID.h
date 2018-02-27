@@ -55,7 +55,9 @@ private:
   RunNumber_t run_;
 };
 
-inline constexpr art::RunID::RunID() noexcept : run_(IDNumber<Level::Run>::invalid()) {}
+inline constexpr art::RunID::RunID() noexcept
+  : run_(IDNumber<Level::Run>::invalid())
+{}
 
 inline art::RunID::RunID(RunNumber_t i) : run_(inRangeOrInvalid(i)) {}
 
