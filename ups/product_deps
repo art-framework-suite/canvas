@@ -11,7 +11,7 @@ clhep		v2_3_4_5c
 cppunit		v1_13_2b
 range		v3_0_3_0
 messagefacility	v2_01_07
-cetbuildtools	v7_02_00	-	only_for_build
+cetbuildtools	v7_02_01	-	only_for_build
 root		v6_12_04e	c2
 end_product_list
 
