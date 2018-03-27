@@ -12,7 +12,7 @@ namespace art {
   class InputTag;
 
   std::ostream& operator<<(std::ostream& ost, InputTag const& tag);
-  bool operator!=(InputTag const& left, InputTag const& right);
+  bool operator!=(InputTag const& left, InputTag const& right) noexcept;
 }
 
 class art::InputTag {
@@ -33,7 +33,7 @@ public:
   // specificiations.
   InputTag(std::string const& label,
            std::string const& instance,
-           std::string const& processName = std::string());
+           std::string const& processName = {});
 
   // Create an InputTag with the given label, instance, and process
   // specifications.
@@ -45,25 +45,31 @@ public:
 
   std::string encode() const;
 
+  bool
+  empty() const noexcept
+  {
+    return label_.empty() && instance_.empty() && process_.empty();
+  }
+
   std::string const&
-  label() const
+  label() const noexcept
   {
     return label_;
   }
   std::string const&
-  instance() const
+  instance() const noexcept
   {
     return instance_;
   }
   /// an empty string means find the most recently produced
   /// product with the label and instance
   std::string const&
-  process() const
+  process() const noexcept
   {
     return process_;
   }
 
-  bool operator==(InputTag const& tag) const;
+  bool operator==(InputTag const& tag) const noexcept;
 
 private:
   std::string label_{};
@@ -98,14 +104,14 @@ inline art::InputTag::InputTag(char const* s)
 }
 
 inline bool
-art::InputTag::operator==(InputTag const& tag) const
+art::InputTag::operator==(InputTag const& tag) const noexcept
 {
   return (label_ == tag.label_) && (instance_ == tag.instance_) &&
          (process_ == tag.process_);
 }
 
 inline bool
-art::operator!=(InputTag const& left, InputTag const& right)
+art::operator!=(InputTag const& left, InputTag const& right) noexcept
 {
   return !(left == right);
 }
