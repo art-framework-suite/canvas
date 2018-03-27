@@ -22,6 +22,7 @@
 #include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 #include "canvas/Persistency/Provenance/Transient.h"
 #include "canvas/Persistency/Provenance/TypeLabel.h"
+#include "canvas/Utilities/InputTag.h"
 #include "fhiclcpp/ParameterSetID.h"
 
 #include <iosfwd>
@@ -88,6 +89,12 @@ public:
   productInstanceName() const
   {
     return productInstanceName_;
+  }
+
+  InputTag
+  inputTag() const
+  {
+    return InputTag{moduleLabel(), productInstanceName(), processName()};
   }
 
   bool
