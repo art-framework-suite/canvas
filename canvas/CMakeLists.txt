@@ -25,6 +25,7 @@ cet_make(LIBRARY_NAME canvas
   Persistency/Common/detail
   LIBRARIES
   MF_MessageLogger
+  MF_Utilities
   ${INTROSPECTION_LIBS}
   ${TBB}
   fhiclcpp
