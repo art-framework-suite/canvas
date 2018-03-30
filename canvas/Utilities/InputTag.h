@@ -37,25 +37,21 @@ namespace art {
     InputTag(InputTag&&);
 
     InputTag& operator=(InputTag const&);
-
     InputTag& operator=(InputTag&&);
 
-  public: // MEMBER FUNCTIONS -- API for the user
-    bool operator==(InputTag const&) const;
+    bool operator==(InputTag const&) const noexcept;
 
-    std::string const& label() const;
+    bool empty() const noexcept;
 
-    std::string const& instance() const;
-
-    std::string const& process() const;
+    std::string const& label() const noexcept;
+    std::string const& instance() const noexcept;
+    std::string const& process() const noexcept;
 
     std::string encode() const;
 
-  private: // MEMBER DATA
+  private:
     std::string label_{};
-
     std::string instance_{};
-
     std::string process_{};
   };
 

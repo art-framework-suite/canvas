@@ -17,9 +17,8 @@ using namespace std;
 
 namespace art {
 
-  InputTag::~InputTag() {}
-
-  InputTag::InputTag() : label_{}, instance_{}, process_{} {}
+  InputTag::~InputTag() = default;
+  InputTag::InputTag() = default;
 
   InputTag::InputTag(string const& label,
                      string const& instance,
@@ -55,57 +54,42 @@ namespace art {
 
   InputTag::InputTag(char const* s) : InputTag{string{s}} {}
 
-  InputTag::InputTag(InputTag const& rhs)
-    : label_{rhs.label_}, instance_{rhs.instance_}, process_{rhs.process_}
-  {}
-
-  InputTag::InputTag(InputTag&& rhs)
-    : label_{move(rhs.label_)}
-    , instance_{move(rhs.instance_)}
-    , process_{move(rhs.process_)}
-  {}
+  InputTag::InputTag(InputTag const& rhs) = default;
+  InputTag::InputTag(InputTag&& rhs) = default;
 
   InputTag&
-  InputTag::operator=(InputTag const& rhs)
-  {
-    if (this != &rhs) {
-      label_ = rhs.label_;
-      instance_ = rhs.instance_;
-      process_ = rhs.process_;
-    }
-    return *this;
-  }
+  InputTag::operator=(InputTag const& rhs) = default;
 
   InputTag&
-  InputTag::operator=(InputTag&& rhs)
-  {
-    label_ = move(rhs.label_);
-    instance_ = move(rhs.instance_);
-    process_ = move(rhs.process_);
-    return *this;
-  }
+  InputTag::operator=(InputTag&& rhs) = default;
 
   bool
-  InputTag::operator==(InputTag const& tag) const
+  InputTag::operator==(InputTag const& tag) const noexcept
   {
     return (label_ == tag.label_) && (instance_ == tag.instance_) &&
            (process_ == tag.process_);
   }
 
+  bool
+  InputTag::empty() const noexcept
+  {
+    return label_.empty() && instance_.empty() && process_.empty();
+  }
+
   string const&
-  InputTag::label() const
+  InputTag::label() const noexcept
   {
     return label_;
   }
 
   string const&
-  InputTag::instance() const
+  InputTag::instance() const noexcept
   {
     return instance_;
   }
 
   string const&
-  InputTag::process() const
+  InputTag::process() const noexcept
   {
     return process_;
   }
