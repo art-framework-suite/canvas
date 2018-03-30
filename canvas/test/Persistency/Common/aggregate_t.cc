@@ -1,4 +1,5 @@
 #define BOOST_TEST_MODULE (Product aggregation Test)
+#include "cetlib/quiet_unit_test.hpp"
 
 //=====================================================
 // Unit-tests for non-CLHEP aggregate overloads
@@ -6,7 +7,6 @@
 
 #include "canvas/test/Persistency/Common/MockRun.h"
 #include "cetlib/map_vector.h"
-#include "cetlib/quiet_unit_test.hpp"
 #include "cetlib/test_macros.h"
 
 #include <map>
@@ -213,26 +213,26 @@ BOOST_AUTO_TEST_CASE(map_vector)
   using mv_t = cet::map_vector<std::string>;
   using key_type = typename mv_t::key_type;
   mv_t primes;
-  primes.push_back({key_type{2}, "two"});
-  primes.push_back({key_type{3}, "three"});
-  primes.push_back({key_type{5}, "five"});
+  primes.insert({key_type{2}, "two"});
+  primes.insert({key_type{3}, "three"});
+  primes.insert({key_type{5}, "five"});
 
   mv_t more_nums;
-  more_nums.push_back({key_type{7}, "seven"});
-  more_nums.push_back({key_type{11}, "eleven"});
-  more_nums.push_back({key_type{13}, "thirteen"});
+  more_nums.insert({key_type{7}, "seven"});
+  more_nums.insert({key_type{11}, "eleven"});
+  more_nums.insert({key_type{13}, "thirteen"});
 
   MockRun r;
   r.put<mv_t>(primes);
   r.put<mv_t>(more_nums);
 
   mv_t ref;
-  ref.push_back({key_type{2}, "two"});
-  ref.push_back({key_type{3}, "three"});
-  ref.push_back({key_type{5}, "five"});
-  ref.push_back({key_type{7}, "seven"});
-  ref.push_back({key_type{11}, "eleven"});
-  ref.push_back({key_type{13}, "thirteen"});
+  ref.insert({key_type{2}, "two"});
+  ref.insert({key_type{3}, "three"});
+  ref.insert({key_type{5}, "five"});
+  ref.insert({key_type{7}, "seven"});
+  ref.insert({key_type{11}, "eleven"});
+  ref.insert({key_type{13}, "thirteen"});
 
   AGGREGATE_CHECK_EQUAL_COLLECTIONS(r.get<mv_t>(), ref);
 }
