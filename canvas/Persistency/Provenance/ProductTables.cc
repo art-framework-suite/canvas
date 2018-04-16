@@ -1,4 +1,6 @@
 #include "canvas/Persistency/Provenance/ProductTables.h"
+// vim: set sw=2 expandtab :
+
 #include "canvas/Persistency/Provenance/detail/createProductLookups.h"
 #include "canvas/Persistency/Provenance/detail/createViewLookups.h"
 #include "cetlib/container_algorithms.h"
@@ -6,20 +8,23 @@
 using namespace art;
 
 namespace {
+
   auto
   descriptions_for_branch_type(BranchType const bt,
                                ProductDescriptions const& descriptions)
   {
     ProductDescriptionsByID result;
     for (auto const& pd : descriptions) {
-      if (pd.branchType() != bt)
+      if (pd.branchType() != bt) {
         continue;
+      }
       result.emplace(pd.productID(), pd);
     }
     return result;
   }
 
   using ProductTables_t = std::array<ProductTable, NumBranchTypes>;
+
   auto
   createProductTables(ProductDescriptions const& descriptions)
   {
@@ -29,9 +34,8 @@ namespace {
     }
     return result;
   }
-}
 
-// =======================================================================
+} // unnamed namespace
 
 art::ProductTable::ProductTable(ProductDescriptions const& descs,
                                 BranchType const bt)

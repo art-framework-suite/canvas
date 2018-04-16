@@ -3,8 +3,8 @@
 
 namespace art {
 
-  PrincipalBase::~PrincipalBase() = default;
-  PrincipalBase::PrincipalBase() = default;
+  PrincipalBase::~PrincipalBase() {}
+  PrincipalBase::PrincipalBase() {}
 
   // Note: Used only by canvas RefCoreStreamer.cc through
   // PrincipalBase::getEDProductGetter!

@@ -1,5 +1,6 @@
 #ifndef canvas_Persistency_Provenance_Hash_h
 #define canvas_Persistency_Provenance_Hash_h
+// vim: set sw=2 expandtab :
 
 // ======================================================================
 //
@@ -16,151 +17,171 @@
 #include "canvas/Utilities/Exception.h"
 #include "cetlib/MD5Digest.h"
 #include "cetlib/container_algorithms.h"
+#include "hep_concurrency/tsan.h"
+
 #include <ostream>
 #include <string>
-
-// ----------------------------------------------------------------------
+#include <utility>
 
 namespace art {
 
   namespace detail {
-    // This string is the 16-byte, non-printable version.
+    // This string is in the 16 byte (non-printable) representation.
     std::string const& InvalidHash();
-  }
+  } // namespace detail
 
   template <int I>
   class Hash {
-  public:
+  public: // Types
     typedef std::string value_type;
 
+  public: // Special Member Functions
     Hash();
-    explicit Hash(value_type const& v);
-
+    explicit Hash(std::string const&);
     Hash(Hash<I> const&);
-    // We can't ref-qualify assignment because of GCC_XML
-    Hash<I> const& operator=(Hash<I> const& iRHS);
+    Hash(Hash<I>&&);
+    Hash<I>& operator=(Hash<I> const&);
+    Hash<I>& operator=(Hash<I>&&);
 
+  public: // Static API
+    // For ROOT
+    static short Class_Version();
+
+  public: // API
     // For now, just check the most basic: a default constructed
     // ParameterSetID is not valid. This is very crude: we are
     // assuming that nobody created a ParameterSetID from an empty
     // string, nor from any string that is not a valid string
     // representation of an MD5 checksum.
     bool isValid() const;
-
-    bool operator<(Hash<I> const& other) const;
-    bool operator>(Hash<I> const& other) const;
-    bool operator==(Hash<I> const& other) const;
-    bool operator!=(Hash<I> const& other) const;
-    std::ostream& print(std::ostream& os) const;
-    void swap(Hash<I>& other);
-
-    // Return the 16-byte (non-printable) string form.
-    value_type compactForm() const;
-
     bool isCompactForm() const;
+    // Return the 16 byte (non-printable) string form.
+    std::string compactForm() const;
+    bool operator<(Hash<I> const&) const;
+    bool operator>(Hash<I> const&) const;
+    bool operator==(Hash<I> const&) const;
+    bool operator!=(Hash<I> const&) const;
+    std::ostream& print(std::ostream&) const;
+    void swap(Hash<I>&);
 
-    // MUST UPDATE WHEN CLASS IS CHANGED!
-    static short
-    Class_Version()
-    {
-      return 10;
-    }
-
-  private:
-    // Hexified version of data *must* contain a multiple of 2
-    // bytes. If it does not, throw an exception.
-    void throwIfIllFormed() const;
-
-    // 'Fix' the string data member of this Hash, i.e., if it is in
-    // the hexified (32 byte) representation, make it be in the
-    // 16-byte (unhexified) representation.
+  private: // Implementation details.
+    // If hash_ is in the hexified 32 byte representation,
+    // make it be in the 16 byte unhexified representation.
     void fixup();
 
-    template <typename Op>
-    bool
-    compareUsing(Hash<I> const& iOther, Op op) const
-    {
-      if (this->isCompactForm() == iOther.isCompactForm()) {
-        return op(this->hash_, iOther.hash_);
-      }
-      Hash<I> tMe(*this);
-      Hash<I> tOther(iOther);
-      return op(tMe.hash_, tOther.hash_);
-    }
-
-    value_type hash_;
+  private: // Member Data -- Implementation details.
+    std::string hash_;
   };
 
-  //--------------------------------------------------------------------
-  //
-  // Implementation details follow...
-  //--------------------------------------------------------------------
+  // MUST UPDATE WHEN CLASS IS CHANGED!
+  template <int I>
+  short
+  Hash<I>::Class_Version()
+  {
+    return 10;
+  }
 
   template <int I>
-  inline Hash<I>::Hash() : hash_()
+  Hash<I>::Hash() : hash_()
   {
     fixup();
   }
 
   template <int I>
-  inline Hash<I>::Hash(typename Hash<I>::value_type const& v) : hash_(v)
+  Hash<I>::Hash(std::string const& s) : hash_(s)
   {
     fixup();
   }
 
   template <int I>
-  inline Hash<I>::Hash(Hash<I> const& iOther) : hash_(iOther.hash_)
+  Hash<I>::Hash(Hash<I> const& rhs) : hash_(rhs.hash_)
   {
     fixup();
   }
 
   template <int I>
-  inline Hash<I> const&
-  Hash<I>::operator=(Hash<I> const& iRHS)
+  Hash<I>::Hash(Hash<I>&& rhs) : hash_(std::move(rhs.hash_))
   {
-    hash_ = iRHS.hash_;
+    fixup();
+  }
+
+  template <int I>
+  Hash<I>&
+  Hash<I>::operator=(Hash<I> const& rhs)
+  {
+    if (this != &rhs) {
+      hash_ = rhs.hash_;
+      fixup();
+    }
+    return *this;
+  }
+
+  template <int I>
+  Hash<I>&
+  Hash<I>::operator=(Hash<I>&& rhs)
+  {
+    hash_ = std::move(rhs.hash_);
     fixup();
     return *this;
   }
 
   template <int I>
-  inline bool
+  bool
   Hash<I>::isValid() const
   {
-    return isCompactForm() ? (hash_ != art::detail::InvalidHash()) :
-                             (hash_.size() != 0);
+    if (isCompactForm()) {
+      auto ret = hash_ != art::detail::InvalidHash();
+      return ret;
+    }
+    return hash_.size() != 0;
   }
 
   template <int I>
-  inline bool
-  Hash<I>::operator<(Hash<I> const& other) const
+  bool
+  Hash<I>::operator<(Hash<I> const& rhs) const
   {
-    return this->compareUsing(other, std::less<std::string>());
+    if (isCompactForm() == rhs.isCompactForm()) {
+      return hash_ < rhs.hash_;
+    }
+    // Force both into compact form.
+    return Hash<I>{*this} < Hash<I>{rhs};
   }
 
   template <int I>
-  inline bool
-  Hash<I>::operator>(Hash<I> const& other) const
+  bool
+  Hash<I>::operator>(Hash<I> const& rhs) const
   {
-    return this->compareUsing(other, std::greater<std::string>());
+    if (isCompactForm() == rhs.isCompactForm()) {
+      return hash_ > rhs.hash_;
+    }
+    // Force both into compact form.
+    return Hash<I>{*this} > Hash<I>{rhs};
   }
 
   template <int I>
-  inline bool
-  Hash<I>::operator==(Hash<I> const& other) const
+  bool
+  Hash<I>::operator==(Hash<I> const& rhs) const
   {
-    return this->compareUsing(other, std::equal_to<std::string>());
+    if (isCompactForm() == rhs.isCompactForm()) {
+      return hash_ == rhs.hash_;
+    }
+    // Force both into compact form.
+    return Hash<I>{*this} == Hash<I>{rhs};
   }
 
   template <int I>
-  inline bool
-  Hash<I>::operator!=(Hash<I> const& other) const
+  bool
+  Hash<I>::operator!=(Hash<I> const& rhs) const
   {
-    return this->compareUsing(other, std::not_equal_to<std::string>());
+    if (isCompactForm() == rhs.isCompactForm()) {
+      return hash_ != rhs.hash_;
+    }
+    // Force both into compact form.
+    return Hash<I>{*this} != Hash<I>{rhs};
   }
 
   template <int I>
-  inline std::ostream&
+  std::ostream&
   Hash<I>::print(std::ostream& os) const
   {
     Hash<I> tMe(*this);
@@ -171,19 +192,19 @@ namespace art {
   }
 
   template <int I>
-  inline void
-  Hash<I>::swap(Hash<I>& other)
+  void
+  Hash<I>::swap(Hash<I>& rhs)
   {
     fixup();
-    hash_.swap(other.hash_);
+    hash_.swap(rhs.hash_);
     fixup();
   }
 
   template <int I>
-  inline typename Hash<I>::value_type
+  std::string
   Hash<I>::compactForm() const
   {
-    if (this->isCompactForm()) {
+    if (isCompactForm()) {
       return hash_;
     }
     Hash<I> tMe(*this);
@@ -191,70 +212,50 @@ namespace art {
   }
 
   template <int I>
-  inline void
-  Hash<I>::throwIfIllFormed() const
-  {
-    // Fixup not needed here.
-    if (hash_.size() % 2 == 1) {
-      throw art::Exception(art::errors::LogicError)
-        << "Ill-formed Hash instance. "
-        << "Please report this to the core framework developers";
-    }
-  }
-
-  // Note: this template is not declared 'inline' because of the
-  // switch statement.
-
-  template <int I>
   void
   Hash<I>::fixup()
   {
-    switch (hash_.size()) {
-      case 0: {
-        hash_ = art::detail::InvalidHash();
-      }
-      case 16: {
-        break;
-      }
-      case 32: {
-        cet::MD5Result temp;
-        temp.fromHexifiedString(hash_);
-        hash_ = temp.compactForm();
-        break;
-      }
-      default: {
-        throw art::Exception(art::errors::LogicError)
-          << "art::Hash<> instance with data in illegal state:\n"
-          << hash_ << "\nPlease report this to the core framework developers";
-      }
+    if (hash_.size() == 16) {
+      // Already in compact form.
+      return;
     }
+    if (hash_.size() == 0) {
+      hash_ = art::detail::InvalidHash();
+      return;
+    }
+    if (hash_.size() == 32) {
+      cet::MD5Result md5;
+      md5.fromHexifiedString(hash_);
+      hash_ = md5.compactForm();
+      return;
+    }
+    throw art::Exception(art::errors::LogicError)
+      << "art::Hash<> instance with data in illegal state:\n"
+      << hash_ << "\nPlease report this to the core framework developers";
   }
 
   template <int I>
-  inline bool
+  bool
   Hash<I>::isCompactForm() const
   {
-    return 16 == hash_.size();
+    return hash_.size() == 16;
   }
 
-  // Free swap function
   template <int I>
-  inline void
+  void
   swap(Hash<I>& a, Hash<I>& b)
   {
     a.swap(b);
   }
 
   template <int I>
-  inline std::ostream&
+  std::ostream&
   operator<<(std::ostream& os, Hash<I> const& h)
   {
     return h.print(os);
   }
 
-} // art
-
-  // ======================================================================
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_Hash_h */
 

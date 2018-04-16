@@ -1,5 +1,6 @@
 #ifndef canvas_Persistency_Provenance_ProductTables_h
 #define canvas_Persistency_Provenance_ProductTables_h
+// vim: set sw=2 expandtab :
 
 #include "canvas/Persistency/Provenance/BranchDescription.h"
 #include "canvas/Persistency/Provenance/type_aliases.h"
@@ -13,15 +14,13 @@ namespace art {
   // (views of) products.
 
   struct ProductTable {
-    // A default-constructed ProductTable object represents an invalid
-    // table.
-    ProductTable() = default;
 
+    // A default-constructed ProductTable object represents an invalid table.
+    ProductTable() = default;
     explicit ProductTable(ProductDescriptions const& descriptions,
                           BranchType bt);
 
     cet::exempt_ptr<BranchDescription const> description(ProductID) const;
-
     bool isValid{false};
     ProductDescriptionsByID descriptions{};
     ProductLookup_t productLookup{};
@@ -31,9 +30,12 @@ namespace art {
   // The underlying representation of ProductTables is an array of
   // ProductTable objects: one for each BranchType value.
   class ProductTables {
+
+  public:
+    explicit ProductTables(ProductDescriptions const& descriptions);
+
   public:
     static ProductTables invalid();
-    explicit ProductTables(ProductDescriptions const& descriptions);
 
     auto const&
     descriptions(BranchType const bt) const
@@ -60,10 +62,13 @@ namespace art {
 
   private:
     explicit ProductTables() = default;
+
+  private:
     bool isValid_{false};
     std::array<ProductTable, NumBranchTypes> tables_{{}};
   };
-}
+
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_ProductTables_h */
 

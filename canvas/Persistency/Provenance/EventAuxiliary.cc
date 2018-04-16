@@ -60,69 +60,80 @@ namespace art {
   Timestamp const&
   EventAuxiliary::time() const noexcept
   {
-    return time_;
+    auto const& ret = time_;
+    return ret;
   }
 
   EventID const&
   EventAuxiliary::id() const noexcept
   {
-    return id_;
+    auto const& ret = id_;
+    return ret;
   }
 
   EventID const&
   EventAuxiliary::eventID() const noexcept
   {
-    return id_;
+    auto const& ret = id_;
+    return ret;
   }
 
   RunID const&
   EventAuxiliary::runID() const noexcept
   {
-    return id_.runID();
+    auto const& ret = id_.runID();
+    return ret;
   }
 
   SubRunID const&
   EventAuxiliary::subRunID() const noexcept
   {
-    return id_.subRunID();
+    auto const& ret = id_.subRunID();
+    return ret;
   }
 
   RunNumber_t
   EventAuxiliary::run() const noexcept
   {
-    return id_.run();
+    auto ret = id_.run();
+    return ret;
   }
 
   SubRunNumber_t
   EventAuxiliary::subRun() const noexcept
   {
-    return id_.subRun();
+    auto ret = id_.subRun();
+    return ret;
   }
 
   EventNumber_t
   EventAuxiliary::event() const noexcept
   {
-    return id_.event();
+    auto ret = id_.event();
+    return ret;
   }
 
   bool
   EventAuxiliary::isRealData() const noexcept
   {
-    return isRealData_;
+    auto ret = isRealData_;
+    return ret;
   }
 
   EventAuxiliary::ExperimentType
   EventAuxiliary::experimentType() const noexcept
   {
-    return experimentType_;
+    auto ret = experimentType_;
+    return ret;
   }
 
   bool
   EventAuxiliary::operator==(EventAuxiliary const& other) const noexcept
   {
-    return (id_ == other.id_) && (time_ == other.time_) &&
-           (isRealData_ == other.isRealData_) &&
-           (experimentType_ == other.experimentType_);
+    auto ret = (id_ == other.id_) && (time_ == other.time_) &&
+               (isRealData_ == other.isRealData_) &&
+               (experimentType_ == other.experimentType_);
+    return ret;
   }
 
   void

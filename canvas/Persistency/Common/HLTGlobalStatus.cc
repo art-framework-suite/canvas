@@ -4,9 +4,11 @@
 #include "canvas/Persistency/Common/HLTPathStatus.h"
 #include "canvas/Persistency/Common/HLTenums.h"
 
+#include <atomic>
 #include <cstddef>
 #include <ostream>
 #include <string>
+#include <utility>
 #include <vector>
 
 using namespace std;
@@ -18,10 +20,35 @@ namespace art {
 
   HLTGlobalStatus::HLTGlobalStatus(std::size_t const n /* = 0 */) : paths_(n) {}
 
+  HLTGlobalStatus::HLTGlobalStatus(HLTGlobalStatus const& rhs)
+    : paths_(rhs.paths_)
+  {}
+
+  HLTGlobalStatus::HLTGlobalStatus(HLTGlobalStatus&& rhs)
+    : paths_(move(rhs.paths_))
+  {}
+
+  HLTGlobalStatus&
+  HLTGlobalStatus::operator=(HLTGlobalStatus const& rhs)
+  {
+    if (this != &rhs) {
+      paths_ = rhs.paths_;
+    }
+    return *this;
+  }
+
+  HLTGlobalStatus&
+  HLTGlobalStatus::operator=(HLTGlobalStatus&& rhs)
+  {
+    paths_ = move(rhs.paths_);
+    return *this;
+  }
+
   std::size_t
   HLTGlobalStatus::size() const
   {
-    return paths_.size();
+    auto ret = paths_.size();
+    return ret;
   }
 
   void
@@ -86,73 +113,70 @@ namespace art {
   const HLTPathStatus&
   HLTGlobalStatus::at(unsigned const i) const
   {
-    return paths_.at(i);
+    auto const& ret = paths_.at(i);
+    return ret;
   }
 
   HLTPathStatus&
   HLTGlobalStatus::at(unsigned const i)
   {
-    return paths_.at(i);
+    auto& ret = paths_.at(i);
+    return ret;
   }
 
   const HLTPathStatus& HLTGlobalStatus::operator[](unsigned const i) const
   {
-    return paths_.at(i);
+    auto const& ret = paths_.at(i);
+    return ret;
   }
 
   HLTPathStatus& HLTGlobalStatus::operator[](unsigned const i)
   {
-    return paths_.at(i);
+    auto& ret = paths_.at(i);
+    return ret;
   }
 
   bool
   HLTGlobalStatus::wasrun(unsigned const i) const
   {
-    return paths_.at(i).wasrun();
+    auto ret = paths_.at(i).wasrun();
+    return ret;
   }
 
   bool
   HLTGlobalStatus::accept(unsigned const i) const
   {
-    return paths_.at(i).accept();
+    auto ret = paths_.at(i).accept();
+    return ret;
   }
 
   bool
   HLTGlobalStatus::error(unsigned const i) const
   {
-    return paths_.at(i).error();
+    auto ret = paths_.at(i).error();
+    return ret;
   }
 
   hlt::HLTState
   HLTGlobalStatus::state(unsigned const i) const
   {
-    return paths_.at(i).state();
+    auto ret = paths_.at(i).state();
+    return ret;
   }
 
   unsigned
   HLTGlobalStatus::index(unsigned const i) const
   {
-    return paths_.at(i).index();
+    auto ret = paths_.at(i).index();
+    return ret;
   }
 
   void
   HLTGlobalStatus::reset(unsigned const i)
   {
     paths_.at(i).reset();
+    atomic_thread_fence(memory_order_seq_cst);
   }
-
-  // void
-  // HLTGlobalStatus::
-  // swap(HLTGlobalStatus& other)
-  //{
-  //  paths_.swap(other.paths_);
-  //}
-
-  // void
-  // swap(HLTGlobalStatus& lhs, HLTGlobalStatus& rhs)
-  //{
-  //  lhs.swap(rhs);
-  //}
 
   ostream&
   operator<<(ostream& ost, const HLTGlobalStatus& hlt)

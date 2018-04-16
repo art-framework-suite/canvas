@@ -24,41 +24,37 @@
 
 #include "canvas/Persistency/Common/HLTenums.h"
 
+#include <atomic>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
 
 namespace art {
-
   class HLTPathStatus {
+  public: // Special Member Functions
+    ~HLTPathStatus();
+    HLTPathStatus();
+    explicit HLTPathStatus(hlt::HLTState const state);
+    explicit HLTPathStatus(hlt::HLTState const state, std::size_t const index);
+    HLTPathStatus(HLTPathStatus const&);
+    HLTPathStatus(HLTPathStatus&&);
+    HLTPathStatus& operator=(HLTPathStatus const&);
+    HLTPathStatus& operator=(HLTPathStatus&&);
 
   public:
-    ~HLTPathStatus();
-
-    HLTPathStatus();
-
-    explicit HLTPathStatus(hlt::HLTState const state);
-
-    explicit HLTPathStatus(hlt::HLTState const state, std::size_t const index);
-
     // Get state of path.
     hlt::HLTState state() const;
-
     // Get index of module on path providing status.
     // This will either be the index of the last module on the
     // path, or the index of the module that rejected or threw.
     unsigned int index() const;
-
     // Reset this path.
     void reset();
-
     // Was this path run?
     bool wasrun() const;
-
     // Has this path accepted the event? If the path was not run, the
     // answer is true.
     bool accept() const;
-
     // has this path encountered an error (exception)?
     bool error() const;
 
@@ -66,9 +62,10 @@ namespace art {
     // packed status of trigger path
     // bits 15:2 (0-4095): index of module on path making path decision
     // bits  1:0 (0-3): HLT state
-    std::uint16_t status_;
+    // Note: We cannot make this atomic because it is persistent,
+    // however we can force the alignment.
+    alignas(std::uint16_t) std::uint16_t status_;
   };
-
 } // namespace art
 
 #endif /* canvas_Persistency_Common_HLTPathStatus_h */

@@ -30,6 +30,7 @@ cet_make(LIBRARY_NAME canvas
   fhiclcpp
   cetlib
   cetlib_except
+  hep_concurrency
   ${CLHEP}
   ${CMAKE_THREAD_LIBS_INIT}
   ${CMAKE_DL_LIBS}

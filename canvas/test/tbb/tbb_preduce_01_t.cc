@@ -1,11 +1,9 @@
-////////////////////////////////////////////////////////////////////////
-// tbb_preduce_01_t
+// vim: set sw=2 expandtab :
 //
 // Demonstrate trivial use of parallel_reduce over a vector with
 // functors to ascertain the mean value in a vector, and the location
 // and value of the minimum value in same.
 //
-////////////////////////////////////////////////////////////////////////
 
 #include "tbb/tbb.h"
 
@@ -13,9 +11,14 @@
 #include <cassert>
 #include <iostream>
 #include <iterator>
+#include <limits>
 #include <numeric>
+#include <sstream>
+#include <vector>
 
-typedef tbb::blocked_range<typename std::vector<double>::const_iterator> br_t;
+using namespace std;
+
+typedef tbb::blocked_range<typename vector<double>::const_iterator> br_t;
 
 // Calculate the mean.
 class Meanie {
@@ -24,7 +27,6 @@ public:
   Meanie(Meanie const&, tbb::split);
   void operator()(br_t const& r);
   void join(Meanie const& other);
-
   size_t count() const;
   double result() const;
 
@@ -37,118 +39,91 @@ private:
 class Minnie {
 public:
   Minnie();
-  Minnie(br_t::const_iterator min);
   Minnie(Minnie const& other, tbb::split);
   void operator()(br_t const& r);
   void join(Minnie const& other);
-
-  br_t::const_iterator min() const;
-  bool valid() const;
+  double min() const;
 
 private:
-  br_t::const_iterator min_;
-  bool valid_;
+  double min_;
 };
 
-// Main program.
 int
 main()
 {
   // Setup.
   size_t const n = 500000;
   double const val = 27.125; // Exactly representable as a double in IEEE.
-  std::vector<double> v(n, val);
+  vector<double> v(n, val);
   // Mean.
   Meanie m;
   tbb::parallel_reduce(br_t(v.cbegin(), v.cend()), m);
   assert(m.count() == n);
   assert(m.result() == val);
   // Setup for min.
-  std::vector<double>::difference_type const loc = 47856;
+  vector<double>::difference_type const loc = 47856;
   double const minval = 22.3;
   v[loc] = minval;
   // Min.
   Minnie mincalc;
   tbb::parallel_reduce(br_t(v.cbegin(), v.cend()), mincalc);
-  assert(mincalc.valid() && std::distance(v.cbegin(), mincalc.min()) == loc);
-  assert(*mincalc.min() == minval);
+  assert(mincalc.min() == minval);
 }
 
-////////////////////////////////////////////////////////////////////////
-// Member function implementations.
+Meanie::Meanie() : running_count_(0), running_sum_(0.0) {}
 
-////////////////////////////////////
-// Meanie
+Meanie::Meanie(Meanie const&, tbb::split) : Meanie() {}
 
-inline Meanie::Meanie() : running_count_(0), running_sum_(0.0) {}
-
-inline Meanie::Meanie(Meanie const&, tbb::split) : Meanie() {}
-
-inline void
+void
 Meanie::operator()(br_t const& r)
 {
   running_count_ += r.size();
-  running_sum_ = std::accumulate(r.begin(), r.end(), running_sum_);
+  running_sum_ = accumulate(r.begin(), r.end(), running_sum_);
 }
 
-inline void
+void
 Meanie::join(Meanie const& other)
 {
   running_count_ += other.running_count_;
   running_sum_ += other.running_sum_;
 }
 
-inline size_t
+size_t
 Meanie::count() const
 {
   return running_count_;
 }
 
-inline double
+double
 Meanie::result() const
 {
   return running_count_ ? (running_sum_ / running_count_) : 0.0;
 }
 
-////////////////////////////////////
-// Minnie
+Minnie::Minnie() : min_(numeric_limits<double>::max()) {}
 
-inline Minnie::Minnie() : min_(), valid_(false) {}
+Minnie::Minnie(Minnie const& /*other*/, tbb::split) : Minnie() {}
 
-inline Minnie::Minnie(br_t::const_iterator min) : min_(min), valid_(true) {}
-
-inline Minnie::Minnie(Minnie const& other, tbb::split)
-  : min_(other.min_), valid_(other.valid_)
-{}
-
-inline void
-Minnie::operator()(br_t const& r)
+void
+Minnie::operator()(br_t const& range)
 {
-  for (br_t::const_iterator i = r.begin(), e = r.end(); i != e; ++i) {
-    if (!valid_ || *i < *min_) {
-      min_ = i;
-      valid_ = true;
+  for (auto val : range) {
+    if (val < min_) {
+      min_ = val;
     }
   }
 }
 
-inline void
+void
 Minnie::join(Minnie const& other)
 {
-  if (other.valid_ && (!valid_ || (*other.min_ < *min_))) {
+  if (other.min_ < min_) {
     min_ = other.min_;
-    valid_ = true;
   }
 }
 
-inline br_t::const_iterator
+double
 Minnie::min() const
 {
   return min_;
-}
-
-inline bool
-Minnie::valid() const
-{
-  return valid_;
 }

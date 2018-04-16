@@ -5,10 +5,10 @@
 #include "canvas/Persistency/Provenance/ProcessConfiguration.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/Transient.h"
+#include "hep_concurrency/RecursiveMutex.h"
 
 #include <iosfwd>
 #include <map>
-#include <mutex>
 #include <string>
 #include <vector>
 
@@ -74,7 +74,7 @@ namespace art {
 
   public: // MEMBER FUNCTIONS
     // FIXME: Try to find a way to avoid exposing this function!
-    std::recursive_mutex& get_mutex() const;
+    hep::concurrency::RecursiveMutex& get_mutex() const;
 
     // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
     // Note: We do not give the strong exception safety guarantee because
@@ -155,7 +155,8 @@ namespace art {
     // Note: threading: trying to call id() or getConfigurationForProcess().
     // Note: threading: We cannot protect the iteration interface, see notes
     // above.
-    mutable std::recursive_mutex mutex_{};
+    mutable hep::concurrency::RecursiveMutex mutex_{
+      "art::ProcessHistory::mutex_"};
   };
 
   typedef std::map<ProcessHistoryID const, ProcessHistory> ProcessHistoryMap;

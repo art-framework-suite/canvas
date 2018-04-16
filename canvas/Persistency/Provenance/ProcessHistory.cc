@@ -1,15 +1,20 @@
 #include "canvas/Persistency/Provenance/ProcessHistory.h"
 // vim: set sw=2 expandtab :
 
+#include "canvas/Persistency/Provenance/ProcessConfiguration.h"
+#include "canvas/Persistency/Provenance/ProcessHistoryID.h"
+#include "canvas/Persistency/Provenance/Transient.h"
 #include "cetlib/MD5Digest.h"
 #include "cetlib/container_algorithms.h"
+#include "hep_concurrency/RecursiveMutex.h"
+
 #include <iterator>
-#include <mutex>
 #include <ostream>
 #include <sstream>
 #include <utility>
 
 using namespace cet;
+using namespace hep::concurrency;
 using namespace std;
 
 namespace art {
@@ -17,16 +22,14 @@ namespace art {
   ProcessHistory::~ProcessHistory() {}
 
   // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
-  ProcessHistory::ProcessHistory() : data_(), transients_{}, mutex_{} {}
+  ProcessHistory::ProcessHistory() : data_(), transients_{} {}
 
   // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
-  ProcessHistory::ProcessHistory(size_type n)
-    : data_(n), transients_{}, mutex_{}
-  {}
+  ProcessHistory::ProcessHistory(size_type n) : data_(n), transients_{} {}
 
   // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
   ProcessHistory::ProcessHistory(collection_type const& vec)
-    : data_(vec), transients_{}, mutex_{}
+    : data_(vec), transients_{}
   {}
 
   // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
@@ -34,7 +37,7 @@ namespace art {
   //       data_ may be modified before the transients_ ctor throws.
   // Note: We do give the basic exception safety guarantee.
   ProcessHistory::ProcessHistory(ProcessHistory const& rhs)
-    : data_(rhs.data_), transients_{rhs.transients_}, mutex_{}
+    : data_(rhs.data_), transients_{rhs.transients_}
   {}
 
   // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
@@ -42,7 +45,7 @@ namespace art {
   //       data_ may be modified before the transients_ ctor throws.
   // Note: We do give the basic exception safety guarantee.
   ProcessHistory::ProcessHistory(ProcessHistory&& rhs)
-    : data_(move(rhs.data_)), transients_{move(rhs.transients_)}, mutex_{}
+    : data_(move(rhs.data_)), transients_{move(rhs.transients_)}
   {}
 
   // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
@@ -71,7 +74,7 @@ namespace art {
     return *this;
   }
 
-  recursive_mutex&
+  RecursiveMutex&
   ProcessHistory::get_mutex() const
   {
     return mutex_;
@@ -202,8 +205,8 @@ namespace art {
   {
     // Note: threading: We may be called by Principal::addProcessEntry()
     // Note: threading: with the mutex already locked, so we use
-    // recursive_mutex.
-    lock_guard<recursive_mutex> sentry(mutex_);
+    // a recursive mutex.
+    RecursiveMutexSentry sentry{mutex_, __func__};
     if (transients_.get().phid_.isValid()) {
       return transients_.get().phid_;
     }
@@ -230,7 +233,7 @@ namespace art {
   ProcessHistory::getConfigurationForProcess(string const& name,
                                              ProcessConfiguration& config) const
   {
-    lock_guard<recursive_mutex> sentry(mutex_);
+    RecursiveMutexSentry sentry{mutex_, __func__};
     for (const_iterator i = data_.begin(), e = data_.end(); i != e; ++i) {
       if (i->processName() == name) {
         config = *i;
