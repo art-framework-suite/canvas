@@ -11,75 +11,43 @@ using namespace std;
 
 namespace art {
 
-  ProcessConfiguration::~ProcessConfiguration() {}
+  ProcessConfiguration::~ProcessConfiguration() = default;
+  ProcessConfiguration::ProcessConfiguration() noexcept(false) = default;
 
-  // Note: Cannot be noexcept because the psetid ctor can throw.
-  ProcessConfiguration::ProcessConfiguration()
-    : processName_{} // Note: threading: The psetid ctor can throw!
-    , parameterSetID_{}
-    , releaseVersion_{}
-  {}
-
-  // Note: Cannot be noexcept because the psetid ctor can throw.
   ProcessConfiguration::ProcessConfiguration(
     string const& procName,
     fhicl::ParameterSetID const& pSetID,
-    ReleaseVersion const& relVersion)
-    : processName_{procName} // Note: threading: The psetid ctor can throw!
+    ReleaseVersion const& relVersion) noexcept(false)
+    : processName_{procName}
     , parameterSetID_{pSetID}
     , releaseVersion_{relVersion}
   {}
 
-  // Note: Cannot be noexcept because the psetid ctor can throw.
-  ProcessConfiguration::ProcessConfiguration(ProcessConfiguration const& rhs)
-    : processName_{rhs.processName_}
-    // Note: threading: The psetid ctor can throw!
-    , parameterSetID_{rhs.parameterSetID_}
-    , releaseVersion_{rhs.releaseVersion_}
-  {}
+  ProcessConfiguration::ProcessConfiguration(
+    ProcessConfiguration const& rhs) noexcept(false) = default;
+  ProcessConfiguration::ProcessConfiguration(ProcessConfiguration&& rhs) =
+    default;
 
-  // Note: Cannot be noexcept because the psetid ctor can throw.
-  ProcessConfiguration::ProcessConfiguration(ProcessConfiguration&& rhs)
-    : processName_{move(rhs.processName_)}
-    // Note: threading: The psetid ctor can throw!
-    , parameterSetID_{move(rhs.parameterSetID_)}
-    , releaseVersion_{move(rhs.releaseVersion_)}
-  {}
+  ProcessConfiguration& ProcessConfiguration::operator=(
+    ProcessConfiguration const& rhs) noexcept(false) = default;
 
-  ProcessConfiguration&
-  ProcessConfiguration::operator=(ProcessConfiguration const& rhs)
-  {
-    if (this != &rhs) {
-      processName_ = rhs.processName_;
-      parameterSetID_ = rhs.parameterSetID_;
-      releaseVersion_ = rhs.releaseVersion_;
-    }
-    return *this;
-  }
-
-  ProcessConfiguration&
-  ProcessConfiguration::operator=(ProcessConfiguration&& rhs)
-  {
-    processName_ = move(rhs.processName_);
-    parameterSetID_ = move(rhs.parameterSetID_);
-    releaseVersion_ = move(rhs.releaseVersion_);
-    return *this;
-  }
+  ProcessConfiguration& ProcessConfiguration::operator=(
+    ProcessConfiguration&& rhs) = default;
 
   string const&
-  ProcessConfiguration::processName() const
+  ProcessConfiguration::processName() const noexcept
   {
     return processName_;
   }
 
   fhicl::ParameterSetID const&
-  ProcessConfiguration::parameterSetID() const
+  ProcessConfiguration::parameterSetID() const noexcept
   {
     return parameterSetID_;
   }
 
   ReleaseVersion const&
-  ProcessConfiguration::releaseVersion() const
+  ProcessConfiguration::releaseVersion() const noexcept
   {
     return releaseVersion_;
   }

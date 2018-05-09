@@ -1,7 +1,6 @@
 #include "canvas/Persistency/Provenance/BranchDescription.h"
 // vim: set sw=2 expandtab :
 
-#include "canvas/Persistency/Provenance/ModuleDescription.h"
 #include "canvas/Persistency/Provenance/canonicalProductName.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/FriendlyName.h"
@@ -20,8 +19,7 @@ using fhicl::ParameterSetID;
 
 namespace {
 
-  // Note: throws
-  void
+  [[noreturn]] void
   throwExceptionWithText(char const* txt)
   {
     throw art::Exception(art::errors::LogicError)
@@ -33,13 +31,15 @@ namespace {
 
 namespace art {
 
-  BranchDescription::BranchDescription(BranchType const bt,
-                                       TypeLabel const& tl,
-                                       ModuleDescription const& md)
+  BranchDescription::BranchDescription(
+    BranchType const bt,
+    TypeLabel const& tl,
+    std::string const& moduleLabel,
+    ParameterSetID const& modulePSetID,
+    ProcessConfiguration const& processConfig)
     : branchType_{bt}
-    , moduleLabel_{tl.hasEmulatedModule() ? tl.emulatedModule() :
-                                            md.moduleLabel()}
-    , processName_{md.processName()}
+    , moduleLabel_{tl.hasEmulatedModule() ? tl.emulatedModule() : moduleLabel}
+    , processName_{processConfig.processName()}
     , producedClassName_{tl.className()}
     , friendlyClassName_{tl.friendlyClassName()}
     , productInstanceName_{tl.productInstanceName()}
@@ -48,8 +48,8 @@ namespace art {
     guts().validity_ = tl.hasEmulatedModule() ? Transients::PresentFromSource :
                                                 Transients::Produced;
     guts().transient_ = tl.transient();
-    psetIDs_.insert(md.parameterSetID());
-    processConfigurationIDs_.insert(md.processConfigurationID());
+    psetIDs_.insert(modulePSetID);
+    processConfigurationIDs_.insert(processConfig.id());
     throwIfInvalid_();
     fluffTransients_();
     initProductID_();

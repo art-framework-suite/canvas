@@ -18,7 +18,7 @@
 // ================================================================================
 
 #include "canvas/Persistency/Provenance/BranchType.h"
-#include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
+#include "canvas/Persistency/Provenance/ProcessConfiguration.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 #include "canvas/Persistency/Provenance/Transient.h"
@@ -54,34 +54,34 @@ namespace art {
 
     BranchDescription(BranchType const bt,
                       TypeLabel const& tl,
-                      ModuleDescription const& modDesc);
-
-    // use compiler-generated copy c'tor, copy assignment, and d'tor
+                      std::string const& moduleLabel,
+                      fhicl::ParameterSetID const& modulePSetID,
+                      ProcessConfiguration const& processConfig);
 
     void write(std::ostream& os) const;
 
     std::string const&
-    moduleLabel() const
+    moduleLabel() const noexcept
     {
       return moduleLabel_;
     }
     std::string const&
-    processName() const
+    processName() const noexcept
     {
       return processName_;
     }
     std::string const&
-    producedClassName() const
+    producedClassName() const noexcept
     {
       return producedClassName_;
     }
     std::string const&
-    friendlyClassName() const
+    friendlyClassName() const noexcept
     {
       return friendlyClassName_;
     }
     std::string const&
-    productInstanceName() const
+    productInstanceName() const noexcept
     {
       return productInstanceName_;
     }
@@ -92,70 +92,70 @@ namespace art {
     }
 
     bool
-    produced() const
+    produced() const noexcept
     {
       return guts().validity_ == Transients::Produced;
     }
     bool
-    present() const
+    present() const noexcept
     {
       return guts().validity_ == Transients::PresentFromSource;
     }
     bool
-    dropped() const
+    dropped() const noexcept
     {
       return guts().validity_ == Transients::Dropped;
     }
     bool
-    transient() const
+    transient() const noexcept
     {
       return guts().transient_;
     }
 
     int
-    splitLevel() const
+    splitLevel() const noexcept
     {
       return guts().splitLevel_;
     }
     int
-    basketSize() const
+    basketSize() const noexcept
     {
       return guts().basketSize_;
     }
     int
-    compression() const
+    compression() const noexcept
     {
       return guts().compression_;
     }
 
     std::set<fhicl::ParameterSetID> const&
-    psetIDs() const
+    psetIDs() const noexcept
     {
       return psetIDs_;
     }
 
     ProductID
-    productID() const
+    productID() const noexcept
     {
       return productID_;
     }
     BranchType
-    branchType() const
+    branchType() const noexcept
     {
       return branchType_;
     }
     bool
-    supportsView() const
+    supportsView() const noexcept
     {
       return supportsView_;
     }
     std::string const&
-    branchName() const
+    branchName() const noexcept
     {
       return guts().branchName_;
     }
     std::string const&
-    wrappedName() const
+    wrappedName() const noexcept
     {
       return guts().wrappedName_;
     }
@@ -211,18 +211,14 @@ namespace art {
     fhicl::ParameterSetID const& psetID() const;
 
     void initProductID_();
-
     void fluffTransients_() const;
-
     bool transientsFluffed_() const noexcept;
-
     bool isPsetIDUnique() const noexcept;
 
     std::set<ProcessConfigurationID> const& processConfigurationIDs() const
       noexcept;
 
     Transients& guts() noexcept;
-
     Transients const& guts() const noexcept;
 
     void throwIfInvalid_() const;

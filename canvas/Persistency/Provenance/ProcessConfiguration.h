@@ -16,45 +16,31 @@ namespace art {
   public:
     ~ProcessConfiguration();
 
-    // Note: Cannot be noexcept because the psetid ctor can throw.
-    ProcessConfiguration();
-
-    // Note: Cannot be noexcept because the psetid ctor can throw.
-    ProcessConfiguration(ProcessConfiguration const&);
-
-    // Note: Cannot be noexcept because the psetid ctor can throw.
-    ProcessConfiguration(ProcessConfiguration&&);
-
-    ProcessConfiguration& operator=(ProcessConfiguration const&);
-
-    ProcessConfiguration& operator=(ProcessConfiguration&&);
-
-    // Note: Cannot be noexcept because the psetid ctor can throw.
+    // Constructors cannot be noexcept because the ParameterSetID
+    // c'tor can throw.
     ProcessConfiguration(std::string const& name,
                          fhicl::ParameterSetID const&,
-                         ReleaseVersion const&);
+                         ReleaseVersion const&) noexcept(false);
+    ProcessConfiguration() noexcept(false);
+    ProcessConfiguration(ProcessConfiguration const&) noexcept(false);
+    ProcessConfiguration(ProcessConfiguration&&) noexcept(false);
 
-  public:
-    std::string const& processName() const;
+    ProcessConfiguration& operator=(ProcessConfiguration const&);
+    ProcessConfiguration& operator=(ProcessConfiguration&&);
 
-    fhicl::ParameterSetID const& parameterSetID() const;
-
-    ReleaseVersion const& releaseVersion() const;
-
+    std::string const& processName() const noexcept;
+    fhicl::ParameterSetID const& parameterSetID() const noexcept;
+    ReleaseVersion const& releaseVersion() const noexcept;
     ProcessConfigurationID id() const;
 
   private:
     std::string processName_{};
-    // Note: threading: The psetid constructor can throw!
     fhicl::ParameterSetID parameterSetID_{};
-    // Note: This is just a std::string!
     ReleaseVersion releaseVersion_{};
   };
 
   bool operator<(ProcessConfiguration const& a, ProcessConfiguration const& b);
-
   bool operator==(ProcessConfiguration const& a, ProcessConfiguration const& b);
-
   bool operator!=(ProcessConfiguration const& a, ProcessConfiguration const& b);
 
   std::ostream& operator<<(std::ostream& os, ProcessConfiguration const& pc);
