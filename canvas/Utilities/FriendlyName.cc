@@ -142,9 +142,9 @@ namespace {
 std::string
 art::friendlyname::friendlyName(std::string const& iFullName)
 {
-  hep::concurrency::RecursiveMutex s_mutex;
+  static hep::concurrency::RecursiveMutex s_mutex;
+  static std::map<std::string, std::string> s_nameMap;
   hep::concurrency::RecursiveMutexSentry sentry{s_mutex, __func__};
-  std::map<std::string, std::string> s_nameMap;
   auto entry = s_nameMap.find(iFullName);
   if (entry == s_nameMap.end()) {
     entry =
