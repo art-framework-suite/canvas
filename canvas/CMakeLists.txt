@@ -8,9 +8,8 @@ add_subdirectory(Persistency)
 find_package(Threads)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
-cet_have_qual(c2 NEED_ROOT_INTROSPECTION)
-if (NEED_ROOT_INTROSPECTION)
-  find_ups_root()
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  find_package(Root REQUIRED)
   set (INTROSPECTION_LIBS ${ROOT_CORE})
 endif()
 
@@ -30,11 +29,11 @@ cet_make(LIBRARY_NAME canvas
   fhiclcpp
   cetlib
   cetlib_except
-  ${CLHEP}
+  ${CLHEP_LIBRARIES}
   ${CMAKE_THREAD_LIBS_INIT}
   ${CMAKE_DL_LIBS}
   NO_DICTIONARY
   )
 
 # Testing
-##add_subdirectory(test)
+add_subdirectory(test)

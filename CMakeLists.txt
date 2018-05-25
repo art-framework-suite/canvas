@@ -39,9 +39,9 @@ cet_find_library(CPPUNIT NAMES cppunit REQUIRED)
 find_package(TBB COMPONENTS tbb REQUIRED)
 set(TBB "TBB::tbb")
 find_package(messagefacility REQUIRED)
-find_package(CLHEP)
-find_package(range)
-find_package(Boost COMPONENTS REQUIRED)
+find_package(CLHEP COMPONENTS Vector Matrix RREQUIRED)
+find_package(range-v3 REQUIRED)
+find_package(Boost REQUIRED)
 
 # source
 add_subdirectory(canvas)
