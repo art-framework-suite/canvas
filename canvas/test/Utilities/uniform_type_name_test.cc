@@ -19,8 +19,8 @@ struct MyULongTemplate_t {
 };
 
 namespace {
-  void testit(std::type_info const & tid,
-              std::string const ref)
+  void
+  testit(std::type_info const& tid, std::string const ref)
   {
     BOOST_CHECK_EQUAL(uniform_type_name(tid), ref);
   }
@@ -30,8 +30,7 @@ BOOST_AUTO_TEST_SUITE(uniform_type_name_test)
 
 BOOST_AUTO_TEST_CASE(allocator_removal)
 {
-  testit(typeid(std::vector<std::string>),
-         "std::vector<std::string>");
+  testit(typeid(std::vector<std::string>), "std::vector<std::string>");
 }
 
 BOOST_AUTO_TEST_CASE(comparator_removal)

@@ -94,6 +94,11 @@ FILE: foreach my $file (@ARGV) {
           close(FILEIN);
           close(FILEOUT);
           next FILE;
+      } elsif (m&^//\s*RESET_HEADERS_IGNORE&) {
+        print "SKIPPED due to RESET_HEADERS_IGNORE directive.\n";
+          close(FILEIN);
+          close(FILEOUT);
+          next FILE;
       }
     }
     if ((!$seen_guard_check) and m&^\s*#\s*if(?:ndef\s+([^\s/]+)|.*?defined.*?\(\s*(.*?)\s*\))&i) {
@@ -183,6 +188,7 @@ chmod +x "${TMP}"
 for F in \
   `${find} "$TOP" \( -type d \( -name .git -o -name .svn -o -name CVS -o -name doc -o \
                              -name ups -o -path '*/tools/migration' -o \
+                             -name gtest -o \
                              -name ParameterSet \) \
                   -prune \) -o \
                -type f \! \( -name '*~' -o -name '*.bak' -o -name '*.new' \) \

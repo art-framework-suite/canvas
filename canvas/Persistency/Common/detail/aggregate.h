@@ -3,9 +3,9 @@
 
 #include "canvas/Utilities/Exception.h"
 #include "cetlib/container_algorithms.h"
-#include "cetlib_except/demangle.h"
-#include "cetlib/detail/metaprogramming.h"
 #include "cetlib/map_vector.h"
+#include "cetlib/metaprogramming.h"
+#include "cetlib_except/demangle.h"
 
 #include <typeinfo>
 
@@ -31,25 +31,33 @@ class TH1;
 namespace art {
   namespace detail {
 
-    using cet::detail::enable_if_function_exists_t;
+    using cet::enable_if_function_exists_t;
 
     template <typename T, typename = void>
-    struct has_aggregate : std::false_type {};
+    struct has_aggregate : std::false_type {
+    };
 
     template <typename T>
-    struct has_aggregate<T, enable_if_function_exists_t<void(T::*)(T const&), &T::aggregate>> : std::true_type {};
+    struct has_aggregate<
+      T,
+      enable_if_function_exists_t<void (T::*)(T const&), &T::aggregate>>
+      : std::true_type {
+    };
 
     template <typename T>
-    struct has_aggregate<T, enable_if_function_exists_t<void(T::*)(T), &T::aggregate>> : std::true_type {};
-
+    struct has_aggregate<
+      T,
+      enable_if_function_exists_t<void (T::*)(T), &T::aggregate>>
+      : std::true_type {
+    };
 
     template <typename T, typename Enable = void>
     struct CanBeAggregated : std::false_type {
-      static void aggregate(T&, T const&)
+      static void
+      aggregate(T&, T const&)
       {
         throw art::Exception(art::errors::ProductCannotBeAggregated)
-          << "Products of type \""
-          << cet::demangle_symbol(typeid(T).name())
+          << "Products of type \"" << cet::demangle_symbol(typeid(T).name())
           << "\" cannot be aggregated.\n"
           << "Please contact artists@fnal.gov.\n";
       }
@@ -57,8 +65,10 @@ namespace art {
 
     // Arithmetic
     template <typename T>
-    struct CanBeAggregated<T, std::enable_if_t<std::is_arithmetic<T>::value>> : std::true_type {
-      static void aggregate(T& p, T const other)
+    struct CanBeAggregated<T, std::enable_if_t<std::is_arithmetic<T>::value>>
+      : std::true_type {
+      static void
+      aggregate(T& p, T const other)
       {
         p += other;
       }
@@ -66,26 +76,28 @@ namespace art {
 
     // User-defined
     template <typename T>
-    struct CanBeAggregated<T, std::enable_if_t<has_aggregate<T>::value>> : std::true_type {
-      static void aggregate(T& p, T const& other)
+    struct CanBeAggregated<T, std::enable_if_t<has_aggregate<T>::value>>
+      : std::true_type {
+      static void
+      aggregate(T& p, T const& other)
       {
         p.aggregate(other);
       }
     };
 
-
     template <typename T>
     struct CanBeAggregated<std::vector<T>> : std::true_type {
-      static void aggregate(std::vector<T>& p, std::vector<T> const& other)
+      static void
+      aggregate(std::vector<T>& p, std::vector<T> const& other)
       {
         p.insert(p.cend(), other.cbegin(), other.cend());
       }
     };
 
-
     template <typename T>
     struct CanBeAggregated<std::list<T>> : std::true_type {
-      static void aggregate(std::list<T>& p, std::list<T> const& other)
+      static void
+      aggregate(std::list<T>& p, std::list<T> const& other)
       {
         p.insert(p.cend(), other.cbegin(), other.cend());
       }
@@ -93,7 +105,8 @@ namespace art {
 
     template <typename T>
     struct CanBeAggregated<std::deque<T>> : std::true_type {
-      static void aggregate(std::deque<T>& p, std::deque<T> const& other)
+      static void
+      aggregate(std::deque<T>& p, std::deque<T> const& other)
       {
         p.insert(p.cend(), other.cbegin(), other.cend());
       }
@@ -101,15 +114,14 @@ namespace art {
 
     // std::array not currently supported by ROOT6
     template <typename T, size_t N>
-    struct CanBeAggregated<std::array<T,N>> : std::true_type {
-      static void aggregate(std::array<T,N>& p, std::array<T,N> const& other)
+    struct CanBeAggregated<std::array<T, N>> : std::true_type {
+      static void
+      aggregate(std::array<T, N>& p, std::array<T, N> const& other)
       {
-        cet::transform_all( p, other,
-                            std::begin(p),
-                            [](T t1, T const& t2) {
-                              CanBeAggregated<T>::aggregate(t1, t2);
-                              return t1;
-                            } );
+        cet::transform_all(p, other, std::begin(p), [](T t1, T const& t2) {
+          CanBeAggregated<T>::aggregate(t1, t2);
+          return t1;
+        });
       }
     };
 
@@ -120,33 +132,38 @@ namespace art {
     template <>
     struct AggregateTuple<0u> {
       template <typename Tuple>
-      static void combine(Tuple&, Tuple const&)
+      static void
+      combine(Tuple&, Tuple const&)
       {}
     };
 
     template <std::size_t I>
     struct AggregateTuple {
       template <typename Tuple>
-      static void combine(Tuple& p, Tuple const& other)
+      static void
+      combine(Tuple& p, Tuple const& other)
       {
         using elem_type = std::tuple_element_t<I, Tuple>;
-        CanBeAggregated<elem_type>::aggregate(std::get<I>(p), std::get<I>(other) );
-        AggregateTuple<I-1>::combine(p, other);
+        CanBeAggregated<elem_type>::aggregate(std::get<I>(p),
+                                              std::get<I>(other));
+        AggregateTuple<I - 1>::combine(p, other);
       }
     };
 
     // std::tuple not currently supported by ROOT6
-    template <typename ... ARGS>
+    template <typename... ARGS>
     struct CanBeAggregated<std::tuple<ARGS...>> : std::true_type {
-      static void aggregate(std::tuple<ARGS...>& p, std::tuple<ARGS...> const& other)
+      static void
+      aggregate(std::tuple<ARGS...>& p, std::tuple<ARGS...> const& other)
       {
-        AggregateTuple<sizeof...(ARGS)-1>::combine(p, other);
+        AggregateTuple<sizeof...(ARGS) - 1>::combine(p, other);
       }
     };
 
     template <typename K, typename V>
-    struct CanBeAggregated<std::map<K,V>> : std::true_type {
-      static void aggregate(std::map<K,V>& p, std::map<K,V> const& other)
+    struct CanBeAggregated<std::map<K, V>> : std::true_type {
+      static void
+      aggregate(std::map<K, V>& p, std::map<K, V> const& other)
       {
         // Maybe throw exception if insert fails.
         p.insert(other.cbegin(), other.cend());
@@ -154,8 +171,9 @@ namespace art {
     };
 
     template <typename K, typename V>
-    struct CanBeAggregated<std::pair<K,V>> : std::true_type {
-      static void aggregate(std::pair<K,V>& p, std::pair<K,V> const& other)
+    struct CanBeAggregated<std::pair<K, V>> : std::true_type {
+      static void
+      aggregate(std::pair<K, V>& p, std::pair<K, V> const& other)
       {
         CanBeAggregated<K>::aggregate(p.first, other.first);
         CanBeAggregated<V>::aggregate(p.second, other.second);
@@ -163,8 +181,9 @@ namespace art {
     };
 
     template <typename K, typename V>
-    struct CanBeAggregated<std::multimap<K,V>> : std::true_type {
-      static void aggregate(std::multimap<K,V>& p, std::multimap<K,V> const& other)
+    struct CanBeAggregated<std::multimap<K, V>> : std::true_type {
+      static void
+      aggregate(std::multimap<K, V>& p, std::multimap<K, V> const& other)
       {
         p.insert(other.cbegin(), other.cend());
       }
@@ -172,7 +191,8 @@ namespace art {
 
     template <typename T>
     struct CanBeAggregated<std::set<T>> : std::true_type {
-      static void aggregate(std::set<T>& p, std::set<T> const& other)
+      static void
+      aggregate(std::set<T>& p, std::set<T> const& other)
       {
         // Maybe throw exception if insert fails.
         p.insert(other.cbegin(), other.cend());
@@ -181,7 +201,8 @@ namespace art {
 
     template <typename T>
     struct CanBeAggregated<cet::map_vector<T>> : std::true_type {
-      static void aggregate(cet::map_vector<T>& p, cet::map_vector<T> const& other)
+      static void
+      aggregate(cet::map_vector<T>& p, cet::map_vector<T> const& other)
       {
         // Maybe throw exception if insert fails.
         p.insert(other.cbegin(), other.cend());
@@ -191,14 +212,16 @@ namespace art {
     // Discuss with stakeholders
     template <>
     struct CanBeAggregated<std::string> : std::true_type {
-      static void aggregate(std::string& p, std::string const& other)
+      static void
+      aggregate(std::string& p, std::string const& other)
       {
         if (p != other)
           throw art::Exception(art::errors::ProductCannotBeAggregated)
             << "Products of type \""
             << cet::demangle_symbol(typeid(std::string).name())
             << "\" cannot be aggregated unless their values are the same.\n"
-            << "Values presented were: \"" << p << "\" and \"" << other << "\".\n";
+            << "Values presented were: \"" << p << "\" and \"" << other
+            << "\".\n";
       }
     };
 
@@ -212,17 +235,20 @@ namespace art {
 
     template <>
     struct CanBeAggregated<CLHEP::Hep2Vector> : std::true_type {
-      static void aggregate(CLHEP::Hep2Vector& p, CLHEP::Hep2Vector const& other);
+      static void aggregate(CLHEP::Hep2Vector& p,
+                            CLHEP::Hep2Vector const& other);
     };
 
     template <>
     struct CanBeAggregated<CLHEP::Hep3Vector> : std::true_type {
-      static void aggregate(CLHEP::Hep3Vector& p, CLHEP::Hep3Vector const& other);
+      static void aggregate(CLHEP::Hep3Vector& p,
+                            CLHEP::Hep3Vector const& other);
     };
 
     template <>
     struct CanBeAggregated<CLHEP::HepLorentzVector> : std::true_type {
-      static void aggregate(CLHEP::HepLorentzVector& p, CLHEP::HepLorentzVector const& other);
+      static void aggregate(CLHEP::HepLorentzVector& p,
+                            CLHEP::HepLorentzVector const& other);
     };
 
     template <>
@@ -232,7 +258,8 @@ namespace art {
 
     template <>
     struct CanBeAggregated<CLHEP::HepSymMatrix> : std::true_type {
-      static void aggregate(CLHEP::HepSymMatrix& p, CLHEP::HepSymMatrix const& other);
+      static void aggregate(CLHEP::HepSymMatrix& p,
+                            CLHEP::HepSymMatrix const& other);
     };
 
     //==============================================================
@@ -250,13 +277,14 @@ namespace art {
     //    type, and not that of Base (TH1).
 
     template <typename T>
-    struct CanBeAggregated<T, std::enable_if_t<std::is_base_of<TH1,T>::value>> : std::true_type {
-      static void aggregate(T& p, T const& other)
+    struct CanBeAggregated<T, std::enable_if_t<std::is_base_of<TH1, T>::value>>
+      : std::true_type {
+      static void
+      aggregate(T& p, T const& other)
       {
         p.Add(&other);
       }
     };
-
   }
 }
 

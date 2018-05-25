@@ -3,11 +3,10 @@
 #include <ostream>
 #include <sstream>
 
-
 namespace art {
 
-  Parentage::Parentage(std::vector<BranchID> const& parents):
-    parents_{parents}
+  Parentage::Parentage(std::vector<ProductID> const& parents)
+    : parents_{parents}
   {}
 
   ParentageID
@@ -15,14 +14,13 @@ namespace art {
   {
     // This implementation is ripe for optimization.
     std::ostringstream oss;
-    for (auto const bid : parents_) {
-      oss << bid << ' ';
+    for (auto const pid : parents_) {
+      oss << pid << ' ';
     }
 
-    std::string const stringrep {oss.str()};
+    std::string const stringrep{oss.str()};
     return ParentageID{cet::MD5Digest{stringrep}.digest().toString()};
   }
-
 
   bool
   operator==(Parentage const& a, Parentage const& b)

@@ -18,64 +18,63 @@
 // ======================================================================
 
 #include "canvas/Persistency/Common/HLTGlobalStatus.h"
-#include "canvas/Persistency/Common/traits.h"
 #include "fhiclcpp/ParameterSetID.h"
 
 // ----------------------------------------------------------------------
 
 namespace art {
 
-  class TriggerResults
-    : public HLTGlobalStatus
-    , public DoNotRecordParents
-  {
+  class TriggerResults : public HLTGlobalStatus {
   private:
     // Parameter set id
-    fhicl::ParameterSetID psetid_;
+    fhicl::ParameterSetID psetid_{};
 
   public:
-    // Default contructor
-    TriggerResults()
-      : HLTGlobalStatus()
-      , psetid_()
-    { }
+    TriggerResults() = default;
 
     // Standard contructor
-    TriggerResults(const HLTGlobalStatus& hlt,
-                   const fhicl::ParameterSetID& psetid)
-      : HLTGlobalStatus(hlt)
-      , psetid_(psetid)
-    { }
+    TriggerResults(HLTGlobalStatus const& hlt,
+                   fhicl::ParameterSetID const& psetid)
+      : HLTGlobalStatus{hlt}, psetid_{psetid}
+    {}
 
     // Get stored parameter set id
-    const fhicl::ParameterSetID& parameterSetID() const { return psetid_; }
+    fhicl::ParameterSetID const&
+    parameterSetID() const
+    {
+      return psetid_;
+    }
 
     // swap function
-    void swap(TriggerResults& other) {
+    void
+    swap(TriggerResults& other)
+    {
       this->HLTGlobalStatus::swap(other);
       psetid_.swap(other.psetid_);
     }
 
     // Copy assignment using swap.
     // We can't ref-qualify assignment because of GCC_XML.
-    TriggerResults& operator=(TriggerResults const& rhs) {
-      TriggerResults temp(rhs);
+    TriggerResults&
+    operator=(TriggerResults const& rhs)
+    {
+      TriggerResults temp{rhs};
       this->swap(temp);
       return *this;
     }
 
-  };  // TriggerResults
+  }; // TriggerResults
 
   // Free swap function
-  inline
-  void
-  swap(TriggerResults& lhs, TriggerResults& rhs) {
+  inline void
+  swap(TriggerResults& lhs, TriggerResults& rhs)
+  {
     lhs.swap(rhs);
   }
 
-}  // art
+} // art
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Persistency_Common_TriggerResults_h */
 

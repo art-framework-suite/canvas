@@ -21,9 +21,9 @@ typedef tbb::blocked_range<typename std::vector<double>::const_iterator> br_t;
 class Meanie {
 public:
   Meanie();
-  Meanie(Meanie const &, tbb::split);
-  void operator()(br_t const & r);
-  void join(Meanie const & other);
+  Meanie(Meanie const&, tbb::split);
+  void operator()(br_t const& r);
+  void join(Meanie const& other);
 
   size_t count() const;
   double result() const;
@@ -38,9 +38,9 @@ class Minnie {
 public:
   Minnie();
   Minnie(br_t::const_iterator min);
-  Minnie(Minnie const & other, tbb::split);
-  void operator()(br_t const & r);
-  void join(Minnie const & other);
+  Minnie(Minnie const& other, tbb::split);
+  void operator()(br_t const& r);
+  void join(Minnie const& other);
 
   br_t::const_iterator min() const;
   bool valid() const;
@@ -51,7 +51,8 @@ private:
 };
 
 // Main program.
-int main()
+int
+main()
 {
   // Setup.
   size_t const n = 500000;
@@ -79,53 +80,32 @@ int main()
 ////////////////////////////////////
 // Meanie
 
-inline
-Meanie::
-Meanie()
-  :
-  running_count_(0),
-  running_sum_(0.0)
-{
-}
+inline Meanie::Meanie() : running_count_(0), running_sum_(0.0) {}
 
-inline
-Meanie::
-Meanie(Meanie const &, tbb::split)
-  :
-  Meanie()
-{
-}
+inline Meanie::Meanie(Meanie const&, tbb::split) : Meanie() {}
 
-inline
-void
-Meanie::
-operator()(br_t const & r)
+inline void
+Meanie::operator()(br_t const& r)
 {
   running_count_ += r.size();
   running_sum_ = std::accumulate(r.begin(), r.end(), running_sum_);
 }
 
-inline
-void
-Meanie::
-join(Meanie const & other)
+inline void
+Meanie::join(Meanie const& other)
 {
   running_count_ += other.running_count_;
   running_sum_ += other.running_sum_;
 }
 
-inline
-size_t
-Meanie::
-count() const
+inline size_t
+Meanie::count() const
 {
   return running_count_;
 }
 
-inline
-double
-Meanie::
-result() const
+inline double
+Meanie::result() const
 {
   return running_count_ ? (running_sum_ / running_count_) : 0.0;
 }
@@ -133,42 +113,18 @@ result() const
 ////////////////////////////////////
 // Minnie
 
-inline
-Minnie::
-Minnie()
-  :
-  min_(),
-  valid_(false)
-{
-}
+inline Minnie::Minnie() : min_(), valid_(false) {}
 
-inline
-Minnie::
-Minnie(br_t::const_iterator min)
-  :
-  min_(min),
-  valid_(true)
-{
-}
+inline Minnie::Minnie(br_t::const_iterator min) : min_(min), valid_(true) {}
 
-inline
-Minnie::
-Minnie(Minnie const & other, tbb::split)
-  :
-  min_(other.min_),
-  valid_(other.valid_)
-{
-}
+inline Minnie::Minnie(Minnie const& other, tbb::split)
+  : min_(other.min_), valid_(other.valid_)
+{}
 
-inline
-void
-Minnie::
-operator()(br_t const & r)
+inline void
+Minnie::operator()(br_t const& r)
 {
-  for (br_t::const_iterator i = r.begin(),
-       e = r.end();
-       i != e;
-       ++i) {
+  for (br_t::const_iterator i = r.begin(), e = r.end(); i != e; ++i) {
     if (!valid_ || *i < *min_) {
       min_ = i;
       valid_ = true;
@@ -176,30 +132,23 @@ operator()(br_t const & r)
   }
 }
 
-inline
-void
-Minnie::
-join(Minnie const & other)
+inline void
+Minnie::join(Minnie const& other)
 {
-  if (other.valid_ &&
-      (!valid_ || (*other.min_ < *min_))) {
+  if (other.valid_ && (!valid_ || (*other.min_ < *min_))) {
     min_ = other.min_;
     valid_ = true;
   }
 }
 
-inline
-br_t::const_iterator
-Minnie::
-min() const
+inline br_t::const_iterator
+Minnie::min() const
 {
   return min_;
 }
 
-inline
-bool
-Minnie::
-valid() const
+inline bool
+Minnie::valid() const
 {
   return valid_;
 }

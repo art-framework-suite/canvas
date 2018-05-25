@@ -1,18 +1,11 @@
-#include <sstream>
-
 #include "canvas/Persistency/Provenance/ProcessConfiguration.h"
 #include "cetlib/MD5Digest.h"
+
 #include <ostream>
-
-/*----------------------------------------------------------------------
-
-
-
-----------------------------------------------------------------------*/
+#include <sstream>
+#include <tuple>
 
 namespace art {
-
-
 
   ProcessConfigurationID
   ProcessConfiguration::id() const
@@ -25,23 +18,26 @@ namespace art {
     return ProcessConfigurationID(md5alg.digest().toString());
   }
 
-  bool operator<(ProcessConfiguration const& a, ProcessConfiguration const& b) {
-    if (a.processName_ < b.processName_) return true;
-    if (b.processName_ < a.processName_) return false;
-    if (a.parameterSetID_ < b.parameterSetID_) return true;
-    if (b.parameterSetID_ < a.parameterSetID_) return false;
-    if (a.releaseVersion_ < b.releaseVersion_) return true;
-    if (b.releaseVersion_ < a.releaseVersion_) return false;
-    if (a.passID_ < b.passID_) return true;
-    return false;
+  bool
+  operator<(ProcessConfiguration const& a, ProcessConfiguration const& b)
+  {
+    return std::tie(a.processName_, a.parameterSetID_, a.releaseVersion_) <
+           std::tie(b.processName_, b.parameterSetID_, b.releaseVersion_);
+  }
+
+  bool
+  operator==(ProcessConfiguration const& a, ProcessConfiguration const& b)
+  {
+    return std::tie(a.processName_, a.parameterSetID_, a.releaseVersion_) ==
+           std::tie(b.processName_, b.parameterSetID_, b.releaseVersion_);
   }
 
   std::ostream&
-  operator<< (std::ostream& os, ProcessConfiguration const& pc) {
-    os << pc.processName_ << ' '
-       << pc.parameterSetID_ << ' '
-       << pc.releaseVersion_ << ' '
-       << pc.passID_;
+  operator<<(std::ostream& os, ProcessConfiguration const& pc)
+  {
+    os << pc.processName_ << ' ' << pc.parameterSetID_ << ' '
+       << pc.releaseVersion_
+       << ' '; // Retain the last space for backwards compatibility
     return os;
   }
 }

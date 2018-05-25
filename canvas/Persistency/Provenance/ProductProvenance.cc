@@ -1,4 +1,3 @@
-#include "canvas/Persistency/Provenance/ParentageRegistry.h"
 #include "canvas/Persistency/Provenance/ProductProvenance.h"
 #include "canvas/Persistency/Provenance/ParentageRegistry.h"
 #include "canvas/Utilities/Exception.h"
@@ -8,40 +7,32 @@
 
 namespace art {
 
-  ProductProvenance::ProductProvenance(BranchID const& bid) :
-    branchID_{bid}
+  ProductProvenance::ProductProvenance(ProductID const pid) : productID_{pid} {}
+
+  ProductProvenance::ProductProvenance(ProductID const pid,
+                                       ProductStatus const status)
+    : productID_{pid}, productStatus_{status}
   {}
 
-  ProductProvenance::ProductProvenance(BranchID const& bid,
-                                       ProductStatus const status) :
-    branchID_{bid},
-    productStatus_{status}
-  {}
-
-  ProductProvenance::ProductProvenance(BranchID const& bid,
+  ProductProvenance::ProductProvenance(ProductID const pid,
                                        ProductStatus const status,
-                                       ParentageID const& edid) :
-    branchID_{bid},
-    productStatus_{status},
-    parentageID_{edid}
+                                       ParentageID const& edid)
+    : productID_{pid}, productStatus_{status}, parentageID_{edid}
   {}
 
-  ProductProvenance::ProductProvenance(BranchID const& bid,
+  ProductProvenance::ProductProvenance(ProductID const pid,
                                        ProductStatus const status,
-                                       std::shared_ptr<Parentage> pPtr) :
-    branchID_{bid},
-    productStatus_{status},
-    parentageID_{pPtr->id()}
+                                       std::shared_ptr<Parentage> pPtr)
+    : productID_{pid}, productStatus_{status}, parentageID_{pPtr->id()}
   {
     parentagePtr() = pPtr;
     ParentageRegistry::emplace(parentageID_, *pPtr);
   }
 
-  ProductProvenance::ProductProvenance(BranchID const& bid,
+  ProductProvenance::ProductProvenance(ProductID const pid,
                                        ProductStatus const status,
-                                       std::vector<BranchID> const& parents) :
-    branchID_{bid},
-    productStatus_{status}
+                                       std::vector<ProductID> const& parents)
+    : productID_{pid}, productStatus_{status}
   {
     parentagePtr() = std::make_shared<Parentage>();
     parentagePtr()->parents() = parents;
@@ -50,32 +41,40 @@ namespace art {
   }
 
   Parentage const&
-  ProductProvenance::parentage() const {
+  ProductProvenance::parentage() const
+  {
     if (!parentagePtr()) {
       parentagePtr() = std::make_shared<Parentage>();
-      ParentageRegistry::get(parentageID_, *parentagePtr()); // Filled only if successful retrieval
+      ParentageRegistry::get(
+        parentageID_, *parentagePtr()); // Filled only if successful retrieval
     }
     return *parentagePtr();
   }
 
   void
-  ProductProvenance::setPresent() const {
-    if (productstatus::present(productStatus())) return;
+  ProductProvenance::setPresent() const
+  {
+    if (productstatus::present(productStatus()))
+      return;
     assert(productstatus::unknown(productStatus()));
     setStatus(productstatus::present());
   }
 
   void
-  ProductProvenance::setNotPresent() const {
-    if (productstatus::neverCreated(productStatus())) return;
-    if (productstatus::dropped(productStatus())) return;
+  ProductProvenance::setNotPresent() const
+  {
+    if (productstatus::neverCreated(productStatus()))
+      return;
+    if (productstatus::dropped(productStatus()))
+      return;
     assert(productstatus::unknown(productStatus()));
     setStatus(productstatus::neverCreated());
   }
 
   void
-  ProductProvenance::write(std::ostream& os) const {
-    os << "branch ID = " << branchID() << '\n';
+  ProductProvenance::write(std::ostream& os) const
+  {
+    os << "product ID = " << productID() << '\n';
     os << "product status = " << static_cast<int>(productStatus()) << '\n';
     if (!noParentage()) {
       os << "entry description ID = " << parentageID() << '\n';
@@ -84,16 +83,16 @@ namespace art {
 
   // Only the 'salient attributes' are tested in equality comparison.
   bool
-  operator==(ProductProvenance const& a, ProductProvenance const& b) {
-    if (a.noParentage() != b.noParentage()) return false;
+  operator==(ProductProvenance const& a, ProductProvenance const& b)
+  {
+    if (a.noParentage() != b.noParentage())
+      return false;
     if (a.noParentage()) {
-      return
-        a.branchID() == b.branchID()
-        && a.productStatus() == b.productStatus();
+      return a.productID() == b.productID() &&
+             a.productStatus() == b.productStatus();
     }
-    return
-      a.branchID() == b.branchID()
-      && a.productStatus() == b.productStatus()
-      && a.parentageID() == b.parentageID();
+    return a.productID() == b.productID() &&
+           a.productStatus() == b.productStatus() &&
+           a.parentageID() == b.parentageID();
   }
 }

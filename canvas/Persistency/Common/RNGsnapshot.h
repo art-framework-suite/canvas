@@ -40,13 +40,13 @@ namespace art {
   class RNGsnapshot {
   public:
     // --- CLHEP engine state characteristics:
-    using CLHEP_t        = unsigned long;
+    using CLHEP_t = unsigned long;
     using engine_state_t = std::vector<CLHEP_t>;
 
     // --- Our state characteristics:
-    using saved_t          = unsigned int;
+    using saved_t = unsigned int;
     using snapshot_state_t = std::vector<saved_t>;
-    using label_t          = std::string;
+    using label_t = std::string;
 
     static_assert(std::numeric_limits<saved_t>::digits == 32,
                   "std::numeric_limits<saved_t>::digits != 32");
@@ -59,26 +59,36 @@ namespace art {
                          engine_state_t const& est);
 
     // --- Access:
-    std::string      const& ekind() const { return engine_kind_; }
-    label_t          const& label() const { return label_; }
-    snapshot_state_t const& state() const { return state_; }
+    std::string const&
+    ekind() const
+    {
+      return engine_kind_;
+    }
+    label_t const&
+    label() const
+    {
+      return label_;
+    }
+    snapshot_state_t const&
+    state() const
+    {
+      return state_;
+    }
 
     // --- Save/restore:
-    void saveFrom(std::string const&,
-                  label_t const&,
-                  engine_state_t const&);
+    void saveFrom(std::string const&, label_t const&, engine_state_t const&);
     engine_state_t restoreState() const;
 
   private:
-    std::string engine_kind_ {};
-    label_t     label_ {};
-    snapshot_state_t state_ {};
+    std::string engine_kind_{};
+    label_t label_{};
+    snapshot_state_t state_{};
 
-  };  // RNGsnapshot
+  }; // RNGsnapshot
 
-}  // art
+} // art
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Persistency_Common_RNGsnapshot_h */
 

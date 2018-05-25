@@ -2,17 +2,15 @@
 
 #include <ostream>
 
-std::ostream &
-art::operator<<(std::ostream & os, SubRunID const & iID)
+std::ostream&
+art::operator<<(std::ostream& os, SubRunID const& iID)
 {
   os << iID.run_ << " subRun: ";
   if (iID.isFlush()) {
     os << "FLUSH";
-  }
-  else if (iID.isValid()) {
+  } else if (iID.isValid()) {
     os << iID.subRun_;
-  }
-  else {
+  } else {
     os << "INVALID";
   }
   return os;

@@ -25,8 +25,8 @@ namespace art {
   public:
     explicit ModuleDescription() = default;
     explicit ModuleDescription(fhicl::ParameterSetID parameterSetID,
-                               std::string const & modName,
-                               std::string const & modLabel,
+                               std::string const& modName,
+                               std::string const& modLabel,
                                ProcessConfiguration pc,
                                ModuleDescriptionID id = getUniqueID());
 
@@ -34,46 +34,84 @@ namespace art {
 
     void write(std::ostream& os) const;
 
-    fhicl::ParameterSetID const& parameterSetID() const {return parameterSetID_;}
-    std::string const& moduleName() const {return moduleName_;}
-    std::string const& moduleLabel() const {return moduleLabel_;}
-    ProcessConfiguration const& processConfiguration() const {return processConfiguration_;}
-    ProcessConfigurationID const processConfigurationID() const {return processConfiguration().id();}
-    std::string const& processName() const {return processConfiguration().processName();}
-    std::string const& releaseVersion() const {return processConfiguration().releaseVersion();}
-    std::string const& passID() const {return processConfiguration().passID();}
-    fhicl::ParameterSetID const& mainParameterSetID() const {return processConfiguration().parameterSetID();}
+    fhicl::ParameterSetID const&
+    parameterSetID() const
+    {
+      return parameterSetID_;
+    }
+    std::string const&
+    moduleName() const
+    {
+      return moduleName_;
+    }
+    std::string const&
+    moduleLabel() const
+    {
+      return moduleLabel_;
+    }
+    ProcessConfiguration const&
+    processConfiguration() const
+    {
+      return processConfiguration_;
+    }
+    ProcessConfigurationID const
+    processConfigurationID() const
+    {
+      return processConfiguration().id();
+    }
+    std::string const&
+    processName() const
+    {
+      return processConfiguration().processName();
+    }
+    std::string const&
+    releaseVersion() const
+    {
+      return processConfiguration().releaseVersion();
+    }
+    fhicl::ParameterSetID const&
+    mainParameterSetID() const
+    {
+      return processConfiguration().parameterSetID();
+    }
 
     bool operator<(ModuleDescription const& rh) const;
     bool operator==(ModuleDescription const& rh) const;
     bool operator!=(ModuleDescription const& rh) const;
 
-    ModuleDescriptionID id() const { return id_; } // Unique only within a process.
+    ModuleDescriptionID
+    id() const
+    {
+      return id_;
+    } // Unique only within a process.
 
     static ModuleDescriptionID getUniqueID();
 
-    static constexpr ModuleDescriptionID invalidID() { return std::numeric_limits<ModuleDescriptionID>::max(); }
+    static constexpr ModuleDescriptionID
+    invalidID()
+    {
+      return std::numeric_limits<ModuleDescriptionID>::max();
+    }
 
-private:
+  private:
     // ID of parameter set of the creator
-    fhicl::ParameterSetID parameterSetID_ {};
+    fhicl::ParameterSetID parameterSetID_{};
 
     // The class name of the creator
-    std::string moduleName_ {};
+    std::string moduleName_{};
 
     // A human friendly string that uniquely identifies the EDProducer
     // and becomes part of the identity of a product that it produces
-    std::string moduleLabel_ {};
+    std::string moduleLabel_{};
 
     // The process configuration.
-    ProcessConfiguration processConfiguration_ {};
+    ProcessConfiguration processConfiguration_{};
 
     // Unique ID.
-    ModuleDescriptionID id_ {invalidID()};
+    ModuleDescriptionID id_{invalidID()};
   };
 
-  inline
-  std::ostream&
+  inline std::ostream&
   operator<<(std::ostream& os, ModuleDescription const& p)
   {
     p.write(os);
@@ -82,7 +120,7 @@ private:
 
 } // art
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Persistency_Provenance_ModuleDescription_h */
 

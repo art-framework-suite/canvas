@@ -1,13 +1,14 @@
 // Sketch of one way to do a scaling study
-#include <iostream>
 #include "tbb/task_scheduler_init.h"
 #include "tbb/tick_count.h"
+#include <iostream>
 
 extern "C" {
 #include <unistd.h>
 }
 
-int main()
+int
+main()
 {
   int n = tbb::task_scheduler_init::default_num_threads();
   for (int p = 1; p <= n; ++p) {

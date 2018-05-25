@@ -3,11 +3,11 @@
 
 /*----------------------------------------------------------------------
 
-BranchChildren: Dependency information between branches.
+BranchChildren: Dependency information between products.
 
 ----------------------------------------------------------------------*/
 
-#include "canvas/Persistency/Provenance/BranchID.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
 
 #include <map>
 #include <set>
@@ -16,30 +16,33 @@ namespace art {
 
   class BranchChildren {
   private:
-    using BranchIDSet = std::set<BranchID>;
-  public:
+    using ProductIDSet = std::set<ProductID>;
 
+  public:
     // Clear all information.
     void clear();
 
     // Insert a parent with no children.
-    void insertEmpty(BranchID parent);
+    void insertEmpty(ProductID parent);
 
     // Insert a new child for the given parent.
-    void insertChild(BranchID parent, BranchID child);
+    void insertChild(ProductID parent, ProductID child);
 
-    // Look up all the descendants of the given parent, and insert them
-    // into descendants. N.B.: this does not clear out descendants first;
-    // it only appends *new* elements to the collection.
-    void appendToDescendants(BranchID parent, BranchIDSet& descendants) const;
+    // Look up all the descendants of the given parent, and insert
+    // them into descendants. N.B.: this does not clear out
+    // descendants first; it only appends *new* elements to the
+    // collection.
+    void appendToDescendants(ProductID parent, ProductIDSet& descendants) const;
+
+    // Public type alias to facilitate ROOT IO rule.
+    using map_t = std::map<ProductID, ProductIDSet>;
 
   private:
-    using map_t = std::map<BranchID, BranchIDSet>;
     map_t childLookup_;
-
-    void append_(map_t const& lookup, BranchID item, BranchIDSet& itemSet) const;
+    void append_(map_t const& lookup,
+                 ProductID item,
+                 ProductIDSet& itemSet) const;
   };
-
 }
 #endif /* canvas_Persistency_Provenance_BranchChildren_h */
 

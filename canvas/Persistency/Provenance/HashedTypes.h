@@ -7,19 +7,18 @@
 //
 // ======================================================================
 
-namespace art
-{
+namespace art {
   enum HashedTypes {
-      ModuleDescriptionType, // Obsolete
-      ParameterSetType,
-      ProcessHistoryType,
-      ProcessConfigurationType,
-      EntryDescriptionType, // Obsolete
-      ParentageType
+    ModuleDescriptionType, // Obsolete
+    ParameterSetType,
+    ProcessHistoryType,
+    ProcessConfigurationType,
+    EntryDescriptionType, // Obsolete
+    ParentageType
   };
 }
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Persistency_Provenance_HashedTypes_h */
 

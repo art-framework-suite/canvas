@@ -28,8 +28,7 @@
 #include <cassert>
 #include <cstdint>
 
-namespace art
-{
+namespace art {
   class HLTPathStatus {
 
   private:
@@ -40,32 +39,58 @@ namespace art
 
   public:
     // constructor
-    HLTPathStatus(const hlt::HLTState state = hlt::Ready, const unsigned int index = 0)
-    : status_(index*4+state) {
-      assert (state<hlt::UNKNOWN);
-      assert (index<16384);
+    HLTPathStatus(const hlt::HLTState state = hlt::Ready,
+                  const unsigned int index = 0)
+      : status_(index * 4 + state)
+    {
+      assert(state < hlt::UNKNOWN);
+      assert(index < 16384);
     }
 
     // get state of path
-    hlt::HLTState state() const {return (static_cast<hlt::HLTState>(status_ % 4));}
+    hlt::HLTState
+    state() const
+    {
+      return (static_cast<hlt::HLTState>(status_ % 4));
+    }
     // get index of module giving the status of this path
-    unsigned int  index() const {return (static_cast<unsigned int >(status_ / 4));}
+    unsigned int
+    index() const
+    {
+      return (static_cast<unsigned int>(status_ / 4));
+    }
     // reset this path
-    void reset() {status_=0;}
+    void
+    reset()
+    {
+      status_ = 0;
+    }
 
     // was this path run?
-    bool wasrun() const {return (state() != hlt::Ready);}
+    bool
+    wasrun() const
+    {
+      return (state() != hlt::Ready);
+    }
     // has this path accepted the event? If the path was not run, the
     // answer is, "yes."
-    bool accept() const {return ((state() == hlt::Pass) || !wasrun());}
+    bool
+    accept() const
+    {
+      return ((state() == hlt::Pass) || !wasrun());
+    }
     // has this path encountered an error (exception)?
-    bool error()  const {return (state() == hlt::Exception);}
+    bool
+    error() const
+    {
+      return (state() == hlt::Exception);
+    }
 
-  };  // HLTPathStatus
+  }; // HLTPathStatus
 
-}  // art
+} // art
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Persistency_Common_HLTPathStatus_h */
 

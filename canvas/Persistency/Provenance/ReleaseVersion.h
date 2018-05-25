@@ -2,8 +2,7 @@
 #define canvas_Persistency_Provenance_ReleaseVersion_h
 
 #include <string>
-namespace art
-{
+namespace art {
   typedef std::string ReleaseVersion;
 }
 

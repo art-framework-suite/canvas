@@ -6,14 +6,15 @@ namespace art {
 
   void
   BranchChildren::append_(map_t const& lookup,
-                          BranchID const item,
-                          BranchIDSet& itemSet) const
+                          ProductID const item,
+                          ProductIDSet& itemSet) const
   {
     auto const& items = const_cast<map_t&>(lookup)[item];
     // For each parent(child)
     for (auto const& i : items) {
-      // Insert the BranchID of the parents(children) into the set of ancestors(descendants).
-      // If the insert succeeds, append recursively.
+      // Insert the ProductID of the parents (children) into the set
+      // of ancestors (descendants).  If the insert succeeds, append
+      // recursively.
       if (itemSet.insert(i).second) {
         append_(lookup, i, itemSet);
       }
@@ -27,17 +28,21 @@ namespace art {
   }
 
   void
-  BranchChildren::insertEmpty(BranchID const parent) {
-    childLookup_.emplace(parent, BranchIDSet());
+  BranchChildren::insertEmpty(ProductID const parent)
+  {
+    childLookup_.emplace(parent, ProductIDSet{});
   }
 
   void
-  BranchChildren::insertChild(BranchID const parent, BranchID const child) {
+  BranchChildren::insertChild(ProductID const parent, ProductID const child)
+  {
     childLookup_[parent].insert(child);
   }
 
   void
-  BranchChildren::appendToDescendants(BranchID const parent, BranchIDSet& descendants) const {
+  BranchChildren::appendToDescendants(ProductID const parent,
+                                      ProductIDSet& descendants) const
+  {
     descendants.insert(parent);
     append_(childLookup_, parent, descendants);
   }

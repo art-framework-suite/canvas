@@ -38,15 +38,31 @@ namespace art {
 
     EventSelectionIDVector const& eventSelectionIDs() const;
 
-    ProcessHistoryID const& processHistoryID() const {return processHistoryID_;}
+    ProcessHistoryID const&
+    processHistoryID() const
+    {
+      return processHistoryID_;
+    }
 
-    void setProcessHistoryID(ProcessHistoryID const& phid) const {processHistoryID_ = phid;}
+    void
+    setProcessHistoryID(ProcessHistoryID const& phid) const
+    {
+      processHistoryID_ = phid;
+    }
 
-    BranchListIndexes const& branchListIndexes() const {return branchListIndexes_;}
+    BranchListIndexes const&
+    branchListIndexes() const
+    {
+      return branchListIndexes_;
+    }
 
-    BranchListIndexes& branchListIndexes() {return branchListIndexes_;}
+    BranchListIndexes&
+    branchListIndexes()
+    {
+      return branchListIndexes_;
+    }
+
   private:
-
     // Note: We could, instead, define a struct that contains the
     // appropriate information for each history entry, and then contain
     // only one data member: a vector of this struct. This might make
@@ -59,7 +75,6 @@ namespace art {
 
     mutable ProcessHistoryID processHistoryID_;
   };
-
 }
 
 #endif /* canvas_Persistency_Provenance_History_h */

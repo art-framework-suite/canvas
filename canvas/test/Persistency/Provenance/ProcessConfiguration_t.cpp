@@ -1,7 +1,8 @@
 #include "canvas/Persistency/Provenance/ProcessConfiguration.h"
 #include <assert.h>
 
-int main()
+int
+main()
 {
   art::ProcessConfiguration pc1;
   assert(pc1 == pc1);
@@ -23,5 +24,5 @@ int main()
   pc4.processName_ = "reco2";
   art::ProcessConfigurationID id4 = pc4.id();
   assert(pc4 == pc2);
-  assert (id4 == id2);
+  assert(id4 == id2);
 }

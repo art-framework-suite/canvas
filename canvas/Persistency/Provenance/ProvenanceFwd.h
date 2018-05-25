@@ -11,13 +11,13 @@ namespace art {
 
   class BranchDescription;
   class BranchID;
-  class BranchKey;
+  struct BranchKey;
   class BranchMapper;
   class EventAuxiliary;
   class EventID;
   class ModuleDescription;
   class Parentage;
-  class ProcessConfiguration;
+  struct ProcessConfiguration;
   class ProcessHistory;
   class ProductID;
   class ProductProvenance;
@@ -27,20 +27,19 @@ namespace art {
   class SubRunID;
   class Timestamp;
 
-}  // art
+} // art
 
-// ----------------------------------------------------------------------
+  // ----------------------------------------------------------------------
 
-#include "canvas/Persistency/Provenance/BranchIDList.h"
 #include "canvas/Persistency/Provenance/BranchListIndex.h"
+#include "canvas/Persistency/Provenance/Compatibility/BranchIDList.h"
 #include "canvas/Persistency/Provenance/ParentageID.h"
-#include "canvas/Persistency/Provenance/PassID.h"
 #include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/ProductStatus.h"
 #include "canvas/Persistency/Provenance/ReleaseVersion.h"
 
-// ======================================================================
+  // ======================================================================
 
 #endif /* canvas_Persistency_Provenance_ProvenanceFwd_h */
 
