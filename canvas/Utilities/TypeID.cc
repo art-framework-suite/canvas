@@ -70,9 +70,6 @@ namespace art {
   string
   TypeID::className() const
   {
-    // if (s_mutex == nullptr) {
-    //  startup();
-    //}
     RecursiveMutexSentry sentry{*s_mutex, __func__};
     auto hash_code = typeInfo().hash_code();
     auto entry = s_nameMap->find(hash_code);
