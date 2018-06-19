@@ -5,7 +5,7 @@ add_subdirectory(Version)
 add_subdirectory(Utilities)
 add_subdirectory(Persistency)
 
-find_package(Threads)
+find_package(Threads REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -25,7 +25,7 @@ cet_make(LIBRARY_NAME canvas
   LIBRARIES
   MF_MessageLogger
   ${INTROSPECTION_LIBS}
-  ${TBB}
+  TBB::tbb
   fhiclcpp
   cetlib
   cetlib_except

@@ -6,6 +6,6 @@ set(simple_tbb_tests
 
 foreach(tbb_test ${simple_tbb_tests})
   cet_test(${tbb_test}
-    LIBRARIES ${TBB} ${RT}
+    LIBRARIES TBB::tbb ${RT}
     )
 endforeach()
