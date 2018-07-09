@@ -13,6 +13,7 @@
 // =====================================================================
 
 #include "canvas/Persistency/Common/EDProduct.h"
+#include "canvas/Persistency/Common/detail/ProductTypeIDs.h"
 #include "canvas/Persistency/Common/detail/aggregate.h"
 #include "canvas/Utilities/DebugMacros.h"
 #include "cetlib/metaprogramming.h"
@@ -97,13 +98,14 @@ private:
   void fillView(std::vector<void const*>& view) const override;
 
   std::string productSize() const override;
-  void do_combine(EDProduct* product) override;
 
-  void do_setRangeSetID(unsigned) override;
-  unsigned do_getRangeSetID() const override;
-
+  product_typeids_t do_getTypeIDs() const override;
   std::unique_ptr<EDProduct> do_makePartner(
     std::type_info const& wanted_type) const override;
+
+  unsigned do_getRangeSetID() const override;
+  void do_setRangeSetID(unsigned) override;
+  void do_combine(EDProduct* product) override;
 
   bool
   isPresent_() const override
@@ -153,7 +155,7 @@ private:
 // Wrapper member functions.
 template <typename T>
 art::Wrapper<T>::Wrapper(std::unique_ptr<T> ptr)
-  : present{ptr.get() != 0}, rangeSetID{-1u}, obj(refOrThrow(ptr.get()))
+  : present{ptr.get() != nullptr}, rangeSetID{-1u}, obj(refOrThrow(ptr.get()))
 {}
 
 template <typename T>
@@ -217,6 +219,13 @@ unsigned
 art::Wrapper<T>::do_getRangeSetID() const
 {
   return rangeSetID;
+}
+
+template <typename T>
+art::product_typeids_t
+art::Wrapper<T>::do_getTypeIDs() const
+{
+  return detail::ProductTypeIDs<T>::get();
 }
 
 template <typename T>

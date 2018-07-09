@@ -7,7 +7,8 @@
 //
 // ======================================================================
 
-#include <memory>
+#include "canvas/Utilities/TypeID.h"
+#include "canvas/Utilities/product_metatype.h"
 
 namespace art {
 
@@ -30,7 +31,7 @@ namespace art {
   class RefCore;
   template <typename T>
   class Wrapper;
-
+  using product_typeids_t = std::map<product_metatype, TypeID>;
 } // art
 
   // ======================================================================
