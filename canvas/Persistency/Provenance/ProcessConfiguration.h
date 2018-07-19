@@ -16,12 +16,13 @@ namespace art {
   public:
     ~ProcessConfiguration();
 
-    // Constructors cannot be noexcept because the ParameterSetID
-    // c'tor can throw.
+    ProcessConfiguration() noexcept;
+
+    // The non-default constructor cannot be noexcept because the
+    // non-default ParameterSetID c'tor can throw.
     ProcessConfiguration(std::string const& name,
                          fhicl::ParameterSetID const&,
                          ReleaseVersion const&) noexcept(false);
-    ProcessConfiguration() noexcept(false);
     ProcessConfiguration(ProcessConfiguration const&) noexcept(false);
     ProcessConfiguration(ProcessConfiguration&&) noexcept(false);
 

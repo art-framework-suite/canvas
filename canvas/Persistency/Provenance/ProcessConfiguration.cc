@@ -12,7 +12,7 @@ using namespace std;
 namespace art {
 
   ProcessConfiguration::~ProcessConfiguration() = default;
-  ProcessConfiguration::ProcessConfiguration() noexcept(false) = default;
+  ProcessConfiguration::ProcessConfiguration() noexcept = default;
 
   ProcessConfiguration::ProcessConfiguration(
     string const& procName,
@@ -24,9 +24,8 @@ namespace art {
   {}
 
   ProcessConfiguration::ProcessConfiguration(
-    ProcessConfiguration const& rhs) noexcept(false) = default;
-  ProcessConfiguration::ProcessConfiguration(ProcessConfiguration&& rhs) =
-    default;
+    ProcessConfiguration const&) noexcept(false) = default;
+  ProcessConfiguration::ProcessConfiguration(ProcessConfiguration&&) = default;
 
   ProcessConfiguration& ProcessConfiguration::operator=(
     ProcessConfiguration const& rhs) noexcept(false) = default;
