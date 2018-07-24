@@ -15,9 +15,11 @@ namespace {
 
   // Testing hierarchy
   // Non virtual
-  class MCBase {};
+  class MCBase {
+  };
 
-  class MCConcrete : public MCBase {};
+  class MCConcrete : public MCBase {
+  };
 
   // Virtual
   class MCBaseVirtual {
@@ -61,10 +63,12 @@ namespace {
   };
 
   // Other tree of inheritance
-  class MCOtherBase {};
+  class MCOtherBase {
+  };
 
   // Multiple
-  class MCConcreteMultiple : public MCBase, public MCOtherBase {};
+  class MCConcreteMultiple : public MCBase, public MCOtherBase {
+  };
 
   // Ambiguous?
 }
