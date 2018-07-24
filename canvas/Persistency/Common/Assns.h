@@ -72,13 +72,13 @@
 //
 // Accessors:
 //
-//   assn_iterator begin() const; // De-referencing an assn_iterator
-//   assn_iterator end() const;   // yields an assn_t const&.
+//   const_iterator begin() const; // De-referencing an const_iterator
+//   const_iterator end() const;   // yields an assn_t const&.
 //   assn_t const& operator [] (size_type i) const;
 //   assn_t const& at(size_type i) const; // Bounds-checked.
 //   size_type size() const;
 //   D const& data(std::size_t index) const;
-//   D const& data(assn_iterator it) const;
+//   D const& data(const_iterator it) const;
 //
 ////////////////////////////////////////////////////////////////////////
 
@@ -132,7 +132,14 @@ private:
 
 public:
   using assn_t = typename ptrs_t::value_type;
-  using assn_iterator = typename ptrs_t::const_iterator;
+  using const_iterator = typename ptrs_t::const_iterator;
+
+  // Clang can't handle type alias deprecations; so we use a typedef instead.
+  [[deprecated("\n\nart warning: 'assn_iterator' has been replaced with "
+               "'const_iterator'.\n"
+               "             The 'assn_iterator' type will be removed as of "
+               "art 3.02.\n\n")]] typedef const_iterator assn_iterator;
+
   using size_type = typename ptrs_t::size_type;
 
   // Constructors, destructor.
@@ -141,8 +148,8 @@ public:
   virtual ~Assns() = default;
 
   // Accessors.
-  assn_iterator begin() const;
-  assn_iterator end() const;
+  const_iterator begin() const;
+  const_iterator end() const;
   assn_t const& operator[](size_type index) const;
   assn_t const& at(size_type index) const;
   size_type size() const;
@@ -283,14 +290,14 @@ inline art::Assns<L, R, void>::Assns(partner_t const& other)
 }
 
 template <typename L, typename R>
-inline typename art::Assns<L, R, void>::assn_iterator
+inline typename art::Assns<L, R, void>::const_iterator
 art::Assns<L, R, void>::begin() const
 {
   return ptrs_.begin();
 }
 
 template <typename L, typename R>
-inline typename art::Assns<L, R, void>::assn_iterator
+inline typename art::Assns<L, R, void>::const_iterator
 art::Assns<L, R, void>::end() const
 {
   return ptrs_.end();

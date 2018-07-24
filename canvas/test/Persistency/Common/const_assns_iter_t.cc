@@ -6,6 +6,8 @@
 #include <forward_list>
 #include <type_traits>
 
+using namespace art;
+
 using intvec_t = std::vector<int>;
 using shortvec_t = std::vector<short>;
 using strvec_t = std::vector<std::string>;
@@ -13,6 +15,31 @@ using floatvec_t = std::vector<float>;
 using assns_ab_t = art::Assns<int, float>;
 using assns_abd_t = art::Assns<int, float, short>;
 using ci_t = assns_abd_t::const_iterator;
+
+using ab_node_t = assns_ab_t::const_iterator::value_type;
+using ab_node_first_t = ab_node_t::first_type;
+using ab_node_second_t = ab_node_t::second_type;
+using abd_node_t = ci_t::value_type;
+using abd_node_first_t = abd_node_t::first_type;
+using abd_node_second_t = abd_node_t::second_type;
+using abd_node_data_t = abd_node_t::data_type;
+
+#define ERR_MSG "Types are not the same."
+
+static_assert(std::is_same<ab_node_first_t, abd_node_first_t>::value, ERR_MSG);
+static_assert(std::is_same<ab_node_second_t, abd_node_second_t>::value,
+              ERR_MSG);
+static_assert(
+  std::is_same<abd_node_first_t, tuple_element_t<0, abd_node_t>>::value,
+  ERR_MSG);
+static_assert(
+  std::is_same<abd_node_second_t, tuple_element_t<1, abd_node_t>>::value,
+  ERR_MSG);
+static_assert(
+  std::is_same<abd_node_data_t, tuple_element_t<2, abd_node_t>>::value,
+  ERR_MSG);
+
+#undef ERR_MSG
 
 int
 main()
@@ -45,11 +72,24 @@ main()
   auto my_begin = assns.begin();
   auto const my_end = assns.end();
 
-  auto check_values = [](auto r, short const s, float const f, int const j) {
-    assert(*(r.data) == s);
-    assert(*(r.second.get()) == f);
-    assert(*(r.first.get()) == j);
-  };
+  auto check_values =
+    [](auto const& r, short const s, float const f, int const j) {
+      auto const& first = get<abd_node_first_t>(r);
+      auto const& second = get<abd_node_second_t>(r);
+      auto const& data = get<abd_node_data_t>(r);
+
+      auto const& firstA = get<0>(r);
+      auto const& secondA = get<1>(r);
+      auto const& dataA = get<2>(r);
+
+      assert(first == firstA);
+      assert(second == secondA);
+      assert(data == dataA);
+
+      assert(data == s);
+      assert(*second == f);
+      assert(*first == j);
+    };
 
   k = 0;
   for (auto p = my_begin; p != my_end; ++p) {

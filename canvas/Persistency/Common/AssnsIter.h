@@ -2,25 +2,14 @@
 #define canvas_Persistency_Common_AssnsIter_h
 
 /* Assns Iterator for art::Assns<L, R, D> */
+
 #include "canvas/Persistency/Common/Assns.h"
-#include "canvas/Persistency/Common/Ptr.h"
+#include "canvas/Persistency/Common/AssnsNode.h"
 
 #include <iostream>
 #include <iterator>
 
 namespace art {
-  // for dereference return type
-  template <class L, class R, class D>
-  struct AssnsNode {
-    art::Ptr<L> first{};
-    art::Ptr<R> second{};
-    D const* data{nullptr};
-    AssnsNode() = default;
-    AssnsNode(art::Ptr<L> const& l, art::Ptr<R> const& r, D const& d)
-      : first{l}, second{r}, data{&d}
-    {}
-  };
-
   enum class Direction : int { Forward = 1, Reverse = -1 };
 
   template <Direction Dir>
@@ -32,7 +21,10 @@ namespace art {
 
   ////////////////////////////
   // Const Iterator
-  template <class L, class R, class D, Direction Dir = Direction::Forward>
+  template <typename L,
+            typename R,
+            typename D,
+            Direction Dir = Direction::Forward>
   class const_AssnsIter {
   public:
     using iterator_category = std::random_access_iterator_tag;
@@ -99,7 +91,7 @@ namespace art {
 
   // Utilities for determining the left and right operands of iterator
   // comparisons based on the direction of the iterator.
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   constexpr auto const&
   left(const_AssnsIter<L, R, D, Dir> const& a,
        const_AssnsIter<L, R, D, Dir> const& b)
@@ -107,7 +99,7 @@ namespace art {
     return (Dir == Direction::Forward) ? a : b;
   }
 
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   constexpr auto const&
   right(const_AssnsIter<L, R, D, Dir> const& a,
         const_AssnsIter<L, R, D, Dir> const& b)
@@ -116,7 +108,7 @@ namespace art {
   }
 
   // Dereference
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   typename art::const_AssnsIter<L, R, D, Dir>::reference
     const_AssnsIter<L, R, D, Dir>::operator*() const
   {
@@ -128,7 +120,7 @@ namespace art {
   }
 
   // right arrow
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   typename art::const_AssnsIter<L, R, D, Dir>::pointer
     const_AssnsIter<L, R, D, Dir>::operator->() const
   {
@@ -140,7 +132,7 @@ namespace art {
   }
 
   // Pre-increment
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   art::const_AssnsIter<L, R, D, Dir>& const_AssnsIter<L, R, D, Dir>::
   operator++()
   {
@@ -149,7 +141,7 @@ namespace art {
   }
 
   // Post-increment
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   art::const_AssnsIter<L, R, D, Dir> const_AssnsIter<L, R, D, Dir>::operator++(
     int)
   {
@@ -159,7 +151,7 @@ namespace art {
   }
 
   // Pre-decrement
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   art::const_AssnsIter<L, R, D, Dir>& const_AssnsIter<L, R, D, Dir>::
   operator--()
   {
@@ -167,7 +159,7 @@ namespace art {
     return *this;
   }
   // post-decrement
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   art::const_AssnsIter<L, R, D, Dir> const_AssnsIter<L, R, D, Dir>::operator--(
     int)
   {
@@ -177,7 +169,7 @@ namespace art {
   }
 
   // equality
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   bool
   const_AssnsIter<L, R, D, Dir>::operator==(
     art::const_AssnsIter<L, R, D, Dir> const& iter) const
@@ -186,7 +178,7 @@ namespace art {
   }
 
   // in-equality
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   bool
   const_AssnsIter<L, R, D, Dir>::operator!=(
     art::const_AssnsIter<L, R, D, Dir> const& iter) const
@@ -195,7 +187,7 @@ namespace art {
   }
 
   // increment by a given value ...
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   art::const_AssnsIter<L, R, D, Dir>&
   const_AssnsIter<L, R, D, Dir>::operator+=(std::size_t const i)
   {
@@ -206,7 +198,7 @@ namespace art {
   }
 
   // random access
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   art::const_AssnsIter<L, R, D, Dir>
   const_AssnsIter<L, R, D, Dir>::operator+(std::size_t const i) const
   {
@@ -216,7 +208,7 @@ namespace art {
   }
 
   // decrement by a given value ...
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   art::const_AssnsIter<L, R, D, Dir>&
   const_AssnsIter<L, R, D, Dir>::operator-=(std::size_t const i)
   {
@@ -227,7 +219,7 @@ namespace art {
   }
 
   // random access
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   art::const_AssnsIter<L, R, D, Dir>
   const_AssnsIter<L, R, D, Dir>::operator-(std::size_t const i) const
   {
@@ -237,7 +229,7 @@ namespace art {
   }
 
   // difference between two iterators to return an index
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   std::size_t
   const_AssnsIter<L, R, D, Dir>::operator-(
     art::const_AssnsIter<L, R, D, Dir> const& iter1) const
@@ -246,7 +238,7 @@ namespace art {
   }
 
   // Dereference
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   typename art::const_AssnsIter<L, R, D, Dir>::value_type
     const_AssnsIter<L, R, D, Dir>::operator[](std::size_t const i) const
   {
@@ -256,7 +248,7 @@ namespace art {
   }
 
   // less than
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   bool
   const_AssnsIter<L, R, D, Dir>::operator<(
     art::const_AssnsIter<L, R, D, Dir> const& iter) const
@@ -267,7 +259,7 @@ namespace art {
   }
 
   // less than equal to
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   bool
   const_AssnsIter<L, R, D, Dir>::operator<=(
     art::const_AssnsIter<L, R, D, Dir> const& iter) const
@@ -278,7 +270,7 @@ namespace art {
   }
 
   // less than equal to
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   bool
   const_AssnsIter<L, R, D, Dir>::operator>(
     art::const_AssnsIter<L, R, D, Dir> const& iter) const
@@ -289,7 +281,7 @@ namespace art {
   }
 
   // greater than equal to
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   bool
   const_AssnsIter<L, R, D, Dir>::operator>=(
     art::const_AssnsIter<L, R, D, Dir> const& iter) const
@@ -299,7 +291,7 @@ namespace art {
     return l.index_ >= r.index_;
   }
 
-  template <class L, class R, class D, Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   art::const_AssnsIter<L, R, D, Dir>&
   const_AssnsIter<L, R, D, Dir>::operator=(
     art::const_AssnsIter<L, R, D, Dir> const& iter)
