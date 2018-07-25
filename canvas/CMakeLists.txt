@@ -19,6 +19,7 @@ cet_make(LIBRARY_NAME canvas
   Persistency/Common/detail
   LIBRARIES
   MF_MessageLogger
+  $<$<PLATFORM_ID:Darwin>:c++abi>
   ${TBB}
   fhiclcpp
   cetlib
