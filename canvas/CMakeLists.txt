@@ -5,8 +5,6 @@ add_subdirectory(Version)
 add_subdirectory(Utilities)
 add_subdirectory(Persistency)
 
-find_package(Threads)
-set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
 cet_make(LIBRARY_NAME canvas
   SUBDIRS Version ${CMAKE_CURRENT_BINARY_DIR}/Version
@@ -20,16 +18,13 @@ cet_make(LIBRARY_NAME canvas
   LIBRARIES
   MF_MessageLogger
   $<$<PLATFORM_ID:Darwin>:c++abi>
-  ${TBB}
   fhiclcpp
   cetlib
   cetlib_except
   hep_concurrency
   ${CLHEP}
-  ${CMAKE_THREAD_LIBS_INIT}
   ${CMAKE_DL_LIBS}
-  NO_DICTIONARY
-  )
+  NO_DICTIONARY)
 
 # Testing
 add_subdirectory(test)
