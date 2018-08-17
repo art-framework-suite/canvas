@@ -82,9 +82,17 @@ main()
       auto const& secondA = get<1>(r);
       auto const& dataA = get<2>(r);
 
+      auto const& firstB = get<Ptr<int>>(r);
+      auto const& secondB = get<Ptr<float>>(r);
+      auto const& dataB = get<short>(r);
+
       assert(first == firstA);
       assert(second == secondA);
       assert(data == dataA);
+
+      assert(first == firstB);
+      assert(second == secondB);
+      assert(data == dataB);
 
       assert(data == s);
       assert(*second == f);
