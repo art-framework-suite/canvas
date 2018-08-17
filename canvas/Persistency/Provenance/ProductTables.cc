@@ -18,7 +18,7 @@ namespace {
       if (pd.branchType() != bt) {
         continue;
       }
-      result.emplace(pd.productID(), pd);
+      result.try_emplace(pd.productID(), pd);
     }
     return result;
   }
@@ -48,11 +48,10 @@ art::ProductTable::ProductTable(ProductDescriptions const& descs,
 cet::exempt_ptr<art::BranchDescription const>
 art::ProductTable::description(ProductID const pid) const
 {
-  auto it = descriptions.find(pid);
-  if (it == descriptions.cend()) {
-    return nullptr;
+  if (auto it = descriptions.find(pid); it != cend(descriptions)) {
+    return cet::make_exempt_ptr(&it->second);
   }
-  return cet::make_exempt_ptr(&it->second);
+  return nullptr;
 }
 
 art::ProductTables

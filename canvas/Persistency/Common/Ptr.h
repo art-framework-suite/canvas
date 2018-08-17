@@ -118,8 +118,7 @@ namespace art {
 
     // 4.
     template <typename U>
-    Ptr(Ptr<U> const& pu,
-        std::enable_if_t<std::is_base_of<T, U>::value>* = nullptr)
+    Ptr(Ptr<U> const& pu, std::enable_if_t<std::is_base_of_v<T, U>>* = nullptr)
       : core_{pu.id(),
               (pu.hasCache() ? static_cast<T const*>(pu.get()) : nullptr),
               pu.productGetter()}
@@ -127,8 +126,7 @@ namespace art {
     {}
 
     template <typename U>
-    Ptr(Ptr<U> const& pu,
-        std::enable_if_t<std::is_base_of<U, T>::value>* = nullptr)
+    Ptr(Ptr<U> const& pu, std::enable_if_t<std::is_base_of_v<U, T>>* = nullptr)
       : core_{pu.id(), dynamic_cast<T const*>(pu.get()), nullptr}
       , key_{pu.key()}
     {}
@@ -258,8 +256,8 @@ namespace art {
   };
 
   template <typename T, typename U>
-  std::enable_if_t<std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
-                     std::is_base_of<U, T>::value,
+  std::enable_if_t<std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                     std::is_base_of_v<U, T>,
                    bool>
   operator==(Ptr<T> const& lhs, Ptr<U> const& rhs)
   {
@@ -267,8 +265,8 @@ namespace art {
   }
 
   template <typename T, typename U>
-  std::enable_if_t<std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
-                     std::is_base_of<U, T>::value,
+  std::enable_if_t<std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                     std::is_base_of_v<U, T>,
                    bool>
   operator!=(Ptr<T> const& lhs, Ptr<U> const& rhs)
   {
@@ -276,8 +274,8 @@ namespace art {
   }
 
   template <typename T, typename U>
-  std::enable_if_t<std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
-                     std::is_base_of<U, T>::value,
+  std::enable_if_t<std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                     std::is_base_of_v<U, T>,
                    bool>
   operator<(Ptr<T> const& lhs, Ptr<U> const& rhs)
   {

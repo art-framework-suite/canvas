@@ -3,14 +3,11 @@
 
 namespace art {
 
-  History::~History() {}
-
-  History::History()
-    : eventSelections_{}, branchListIndexes_{}, processHistoryID_{}
-  {}
+  History::~History() = default;
+  History::History() = default;
 
   History::size_type
-  History::size() const
+  History::size() const noexcept
   {
     return eventSelections_.size();
   }
@@ -28,37 +25,37 @@ namespace art {
   }
 
   EventSelectionID const&
-  History::getEventSelectionID(History::size_type i) const
+  History::getEventSelectionID(History::size_type const i) const noexcept
   {
     return eventSelections_[i];
   }
 
   EventSelectionIDVector const&
-  History::eventSelectionIDs() const
+  History::eventSelectionIDs() const noexcept
   {
     return eventSelections_;
   }
 
   ProcessHistoryID const&
-  History::processHistoryID() const
+  History::processHistoryID() const noexcept
   {
     return processHistoryID_;
   }
 
   void
-  History::setProcessHistoryID(ProcessHistoryID const& phid) const
+  History::setProcessHistoryID(ProcessHistoryID const& phid)
   {
     processHistoryID_ = phid;
   }
 
   BranchListIndexes const&
-  History::branchListIndexes() const
+  History::branchListIndexes() const noexcept
   {
     return branchListIndexes_;
   }
 
   BranchListIndexes&
-  History::branchListIndexes()
+  History::branchListIndexes() noexcept
   {
     return branchListIndexes_;
   }

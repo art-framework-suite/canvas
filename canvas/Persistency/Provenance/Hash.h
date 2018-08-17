@@ -32,10 +32,9 @@ namespace art {
 
   template <int I>
   class Hash {
-  public: // Types
-    typedef std::string value_type;
+  public:
+    using value_type = std::string;
 
-  public: // Special Member Functions
     Hash();
     explicit Hash(std::string const&);
     Hash(Hash<I> const&);
@@ -43,18 +42,16 @@ namespace art {
     Hash<I>& operator=(Hash<I> const&);
     Hash<I>& operator=(Hash<I>&&);
 
-  public: // Static API
     // For ROOT
-    static short Class_Version();
+    static short Class_Version() noexcept;
 
-  public: // API
     // For now, just check the most basic: a default constructed
     // ParameterSetID is not valid. This is very crude: we are
     // assuming that nobody created a ParameterSetID from an empty
     // string, nor from any string that is not a valid string
     // representation of an MD5 checksum.
     bool isValid() const;
-    bool isCompactForm() const;
+    bool isCompactForm() const noexcept;
     // Return the 16 byte (non-printable) string form.
     std::string compactForm() const;
     bool operator<(Hash<I> const&) const;
@@ -64,43 +61,41 @@ namespace art {
     std::ostream& print(std::ostream&) const;
     void swap(Hash<I>&);
 
-  private: // Implementation details.
+  private:
     // If hash_ is in the hexified 32 byte representation,
     // make it be in the 16 byte unhexified representation.
     void fixup();
-
-  private: // Member Data -- Implementation details.
-    std::string hash_;
+    std::string hash_{};
   };
 
   // MUST UPDATE WHEN CLASS IS CHANGED!
   template <int I>
   short
-  Hash<I>::Class_Version()
+  Hash<I>::Class_Version() noexcept
   {
     return 10;
   }
 
   template <int I>
-  Hash<I>::Hash() : hash_()
+  Hash<I>::Hash()
   {
     fixup();
   }
 
   template <int I>
-  Hash<I>::Hash(std::string const& s) : hash_(s)
+  Hash<I>::Hash(std::string const& s) : hash_{s}
   {
     fixup();
   }
 
   template <int I>
-  Hash<I>::Hash(Hash<I> const& rhs) : hash_(rhs.hash_)
+  Hash<I>::Hash(Hash<I> const& rhs) : hash_{rhs.hash_}
   {
     fixup();
   }
 
   template <int I>
-  Hash<I>::Hash(Hash<I>&& rhs) : hash_(std::move(rhs.hash_))
+  Hash<I>::Hash(Hash<I>&& rhs) : hash_{std::move(rhs.hash_)}
   {
     fixup();
   }
@@ -133,7 +128,7 @@ namespace art {
       auto ret = hash_ != art::detail::InvalidHash();
       return ret;
     }
-    return hash_.size() != 0;
+    return !hash_.empty();
   }
 
   template <int I>
@@ -184,7 +179,7 @@ namespace art {
   std::ostream&
   Hash<I>::print(std::ostream& os) const
   {
-    Hash<I> tMe(*this);
+    Hash<I> tMe{*this};
     cet::MD5Result temp;
     cet::copy_all(tMe.hash_, temp.bytes);
     os << temp.toString();
@@ -236,7 +231,7 @@ namespace art {
 
   template <int I>
   bool
-  Hash<I>::isCompactForm() const
+  Hash<I>::isCompactForm() const noexcept
   {
     return hash_.size() == 16;
   }

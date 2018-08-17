@@ -133,21 +133,20 @@ private:
 ////////////////////////////////////////////////////////////////////////
 // Implementation details.
 
+#include "boost/lexical_cast.hpp"
+#include "canvas/Persistency/Common/traits.h"
+#include "canvas/Utilities/Exception.h"
 #include "canvas/Persistency/Common/GetProduct.h"
 #include "canvas/Persistency/Common/PtrVector.h"
 #include "canvas/Persistency/Common/getElementAddresses.h"
 #include "canvas/Persistency/Common/setPtr.h"
 
-#include "boost/lexical_cast.hpp"
-#include "canvas/Persistency/Common/traits.h"
-#include "canvas/Utilities/Exception.h"
-#include <memory>
-#include <type_traits>
-
 #include <deque>
 #include <list>
+#include <memory>
 #include <set>
 #include <string>
+#include <type_traits>
 #include <typeinfo>
 #include <vector>
 
@@ -233,23 +232,30 @@ std::unique_ptr<art::EDProduct>
 art::Wrapper<T>::do_makePartner(std::type_info const& wanted_wrapper) const
 {
   std::unique_ptr<art::EDProduct> retval;
-  std::conditional_t<detail::has_makePartner_member<T>::value,
-                     DoMakePartner<T>,
-                     DoNotMakePartner<T>>
-    maybe_maker;
-  retval = maybe_maker(obj, wanted_wrapper);
+  if constexpr (detail::has_makePartner_member<T>::value) {
+    retval = obj.makePartner(wanted_wrapper);
+  } else {
+    throw Exception{errors::LogicError, "makePartner"}
+      << "Attempted to make partner of a product ("
+      << cet::demangle_symbol(typeid(T).name()) << ") that does not know how!\n"
+      << "Please report to the art framework developers.\n";
+  }
   return retval;
 }
 
 template <typename T>
 inline void
 art::Wrapper<T>::do_setPtr(std::type_info const& toType,
-                           unsigned long index,
+                           unsigned long const index [[maybe_unused]],
                            void const*& ptr) const
 {
-  std::conditional_t<has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T>>
-    maybe_filler;
-  maybe_filler(this->obj, toType, index, ptr);
+  if constexpr (has_setPtr<T>::value) {
+    art::setPtr(obj, toType, index, ptr);
+  } else {
+    throw Exception{errors::ProductDoesNotSupportPtr}
+      << "The product type " << cet::demangle_symbol(typeid(T).name())
+      << " does not support art::Ptr\n";
+  }
 }
 
 template <typename T>
@@ -259,9 +265,17 @@ art::Wrapper<T>::do_getElementAddresses(
   std::vector<unsigned long> const& indices,
   std::vector<void const*>& ptrs) const
 {
-  std::conditional_t<has_setPtr<T>::value, DoSetPtr<T>, DoNotSetPtr<T>>
-    maybe_filler;
-  maybe_filler(this->obj, toType, indices, ptrs);
+  if constexpr (has_setPtr<T>::value) {
+    // getElementAddresses is the name of an overload set; each
+    // concrete collection T should supply a getElementAddresses
+    // function, in the same namespace at that in which T is
+    // defined, or in the 'art' namespace.
+    art::getElementAddresses(obj, toType, indices, ptrs);
+  } else {
+    throw Exception{errors::ProductDoesNotSupportPtr}
+      << "The product type " << cet::demangle_symbol(typeid(T).name())
+      << " does not support art::PtrVector\n";
+  }
 }
 
 template <typename T>
@@ -330,92 +344,6 @@ namespace art {
   struct productSize<cet::map_vector<E>, false>
     : public productSize<cet::map_vector<E>, true> {
   };
-
-  template <typename T>
-  struct DoMakePartner {
-    std::unique_ptr<EDProduct>
-    operator()(T const& obj, std::type_info const& wanted_wrapper_type) const
-    {
-      return obj.makePartner(wanted_wrapper_type);
-    }
-  };
-
-  template <typename T>
-  struct DoNotMakePartner {
-    std::unique_ptr<EDProduct>
-    operator()(T const&, std::type_info const&) const
-    {
-      throw Exception(errors::LogicError, "makePartner")
-        << "Attempted to make partner of a product ("
-        << cet::demangle_symbol(typeid(T).name())
-        << ") that does not know how!\n"
-        << "Please report to the ART framework developers.\n";
-    }
-  };
-
-  template <typename T>
-  struct DoSetPtr {
-    void operator()(T const& obj,
-                    std::type_info const& toType,
-                    unsigned long index,
-                    void const*& ptr) const;
-    void operator()(T const& obj,
-                    std::type_info const& toType,
-                    std::vector<unsigned long> const& index,
-                    std::vector<void const*>& ptrs) const;
-  };
-
-  template <typename T>
-  struct DoNotSetPtr {
-    void
-    operator()(T const&,
-               std::type_info const&,
-               unsigned long,
-               void const*&) const
-    {
-      throw Exception(errors::ProductDoesNotSupportPtr)
-        << "The product type " << cet::demangle_symbol(typeid(T).name())
-        << "\ndoes not support art::Ptr\n";
-    }
-
-    void
-    operator()(T const&,
-               std::type_info const&,
-               std::vector<unsigned long> const&,
-               std::vector<void const*>&) const
-    {
-      throw Exception(errors::ProductDoesNotSupportPtr)
-        << "The product type " << cet::demangle_symbol(typeid(T).name())
-        << "\ndoes not support art::PtrVector\n";
-    }
-  };
-
-  template <typename T>
-  void
-  DoSetPtr<T>::operator()(T const& obj,
-                          std::type_info const& toType,
-                          unsigned long const index,
-                          void const*& ptr) const
-  {
-    // setPtr is the name of an overload set; each concrete collection
-    // T should supply a setPtr function, in the same namespace at
-    // that in which T is defined, or in the 'art' namespace.
-    setPtr(obj, toType, index, ptr);
-  }
-
-  template <typename T>
-  void
-  DoSetPtr<T>::operator()(T const& obj,
-                          std::type_info const& toType,
-                          std::vector<unsigned long> const& indices,
-                          std::vector<void const*>& ptr) const
-  {
-    // getElementAddresses is the name of an overload set; each
-    // concrete collection T should supply a getElementAddresses
-    // function, in the same namespace at that in which T is
-    // defined, or in the 'art' namespace.
-    getElementAddresses(obj, toType, indices, ptr);
-  }
 }
 
 #endif /* canvas_Persistency_Common_Wrapper_h */

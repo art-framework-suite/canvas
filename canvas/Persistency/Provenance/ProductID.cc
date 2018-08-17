@@ -5,8 +5,6 @@
 
 namespace art {
 
-  ProductID::ProductID(value_type const value) : value_{value} {}
-
   ProductID::ProductID(std::string const& canonicalProductName)
     : ProductID{toID(canonicalProductName)}
   {}
@@ -26,11 +24,6 @@ namespace art {
                               << "from canonical product name: "
                               << "\"" << canonicalProductName << "\"";
     return check;
-  }
-
-  ProductID::operator std::size_t() const
-  {
-    return static_cast<std::size_t>(value_);
   }
 
   std::ostream&

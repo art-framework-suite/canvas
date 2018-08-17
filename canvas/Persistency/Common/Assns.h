@@ -433,7 +433,7 @@ art::Assns<L, R, void>::fill_from_transients()
 template <typename L, typename R, typename D>
 inline art::Assns<L, R, D>::Assns()
 {
-  static_assert((!std::is_pointer<D>::value),
+  static_assert(!std::is_pointer_v<D>,
                 "Data template argument must not be pointer type!");
 }
 

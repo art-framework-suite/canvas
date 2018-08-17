@@ -16,8 +16,7 @@ namespace art {
 
   // This class is a ProcessHistoryID and a vector of ProcessConfiguration.
   class ProcessHistory {
-
-  public: // TYPES
+  public:
     typedef ProcessConfiguration value_type;
     typedef std::vector<value_type> collection_type;
 
@@ -32,15 +31,12 @@ namespace art {
 
     typedef collection_type::size_type size_type;
 
-  public: // TYPES
     // Note: threading: The ProcessHistoryID ctor can throw!
     struct Transients {
       ProcessHistoryID phid_{};
     };
 
-  public: // MEMBER FUNCTIONS
     ~ProcessHistory();
-
     // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
     ProcessHistory();
 

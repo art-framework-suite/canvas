@@ -16,41 +16,28 @@
 namespace art {
 
   class History {
-
   public:
-    typedef std::size_t size_type;
+    using size_type = std::size_t;
 
-  public:
     ~History();
-
     History();
-
     History(History const&) = default;
-
     History(History&&) = delete;
-
     History& operator=(History const&) = delete;
-
     History& operator=(History&&) = delete;
 
-  public:
-    size_type size() const;
+    size_type size() const noexcept;
 
     void addEventSelectionEntry(EventSelectionID const& eventSelection);
-
     void addBranchListIndexEntry(BranchListIndex const& branchListIndex);
 
-    EventSelectionID const& getEventSelectionID(size_type i) const;
+    EventSelectionID const& getEventSelectionID(size_type i) const noexcept;
+    EventSelectionIDVector const& eventSelectionIDs() const noexcept;
+    ProcessHistoryID const& processHistoryID() const noexcept;
 
-    EventSelectionIDVector const& eventSelectionIDs() const;
-
-    ProcessHistoryID const& processHistoryID() const;
-
-    void setProcessHistoryID(ProcessHistoryID const& phid) const;
-
-    BranchListIndexes const& branchListIndexes() const;
-
-    BranchListIndexes& branchListIndexes();
+    BranchListIndexes const& branchListIndexes() const noexcept;
+    BranchListIndexes& branchListIndexes() noexcept;
+    void setProcessHistoryID(ProcessHistoryID const& phid);
 
   private:
     EventSelectionIDVector eventSelections_;

@@ -88,21 +88,21 @@ namespace art {
 
       // By-type accessors
       template <typename T>
-      static std::enable_if_t<std::is_same<T, first_type>::value, T const&>
+      static std::enable_if_t<std::is_same_v<T, first_type>, T const&>
       get_element(node_t const& r)
       {
         return r.first;
       }
 
       template <typename T>
-      static std::enable_if_t<std::is_same<T, second_type>::value, T const&>
+      static std::enable_if_t<std::is_same_v<T, second_type>, T const&>
       get_element(node_t const& r)
       {
         return r.second;
       }
 
       template <typename T>
-      static std::enable_if_t<std::is_same<T, D>::value, T const&>
+      static std::enable_if_t<std::is_same_v<T, D>, T const&>
       get_element(node_t const& r)
       {
         return *r.data;
