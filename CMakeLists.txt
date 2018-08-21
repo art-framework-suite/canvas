@@ -38,7 +38,7 @@ cet_report_compiler_flags()
 cet_find_library(CPPUNIT NAMES cppunit REQUIRED)
 find_package(TBB COMPONENTS tbb REQUIRED)
 find_package(messagefacility REQUIRED)
-find_package(CLHEP COMPONENTS Vector Matrix RREQUIRED)
+find_package(CLHEP COMPONENTS Vector Matrix REQUIRED)
 find_package(range-v3 REQUIRED)
 find_package(Boost REQUIRED)
 

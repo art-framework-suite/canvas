@@ -9,8 +9,8 @@ find_package(Threads REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  find_package(Root REQUIRED)
-  set (INTROSPECTION_LIBS ${ROOT_CORE})
+  find_package(ROOT REQUIRED COMPONENTS Core)
+  set (INTROSPECTION_LIBS ${ROOT_Core_LIBRARY})
 endif()
 
 cet_make(LIBRARY_NAME canvas
