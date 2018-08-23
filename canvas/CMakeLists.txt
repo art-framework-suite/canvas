@@ -22,6 +22,7 @@ cet_make(LIBRARY_NAME canvas
   cetlib
   cetlib_except
   hep_concurrency
+  ${Boost_DATE_TIME_LIBRARY}
   ${CLHEP}
   ${CMAKE_DL_LIBS}
   NO_DICTIONARY)

@@ -72,10 +72,8 @@ namespace art {
 
   private:
     void mergeNewTimestampsIntoThis_(RunAuxiliary const&);
-
     void mergeNewProcessHistoryIntoThis_(RunAuxiliary const&);
 
-  private:
     // most recent process that put a RunProduct into this run
     // is the last on the list, this defines what "latest" is
     mutable ProcessHistoryID processHistoryID_{};
