@@ -86,7 +86,7 @@ namespace art {
     static constexpr Timestamp
     endOfTime()
     {
-      return Timestamp(-1);
+      return Timestamp{-1ull};
     }
     static constexpr Timestamp
     beginOfTime()
