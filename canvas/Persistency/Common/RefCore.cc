@@ -10,11 +10,11 @@
 
 namespace art {
 
-  RefCore::RefCoreTransients::RefCoreTransients() = default;
+  RefCore::RefCoreTransients::RefCoreTransients() noexcept = default;
 
   RefCore::RefCoreTransients::RefCoreTransients(
     void const* prodPtr,
-    EDProductGetter const* prodGetter)
+    EDProductGetter const* prodGetter) noexcept
     : itemPtr_{prodPtr}, prodGetter_{prodGetter}
   {}
 
@@ -29,39 +29,40 @@ namespace art {
   bool
   RefCore::isAvailable() const
   {
-    return productPtr() != 0 || (id_.isValid() && productGetter() != 0 &&
-                                 productGetter()->getIt() != 0);
+    return productPtr() != nullptr ||
+           (id_.isValid() && productGetter() != nullptr &&
+            productGetter()->getIt() != nullptr);
   }
 
   bool
-  RefCore::isNonnull() const
+  RefCore::isNonnull() const noexcept
   {
     return id_.isValid();
   }
 
   bool
-  RefCore::isNull() const
+  RefCore::isNull() const noexcept
   {
     return !isNonnull();
   }
 
-  bool RefCore::operator!() const { return isNull(); }
+  bool RefCore::operator!() const noexcept { return isNull(); }
 
   ProductID
-  RefCore::id() const
+  RefCore::id() const noexcept
   {
     return id_;
   }
 
   void const*
-  RefCore::productPtr() const
+  RefCore::productPtr() const noexcept
   {
     return transients_.itemPtr_;
   }
 
   // Used by isAvailable()
   EDProductGetter const*
-  RefCore::productGetter() const
+  RefCore::productGetter() const noexcept
   {
     return transients_.prodGetter_;
   }
@@ -69,7 +70,7 @@ namespace art {
   // Used by RefCoreStreamer on read to set itemPtr_
   // to the nullptr.
   void
-  RefCore::setProductPtr(void const* prodPtr) const
+  RefCore::setProductPtr(void const* prodPtr) const noexcept
   {
     transients_.itemPtr_ = prodPtr;
   }
@@ -78,7 +79,7 @@ namespace art {
   // Note: prodGetter_ is actually a Group for art,
   //       and a BranchData or AssnsBranchData for gallery.
   void
-  RefCore::setProductGetter(EDProductGetter const* prodGetter)
+  RefCore::setProductGetter(EDProductGetter const* prodGetter) noexcept
   {
     transients_.prodGetter_ = prodGetter;
   }

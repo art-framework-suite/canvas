@@ -20,11 +20,9 @@ namespace art {
 
 class art::PtrVectorBase {
 public:
-  typedef unsigned long key_type;
-  typedef std::vector<key_type> indices_t;
-
-public:
-  typedef indices_t::size_type size_type;
+  using key_type = unsigned long;
+  using indices_t = std::vector<key_type>;
+  using size_type = indices_t::size_type;
 
   virtual ~PtrVectorBase() = default;
 
@@ -107,7 +105,7 @@ art::PtrVectorBase::clear()
 }
 
 inline void
-art::PtrVectorBase::reserve(size_type n)
+art::PtrVectorBase::reserve(size_type const n)
 {
   indicies_.reserve(n);
 }

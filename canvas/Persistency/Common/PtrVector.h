@@ -16,12 +16,6 @@
 #include <iterator>
 #include <vector>
 
-#if GCC_IS_AT_LEAST(4, 9, 0) || CLANG_IS_AT_LEAST(3, 5, 0)
-#define PV_INSERT_POSITION_TYPE const_iterator
-#else
-#define PV_INSERT_POSITION_TYPE iterator
-#endif
-
 namespace art {
   template <typename T>
   class PtrVector;
@@ -29,10 +23,10 @@ namespace art {
   template <typename T>
   void swap(PtrVector<T>&, PtrVector<T>&);
 
-  template <typename COMP>
+  template <typename Comp>
   class ComparePtrs {
   public:
-    ComparePtrs(COMP comp) : comp_(comp) {}
+    ComparePtrs(Comp const comp) : comp_{comp} {}
     template <typename T>
     bool
     operator()(Ptr<T> const& a, Ptr<T> const& b)
@@ -41,28 +35,28 @@ namespace art {
     }
 
   private:
-    COMP comp_;
+    Comp comp_;
   };
 }
 
 template <typename T>
 class art::PtrVector : public PtrVectorBase {
 private:
-  typedef std::vector<Ptr<T>> data_t;
+  using data_t = std::vector<Ptr<T>>;
 
 public:
-  typedef typename data_t::value_type value_type;
-  typedef typename data_t::allocator_type allocator_type;
-  typedef typename data_t::reference reference;
-  typedef typename data_t::const_reference const_reference;
-  typedef typename data_t::pointer pointer;
-  typedef typename data_t::const_pointer const_pointer;
-  typedef typename data_t::iterator iterator;
-  typedef typename data_t::const_iterator const_iterator;
-  typedef typename data_t::reverse_iterator reverse_iterator;
-  typedef typename data_t::const_reverse_iterator const_reverse_iterator;
-  typedef typename data_t::difference_type difference_type;
-  typedef typename data_t::size_type size_type;
+  using value_type = typename data_t::value_type;
+  using allocator_type = typename data_t::allocator_type;
+  using reference = typename data_t::reference;
+  using const_reference = typename data_t::const_reference;
+  using pointer = typename data_t::pointer;
+  using const_pointer = typename data_t::const_pointer;
+  using iterator = typename data_t::iterator;
+  using const_iterator = typename data_t::const_iterator;
+  using reverse_iterator = typename data_t::reverse_iterator;
+  using const_reverse_iterator = typename data_t::const_reverse_iterator;
+  using difference_type = typename data_t::difference_type;
+  using size_type = typename data_t::size_type;
 
   PtrVector();
   template <typename U>
@@ -86,10 +80,10 @@ public:
   reverse_iterator rend();
   const_reverse_iterator rend() const;
 
-  const_iterator cbegin() const;          // C+2011.
-  const_iterator cend() const;            // C+2011.
-  const_reverse_iterator crbegin() const; // C+2011.
-  const_reverse_iterator crend() const;   // C+2011.
+  const_iterator cbegin() const;
+  const_iterator cend() const;
+  const_reverse_iterator crbegin() const;
+  const_reverse_iterator crend() const;
 
   // Capacity.
   size_type size() const;
@@ -98,7 +92,7 @@ public:
   size_type capacity() const;
   bool empty() const;
   void reserve(size_type n);
-  void shrink_to_fit(); // C+2011.
+  void shrink_to_fit();
 
   // Element access.
   Ptr<T> const& operator[](unsigned long const idx) const;
@@ -108,7 +102,7 @@ public:
   const_reference front() const;
   reference back();
   const_reference back() const;
-  // No C++2011 data() functions by design.
+  // No data() functions by design.
 
   // Modifiers.
   template <typename U>
@@ -125,7 +119,7 @@ public:
   template <typename U>
   void insert(iterator position, size_type n, Ptr<U> const& p);
   template <typename InputIterator>
-  iterator insert(PV_INSERT_POSITION_TYPE position,
+  iterator insert(const_iterator position,
                   InputIterator first,
                   InputIterator last);
   iterator erase(iterator position);
@@ -133,13 +127,13 @@ public:
   void swap(PtrVector& other);
   void swap(key_type k1, key_type k2);
   void clear();
-  // No C++2011 emplace() due to problems associated with checking for
+  // No emplace() due to problems associated with checking for
   // compatible ProductID.
 
   bool operator==(PtrVector const& other) const;
   void sort();
-  template <class COMP>
-  void sort(COMP comp);
+  template <class Comp>
+  void sort(Comp comp);
   static short
   Class_Version()
   {
@@ -152,8 +146,8 @@ private:
   void zeroTransients() override;
 
   // Need to explicitly zero this from custom streamer for base class.
-  mutable data_t ptrs_; //! transient
-};                      // PtrVector<T>
+  mutable data_t ptrs_{}; //! transient
+};
 
 #include <algorithm>
 #include <functional>
@@ -162,16 +156,15 @@ private:
 
 // Constructors.
 template <typename T>
-inline art::PtrVector<T>::PtrVector() : PtrVectorBase(), ptrs_()
-{}
+inline art::PtrVector<T>::PtrVector() = default;
 
 template <typename T>
 template <typename U>
 inline art::PtrVector<T>::PtrVector(PtrVector<U> const& other)
-  : PtrVectorBase(other), ptrs_()
+  : PtrVectorBase{other}
 {
   // Ensure that types are compatible.
-  static_assert(std::is_base_of<T, U>::value || std::is_base_of<U, T>::value,
+  static_assert(std::is_base_of_v<T, U> || std::is_base_of_v<U, T>,
                 "PtrVector: incompatible types");
   ptrs_.reserve(other.size());
   std::copy(other.begin(), other.end(), std::back_inserter(ptrs_));
@@ -179,11 +172,10 @@ inline art::PtrVector<T>::PtrVector(PtrVector<U> const& other)
 
 template <typename T>
 template <typename U>
-inline art::PtrVector<T>::PtrVector(std::initializer_list<Ptr<U>> il)
-  : PtrVectorBase(), ptrs_()
+inline art::PtrVector<T>::PtrVector(std::initializer_list<Ptr<U>> const il)
 {
-  static_assert(std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
-                  std::is_base_of<U, T>::value,
+  static_assert(std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                  std::is_base_of_v<U, T>,
                 "PtrVector: incompatible types");
   ptrs_.reserve(il.size());
   for (auto&& p : il) {
@@ -195,10 +187,10 @@ inline art::PtrVector<T>::PtrVector(std::initializer_list<Ptr<U>> il)
 template <typename T>
 template <typename U>
 inline art::PtrVector<T>&
-art::PtrVector<T>::operator=(std::initializer_list<Ptr<U>> il)
+art::PtrVector<T>::operator=(std::initializer_list<Ptr<U>> const il)
 {
-  static_assert(std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
-                  std::is_base_of<U, T>::value,
+  static_assert(std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                  std::is_base_of_v<U, T>,
                 "PtrVector: incompatible types");
   assign(il);
   return *this;
@@ -209,7 +201,7 @@ template <typename U>
 inline art::PtrVector<T>&
 art::PtrVector<T>::operator=(PtrVector<U> const& other) &
 {
-  static_assert(std::is_base_of<T, U>::value || std::is_base_of<U, T>::value,
+  static_assert(std::is_base_of_v<T, U> || std::is_base_of_v<U, T>,
                 "PtrVector: incompatible types");
   this->PtrVectorBase::operator=(other);
   ptrs_.clear();
@@ -319,7 +311,7 @@ art::PtrVector<T>::max_size() const -> size_type
 
 template <typename T>
 inline void
-art::PtrVector<T>::resize(size_type n)
+art::PtrVector<T>::resize(size_type const n)
 {
   ptrs_.resize(n);
 }
@@ -340,7 +332,7 @@ art::PtrVector<T>::empty() const
 
 template <typename T>
 inline void
-art::PtrVector<T>::reserve(size_type n)
+art::PtrVector<T>::reserve(size_type const n)
 {
   ptrs_.reserve(n);
 }
@@ -362,14 +354,14 @@ inline art::Ptr<T> const& art::PtrVector<T>::operator[](
 
 template <typename T>
 inline auto
-art::PtrVector<T>::at(size_type n) -> reference
+art::PtrVector<T>::at(size_type const n) -> reference
 {
   return ptrs_.at(n);
 }
 
 template <typename T>
 inline auto
-art::PtrVector<T>::at(size_type n) const -> const_reference
+art::PtrVector<T>::at(size_type const n) const -> const_reference
 {
   return ptrs_.at(n);
 }
@@ -406,10 +398,10 @@ art::PtrVector<T>::back() const -> const_reference
 template <typename T>
 template <typename U>
 inline void
-art::PtrVector<T>::assign(size_type n, Ptr<U> const& p)
+art::PtrVector<T>::assign(size_type const n, Ptr<U> const& p)
 {
-  static_assert(std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
-                  std::is_base_of<U, T>::value,
+  static_assert(std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                  std::is_base_of_v<U, T>,
                 "PtrVector: incompatible types");
   PtrVectorBase::clear();
   updateCore(p.refCore());
@@ -419,7 +411,7 @@ art::PtrVector<T>::assign(size_type n, Ptr<U> const& p)
 template <typename T>
 template <typename InputIterator>
 inline void
-art::PtrVector<T>::assign(InputIterator first, InputIterator last)
+art::PtrVector<T>::assign(InputIterator const first, InputIterator const last)
 {
   PtrVectorBase::clear();
   std::for_each(
@@ -430,7 +422,7 @@ art::PtrVector<T>::assign(InputIterator first, InputIterator last)
 template <typename T>
 template <typename U>
 inline void
-art::PtrVector<T>::assign(std::initializer_list<Ptr<U>> il)
+art::PtrVector<T>::assign(std::initializer_list<Ptr<U>> const il)
 {
   assign(il.begin(), il.end());
 }
@@ -441,8 +433,8 @@ inline void
 art::PtrVector<T>::push_back(Ptr<U> const& p)
 {
   // Ensure that types are compatible.
-  static_assert(std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
-                  std::is_base_of<U, T>::value,
+  static_assert(std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                  std::is_base_of_v<U, T>,
                 "PtrVector: incompatible types");
   updateCore(p.refCore());
   ptrs_.push_back(p);
@@ -458,11 +450,11 @@ art::PtrVector<T>::pop_back()
 template <typename T>
 template <typename U>
 inline typename art::PtrVector<T>::iterator
-art::PtrVector<T>::insert(iterator position, Ptr<U> const& p)
+art::PtrVector<T>::insert(iterator const position, Ptr<U> const& p)
 {
   // Ensure that types are compatible.
-  static_assert(std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
-                  std::is_base_of<U, T>::value,
+  static_assert(std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                  std::is_base_of_v<U, T>,
                 "PtrVector: incompatible types");
   updateCore(p.refCore());
   return ptrs_.insert(position, p);
@@ -471,11 +463,13 @@ art::PtrVector<T>::insert(iterator position, Ptr<U> const& p)
 template <typename T>
 template <typename U>
 inline void
-art::PtrVector<T>::insert(iterator position, size_type n, Ptr<U> const& p)
+art::PtrVector<T>::insert(iterator const position,
+                          size_type const n,
+                          Ptr<U> const& p)
 {
   // Ensure that types are compatible.
-  static_assert(std::is_same<T, U>::value || std::is_base_of<T, U>::value ||
-                  std::is_base_of<U, T>::value,
+  static_assert(std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                  std::is_base_of_v<U, T>,
                 "PtrVector: incompatible types");
   updateCore(p.refCore());
   ptrs_.insert(position, n, p);
@@ -484,7 +478,7 @@ art::PtrVector<T>::insert(iterator position, size_type n, Ptr<U> const& p)
 template <typename T>
 template <typename InputIterator>
 inline auto
-art::PtrVector<T>::insert(PV_INSERT_POSITION_TYPE position,
+art::PtrVector<T>::insert(const_iterator position,
                           InputIterator first,
                           InputIterator last) -> iterator
 {
@@ -551,15 +545,15 @@ template <typename T>
 inline void
 art::PtrVector<T>::sort()
 {
-  sort(std::less<T>());
+  sort(std::less<T>{});
 }
 
 template <typename T>
-template <class COMP>
+template <class Comp>
 inline void
-art::PtrVector<T>::sort(COMP comp)
+art::PtrVector<T>::sort(Comp const comp)
 {
-  std::sort(ptrs_.begin(), ptrs_.end(), ComparePtrs<COMP>(comp));
+  std::sort(ptrs_.begin(), ptrs_.end(), ComparePtrs{comp});
 }
 
 template <typename T>
@@ -601,7 +595,6 @@ art::swap(PtrVector<T>& lhs, PtrVector<T>& rhs)
   lhs.swap(rhs);
 }
 
-#undef PV_INSERT_POSITION_TYPE
 #endif /* canvas_Persistency_Common_PtrVector_h */
 
 // Local Variables:
