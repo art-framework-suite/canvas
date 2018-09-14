@@ -34,28 +34,24 @@ namespace art {
 
     // has_size_member
     template <typename T, typename = void>
-    struct has_size_member : std::false_type {
-    };
+    struct has_size_member : std::false_type {};
 
     template <typename T>
     struct has_size_member<
       T,
       enable_if_function_exists_t<size_t (T::*)() const, &T::size>>
-      : std::true_type {
-    };
+      : std::true_type {};
 
     // has_makePartner_member
     template <typename T, typename = void>
-    struct has_makePartner_member : std::false_type {
-    };
+    struct has_makePartner_member : std::false_type {};
 
     template <typename T>
     struct has_makePartner_member<
       T,
       enable_if_function_exists_t<std::unique_ptr<EDProduct> (T::*)(
                                     std::type_info const&) const,
-                                  &T::makePartner>> : std::true_type {
-    };
+                                  &T::makePartner>> : std::true_type {};
   }
 
   template <typename T, bool = detail::has_size_member<T>::value>
@@ -134,12 +130,12 @@ private:
 // Implementation details.
 
 #include "boost/lexical_cast.hpp"
-#include "canvas/Persistency/Common/traits.h"
-#include "canvas/Utilities/Exception.h"
 #include "canvas/Persistency/Common/GetProduct.h"
 #include "canvas/Persistency/Common/PtrVector.h"
 #include "canvas/Persistency/Common/getElementAddresses.h"
 #include "canvas/Persistency/Common/setPtr.h"
+#include "canvas/Persistency/Common/traits.h"
+#include "canvas/Utilities/Exception.h"
 
 #include <deque>
 #include <list>
@@ -246,7 +242,7 @@ art::Wrapper<T>::do_makePartner(std::type_info const& wanted_wrapper) const
 template <typename T>
 inline void
 art::Wrapper<T>::do_setPtr(std::type_info const& toType,
-                           unsigned long const index [[maybe_unused]],
+                           unsigned long const index[[maybe_unused]],
                            void const*& ptr) const
 {
   if constexpr (has_setPtr<T>::value) {
@@ -317,33 +313,27 @@ namespace art {
 
   template <class E>
   struct productSize<std::vector<E>, false>
-    : public productSize<std::vector<E>, true> {
-  };
+    : public productSize<std::vector<E>, true> {};
 
   template <class E>
   struct productSize<std::list<E>, false>
-    : public productSize<std::list<E>, true> {
-  };
+    : public productSize<std::list<E>, true> {};
 
   template <class E>
   struct productSize<std::deque<E>, false>
-    : public productSize<std::deque<E>, true> {
-  };
+    : public productSize<std::deque<E>, true> {};
 
   template <class E>
   struct productSize<std::set<E>, false>
-    : public productSize<std::set<E>, true> {
-  };
+    : public productSize<std::set<E>, true> {};
 
   template <class E>
   struct productSize<PtrVector<E>, false>
-    : public productSize<PtrVector<E>, true> {
-  };
+    : public productSize<PtrVector<E>, true> {};
 
   template <class E>
   struct productSize<cet::map_vector<E>, false>
-    : public productSize<cet::map_vector<E>, true> {
-  };
+    : public productSize<cet::map_vector<E>, true> {};
 }
 
 #endif /* canvas_Persistency_Common_Wrapper_h */

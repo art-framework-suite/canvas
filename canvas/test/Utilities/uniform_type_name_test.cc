@@ -11,12 +11,10 @@ using art::uniform_type_name;
 using std::string;
 
 template <unsigned int, typename>
-struct MyUIntTemplate_t {
-};
+struct MyUIntTemplate_t {};
 
 template <unsigned long, typename>
-struct MyULongTemplate_t {
-};
+struct MyULongTemplate_t {};
 
 namespace {
   void

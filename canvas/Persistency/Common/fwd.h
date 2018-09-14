@@ -34,7 +34,7 @@ namespace art {
   using product_typeids_t = std::map<product_metatype, TypeID>;
 } // art
 
-  // ======================================================================
+// ======================================================================
 
 #endif /* canvas_Persistency_Common_fwd_h */
 

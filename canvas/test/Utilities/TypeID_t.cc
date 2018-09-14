@@ -8,10 +8,8 @@
 #include <string>
 
 namespace arttest {
-  struct empty {
-  };
-  struct also_empty {
-  };
+  struct empty {};
+  struct also_empty {};
 }
 
 BOOST_AUTO_TEST_SUITE(TypeID_t)

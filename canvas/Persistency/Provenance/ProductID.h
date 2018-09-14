@@ -19,7 +19,9 @@ namespace art {
 
     constexpr ProductID() = default;
     explicit ProductID(std::string const& canonicalProductName);
-    constexpr explicit ProductID(value_type const value) noexcept : value_{value} {}
+    constexpr explicit ProductID(value_type const value) noexcept
+      : value_{value}
+    {}
 
     static constexpr ProductID
     invalid() noexcept

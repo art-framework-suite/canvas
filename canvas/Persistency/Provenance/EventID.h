@@ -64,8 +64,7 @@ public:
   friend std::ostream& operator<<(std::ostream& os, EventID const& iID);
 
 private:
-  struct FlushFlag {
-  };
+  struct FlushFlag {};
 
   explicit constexpr EventID(FlushFlag) noexcept;
   EventID(RunID rID, FlushFlag);

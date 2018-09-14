@@ -46,8 +46,7 @@ public:
   friend std::ostream& operator<<(std::ostream& os, RunID const& iID);
 
 private:
-  struct FlushFlag {
-  };
+  struct FlushFlag {};
 
   explicit constexpr RunID(FlushFlag) noexcept;
 
