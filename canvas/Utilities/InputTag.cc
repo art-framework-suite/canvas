@@ -3,7 +3,6 @@
 
 #include "boost/algorithm/string/classification.hpp"
 #include "boost/algorithm/string/split.hpp"
-#include "boost/any.hpp"
 #include "canvas/Utilities/Exception.h"
 #include "fhiclcpp/coding.h"
 
@@ -113,7 +112,7 @@ namespace art {
   }
 
   void
-  decode(boost::any const& a, InputTag& tag)
+  decode(std::any const& a, InputTag& tag)
   {
     if (fhicl::detail::is_sequence(a)) {
       vector<string> tmp;

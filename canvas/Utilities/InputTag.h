@@ -2,27 +2,20 @@
 #define canvas_Utilities_InputTag_h
 // vim: set sw=2 expandtab :
 
+#include <any>
 #include <iosfwd>
 #include <string>
-
-namespace boost {
-
-  class any;
-
-} // namespace boost
 
 namespace art {
 
   class InputTag {
-
-  public: // MEMBER FUNCTIONS -- Special Member Functions
+  public:
     ~InputTag();
-
     InputTag();
 
     InputTag(std::string const& label,
              std::string const& instance,
-             std::string const& processName = std::string());
+             std::string const& processName = {});
 
     InputTag(char const* label,
              char const* instance,
@@ -33,7 +26,6 @@ namespace art {
     InputTag(char const*);
 
     InputTag(InputTag const&);
-
     InputTag(InputTag&&);
 
     InputTag& operator=(InputTag const&);
@@ -57,7 +49,7 @@ namespace art {
 
   bool operator!=(InputTag const&, InputTag const&);
 
-  void decode(boost::any const&, InputTag&);
+  void decode(std::any const&, InputTag&);
 
   std::ostream& operator<<(std::ostream&, InputTag const&);
 
