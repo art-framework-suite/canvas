@@ -7,11 +7,11 @@ fcldir -
 perllib  product_dir
 #
 product         version
-clhep           v2_4_1_0
-cppunit         v1_13_2d
+clhep           v2_4_1_0a
+cppunit         v1_13_2e
 range           v3_0_3_6
 messagefacility v2_02_03
-cetbuildtools   v7_06_03        -       only_for_build
+cetbuildtools   v7_06_04        -       only_for_build
 end_product_list
 
 qualifier       messagefacility clhep           cppunit         range           notes
@@ -21,8 +21,8 @@ e19:debug       e19:debug       e19:debug       e19:debug       -nq-
 e19:prof        e19:prof        e19:prof        e19:prof        -nq-
 c2:debug        c2:debug        c2:debug        c2:debug        -nq-
 c2:prof         c2:prof         c2:prof         c2:prof         -nq-
-c5:debug        c5:debug        c5:debug        c5:debug        -nq-
-c5:prof         c5:prof         c5:prof         c5:prof         -nq-
+c7:debug        c7:debug        c7:debug        c7:debug        -nq-
+c7:prof         c7:prof         c7:prof         c7:prof         -nq-
 end_qualifier_list
 
 # Local Variables:
