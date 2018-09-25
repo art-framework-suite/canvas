@@ -11,13 +11,11 @@ clhep		v2_3_4_6
 cppunit		v1_13_2c
 range		v3_0_3_0
 messagefacility	v2_02_03
-cetbuildtools	v7_04_00	-	only_for_build
+cetbuildtools	v7_06_04	-	only_for_build
 root		v6_12_06a	c2
 end_product_list
 
 qualifier	messagefacility	clhep		root		cppunit		range		notes
-e15:debug	e15:debug	e15:debug	-		e15:debug	-nq-
-e15:prof	e15:prof	e15:prof	-		e15:prof	-nq-
 e17:debug	e17:debug	e17:debug	-		e17:debug	-nq-
 e17:prof	e17:prof	e17:prof	-		e17:prof	-nq-
 c2:debug	c2:debug	c2:debug	c2:debug	c2:debug	-nq-
