@@ -484,7 +484,9 @@ art::PtrVector<T>::insert(const_iterator position,
 {
   std::for_each(
     first, last, [this](Ptr<T> const& p) { updateCore(p.refCore()); });
-#if GCC_IS_AT_LEAST(4, 9, 0) || CLANG_IS_AT_LEAST(3, 5, 0)
+#if GCC_IS_AT_LEAST(4, 9, 0) ||                 \
+  CLANG_IS_AT_LEAST(3, 5, 0) ||                 \
+  APPLE_CLANG_IS_AT_LEAST(6, 0, 0)
   // C++2011.
   return ptrs_.insert(position, first, last);
 #else
