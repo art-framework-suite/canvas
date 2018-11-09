@@ -8,8 +8,6 @@
 #include <utility>
 #include <vector>
 
-class TBuffer;
-
 namespace art {
   class PtrVectorBase;
 

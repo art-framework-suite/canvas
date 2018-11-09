@@ -10,7 +10,7 @@
 
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/PtrVectorBase.h"
-#include "cetlib/compiler_macros.h"
+#include "cetlib/container_algorithms.h"
 
 #include <initializer_list>
 #include <iterator>
@@ -113,6 +113,8 @@ public:
   void assign(std::initializer_list<Ptr<U>> il);
   template <typename U>
   void push_back(Ptr<U> const& p);
+  template <typename... Args>
+  void emplace_back(Args&&... args);
   void pop_back();
   template <typename U>
   iterator insert(iterator position, Ptr<U> const& p);
@@ -167,7 +169,7 @@ inline art::PtrVector<T>::PtrVector(PtrVector<U> const& other)
   static_assert(std::is_base_of_v<T, U> || std::is_base_of_v<U, T>,
                 "PtrVector: incompatible types");
   ptrs_.reserve(other.size());
-  std::copy(other.begin(), other.end(), std::back_inserter(ptrs_));
+  cet::copy_all(other, std::back_inserter(ptrs_));
 }
 
 template <typename T>
@@ -203,9 +205,9 @@ art::PtrVector<T>::operator=(PtrVector<U> const& other) &
 {
   static_assert(std::is_base_of_v<T, U> || std::is_base_of_v<U, T>,
                 "PtrVector: incompatible types");
-  this->PtrVectorBase::operator=(other);
+  PtrVectorBase::operator=(other);
   ptrs_.clear();
-  std::copy(other.cbegin(), other.cend(), std::back_inserter(ptrs_));
+  cet::copy_all(other, std::back_inserter(ptrs_));
   return *this;
 }
 
@@ -441,6 +443,16 @@ art::PtrVector<T>::push_back(Ptr<U> const& p)
 }
 
 template <typename T>
+template <typename... Args>
+inline void
+art::PtrVector<T>::emplace_back(Args&&... args)
+{
+  Ptr<T> p{std::forward<Args>(args)...};
+  updateCore(p.refCore());
+  ptrs_.push_back(std::move(p));
+}
+
+template <typename T>
 inline void
 art::PtrVector<T>::pop_back()
 {
@@ -484,19 +496,7 @@ art::PtrVector<T>::insert(const_iterator position,
 {
   std::for_each(
     first, last, [this](Ptr<T> const& p) { updateCore(p.refCore()); });
-#if GCC_IS_AT_LEAST(4, 9, 0) ||                 \
-  CLANG_IS_AT_LEAST(3, 5, 0) ||                 \
-  APPLE_CLANG_IS_AT_LEAST(6, 0, 0)
-  // C++2011.
   return ptrs_.insert(position, first, last);
-#else
-  // Inefficient with C++03 interface.
-  auto const orig_dist = std::distance(ptrs_.begin(), position);
-  ptrs_.insert(position, first, last);
-  iterator result = ptrs_.begin();
-  std::advance(result, orig_dist);
-  return result;
-#endif
 }
 
 template <typename T>
@@ -540,7 +540,7 @@ template <typename T>
 inline bool
 art::PtrVector<T>::operator==(PtrVector const& other) const
 {
-  return ptrs_ == other.ptrs_ && this->PtrVectorBase::operator==(other);
+  return ptrs_ == other.ptrs_ && PtrVectorBase::operator==(other);
 }
 
 template <typename T>
@@ -555,7 +555,7 @@ template <class Comp>
 inline void
 art::PtrVector<T>::sort(Comp const comp)
 {
-  std::sort(ptrs_.begin(), ptrs_.end(), ComparePtrs{comp});
+  cet::sort_all(ptrs_, ComparePtrs{comp});
 }
 
 template <typename T>
