@@ -12,47 +12,8 @@ using namespace std;
 
 namespace art {
 
-  ProductProvenance::Transients::~Transients() {}
-
-  ProductProvenance::Transients::Transients()
-    : noParentage_{false}, parentagePtr_{nullptr}
-  {}
-
-  ProductProvenance::Transients::Transients(Transients const& rhs)
-    : noParentage_{rhs.noParentage_}, parentagePtr_{rhs.parentagePtr_}
-  {}
-
-  ProductProvenance::Transients::Transients(Transients&& rhs)
-    : noParentage_{move(rhs.noParentage_)}
-    , parentagePtr_{move(rhs.parentagePtr_)}
-  {}
-
-  ProductProvenance::Transients&
-  ProductProvenance::Transients::operator=(Transients const& rhs)
-  {
-    if (this != &rhs) {
-      noParentage_ = rhs.noParentage_;
-      parentagePtr_ = rhs.parentagePtr_;
-    }
-    return *this;
-  }
-
-  ProductProvenance::Transients&
-  ProductProvenance::Transients::operator=(Transients&& rhs)
-  {
-    noParentage_ = move(rhs.noParentage_);
-    parentagePtr_ = move(rhs.parentagePtr_);
-    return *this;
-  }
-
+  ProductProvenance::ProductProvenance() = default;
   ProductProvenance::~ProductProvenance() = default;
-
-  ProductProvenance::ProductProvenance()
-    : productID_{}
-    , productStatus_{productstatus::uninitialized()}
-    , parentageID_{}
-    , transients_{}
-  {}
 
   ProductProvenance::ProductProvenance(ProductID const& bid,
                                        ProductStatus const status)
@@ -69,41 +30,12 @@ namespace art {
     ParentageRegistry::emplace(parentageID_, *transients_.get().parentagePtr_);
   }
 
-  ProductProvenance::ProductProvenance(ProductProvenance const& rhs)
-    : productID_{rhs.productID_}
-    , productStatus_{rhs.productStatus_}
-    , parentageID_{rhs.parentageID_}
-    , transients_{rhs.transients_}
-  {}
-
-  ProductProvenance::ProductProvenance(ProductProvenance&& rhs)
-    : productID_{move(rhs.productID_)}
-    , productStatus_{move(rhs.productStatus_)}
-    , parentageID_{move(rhs.parentageID_)}
-    , transients_{move(rhs.transients_)}
-  {}
-
-  ProductProvenance&
-  ProductProvenance::operator=(ProductProvenance const& rhs)
-  {
-    if (this != &rhs) {
-      productID_ = rhs.productID_;
-      productStatus_ = rhs.productStatus_;
-      parentageID_ = rhs.parentageID_;
-      transients_ = rhs.transients_;
-    }
-    return *this;
-  }
-
-  ProductProvenance&
-  ProductProvenance::operator=(ProductProvenance&& rhs)
-  {
-    productID_ = move(rhs.productID_);
-    productStatus_ = move(rhs.productStatus_);
-    parentageID_ = move(rhs.parentageID_);
-    transients_ = move(rhs.transients_);
-    return *this;
-  }
+  ProductProvenance::ProductProvenance(ProductProvenance const& rhs) = default;
+  ProductProvenance::ProductProvenance(ProductProvenance&& rhs) = default;
+  ProductProvenance& ProductProvenance::operator=(
+    ProductProvenance const& rhs) = default;
+  ProductProvenance& ProductProvenance::operator=(ProductProvenance&& rhs) =
+    default;
 
   ProductID
   ProductProvenance::productID() const noexcept
@@ -123,12 +55,6 @@ namespace art {
     return parentageID_;
   }
 
-  void
-  ProductProvenance::setStatus(ProductStatus status) const noexcept
-  {
-    productStatus_ = status;
-  }
-
   // Note: This is true for Run, SubRun, and Results products.
   bool
   ProductProvenance::noParentage() const noexcept
@@ -144,45 +70,6 @@ namespace art {
       ParentageRegistry::get(parentageID_, *transients_.get().parentagePtr_);
     }
     return *transients_.get().parentagePtr_;
-  }
-
-  // Used only by Group::status() to override productstatus::unknown
-  // with the value of the Wrapper present flag.
-  // Note: This should never happen! But a mistake in RootDelayedReader
-  //       would make it happen if there were two or more run/subrun
-  //       fragments in the file index with the same run/subrun number
-  //       where the first fragment had a product with an invalid range
-  //       (because RootOutputFile changed it to invalid to prevent
-  //       double-counting when combining products), and a later fragment
-  //       had the same product with a valid range.
-  //       RootDelayedReader would return the fragment product with the
-  //       valid range as the combined product, but it forgot to update
-  //       provenance, so we would have a product where the wrapper
-  //       present flag was true, but the product provenance status was
-  //       unknown instead of present.  This has since been fixed.
-  //       We leave this routine here so old files with the problem can
-  //       still be read.
-  void
-  ProductProvenance::setPresent() const noexcept
-  {
-    setStatus(productstatus::present());
-  }
-
-  // Used only by Group::status() to override productstatus::unknown
-  // with the value of the Wrapper present flag.
-  // Note: This should never happen! But a mistake in RootOutputFile
-  //       would make it happen when it changed a run/subrun product
-  //       range set to invalid to prevent double-counting when combining
-  //       products. It would change the product status to unknown,
-  //       replace it with a dummy object, and write out the dummy with
-  //       the unknown status in the provenance. This has since been fixed
-  //       to write out the dummy with status neverCreated.
-  //       We leave this routine here so old files with the problem can
-  //       still be read.
-  void
-  ProductProvenance::setNeverCreated() const noexcept
-  {
-    setStatus(productstatus::neverCreated());
   }
 
   void
