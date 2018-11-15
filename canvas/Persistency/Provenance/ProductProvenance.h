@@ -17,9 +17,9 @@
 
 namespace art {
   class ProductProvenance {
-  public: // TYPES
+  public:
     struct Transients {
-    public: // Special Member Functions
+    public:
       ~Transients();
       Transients();
       Transients(Transients const&);
@@ -27,12 +27,10 @@ namespace art {
       Transients& operator=(Transients const&);
       Transients& operator=(Transients&&);
 
-    public: // MEMBER DATA
       bool noParentage_{false};
       std::shared_ptr<Parentage> parentagePtr_{nullptr};
     };
 
-  public: // MEMBER FUNCTIONS -- Special Member Functions
     ~ProductProvenance();
     ProductProvenance();
     ProductProvenance(ProductID const&, ProductStatus);
@@ -44,13 +42,12 @@ namespace art {
     ProductProvenance& operator=(ProductProvenance const&);
     ProductProvenance& operator=(ProductProvenance&&);
 
-  public: // MEMBER FUNCTIONS
     void write(std::ostream&) const;
-    ProductID const& productID() const;
-    ProductStatus const& productStatus() const;
-    ParentageID const& parentageID() const;
+    ProductID productID() const noexcept;
+    ProductStatus productStatus() const noexcept;
+    ParentageID const& parentageID() const noexcept;
     Parentage const& parentage() const;
-    void setStatus(ProductStatus status) const;
+    void setStatus(ProductStatus status) const noexcept;
     // Used only by Group::status() to override productstatus::unknown
     // with the value of the Wrapper present flag.
     // Note: This should never happen! But a mistake in RootDelayedReader
@@ -67,7 +64,7 @@ namespace art {
     //       unknown instead of present.  This has since been fixed.
     //       We leave this routine here so old files with the problem can
     //       still be read.
-    void setPresent() const;
+    void setPresent() const noexcept;
     // Used only by Group::status() to override productstatus::unknown
     // with the value of the Wrapper present flag.
     // Note: This should never happen! But a mistake in RootOutputFile
@@ -79,9 +76,9 @@ namespace art {
     //       to write out the dummy with status neverCreated.
     //       We leave this routine here so old files with the problem can
     //       still be read.
-    void setNeverCreated() const;
+    void setNeverCreated() const noexcept;
     // Note: This is true for Run, SubRun, and Results products.
-    bool noParentage() const;
+    bool noParentage() const noexcept;
 
   private:
     ProductID productID_{};
@@ -90,12 +87,12 @@ namespace art {
     mutable Transient<Transients> transients_{};
   };
 
-  typedef std::vector<ProductProvenance> ProductProvenances;
+  using ProductProvenances = std::vector<ProductProvenance>;
 
   std::ostream& operator<<(std::ostream& os, ProductProvenance const& p);
-  bool operator==(ProductProvenance const& a, ProductProvenance const& b);
-  bool operator!=(ProductProvenance const& a, ProductProvenance const& b);
-  bool operator<(ProductProvenance const& a, ProductProvenance const& b);
+  bool operator==(ProductProvenance const& a, ProductProvenance const& b) noexcept;
+  bool operator!=(ProductProvenance const& a, ProductProvenance const& b) noexcept;
+  bool operator<(ProductProvenance const& a, ProductProvenance const& b) noexcept;
 
 } // namespace art
 

@@ -45,7 +45,7 @@ namespace art {
     return *this;
   }
 
-  ProductProvenance::~ProductProvenance() {}
+  ProductProvenance::~ProductProvenance() = default;
 
   ProductProvenance::ProductProvenance()
     : productID_{}
@@ -105,33 +105,33 @@ namespace art {
     return *this;
   }
 
-  ProductID const&
-  ProductProvenance::productID() const
+  ProductID
+  ProductProvenance::productID() const noexcept
   {
     return productID_;
   }
 
-  ProductStatus const&
-  ProductProvenance::productStatus() const
+  ProductStatus
+  ProductProvenance::productStatus() const noexcept
   {
     return productStatus_;
   }
 
   ParentageID const&
-  ProductProvenance::parentageID() const
+  ProductProvenance::parentageID() const noexcept
   {
     return parentageID_;
   }
 
   void
-  ProductProvenance::setStatus(ProductStatus status) const
+  ProductProvenance::setStatus(ProductStatus status) const noexcept
   {
     productStatus_ = status;
   }
 
   // Note: This is true for Run, SubRun, and Results products.
   bool
-  ProductProvenance::noParentage() const
+  ProductProvenance::noParentage() const noexcept
   {
     return transients_.get().noParentage_;
   }
@@ -163,13 +163,8 @@ namespace art {
   //       We leave this routine here so old files with the problem can
   //       still be read.
   void
-  ProductProvenance::setPresent() const
+  ProductProvenance::setPresent() const noexcept
   {
-    if (productstatus::present(productStatus_)) {
-      return;
-    }
-    assert(productstatus::unknown(productStatus_) ||
-           productstatus::dummyToPreventDoubleCount(productStatus_));
     setStatus(productstatus::present());
   }
 
@@ -185,10 +180,8 @@ namespace art {
   //       We leave this routine here so old files with the problem can
   //       still be read.
   void
-  ProductProvenance::setNeverCreated() const
+  ProductProvenance::setNeverCreated() const noexcept
   {
-    assert(productstatus::unknown(productStatus_) ||
-           productstatus::dummyToPreventDoubleCount(productStatus_));
     setStatus(productstatus::neverCreated());
   }
 
@@ -210,7 +203,7 @@ namespace art {
   }
 
   bool
-  operator==(ProductProvenance const& a, ProductProvenance const& b)
+  operator==(ProductProvenance const& a, ProductProvenance const& b) noexcept
   {
     if (a.noParentage() != b.noParentage()) {
       return false;
@@ -225,15 +218,15 @@ namespace art {
   }
 
   bool
-  operator!=(ProductProvenance const& a, ProductProvenance const& b)
+  operator!=(ProductProvenance const& a, ProductProvenance const& b) noexcept
   {
     return !(a == b);
   }
 
-  // FIXME: This is not compatible with operator=.  That is if !(a<b) && !(a>b)
+  // FIXME: This is not compatible with operator==.  That is if !(a<b) && !(a>b)
   // does not imply (a==b)!!!
   bool
-  operator<(ProductProvenance const& a, ProductProvenance const& b)
+  operator<(ProductProvenance const& a, ProductProvenance const& b) noexcept
   {
     return a.productID() < b.productID();
   }
