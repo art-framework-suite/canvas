@@ -20,7 +20,8 @@ using fhicl::ParameterSetID;
 namespace {
 
   [[noreturn]] void
-  throwExceptionWithText(char const* txt) {
+  throwExceptionWithText(char const* txt)
+  {
     throw art::Exception(art::errors::LogicError)
       << "Problem using an incomplete BranchDescription\n"
       << txt << "\nPlease report this error to the ART developers\n";

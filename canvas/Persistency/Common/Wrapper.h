@@ -242,7 +242,7 @@ art::Wrapper<T>::do_makePartner(std::type_info const& wanted_wrapper) const
 template <typename T>
 inline void
 art::Wrapper<T>::do_setPtr(std::type_info const& toType,
-                           unsigned long const index[[maybe_unused]],
+                           unsigned long const index [[maybe_unused]],
                            void const*& ptr) const
 {
   if constexpr (has_setPtr<T>::value) {
