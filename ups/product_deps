@@ -11,18 +11,26 @@ clhep           v2_4_1_0a
 cppunit         v1_14_0
 range           v3_0_4_0
 messagefacility	v2_03_00
-cetbuildtools   v7_07_03        -       only_for_build
+cetbuildtools   v7_08_00        -       only_for_build
 end_product_list
 
-qualifier       messagefacility clhep           cppunit         range           notes
-e17:debug       e17:debug       e17:debug       e17:debug       -nq-
-e17:prof        e17:prof        e17:prof        e17:prof        -nq-
-e19:debug       e19:debug       e19:debug       e19:debug       -nq-
-e19:prof        e19:prof        e19:prof        e19:prof        -nq-
-c2:debug        c2:debug        c2:debug        c2:debug        -nq-
-c2:prof         c2:prof         c2:prof         c2:prof         -nq-
-c7:debug        c7:debug        c7:debug        c7:debug        -nq-
-c7:prof         c7:prof         c7:prof         c7:prof         -nq-
+qualifier	messagefacility clhep		cppunit		range		notes
+e17:debug	e17:debug	e17:debug	e17:debug	-nq-
+e17:prof	e17:prof	e17:prof	e17:prof	-nq-
+e19:debug	e19:debug	e19:debug	e19:debug	-nq-
+e19:prof	e19:prof	e19:prof	e19:prof	-nq-
+c2:debug	c2:debug	c2:debug	c2:debug	-nq-
+c2:prof		c2:prof		c2:prof		c2:prof		-nq-
+c7:debug	c7:debug	c7:debug	c7:debug	-nq-
+c7:prof		c7:prof		c7:prof		c7:prof		-nq-
+e17:debug:py3	e17:debug:py3	e17:debug	e17:debug	-nq-
+e17:prof:py3	e17:prof:py3	e17:prof	e17:prof	-nq-
+e19:debug:py3	e19:debug:py3	e19:debug	e19:debug	-nq-
+e19:prof:py3	e19:prof:py3	e19:prof	e19:prof	-nq-
+c2:debug:py3	c2:debug:py3	c2:debug	c2:debug	-nq-
+c2:prof:py3	c2:prof:py3	c2:prof		c2:prof		-nq-
+c7:debug:py3	c7:debug:py3	c7:debug	c7:debug	-nq-
+c7:prof:py3	c7:prof:py3	c7:prof		c7:prof		-nq-
 end_qualifier_list
 
 # Local Variables:
