@@ -57,11 +57,19 @@ public:
 
   BranchDescription() = default;
 
-  BranchDescription(BranchType const bt,
+  BranchDescription(BranchType bt,
                     TypeLabel const& tl,
                     ModuleDescription const& modDesc);
 
-  // use compiler-generated copy c'tor, copy assignment, and d'tor
+  BranchDescription(BranchType bt,
+                    std::string const& moduleLabel,
+                    std::string const& processName,
+                    std::string const& producedClassName,
+                    std::string const& productInstanceName,
+                    fhicl::ParameterSetID const& psetID,
+                    ProcessConfigurationID const& processConfigurationID,
+                    bool supportsView,
+                    bool transient);
 
   void write(std::ostream& os) const;
 

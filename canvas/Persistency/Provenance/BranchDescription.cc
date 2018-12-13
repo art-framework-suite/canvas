@@ -31,19 +31,40 @@ namespace art {
   BranchDescription::BranchDescription(BranchType const bt,
                                        TypeLabel const& tl,
                                        ModuleDescription const& md)
-    : branchType_{bt}
-    , moduleLabel_{tl.hasEmulatedModule() ? tl.emulatedModule() :
-                                            md.moduleLabel()}
-    , processName_{md.processName()}
-    , producedClassName_{tl.className()}
-    , friendlyClassName_{tl.friendlyClassName()}
-    , productInstanceName_{tl.productInstanceName()}
-    , supportsView_{tl.supportsView()}
+    : BranchDescription{bt,
+                        tl.hasEmulatedModule() ? tl.emulatedModule() :
+                                                 md.moduleLabel(),
+                        md.processName(),
+                        tl.className(),
+                        tl.productInstanceName(),
+                        md.parameterSetID(),
+                        md.processConfigurationID(),
+                        tl.supportsView(),
+                        tl.transient()}
+  {}
+
+  BranchDescription::BranchDescription(
+    BranchType const branchType,
+    std::string const& moduleLabel,
+    std::string const& processName,
+    std::string const& producedClassName,
+    std::string const& productInstanceName,
+    fhicl::ParameterSetID const& psetID,
+    ProcessConfigurationID const& processConfigurationID,
+    bool const supportsView,
+    bool const transient)
+    : branchType_{branchType}
+    , moduleLabel_{moduleLabel}
+    , processName_{processName}
+    , producedClassName_{producedClassName}
+    , friendlyClassName_{friendlyname::friendlyName(producedClassName_)}
+    , productInstanceName_{productInstanceName}
+    , supportsView_{supportsView}
   {
     guts().validity_ = Transients::Produced;
-    guts().transient_ = tl.transient();
-    psetIDs_.insert(md.parameterSetID());
-    processConfigurationIDs_.insert(md.processConfigurationID());
+    guts().transient_ = transient;
+    psetIDs_.insert(psetID);
+    processConfigurationIDs_.insert(processConfigurationID);
     throwIfInvalid_();
     fluffTransients_();
     initProductID_();
