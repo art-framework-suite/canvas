@@ -29,7 +29,7 @@ namespace art {
 
 } // art
 
-  // ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
 #include "canvas/Persistency/Provenance/BranchListIndex.h"
 #include "canvas/Persistency/Provenance/Compatibility/BranchIDList.h"
@@ -39,7 +39,7 @@ namespace art {
 #include "canvas/Persistency/Provenance/ProductStatus.h"
 #include "canvas/Persistency/Provenance/ReleaseVersion.h"
 
-  // ======================================================================
+// ======================================================================
 
 #endif /* canvas_Persistency_Provenance_ProvenanceFwd_h */
 

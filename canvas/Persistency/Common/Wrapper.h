@@ -33,28 +33,24 @@ namespace art {
 
     // has_size_member
     template <typename T, typename = void>
-    struct has_size_member : std::false_type {
-    };
+    struct has_size_member : std::false_type {};
 
     template <typename T>
     struct has_size_member<
       T,
       enable_if_function_exists_t<size_t (T::*)() const, &T::size>>
-      : std::true_type {
-    };
+      : std::true_type {};
 
     // has_makePartner_member
     template <typename T, typename = void>
-    struct has_makePartner_member : std::false_type {
-    };
+    struct has_makePartner_member : std::false_type {};
 
     template <typename T>
     struct has_makePartner_member<
       T,
       enable_if_function_exists_t<std::unique_ptr<EDProduct> (T::*)(
                                     std::type_info const&) const,
-                                  &T::makePartner>> : std::true_type {
-    };
+                                  &T::makePartner>> : std::true_type {};
   }
 
   template <typename T, bool = detail::has_size_member<T>::value>
@@ -294,33 +290,27 @@ namespace art {
 
   template <class E>
   struct productSize<std::vector<E>, false>
-    : public productSize<std::vector<E>, true> {
-  };
+    : public productSize<std::vector<E>, true> {};
 
   template <class E>
   struct productSize<std::list<E>, false>
-    : public productSize<std::list<E>, true> {
-  };
+    : public productSize<std::list<E>, true> {};
 
   template <class E>
   struct productSize<std::deque<E>, false>
-    : public productSize<std::deque<E>, true> {
-  };
+    : public productSize<std::deque<E>, true> {};
 
   template <class E>
   struct productSize<std::set<E>, false>
-    : public productSize<std::set<E>, true> {
-  };
+    : public productSize<std::set<E>, true> {};
 
   template <class E>
   struct productSize<PtrVector<E>, false>
-    : public productSize<PtrVector<E>, true> {
-  };
+    : public productSize<PtrVector<E>, true> {};
 
   template <class E>
   struct productSize<cet::map_vector<E>, false>
-    : public productSize<cet::map_vector<E>, true> {
-  };
+    : public productSize<cet::map_vector<E>, true> {};
 
   template <typename T>
   struct DoMakePartner {

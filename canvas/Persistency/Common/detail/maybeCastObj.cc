@@ -85,8 +85,8 @@ namespace {
     long offset = 0L;
 
   public:
-    void print[[gnu::unused]]() const;
-    void reset[[gnu::unused]]();
+    void print [[gnu::unused]] () const;
+    void reset [[gnu::unused]] ();
   };
 
   void

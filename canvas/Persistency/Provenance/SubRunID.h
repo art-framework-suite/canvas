@@ -50,8 +50,7 @@ public:
   friend std::ostream& operator<<(std::ostream& os, SubRunID const& iID);
 
 private:
-  struct FlushFlag {
-  };
+  struct FlushFlag {};
 
   explicit constexpr SubRunID(FlushFlag);
   SubRunID(RunID rID, FlushFlag);

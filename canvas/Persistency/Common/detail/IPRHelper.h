@@ -37,8 +37,7 @@ namespace art {
       return token.inputTag_;
     }
 
-    class IPRHelperDef {
-    };
+    class IPRHelperDef {};
 
     template <typename ProdA,
               typename ProdB,

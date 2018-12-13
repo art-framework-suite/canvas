@@ -22,10 +22,13 @@ namespace art {
   class ProductProvenance;
   using ProductProvenances = std::vector<ProductProvenance>;
 
-  bool operator<(ProductProvenance const& a, ProductProvenance const& b) noexcept;
+  bool operator<(ProductProvenance const& a,
+                 ProductProvenance const& b) noexcept;
   std::ostream& operator<<(std::ostream& os, ProductProvenance const& p);
-  bool operator==(ProductProvenance const& a, ProductProvenance const& b) noexcept;
-  bool operator!=(ProductProvenance const& a, ProductProvenance const& b) noexcept;
+  bool operator==(ProductProvenance const& a,
+                  ProductProvenance const& b) noexcept;
+  bool operator!=(ProductProvenance const& a,
+                  ProductProvenance const& b) noexcept;
 }
 
 class art::ProductProvenance {

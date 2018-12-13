@@ -70,7 +70,7 @@ art::operator<<(std::ostream& os, BranchMapper const& p)
   return os;
 }
 
-  // ======================================================================
+// ======================================================================
 
 #endif /* canvas_Persistency_Provenance_BranchMapper_h */
 

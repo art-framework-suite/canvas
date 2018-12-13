@@ -31,12 +31,10 @@ namespace art {
 
   namespace detail {
     template <typename T>
-    struct is_instantiation_of_hash : std::false_type {
-    };
+    struct is_instantiation_of_hash : std::false_type {};
 
     template <int I>
-    struct is_instantiation_of_hash<art::Hash<I>> : std::true_type {
-    };
+    struct is_instantiation_of_hash<art::Hash<I>> : std::true_type {};
 
     template <typename H>
     struct hash_to_size_t {

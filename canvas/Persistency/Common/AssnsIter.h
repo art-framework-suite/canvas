@@ -141,8 +141,8 @@ namespace art {
 
   // Pre-increment
   template <class L, class R, class D, Direction Dir>
-  art::const_AssnsIter<L, R, D, Dir>& const_AssnsIter<L, R, D, Dir>::
-  operator++()
+  art::const_AssnsIter<L, R, D, Dir>&
+  const_AssnsIter<L, R, D, Dir>::operator++()
   {
     index_ = index_ + signed_one<Dir>();
     return *this;
@@ -150,8 +150,8 @@ namespace art {
 
   // Post-increment
   template <class L, class R, class D, Direction Dir>
-  art::const_AssnsIter<L, R, D, Dir> const_AssnsIter<L, R, D, Dir>::operator++(
-    int)
+  art::const_AssnsIter<L, R, D, Dir>
+  const_AssnsIter<L, R, D, Dir>::operator++(int)
   {
     art::const_AssnsIter<L, R, D, Dir> tmp{*this};
     index_ = index_ + signed_one<Dir>();
@@ -160,16 +160,16 @@ namespace art {
 
   // Pre-decrement
   template <class L, class R, class D, Direction Dir>
-  art::const_AssnsIter<L, R, D, Dir>& const_AssnsIter<L, R, D, Dir>::
-  operator--()
+  art::const_AssnsIter<L, R, D, Dir>&
+  const_AssnsIter<L, R, D, Dir>::operator--()
   {
     index_ = index_ - signed_one<Dir>();
     return *this;
   }
   // post-decrement
   template <class L, class R, class D, Direction Dir>
-  art::const_AssnsIter<L, R, D, Dir> const_AssnsIter<L, R, D, Dir>::operator--(
-    int)
+  art::const_AssnsIter<L, R, D, Dir>
+  const_AssnsIter<L, R, D, Dir>::operator--(int)
   {
     art::const_AssnsIter<L, R, D, Dir> tmp{*this};
     index_ = index_ - signed_one<Dir>();

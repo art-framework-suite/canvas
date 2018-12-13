@@ -63,8 +63,7 @@ namespace art {
   //------------------------------------------------------------
   // ... Check for value_type
   template <typename T, typename = void>
-  struct has_value_type : std::false_type {
-  };
+  struct has_value_type : std::false_type {};
 
   template <typename T>
   struct has_value_type<T, cet::enable_if_type_exists_t<typename T::value_type>>
@@ -74,8 +73,7 @@ namespace art {
 
   // ... Check for mapped_type
   template <typename T, typename = void>
-  struct has_mapped_type : std::false_type {
-  };
+  struct has_mapped_type : std::false_type {};
 
   template <typename T>
   struct has_mapped_type<T,
@@ -131,15 +129,13 @@ namespace art {
 
   // has_fillView
   template <typename T, typename = void>
-  struct has_fillView {
-  };
+  struct has_fillView {};
 
   template <typename T>
   struct has_fillView<
     T,
     cet::enable_if_function_exists_t<void (T::*)(std::vector<void const*>&),
-                                     &T::fillView>> {
-  };
+                                     &T::fillView>> {};
 
   template <typename T>
   struct CannotFillView {
@@ -153,8 +149,7 @@ namespace art {
   };
 
   template <class T, typename = void>
-  struct MaybeFillView : CannotFillView<T> {
-  };
+  struct MaybeFillView : CannotFillView<T> {};
 
   template <typename T>
   struct MaybeFillView<T, std::enable_if_t<has_fillView<T>::value>> {
@@ -177,8 +172,7 @@ namespace art {
 
   template <class A>
   struct MaybeFillView<std::vector<bool, A>>
-    : CannotFillView<std::vector<bool, A>> {
-  };
+    : CannotFillView<std::vector<bool, A>> {};
 
   template <class T, class A>
   struct MaybeFillView<std::list<T, A>> {
@@ -232,32 +226,25 @@ namespace art {
   //------------------------------------------------------------
 
   template <class T>
-  struct has_setPtr : std::false_type {
-  };
+  struct has_setPtr : std::false_type {};
 
   template <class T, class A>
-  struct has_setPtr<std::vector<T, A>> : std::true_type {
-  };
+  struct has_setPtr<std::vector<T, A>> : std::true_type {};
 
   template <class A>
-  struct has_setPtr<std::vector<bool, A>> : std::false_type {
-  };
+  struct has_setPtr<std::vector<bool, A>> : std::false_type {};
 
   template <class T, class A>
-  struct has_setPtr<std::list<T, A>> : std::true_type {
-  };
+  struct has_setPtr<std::list<T, A>> : std::true_type {};
 
   template <class T, class A>
-  struct has_setPtr<std::deque<T, A>> : std::true_type {
-  };
+  struct has_setPtr<std::deque<T, A>> : std::true_type {};
 
   template <class T, class A>
-  struct has_setPtr<std::set<T, A>> : std::true_type {
-  };
+  struct has_setPtr<std::set<T, A>> : std::true_type {};
 
   template <class T>
-  struct has_setPtr<cet::map_vector<T>> : std::true_type {
-  };
+  struct has_setPtr<cet::map_vector<T>> : std::true_type {};
 }
 
 #endif /* canvas_Persistency_Common_traits_h */

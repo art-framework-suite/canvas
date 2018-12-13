@@ -34,22 +34,19 @@ namespace art {
     using cet::enable_if_function_exists_t;
 
     template <typename T, typename = void>
-    struct has_aggregate : std::false_type {
-    };
+    struct has_aggregate : std::false_type {};
 
     template <typename T>
     struct has_aggregate<
       T,
       enable_if_function_exists_t<void (T::*)(T const&), &T::aggregate>>
-      : std::true_type {
-    };
+      : std::true_type {};
 
     template <typename T>
     struct has_aggregate<
       T,
       enable_if_function_exists_t<void (T::*)(T), &T::aggregate>>
-      : std::true_type {
-    };
+      : std::true_type {};
 
     template <typename T, typename Enable = void>
     struct CanBeAggregated : std::false_type {
