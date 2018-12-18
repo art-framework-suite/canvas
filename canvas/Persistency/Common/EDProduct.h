@@ -16,6 +16,7 @@
 
 namespace art {
   class EDProduct;
+  class InputTag;
 }
 
 // ======================================================================
@@ -81,6 +82,19 @@ public:
     do_combine(p);
   }
 
+  std::unique_ptr<EDProduct>
+  createEmptySampledProduct(InputTag const& tag) const
+  {
+    return do_createEmptySampledProduct(tag);
+  }
+
+  void
+  insertIfSampledProduct(std::string const& dataset,
+                         std::unique_ptr<EDProduct> product)
+  {
+    return do_insertIfSampledProduct(dataset, move(product));
+  }
+
 protected:
   virtual std::unique_ptr<EDProduct> do_makePartner(
     std::type_info const& wanted_type) const = 0;
@@ -96,6 +110,13 @@ protected:
   virtual void do_getElementAddresses(std::type_info const& toType,
                                       std::vector<unsigned long> const& indices,
                                       std::vector<void const*>& ptr) const = 0;
+
+  virtual std::unique_ptr<EDProduct> do_createEmptySampledProduct(
+    InputTag const& tag) const = 0;
+
+  virtual void do_insertIfSampledProduct(
+    std::string const& dataset,
+    std::unique_ptr<EDProduct> product) = 0;
 
 private:
   virtual bool isPresent_() const = 0;

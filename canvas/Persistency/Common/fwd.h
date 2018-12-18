@@ -29,6 +29,8 @@ namespace art {
   class ProductID;
   class RefCore;
   template <typename T>
+  class Sampled;
+  template <typename T>
   class Wrapper;
 
 } // art

@@ -13,3 +13,5 @@ cet_test(for_each_group_t LIBRARIES canvas)
 cet_test(for_each_group_with_left_t LIBRARIES canvas)
 
 cet_test(ptr_hash_t LIBRARIES canvas)
+
+cet_test(wrapper_t LIBRARIES canvas)
