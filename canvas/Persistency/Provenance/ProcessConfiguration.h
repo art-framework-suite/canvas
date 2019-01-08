@@ -10,8 +10,10 @@
 #include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
 #include "canvas/Persistency/Provenance/ReleaseVersion.h"
 #include "fhiclcpp/ParameterSetID.h"
+
 #include <iosfwd>
 #include <string>
+#include <vector>
 
 namespace art {
 
@@ -59,6 +61,8 @@ namespace art {
   }
 
   std::ostream& operator<<(std::ostream& os, ProcessConfiguration const& pc);
+
+  using ProcessConfigurations = std::vector<ProcessConfiguration>;
 
 } // art
 
