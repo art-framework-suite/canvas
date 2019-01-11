@@ -22,7 +22,7 @@
 // label 'm1', an empty instance name, and process name 'MakeInts',
 // follow the pattern:
 //
-//   InputTag const tag_to_retrieve{"m1::sampledFromMakeInts"};
+//   InputTag const tag_to_retrieve{"m1::SampledFromMakeInts"};
 //   auto const& sampledInts = r.getValidHandle<Sampled<int>>(tag_to_retrieve);
 //
 //   for (auto const& [dataset, nums] : sampledInts) {
@@ -31,15 +31,20 @@
 //
 // N.B. To access sampled products with the process name 'MakeInts',
 //      the provided process name while retrieving the corresponding
-//      sampled product is 'sampledFromMakeInts', where the
-//      'sampledFrom' *must be prepended* to the original process
-//      name.
+//      sampled product is 'SampledFromMakeInts', where the
+//      'SampledFrom' *must be prepended* to the original process
+//      name.  The art::sampled_from("MakeInts") function can be used
+//      for this purpose.
 // ==============================================================================
 
+#include "canvas/Persistency/Common/fwd.h"
+#include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/InputTag.h"
+#include "cetlib_except/demangle.h"
 
 #include <map>
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -53,7 +58,7 @@ namespace art {
     using const_iterator = typename container_t::const_iterator;
 
     Sampled() = default;
-    explicit Sampled(InputTag const& tag) : tag_{tag} {}
+    explicit Sampled(InputTag const& tag) noexcept(false);
 
     InputTag const&
     originalInputTag() const
@@ -97,11 +102,44 @@ namespace art {
       products_[dataset].push_back(std::forward<T>(value));
     }
 
+    // MUST UPDATE WHEN CLASS IS CHANGED!
+    static short
+    Class_Version()
+    {
+      return 10;
+    }
+
   private:
     InputTag tag_{};
     container_t products_{};
   };
 
+  inline auto
+  sampled_from(std::string process_name)
+  {
+    return process_name.insert(0, "SampledFrom");
+  }
+
+  // Implementation below
+  template <typename T>
+  Sampled<T>::Sampled(InputTag const& tag) noexcept(false) : tag_{tag}
+  {
+    // Due to Ptr reseeding issues, Assns or Ptr types (or
+    // containers thereof) are not supported.  This checking cannot
+    // be done at compile time because creating a Wrapper requires a
+    // Sampled instantiation, even if that instantiation will never
+    // be used.
+    auto const type_name = cet::demangle_symbol(typeid(*this).name());
+    if (type_name.find("art::Assns") != std::string::npos ||
+        type_name.find("art::Ptr") != std::string::npos) {
+      throw Exception{errors::LogicError}
+        << "An attempt was made to create the type "
+        << cet::demangle_symbol(typeid(T).name())
+        << ".\n"
+           "This is not allowed.  Please contact artists@fnal.gov for "
+           "guidance.";
+    }
+  }
 }
 
 #endif /* canvas_Persistency_Common_Sampled_h */

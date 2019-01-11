@@ -10,6 +10,9 @@
 #include <memory>
 
 namespace art {
+  namespace detail {
+    class AssnsBase;
+  }
 
   template <typename L, typename R, typename D>
   class Assns;
