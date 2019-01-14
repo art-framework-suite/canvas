@@ -18,12 +18,6 @@ namespace art {
     eventSelections_.push_back(eventSelection);
   }
 
-  void
-  History::addBranchListIndexEntry(BranchListIndex const& branchListIndex)
-  {
-    branchListIndexes_.push_back(branchListIndex);
-  }
-
   EventSelectionID const&
   History::getEventSelectionID(History::size_type const i) const noexcept
   {
@@ -46,18 +40,6 @@ namespace art {
   History::setProcessHistoryID(ProcessHistoryID const& phid)
   {
     processHistoryID_ = phid;
-  }
-
-  BranchListIndexes const&
-  History::branchListIndexes() const noexcept
-  {
-    return branchListIndexes_;
-  }
-
-  BranchListIndexes&
-  History::branchListIndexes() noexcept
-  {
-    return branchListIndexes_;
   }
 
 } // namespace art

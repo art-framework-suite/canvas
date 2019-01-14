@@ -30,7 +30,6 @@ namespace art {
 
 // ----------------------------------------------------------------------
 
-#include "canvas/Persistency/Provenance/BranchListIndex.h"
 #include "canvas/Persistency/Provenance/Compatibility/BranchIDList.h"
 #include "canvas/Persistency/Provenance/ParentageID.h"
 #include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
