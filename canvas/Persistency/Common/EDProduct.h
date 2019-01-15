@@ -17,6 +17,7 @@
 namespace art {
   class EDProduct;
   class InputTag;
+  class SubRunID;
 }
 
 // ======================================================================
@@ -90,9 +91,10 @@ public:
 
   void
   insertIfSampledProduct(std::string const& dataset,
+                         SubRunID const& id,
                          std::unique_ptr<EDProduct> product)
   {
-    return do_insertIfSampledProduct(dataset, move(product));
+    return do_insertIfSampledProduct(dataset, id, move(product));
   }
 
 protected:
@@ -116,6 +118,7 @@ protected:
 
   virtual void do_insertIfSampledProduct(
     std::string const& dataset,
+    SubRunID const& id,
     std::unique_ptr<EDProduct> product) = 0;
 
 private:

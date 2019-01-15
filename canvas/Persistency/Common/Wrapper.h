@@ -15,6 +15,7 @@
 #include "canvas/Persistency/Common/EDProduct.h"
 #include "canvas/Persistency/Common/Sampled.h"
 #include "canvas/Persistency/Common/detail/aggregate.h"
+#include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Utilities/DebugMacros.h"
 #include "cetlib/metaprogramming.h"
 #include "cetlib_except/demangle.h"
@@ -112,6 +113,7 @@ private:
   friend struct prevent_recursion;
 
   void do_insertIfSampledProduct(std::string const& dataset,
+                                 SubRunID const& id,
                                  std::unique_ptr<EDProduct> product) override;
 
   bool
@@ -254,6 +256,7 @@ namespace art {
     [[noreturn]] static void
     insert_if_sampled_product(T&,
                               std::string const& dataset,
+                              SubRunID const&,
                               std::unique_ptr<EDProduct>)
     {
       throw Exception{errors::LogicError}
@@ -278,10 +281,11 @@ namespace art {
     static void
     insert_if_sampled_product(Sampled<T>& obj,
                               std::string const& dataset,
+                              SubRunID const& id,
                               std::unique_ptr<EDProduct> product)
     {
       auto& wp = dynamic_cast<Wrapper<T>&>(*product);
-      obj.insert(dataset, std::move(wp.obj));
+      obj.insert(dataset, id, std::move(wp.obj));
     }
   };
 }
@@ -296,9 +300,11 @@ art::Wrapper<T>::do_createEmptySampledProduct(InputTag const& tag) const
 template <typename T>
 void
 art::Wrapper<T>::do_insertIfSampledProduct(std::string const& dataset,
+                                           SubRunID const& id,
                                            std::unique_ptr<EDProduct> product)
 {
-  prevent_recursion<T>::insert_if_sampled_product(obj, dataset, move(product));
+  prevent_recursion<T>::insert_if_sampled_product(
+    obj, dataset, id, move(product));
 }
 
 template <typename T>

@@ -9,6 +9,11 @@
 // instances of a (sub)run data product that have been written to
 // separate files.
 //
+// N.B. This is a first version of a wrapper that collects all objects
+//      for a given product signature from a (sub)run.  It is likely
+//      that optimizations can be made to it once it has seen some use
+//      in the wild.
+//
 // A Sampled<T> object is created by providing an input tag
 // corresponding to the original product signature of the gathered
 // products.  This input tag can be accessed by calling the
@@ -22,12 +27,21 @@
 // label 'm1', an empty instance name, and process name 'MakeInts',
 // follow the pattern:
 //
-//   InputTag const tag_to_retrieve{"m1::SampledFromMakeInts"};
+//   InputTag const tag_to_retrieve{"m1", "", sampled_from("MakeInts")};
 //   auto const& sampledInts = r.getValidHandle<Sampled<int>>(tag_to_retrieve);
 //
-//   for (auto const& [dataset, nums] : sampledInts) {
-//     cet::for_all(nums, [](int const i) { ... });
+//   // Access specific number for a specified dataset and run
+//   cet::exempt_ptr<int const> p = sampledInts.get(some_dataset, some_run_id);
+//   if (p) {
+//     std::cout << *p << '\n';
 //   }
+//
+// If a value does not exist for the provided dataset name and
+// (sub)run ID, the 'get' function will return a null exempt pointer.
+// This means that the validity of the pointer should be checked
+// before dereferencing it.  The dataset names and (sub)run IDs used
+// by the SamplingInput source can be retrieved from the
+// Sampled(Sub)RunInfo product that the SamplingInput source creates.
 //
 // N.B. To access sampled products with the process name 'MakeInts',
 //      the provided process name while retrieving the corresponding
@@ -38,8 +52,10 @@
 // ==============================================================================
 
 #include "canvas/Persistency/Common/fwd.h"
+#include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/InputTag.h"
+#include "cetlib/exempt_ptr.h"
 #include "cetlib_except/demangle.h"
 
 #include <map>
@@ -52,7 +68,8 @@ namespace art {
 
   template <typename T>
   class Sampled {
-    using container_t = std::map<std::string, std::vector<T>>;
+    // TODO: An unordered map may end up being better.
+    using container_t = std::map<std::string, std::map<SubRunID, T>>;
 
   public:
     using const_iterator = typename container_t::const_iterator;
@@ -60,46 +77,19 @@ namespace art {
     Sampled() = default;
     explicit Sampled(InputTag const& tag) noexcept(false);
 
-    InputTag const&
-    originalInputTag() const
-    {
-      return tag_;
-    }
+    InputTag const& originalInputTag() const;
 
-    const_iterator
-    begin() const
-    {
-      return products_.begin();
-    }
+    cet::exempt_ptr<T const> get(std::string const& dataset,
+                                 RunID const& id) const;
 
-    const_iterator
-    end() const
-    {
-      return products_.end();
-    }
+    cet::exempt_ptr<T const> get(std::string const& dataset,
+                                 SubRunID const& id) const;
 
-    const_iterator
-    cbegin() const
-    {
-      return products_.cbegin();
-    }
-
-    const_iterator
-    cend() const
-    {
-      return products_.cend();
-    }
-
-    bool
-    empty() const
-    {
-      return products_.empty();
-    }
-
+    // Expert interface below
     void
-    insert(std::string const& dataset, T&& value)
+    insert(std::string const& dataset, SubRunID const& id, T&& value)
     {
-      products_[dataset].push_back(std::forward<T>(value));
+      products_[dataset].emplace(id, std::forward<T>(value));
     }
 
     // MUST UPDATE WHEN CLASS IS CHANGED!
@@ -140,6 +130,45 @@ namespace art {
            "guidance.";
     }
   }
+
+  template <typename T>
+  InputTag const&
+  Sampled<T>::originalInputTag() const
+  {
+    return tag_;
+  }
+
+  template <typename T>
+  bool
+  Sampled<T>::empty() const
+  {
+    return products_.empty();
+  }
+
+  cet::exempt_ptr<T const>
+  Sampled<T>::get(std::string const& dataset, RunID const& id) const
+  {
+    return get(dataset, SubRunID::invalidSubRun(id));
+  }
+
+  cet::exempt_ptr<T const>
+  Sampled<T>::get(std::string const& dataset, SubRunID const& id) const
+  {
+    cet::exempt_ptr<T const> result{nullptr};
+    auto dataset_it = products_.find(dataset);
+    if (dataset_it == products_.cend()) {
+      return result;
+    }
+
+    auto const& ids = dataset_it->second;
+    auto id_it = ids.find(id);
+    if (id_it == ids.cend()) {
+      return result;
+    }
+
+    return cet::make_exempt_ptr(&id_it->second);
+  }
+
 }
 
 #endif /* canvas_Persistency_Common_Sampled_h */
