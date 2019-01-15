@@ -77,6 +77,8 @@ namespace art {
     Sampled() = default;
     explicit Sampled(InputTag const& tag) noexcept(false);
 
+    bool empty() const;
+
     InputTag const& originalInputTag() const;
 
     cet::exempt_ptr<T const> get(std::string const& dataset,
@@ -145,12 +147,14 @@ namespace art {
     return products_.empty();
   }
 
+  template <typename T>
   cet::exempt_ptr<T const>
   Sampled<T>::get(std::string const& dataset, RunID const& id) const
   {
     return get(dataset, SubRunID::invalidSubRun(id));
   }
 
+  template <typename T>
   cet::exempt_ptr<T const>
   Sampled<T>::get(std::string const& dataset, SubRunID const& id) const
   {
