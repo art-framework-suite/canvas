@@ -28,6 +28,9 @@ namespace art {
                                std::string const& modName,
                                std::string const& modLabel,
                                ProcessConfiguration pc,
+                               bool const parentageEnabled = true,
+                               bool const rangesEnabled = true,
+                               bool const dbEnabled = true,
                                ModuleDescriptionID id = getUniqueID());
 
     // Feel free to use move semantics.
@@ -58,6 +61,21 @@ namespace art {
     processConfigurationID() const
     {
       return processConfiguration().id();
+    }
+    bool
+    parentageEnabled() const
+    {
+      return parentageEnabled_;
+    }
+    bool
+    rangesEnabled() const
+    {
+      return rangesEnabled_;
+    }
+    bool
+    dbEnabled() const
+    {
+      return dbEnabled_;
     }
     std::string const&
     processName() const
@@ -106,6 +124,12 @@ namespace art {
 
     // The process configuration.
     ProcessConfiguration processConfiguration_{};
+
+    bool parentageEnabled_{true};
+
+    bool rangesEnabled_{true};
+
+    bool dbEnabled_{true};
 
     // Unique ID.
     ModuleDescriptionID id_{invalidID()};

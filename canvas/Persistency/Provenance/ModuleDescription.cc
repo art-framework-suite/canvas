@@ -9,11 +9,17 @@ art::ModuleDescription::ModuleDescription(
   std::string const& modName,
   std::string const& modLabel,
   ProcessConfiguration pc,
+  bool const parentageEnabled,
+  bool const rangesEnabled,
+  bool const dbEnabled,
   ModuleDescriptionID const id)
   : parameterSetID_{parameterSetID}
   , moduleName_{modName}
   , moduleLabel_{modLabel}
   , processConfiguration_{std::move(pc)}
+  , parentageEnabled_{parentageEnabled}
+  , rangesEnabled_{rangesEnabled}
+  , dbEnabled_{dbEnabled}
   , id_{id}
 {}
 

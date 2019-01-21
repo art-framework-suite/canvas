@@ -56,7 +56,7 @@ public:
     Element() = default;
     Element(EventID const& eID) : Element(eID, invalidEntry) {}
     Element(EventID const& eID, EntryNumber_t const entry)
-      : eventID_{eID}, entry_{entry}
+      : entry_{entry}, eventID_{eID}
     {}
     EntryType
     getEntryType() const
@@ -65,8 +65,12 @@ public:
                kEvent :
                (eventID_.subRunID().isValid() ? kSubRun : kRun);
     }
-    EventID eventID_{};
+    // WARNING: The order of these two data members is important!
+    // The padding rules mean that in this order each element
+    // is 8 + 12 = 20 bytes.  If they are reversed it becomes
+    // 12 + (4 padding) + 8 = 24 bytes.
     EntryNumber_t entry_{invalidEntry};
+    EventID eventID_{};
   };
 
   using const_iterator = std::vector<Element>::const_iterator;
