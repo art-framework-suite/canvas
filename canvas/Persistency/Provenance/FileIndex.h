@@ -84,13 +84,6 @@ namespace art {
     };
 
     struct Transients {
-
-    public: // MEMBER FUNCTIONS -- Special Member Functions
-      ~Transients();
-
-      Transients();
-
-    public: // MEMBER DATA
       bool allInEntryOrder_{false};
 
       bool resultCached_{false};
@@ -103,11 +96,6 @@ namespace art {
       // sorted.
       SortState sortState_{kSorted_Run_SubRun_Event};
     };
-
-  public: // MEMBER FUNCTIONS -- Special Member Functions
-    ~FileIndex();
-
-    FileIndex();
 
   public: // MEMBER FUNCTIONS
     void addEntry(EventID const& eID, EntryNumber_t entry);

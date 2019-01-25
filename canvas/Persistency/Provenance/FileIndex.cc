@@ -46,18 +46,6 @@ namespace art {
              (eventID_.subRunID().isValid() ? kSubRun : kRun);
   }
 
-  FileIndex::Transients::Transients()
-    : allInEntryOrder_{false}
-    , resultCached_{false}
-    , sortState_{kSorted_Run_SubRun_Event}
-  {}
-
-  FileIndex::Transients::~Transients() {}
-
-  FileIndex::~FileIndex() {}
-
-  FileIndex::FileIndex() {}
-
   FileIndex::iterator
   FileIndex::begin()
   {
