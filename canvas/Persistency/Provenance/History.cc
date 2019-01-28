@@ -3,9 +3,6 @@
 
 namespace art {
 
-  History::~History() = default;
-  History::History() = default;
-
   History::size_type
   History::size() const noexcept
   {

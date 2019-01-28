@@ -18,13 +18,6 @@ namespace art {
   public:
     using size_type = std::size_t;
 
-    ~History();
-    History();
-    History(History const&) = default;
-    History(History&&) = delete;
-    History& operator=(History const&) = delete;
-    History& operator=(History&&) = delete;
-
     size_type size() const noexcept;
 
     void addEventSelectionEntry(EventSelectionID const& eventSelection);
