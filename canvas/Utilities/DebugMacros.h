@@ -58,13 +58,9 @@ namespace art {
   {                                                                            \
     if ((LEVEL) <= art::debugTasks()) {                                        \
       auto tid_ = hep::concurrency::getThreadID();                             \
-      unsigned tsc_cpuidx_ = 0;                                                \
-      auto tsc_ = hep::concurrency::getTSCP(tsc_cpuidx_);                      \
       ostringstream buf_;                                                      \
       buf_ << "----->"                                                         \
-           << " " << std::setw(2) << std::right << (tsc_cpuidx_ & 0xFF)        \
-           << std::left << " " << std::setw(18) << std::right << tsc_          \
-           << std::left << " " << std::setw(6) << std::right << tid_           \
+           << " " << std::setw(6) << std::right << tid_                        \
            << std::left << " "                                                 \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
@@ -78,13 +74,9 @@ namespace art {
   {                                                                            \
     if ((LEVEL) <= art::debugTasks()) {                                        \
       auto tid_ = hep::concurrency::getThreadID();                             \
-      unsigned tsc_cpuidx_ = 0;                                                \
-      auto tsc_ = hep::concurrency::getTSCP(tsc_cpuidx_);                      \
       ostringstream buf_;                                                      \
       buf_ << "----->"                                                         \
-           << " " << std::setw(2) << std::right << (tsc_cpuidx_ & 0xFF)        \
-           << std::left << " " << std::setw(18) << std::right << tsc_          \
-           << std::left << " " << std::setw(6) << std::right << tid_           \
+           << " " << std::setw(6) << std::right << tid_                        \
            << std::left << " "                                                 \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
@@ -98,13 +90,9 @@ namespace art {
   {                                                                            \
     if ((LEVEL) <= art::debugTasks()) {                                        \
       auto tid_ = hep::concurrency::getThreadID();                             \
-      unsigned tsc_cpuidx_ = 0;                                                \
-      auto tsc_ = hep::concurrency::getTSCP(tsc_cpuidx_);                      \
       ostringstream buf_;                                                      \
       buf_ << "----->"                                                         \
-           << " " << std::setw(2) << std::right << (tsc_cpuidx_ & 0xFF)        \
-           << std::left << " " << std::setw(18) << std::right << tsc_          \
-           << std::left << " " << std::setw(6) << std::right << tid_           \
+           << " " << std::setw(6) << std::right << tid_                        \
            << std::left << " "                                                 \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
@@ -118,13 +106,9 @@ namespace art {
   {                                                                            \
     if ((LEVEL) <= art::debugTasks()) {                                        \
       auto tid_ = hep::concurrency::getThreadID();                             \
-      unsigned tsc_cpuidx_ = 0;                                                \
-      auto tsc_ = hep::concurrency::getTSCP(tsc_cpuidx_);                      \
       std::ostringstream buf_;                                                 \
       buf_ << "----->"                                                         \
-           << " " << std::setw(2) << std::right << (tsc_cpuidx_ & 0xFF)        \
-           << std::left << " " << std::setw(18) << std::right << tsc_          \
-           << std::left << " " << std::setw(6) << std::right << tid_           \
+           << " " << std::setw(6) << std::right << tid_                        \
            << std::left << " "                                                 \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
@@ -138,13 +122,9 @@ namespace art {
   {                                                                            \
     if ((LEVEL) <= art::debugTasks()) {                                        \
       auto tid_ = hep::concurrency::getThreadID();                             \
-      unsigned tsc_cpuidx_ = 0;                                                \
-      auto tsc_ = hep::concurrency::getTSCP(tsc_cpuidx_);                      \
       std::ostringstream buf_;                                                 \
       buf_ << "----->"                                                         \
-           << " " << std::setw(2) << std::right << (tsc_cpuidx_ & 0xFF)        \
-           << std::left << " " << std::setw(18) << std::right << tsc_          \
-           << std::left << " " << std::setw(6) << std::right << tid_           \
+           << " " << std::setw(6) << std::right << tid_                        \
            << std::left << " "                                                 \
            << "    "                                                           \
            << " "                                                              \
@@ -157,13 +137,9 @@ namespace art {
   {                                                                            \
     if ((LEVEL) <= art::debugTasks()) {                                        \
       auto tid_ = hep::concurrency::getThreadID();                             \
-      unsigned tsc_cpuidx_ = 0;                                                \
-      auto tsc_ = hep::concurrency::getTSCP(tsc_cpuidx_);                      \
       std::ostringstream buf_;                                                 \
       buf_ << "=====>"                                                         \
-           << " " << std::setw(2) << std::right << (tsc_cpuidx_ & 0xFF)        \
-           << std::left << " " << std::setw(18) << std::right << tsc_          \
-           << std::left << " " << std::setw(6) << std::right << tid_           \
+           << " " << std::setw(6) << std::right << tid_                        \
            << std::left << " "                                                 \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
@@ -177,13 +153,9 @@ namespace art {
   {                                                                            \
     if ((LEVEL) <= art::debugTasks()) {                                        \
       auto tid_ = hep::concurrency::getThreadID();                             \
-      unsigned tsc_cpuidx_ = 0;                                                \
-      auto tsc_ = hep::concurrency::getTSCP(tsc_cpuidx_);                      \
       std::ostringstream buf_;                                                 \
       buf_ << "=====>"                                                         \
-           << " " << std::setw(2) << std::right << (tsc_cpuidx_ & 0xFF)        \
-           << std::left << " " << std::setw(18) << std::right << tsc_          \
-           << std::left << " " << std::setw(6) << std::right << tid_           \
+           << " " << std::setw(6) << std::right << tid_                        \
            << std::left << " "                                                 \
            << "    "                                                           \
            << " "                                                              \
@@ -196,13 +168,9 @@ namespace art {
   {                                                                            \
     if ((LEVEL) <= art::debugTasks()) {                                        \
       auto tid_ = hep::concurrency::getThreadID();                             \
-      unsigned tsc_cpuidx_ = 0;                                                \
-      auto tsc_ = hep::concurrency::getTSCP(tsc_cpuidx_);                      \
       std::ostringstream buf_;                                                 \
       buf_ << "=====>"                                                         \
-           << " " << std::setw(2) << std::right << (tsc_cpuidx_ & 0xFF)        \
-           << std::left << " " << std::setw(18) << std::right << tsc_          \
-           << std::left << " " << std::setw(6) << std::right << tid_           \
+           << " " << std::setw(6) << std::right << tid_                        \
            << std::left << " "                                                 \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
@@ -216,13 +184,9 @@ namespace art {
   {                                                                            \
     if ((LEVEL) <= art::debugTasks()) {                                        \
       auto tid_ = hep::concurrency::getThreadID();                             \
-      unsigned tsc_cpuidx_ = 0;                                                \
-      auto tsc_ = hep::concurrency::getTSCP(tsc_cpuidx_);                      \
       std::ostringstream buf_;                                                 \
       buf_ << "=====>"                                                         \
-           << " " << std::setw(2) << std::right << (tsc_cpuidx_ & 0xFF)        \
-           << std::left << " " << std::setw(18) << std::right << tsc_          \
-           << std::left << " " << std::setw(6) << std::right << tid_           \
+           << " " << std::setw(6) << std::right << tid_                        \
            << std::left << " "                                                 \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
@@ -236,13 +200,9 @@ namespace art {
   {                                                                            \
     if ((LEVEL) <= art::debugTasks()) {                                        \
       auto tid_ = hep::concurrency::getThreadID();                             \
-      unsigned tsc_cpuidx_ = 0;                                                \
-      auto tsc_ = hep::concurrency::getTSCP(tsc_cpuidx_);                      \
       std::ostringstream buf_;                                                 \
       buf_ << "=====>"                                                         \
-           << " " << std::setw(2) << std::right << (tsc_cpuidx_ & 0xFF)        \
-           << std::left << " " << std::setw(18) << std::right << tsc_          \
-           << std::left << " " << std::setw(6) << std::right << tid_           \
+           << " " << std::setw(6) << std::right << tid_                        \
            << std::left << " "                                                 \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
