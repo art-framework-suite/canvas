@@ -16,3 +16,7 @@ cet_test(ptr_hash_t LIBRARIES canvas)
 
 cet_test(maybeCastObj_t USE_BOOST_UNIT
   LIBRARIES canvas)
+
+cet_test(sampled_t LIBRARIES canvas)
+
+cet_test(wrapper_t LIBRARIES canvas)

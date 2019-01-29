@@ -14,7 +14,7 @@ namespace art {
   class HLTGlobalStatus {
   public:
     ~HLTGlobalStatus();
-    explicit HLTGlobalStatus(std::size_t const n = 0);
+    explicit HLTGlobalStatus(std::size_t n = 0);
     HLTGlobalStatus(HLTGlobalStatus const&);
     HLTGlobalStatus(HLTGlobalStatus&&);
     HLTGlobalStatus& operator=(HLTGlobalStatus const&);
@@ -40,7 +40,7 @@ namespace art {
   private:
     std::vector<HLTPathStatus> paths_;
   };
-  std::ostream& operator<<(std::ostream& ost, const HLTGlobalStatus& hlt);
+  std::ostream& operator<<(std::ostream& ost, HLTGlobalStatus const& hlt);
 } // namespace art
 
 #endif /* canvas_Persistency_Common_HLTGlobalStatus_h */

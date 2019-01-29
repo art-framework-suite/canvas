@@ -8,11 +8,11 @@
 
 #include <iosfwd>
 #include <string>
+#include <vector>
 
 namespace art {
 
   class ProcessConfiguration {
-
   public:
     ~ProcessConfiguration();
 
@@ -45,6 +45,8 @@ namespace art {
   bool operator!=(ProcessConfiguration const& a, ProcessConfiguration const& b);
 
   std::ostream& operator<<(std::ostream& os, ProcessConfiguration const& pc);
+
+  using ProcessConfigurations = std::vector<ProcessConfiguration>;
 
 } // namespace art
 

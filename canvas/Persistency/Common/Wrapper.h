@@ -13,8 +13,10 @@
 // =====================================================================
 
 #include "canvas/Persistency/Common/EDProduct.h"
+#include "canvas/Persistency/Common/Sampled.h"
 #include "canvas/Persistency/Common/detail/ProductTypeIDs.h"
 #include "canvas/Persistency/Common/detail/aggregate.h"
+#include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Utilities/DebugMacros.h"
 #include "cetlib/metaprogramming.h"
 #include "cetlib_except/demangle.h"
@@ -24,6 +26,9 @@
 #include <vector>
 
 namespace art {
+  template <typename T>
+  struct prevent_recursion;
+
   template <typename T>
   class Wrapper;
 
@@ -102,6 +107,15 @@ private:
   unsigned do_getRangeSetID() const override;
   void do_setRangeSetID(unsigned) override;
   void do_combine(EDProduct* product) override;
+  std::unique_ptr<EDProduct> do_createEmptySampledProduct(
+    InputTag const& tag) const override;
+
+  template <typename>
+  friend struct prevent_recursion;
+
+  void do_insertIfSampledProduct(std::string const& dataset,
+                                 SubRunID const& id,
+                                 std::unique_ptr<EDProduct> product) override;
 
   bool
   isPresent_() const override
@@ -237,6 +251,70 @@ art::Wrapper<T>::do_makePartner(std::type_info const& wanted_wrapper) const
       << "Please report to the art framework developers.\n";
   }
   return retval;
+}
+
+namespace art {
+  template <typename T>
+  struct prevent_recursion {
+    static std::unique_ptr<EDProduct>
+    create_empty_sampled_product(InputTag const& tag)
+    {
+      auto emptySampledProduct = std::make_unique<Sampled<T>>(tag);
+      return std::make_unique<Wrapper<Sampled<T>>>(move(emptySampledProduct));
+    }
+
+    [[noreturn]] static void
+    insert_if_sampled_product(T&,
+                              std::string const& dataset,
+                              SubRunID const&,
+                              std::unique_ptr<EDProduct>)
+    {
+      throw Exception{errors::LogicError}
+        << "An attempt was made to insert a product from dataset '" << dataset
+        << "'\ninto a non-sampled product of type '"
+        << cet::demangle_symbol(typeid(T).name()) << "'.\n"
+        << "Please contact artists@fnal.gov for guidance.";
+    }
+  };
+
+  template <typename T>
+  struct prevent_recursion<Sampled<T>> {
+    [[noreturn]] static std::unique_ptr<EDProduct>
+    create_empty_sampled_product(InputTag const&)
+    {
+      throw Exception{errors::LogicError}
+        << "An attempt was made to create an empty sampled product\n"
+        << "for a sampled product.  This type of recursion is not allowed.\n"
+        << "Please contact artists@fnal.gov for guidance.";
+    }
+
+    static void
+    insert_if_sampled_product(Sampled<T>& obj,
+                              std::string const& dataset,
+                              SubRunID const& id,
+                              std::unique_ptr<EDProduct> product)
+    {
+      auto& wp = dynamic_cast<Wrapper<T>&>(*product);
+      obj.insert(dataset, id, std::move(wp.obj));
+    }
+  };
+}
+
+template <typename T>
+std::unique_ptr<art::EDProduct>
+art::Wrapper<T>::do_createEmptySampledProduct(InputTag const& tag) const
+{
+  return prevent_recursion<T>::create_empty_sampled_product(tag);
+}
+
+template <typename T>
+void
+art::Wrapper<T>::do_insertIfSampledProduct(std::string const& dataset,
+                                           SubRunID const& id,
+                                           std::unique_ptr<EDProduct> product)
+{
+  prevent_recursion<T>::insert_if_sampled_product(
+    obj, dataset, id, move(product));
 }
 
 template <typename T>

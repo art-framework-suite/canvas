@@ -37,19 +37,43 @@ namespace art {
     std::string const& moduleLabel,
     ParameterSetID const& modulePSetID,
     ProcessConfiguration const& processConfig)
-    : branchType_{bt}
-    , moduleLabel_{tl.hasEmulatedModule() ? tl.emulatedModule() : moduleLabel}
-    , processName_{processConfig.processName()}
-    , producedClassName_{tl.className()}
-    , friendlyClassName_{tl.friendlyClassName()}
-    , productInstanceName_{tl.productInstanceName()}
-    , supportsView_{tl.supportsView()}
+    : BranchDescription{bt,
+                        tl.hasEmulatedModule() ? tl.emulatedModule() :
+                                                 moduleLabel,
+                        processConfig.processName(),
+                        tl.className(),
+                        tl.productInstanceName(),
+                        modulePSetID,
+                        processConfig.id(),
+                        tl.hasEmulatedModule() ? Transients::PresentFromSource :
+                                                 Transients::Produced,
+                        tl.supportsView(),
+                        tl.transient()}
+  {}
+
+  BranchDescription::BranchDescription(
+    BranchType const branchType,
+    std::string const& moduleLabel,
+    std::string const& processName,
+    std::string const& producedClassName,
+    std::string const& productInstanceName,
+    fhicl::ParameterSetID const& psetID,
+    ProcessConfigurationID const& processConfigurationID,
+    Transients::validity_state const validity,
+    bool const supportsView,
+    bool const transient)
+    : branchType_{branchType}
+    , moduleLabel_{moduleLabel}
+    , processName_{processName}
+    , producedClassName_{producedClassName}
+    , friendlyClassName_{friendlyname::friendlyName(producedClassName_)}
+    , productInstanceName_{productInstanceName}
+    , supportsView_{supportsView}
   {
-    guts().validity_ = tl.hasEmulatedModule() ? Transients::PresentFromSource :
-                                                Transients::Produced;
-    guts().transient_ = tl.transient();
-    psetIDs_.insert(modulePSetID);
-    processConfigurationIDs_.insert(processConfig.id());
+    guts().validity_ = validity;
+    guts().transient_ = transient;
+    psetIDs_.insert(psetID);
+    processConfigurationIDs_.insert(processConfigurationID);
     throwIfInvalid_();
     fluffTransients_();
     initProductID_();

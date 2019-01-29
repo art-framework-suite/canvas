@@ -60,8 +60,7 @@ namespace art {
       auto tid_ = hep::concurrency::getThreadID();                             \
       ostringstream buf_;                                                      \
       buf_ << "----->"                                                         \
-           << " " << std::setw(6) << std::right << tid_                        \
-           << std::left << " "                                                 \
+           << " " << std::setw(6) << std::right << tid_ << std::left << " "    \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
            << " "                                                              \
@@ -76,8 +75,7 @@ namespace art {
       auto tid_ = hep::concurrency::getThreadID();                             \
       ostringstream buf_;                                                      \
       buf_ << "----->"                                                         \
-           << " " << std::setw(6) << std::right << tid_                        \
-           << std::left << " "                                                 \
+           << " " << std::setw(6) << std::right << tid_ << std::left << " "    \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
            << " "                                                              \
@@ -92,8 +90,7 @@ namespace art {
       auto tid_ = hep::concurrency::getThreadID();                             \
       ostringstream buf_;                                                      \
       buf_ << "----->"                                                         \
-           << " " << std::setw(6) << std::right << tid_                        \
-           << std::left << " "                                                 \
+           << " " << std::setw(6) << std::right << tid_ << std::left << " "    \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
            << " "                                                              \
@@ -108,8 +105,7 @@ namespace art {
       auto tid_ = hep::concurrency::getThreadID();                             \
       std::ostringstream buf_;                                                 \
       buf_ << "----->"                                                         \
-           << " " << std::setw(6) << std::right << tid_                        \
-           << std::left << " "                                                 \
+           << " " << std::setw(6) << std::right << tid_ << std::left << " "    \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
            << " "                                                              \
@@ -124,8 +120,7 @@ namespace art {
       auto tid_ = hep::concurrency::getThreadID();                             \
       std::ostringstream buf_;                                                 \
       buf_ << "----->"                                                         \
-           << " " << std::setw(6) << std::right << tid_                        \
-           << std::left << " "                                                 \
+           << " " << std::setw(6) << std::right << tid_ << std::left << " "    \
            << "    "                                                           \
            << " "                                                              \
            << "      " << FUNC << " - " << MSG << "\n";                        \
@@ -139,8 +134,7 @@ namespace art {
       auto tid_ = hep::concurrency::getThreadID();                             \
       std::ostringstream buf_;                                                 \
       buf_ << "=====>"                                                         \
-           << " " << std::setw(6) << std::right << tid_                        \
-           << std::left << " "                                                 \
+           << " " << std::setw(6) << std::right << tid_ << std::left << " "    \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
            << " "                                                              \
@@ -155,8 +149,7 @@ namespace art {
       auto tid_ = hep::concurrency::getThreadID();                             \
       std::ostringstream buf_;                                                 \
       buf_ << "=====>"                                                         \
-           << " " << std::setw(6) << std::right << tid_                        \
-           << std::left << " "                                                 \
+           << " " << std::setw(6) << std::right << tid_ << std::left << " "    \
            << "    "                                                           \
            << " "                                                              \
            << "      " << TASK << " - " << MSG << "\n";                        \
@@ -170,8 +163,7 @@ namespace art {
       auto tid_ = hep::concurrency::getThreadID();                             \
       std::ostringstream buf_;                                                 \
       buf_ << "=====>"                                                         \
-           << " " << std::setw(6) << std::right << tid_                        \
-           << std::left << " "                                                 \
+           << " " << std::setw(6) << std::right << tid_ << std::left << " "    \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
            << " "                                                              \
@@ -186,8 +178,7 @@ namespace art {
       auto tid_ = hep::concurrency::getThreadID();                             \
       std::ostringstream buf_;                                                 \
       buf_ << "=====>"                                                         \
-           << " " << std::setw(6) << std::right << tid_                        \
-           << std::left << " "                                                 \
+           << " " << std::setw(6) << std::right << tid_ << std::left << " "    \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
            << " "                                                              \
@@ -202,8 +193,7 @@ namespace art {
       auto tid_ = hep::concurrency::getThreadID();                             \
       std::ostringstream buf_;                                                 \
       buf_ << "=====>"                                                         \
-           << " " << std::setw(6) << std::right << tid_                        \
-           << std::left << " "                                                 \
+           << " " << std::setw(6) << std::right << tid_ << std::left << " "    \
            << "[" << std::setw(2) << std::right << std::setfill('0') << SI     \
            << std::setfill(' ') << std::left << "]"                            \
            << " "                                                              \

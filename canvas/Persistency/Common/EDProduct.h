@@ -16,6 +16,8 @@
 
 namespace art {
   class EDProduct;
+  class InputTag;
+  class SubRunID;
 }
 
 // ======================================================================
@@ -87,6 +89,20 @@ public:
     do_combine(p);
   }
 
+  std::unique_ptr<EDProduct>
+  createEmptySampledProduct(InputTag const& tag) const
+  {
+    return do_createEmptySampledProduct(tag);
+  }
+
+  void
+  insertIfSampledProduct(std::string const& dataset,
+                         SubRunID const& id,
+                         std::unique_ptr<EDProduct> product)
+  {
+    return do_insertIfSampledProduct(dataset, id, move(product));
+  }
+
 private:
   virtual product_typeids_t do_getTypeIDs() const = 0;
   virtual std::unique_ptr<EDProduct> do_makePartner(
@@ -103,6 +119,14 @@ private:
   virtual void do_getElementAddresses(std::type_info const& toType,
                                       std::vector<unsigned long> const& indices,
                                       std::vector<void const*>& ptr) const = 0;
+
+  virtual std::unique_ptr<EDProduct> do_createEmptySampledProduct(
+    InputTag const& tag) const = 0;
+
+  virtual void do_insertIfSampledProduct(
+    std::string const& dataset,
+    SubRunID const& id,
+    std::unique_ptr<EDProduct> product) = 0;
 
   virtual bool isPresent_() const = 0;
   virtual std::type_info const* typeInfo_() const = 0;

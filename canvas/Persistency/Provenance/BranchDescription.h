@@ -50,6 +50,44 @@ namespace art {
     static int constexpr invalidBasketSize{0};
     static int constexpr invalidCompression{-1};
 
+    struct Transients {
+
+      Transients() = default;
+
+      enum validity_state { Produced, PresentFromSource, Dropped, Invalid };
+
+      // The branch name, which is currently derivable from the other
+      // attributes.
+      std::string branchName_{};
+
+      // The wrapped class name, which is currently derivable from the
+      // other attributes.
+      std::string wrappedName_{};
+
+      // Is the class of the branch marked as transient in the data
+      // dictionary
+      bool transient_{false};
+
+      // Was this branch produced in this process rather than in a
+      // previous process
+      validity_state validity_{PresentFromSource};
+
+      // N.B. ROOT-specific transient information will be fluffed by the
+      //      BranchDescriptionStreamer::fluffRootTransients function.
+
+      // The split level of the branch, as marked in the data
+      // dictionary.
+      int splitLevel_{};
+
+      // The basket size of the branch, as marked in the data
+      // dictionary.
+      int basketSize_{};
+
+      // The compression of the branch, as marked in the data
+      // dictionary.
+      int compression_{invalidCompression};
+    };
+
     BranchDescription() = default;
 
     BranchDescription(BranchType const bt,
@@ -57,6 +95,17 @@ namespace art {
                       std::string const& moduleLabel,
                       fhicl::ParameterSetID const& modulePSetID,
                       ProcessConfiguration const& processConfig);
+
+    BranchDescription(BranchType bt,
+                      std::string const& moduleLabel,
+                      std::string const& processName,
+                      std::string const& producedClassName,
+                      std::string const& productInstanceName,
+                      fhicl::ParameterSetID const& psetID,
+                      ProcessConfigurationID const& processConfigurationID,
+                      Transients::validity_state validity,
+                      bool supportsView,
+                      bool transient);
 
     void write(std::ostream& os) const;
 
@@ -163,44 +212,6 @@ namespace art {
     void merge(BranchDescription const& other);
     void swap(BranchDescription& other);
 
-    struct Transients {
-
-      Transients() = default;
-
-      enum validity_state { Produced, PresentFromSource, Dropped, Invalid };
-
-      // The branch name, which is currently derivable from the other
-      // attributes.
-      std::string branchName_{};
-
-      // The wrapped class name, which is currently derivable from the
-      // other attributes.
-      std::string wrappedName_{};
-
-      // Is the class of the branch marked as transient in the data
-      // dictionary
-      bool transient_{false};
-
-      // Was this branch produced in this process rather than in a
-      // previous process
-      validity_state validity_{PresentFromSource};
-
-      // N.B. ROOT-specific transient information will be fluffed by the
-      //      BranchDescriptionStreamer::fluffRootTransients function.
-
-      // The split level of the branch, as marked in the data
-      // dictionary.
-      int splitLevel_{};
-
-      // The basket size of the branch, as marked in the data
-      // dictionary.
-      int basketSize_{};
-
-      // The compression of the branch, as marked in the data
-      // dictionary.
-      int compression_{invalidCompression};
-    };
-
     void
     setValidity(Transients::validity_state const state)
     {
@@ -223,7 +234,6 @@ namespace art {
 
     void throwIfInvalid_() const;
 
-  private:
     // What tree is the branch in?
     BranchType branchType_{InEvent};
 
