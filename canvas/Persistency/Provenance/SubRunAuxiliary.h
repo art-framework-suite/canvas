@@ -1,7 +1,6 @@
 #ifndef canvas_Persistency_Provenance_SubRunAuxiliary_h
 #define canvas_Persistency_Provenance_SubRunAuxiliary_h
-
-#include <iosfwd>
+// vim: set sw=2 expandtab :
 
 #include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
@@ -9,92 +8,83 @@
 #include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Persistency/Provenance/Timestamp.h"
 
+#include <iosfwd>
+
 // Auxiliary subRun data that is persistent
 
 namespace art {
-  class SubRunAuxiliary;
-}
 
-class art::SubRunAuxiliary {
-public:
+  class SubRunAuxiliary {
 
-  static constexpr BranchType branch_type = InSubRun;
+  public:
+    static constexpr BranchType branch_type = InSubRun;
 
-  SubRunAuxiliary()
-    :
-    processHistoryID_(),
-    rangeSetID_(-1u),
-    id_(),
-    beginTime_(),
-    endTime_()
-  {}
+  public:
+    ~SubRunAuxiliary();
 
-  SubRunAuxiliary(SubRunID const &theId,
-                  Timestamp const &theTime,
-                  Timestamp const &theEndTime)
-    :
-    processHistoryID_(),
-    rangeSetID_(-1u),
-    id_(theId),
-    beginTime_(theTime),
-    endTime_(theEndTime)
-  {}
+    SubRunAuxiliary();
 
-  SubRunAuxiliary(RunNumber_t const &theRun,
-                  SubRunNumber_t const &theSubRun,
-                  Timestamp const &theTime,
-                  Timestamp const &theEndTime)
-    :
-    processHistoryID_(),
-    rangeSetID_(-1u),
-    id_(theRun, theSubRun),
-    beginTime_(theTime),
-    endTime_(theEndTime)
-  {}
+    SubRunAuxiliary(SubRunID const& theId,
+                    Timestamp const& theTime,
+                    Timestamp const& theEndTime);
 
-  void write(std::ostream& os) const;
+    SubRunAuxiliary(RunNumber_t const theRun,
+                    SubRunNumber_t const theSubRun,
+                    Timestamp const& theTime,
+                    Timestamp const& theEndTime);
 
-  ProcessHistoryID& processHistoryID() const { return processHistoryID_; }
+    SubRunAuxiliary(SubRunAuxiliary const&);
 
-  void setProcessHistoryID(ProcessHistoryID const &phid) const { processHistoryID_ = phid; }
+    SubRunAuxiliary(SubRunAuxiliary&&);
 
-  SubRunID const &id() const { return id_; }
-  RunID const &runID() const { return id_.runID(); }
-  RunNumber_t run() const { return id_.run(); }
-  SubRunNumber_t subRun() const { return id_.subRun(); }
+    SubRunAuxiliary& operator=(SubRunAuxiliary const&);
 
-  Timestamp const &beginTime() const { return beginTime_; }
+    SubRunAuxiliary& operator=(SubRunAuxiliary&&);
 
-  Timestamp const &endTime() const { return endTime_; }
+  public:
+    void write(std::ostream& os) const;
 
-  void setEndTime(Timestamp const &time)
-  {
-    if (endTime_ == Timestamp::invalidTimestamp()) endTime_ = time;
-  }
+    ProcessHistoryID const& processHistoryID() const noexcept;
 
-  void setRangeSetID(unsigned const id) const { rangeSetID_ = id; }
-  auto rangeSetID() const { return rangeSetID_; }
+    void setProcessHistoryID(ProcessHistoryID const& phid) const;
 
-  bool mergeAuxiliary(SubRunAuxiliary const &newAux);
+    SubRunID const& id() const noexcept;
 
-  // most recent process that processed this subRun
-  // is the last on the list, this defines what "latest" is
-  mutable ProcessHistoryID processHistoryID_;
-  mutable unsigned rangeSetID_;
+    SubRunID const& subRunID() const noexcept;
 
-  SubRunID id_;
-  // Times from DAQ
-  Timestamp beginTime_;
-  Timestamp endTime_;
+    RunID const& runID() const noexcept;
 
-};
+    RunNumber_t run() const noexcept;
 
-inline
-std::ostream&
-operator<<(std::ostream& os, const art::SubRunAuxiliary& p) {
-  p.write(os);
-  return os;
-}
+    SubRunNumber_t subRun() const noexcept;
+
+    Timestamp const& beginTime() const noexcept;
+
+    Timestamp const& endTime() const noexcept;
+
+    void setEndTime(Timestamp const& time);
+
+    void setRangeSetID(unsigned const id) const;
+
+    unsigned rangeSetID() const noexcept;
+
+    bool mergeAuxiliary(SubRunAuxiliary const&);
+
+  public:
+    mutable ProcessHistoryID processHistoryID_{};
+
+    mutable unsigned rangeSetID_{-1u};
+
+    SubRunID id_{};
+
+    Timestamp beginTime_{};
+
+    Timestamp endTime_{};
+  };
+
+  std::ostream& operator<<(std::ostream&, SubRunAuxiliary const&);
+
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_SubRunAuxiliary_h */
 

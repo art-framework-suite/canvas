@@ -5,9 +5,9 @@
 
 namespace art {
   namespace detail {
-    [[noreturn]]
-      void throwPartnerException(std::type_info const & generator,
-                                 std::type_info const & wanted_wrapper_type);
+    [[noreturn]] void throwPartnerException(
+      std::type_info const& generator,
+      std::type_info const& wanted_wrapper_type);
   }
 }
 #endif /* canvas_Persistency_Common_detail_throwPartnerException_h */

@@ -1,33 +1,36 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent canvas	v2_00_02
-defaultqual	e14
+parent canvas	v3_07_00
+defaultqual	e17
 #
 fcldir -
 perllib  product_dir
 #
-product		version
-clhep		v2_3_4_4
-cppunit		v1_13_2
-python		v2_7_13d
-root		v6_08_06g
-messagefacility	v2_00_02
-cetbuildtools	v5_08_02	-	only_for_build
+product         version
+clhep           v2_4_1_0b
+cppunit         v1_14_0
+range           v3_0_4_0
+messagefacility	v2_04_00
+cetbuildtools   v7_09_02        -       only_for_build
 end_product_list
 
-qualifier	messagefacility	root		clhep		cppunit		python	compiler	notes
-e14:debug	e14:debug	e14:debug	e14:debug	e14:debug	-nq-	gcc
-e14:prof	e14:prof	e14:prof	e14:prof	e14:prof	-nq-	gcc
-nu:e14:debug	e14:debug	e14:nu:debug	e14:debug	e14:debug	-nq-	gcc
-nu:e14:prof	e14:prof	e14:nu:prof	e14:prof	e14:prof	-nq-	gcc
-e12:debug	e12:debug	e12:debug	e12:debug	e12:debug	-nq-	gcc
-e12:prof	e12:prof	e12:prof	e12:prof	e12:prof	-nq-	gcc
-nu:e12:debug	e12:debug	e12:nu:debug	e12:debug	e12:debug	-nq-	gcc
-nu:e12:prof	e12:prof	e12:nu:prof	e12:prof	e12:prof	-nq-	gcc
-e10:debug	e10:debug	e10:debug	e10:debug	e10:debug	-nq-	gcc
-e10:prof	e10:prof	e10:prof	e10:prof	e10:prof	-nq-	gcc
-nu:e10:debug	e10:debug	e10:nu:debug	e10:debug	e10:debug	-nq-	gcc
-nu:e10:prof	e10:prof	e10:nu:prof	e10:prof	e10:prof	-nq-	gcc
+qualifier	messagefacility clhep		cppunit		range		notes
+e17:debug	e17:debug	e17:debug	e17:debug	-nq-
+e17:prof	e17:prof	e17:prof	e17:prof	-nq-
+e19:debug	e19:debug	e19:debug	e19:debug	-nq-
+e19:prof	e19:prof	e19:prof	e19:prof	-nq-
+c2:debug	c2:debug	c2:debug	c2:debug	-nq-
+c2:prof		c2:prof		c2:prof		c2:prof		-nq-
+c7:debug	c7:debug	c7:debug	c7:debug	-nq-
+c7:prof		c7:prof		c7:prof		c7:prof		-nq-
+e17:debug:py3	e17:debug:py3	e17:debug	e17:debug	-nq-
+e17:prof:py3	e17:prof:py3	e17:prof	e17:prof	-nq-
+e19:debug:py3	e19:debug:py3	e19:debug	e19:debug	-nq-
+e19:prof:py3	e19:prof:py3	e19:prof	e19:prof	-nq-
+c2:debug:py3	c2:debug:py3	c2:debug	c2:debug	-nq-
+c2:prof:py3	c2:prof:py3	c2:prof		c2:prof		-nq-
+c7:debug:py3	c7:debug:py3	c7:debug	c7:debug	-nq-
+c7:prof:py3	c7:prof:py3	c7:prof		c7:prof		-nq-
 end_qualifier_list
 
 # Local Variables:

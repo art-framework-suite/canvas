@@ -14,10 +14,10 @@
 
 namespace art {
 
-  typedef  fhicl::ParameterSetID          EventSelectionID;
-  typedef  std::vector<EventSelectionID>  EventSelectionIDVector;
+  typedef fhicl::ParameterSetID EventSelectionID;
+  typedef std::vector<EventSelectionID> EventSelectionIDVector;
 
-}  // art
+} // art
 
 // ======================================================================
 

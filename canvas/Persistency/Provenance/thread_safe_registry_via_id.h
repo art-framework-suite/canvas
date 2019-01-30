@@ -23,39 +23,20 @@
 // ===================================================================
 
 #include "canvas/Persistency/Provenance/Hash.h"
-#include "tbb/concurrent_unordered_map.h"
+#include "hep_concurrency/RecursiveMutex.h"
+#include "hep_concurrency/tsan.h"
 
+#include <map>
 #include <type_traits>
 
 namespace art {
-
-  namespace detail {
-    template <typename T>
-    struct is_instantiation_of_hash : std::false_type {};
-
-    template <int I>
-    struct is_instantiation_of_hash<art::Hash<I>> : std::true_type {};
-
-    template <typename H>
-    struct hash_to_size_t {
-
-      std::enable_if_t<is_instantiation_of_hash<H>::value, std::size_t>
-      operator()(H const& id) const
-      {
-        std::ostringstream os;
-        id.print(os);
-        return tbb::tbb_hasher(os.str());
-      }
-    };
-  }
-
   template <typename K, typename M>
   class thread_safe_registry_via_id {
-  public:
-
-    using collection_type = tbb::concurrent_unordered_map<K, M, detail::hash_to_size_t<K>>;
+  public: // Types
+    using collection_type = std::map<K, M>;
     using value_type = typename collection_type::value_type;
 
+  public: // Static API
     template <typename C>
     static void put(C const& container);
     static auto emplace(value_type const& value);
@@ -63,60 +44,94 @@ namespace art {
     static bool empty();
     static collection_type const& get();
     static bool get(K const& key, M& mapped);
-
-  private:
-    static auto& instance() {
-      static collection_type me;
+    static auto&
+    getMutex()
+    {
+      static hep::concurrency::RecursiveMutex m{"art::tsr<K,M>::m"};
+      return m;
+    }
+    static auto
+    instance(bool cleanup = false)
+    {
+      hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+      static collection_type* me = new collection_type{};
+      if (cleanup) {
+        delete me;
+        me = nullptr;
+        return me;
+      }
+      if (me == nullptr) {
+        // We have been cleaned up and are now being used again.
+        me = new collection_type{};
+      }
       return me;
     }
   };
 
   template <typename K, typename M>
   template <typename C>
-  void thread_safe_registry_via_id<K,M>::put(C const& container)
+  void
+  thread_safe_registry_via_id<K, M>::put(C const& container)
   {
-    auto& me = instance();
+    hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+    auto me = instance();
     for (auto const& e : container) {
-      me.emplace(e);
+      me->emplace(e);
     }
   }
 
   template <typename K, typename M>
-  auto thread_safe_registry_via_id<K,M>::emplace(value_type const& value)
+  auto
+  thread_safe_registry_via_id<K, M>::emplace(value_type const& value)
   {
-    return instance().emplace(value);
+    hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+    auto ret = instance()->emplace(value);
+    return ret;
   }
 
   template <typename K, typename M>
-  auto thread_safe_registry_via_id<K,M>::emplace(K const& key, M const& mapped)
+  auto
+  thread_safe_registry_via_id<K, M>::emplace(K const& key, M const& mapped)
   {
-    return instance().emplace(key, mapped);
+    hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+    auto ret = instance()->emplace(key, mapped);
+    return ret;
   }
 
   template <typename K, typename M>
-  bool thread_safe_registry_via_id<K,M>::empty()
+  bool
+  thread_safe_registry_via_id<K, M>::empty()
   {
-    return instance().empty();
+    hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+    auto ret = instance()->empty();
+    return ret;
   }
 
   template <typename K, typename M>
-  auto thread_safe_registry_via_id<K,M>::get() -> collection_type const&
+  auto
+  thread_safe_registry_via_id<K, M>::get() -> collection_type const&
   {
-    return instance();
+    auto const& ret = *instance();
+    return ret;
   }
 
   template <typename K, typename M>
-  bool thread_safe_registry_via_id<K,M>::get(K const& k, M& mapped)
+  bool
+  thread_safe_registry_via_id<K, M>::get(K const& k, M& mapped)
   {
-    auto& me = instance();
-    auto it = me.find(k);
-    if (it != me.cend()) {
+    hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+    auto me = instance();
+    auto it = me->find(k);
+    if (it != me->cend()) {
       mapped = it->second;
       return true;
     }
     return false;
   }
-
 }
 
-#endif
+#endif /* canvas_Persistency_Provenance_thread_safe_registry_via_id_h */
+
+// Local Variables:
+// mode: c++
+// End:

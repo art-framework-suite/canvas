@@ -1,64 +1,106 @@
 #ifndef canvas_Persistency_Provenance_ProductID_h
 #define canvas_Persistency_Provenance_ProductID_h
 
-/*----------------------------------------------------------------------
+//=====================================================================
+// ProductID: A unique identifier for each EDProduct within a process.
+//=====================================================================
 
-ProductID: A unique identifier for each EDProduct within a process.
-Used only in Ptr and similar classes.
+#include "cetlib/crc32.h"
 
-The high order 16 bits is the process index, identifying the process
-in which the product was created.  Exception: An index of 0 means that
-the product was created prior to the new format (i.e. prior to CMSSW_3_0_0.
-
-The low order 16 bits is the product index, identifying the product
-in which the product was created.  An index of zero means no product.
-
-----------------------------------------------------------------------*/
-
+#include <functional> // for std::hash
 #include <iosfwd>
+#include <string>
 
 namespace art {
 
-  typedef unsigned short ProcessIndex;
-  typedef unsigned short ProductIndex;
-
-  class ProductID
-  {
+  class ProductID {
   public:
-    ProductID()
-    : processIndex_(0)
-    , productIndex_(0)
-    { }
+    using value_type = unsigned int;
 
-    ProductID(ProcessIndex processIndex, ProductIndex productIndex)
-    : processIndex_(processIndex)
-    , productIndex_(productIndex)
-    { }
+    constexpr ProductID() = default;
+    explicit ProductID(std::string const& canonicalProductName);
+    constexpr explicit ProductID(value_type const value) noexcept
+      : value_{value}
+    {}
 
-    bool isValid() const {return productIndex_ != 0;}
+    static constexpr ProductID
+    invalid() noexcept
+    {
+      return ProductID{};
+    }
 
-    ProcessIndex processIndex() const {return processIndex_;}
-    ProcessIndex productIndex() const {return productIndex_;}
+    void setID(std::string const& canonicalProductName);
+
+    constexpr bool
+    isValid() const noexcept
+    {
+      return value_ != 0u;
+    }
+
+    constexpr auto
+    value() const noexcept
+    {
+      return value_;
+    }
+
+    constexpr operator std::size_t() const noexcept
+    {
+      return static_cast<std::size_t>(value_);
+    }
+
+    constexpr bool
+    operator<(ProductID const rh) const noexcept
+    {
+      return value_ < rh.value_;
+    }
+    constexpr bool
+    operator>(ProductID const rh) const noexcept
+    {
+      return rh < *this;
+    }
+    constexpr bool
+    operator==(ProductID const rh) const noexcept
+    {
+      return value_ == rh.value_;
+    }
+    constexpr bool
+    operator!=(ProductID const rh) const noexcept
+    {
+      return !(*this == rh);
+    }
+
+    struct Hash {
+      constexpr std::size_t
+      operator()(ProductID const pid) const noexcept
+      {
+        return pid.value(); // since the ID is already a checksum, don't
+                            // worry about further hashing
+      }
+    };
 
   private:
-    ProcessIndex processIndex_;
-    ProductIndex productIndex_;
+    static value_type toID(std::string const& branchName);
+    friend class ProductIDStreamer;
+
+    // Conveniently, the CRC32 value associated with an empty string
+    // is 0.
+    value_type value_{0u};
   };
 
-  inline
-  bool operator==(ProductID const& lh, ProductID const& rh) {
-    return lh.processIndex() == rh.processIndex() && lh.productIndex() == rh.productIndex();
-  }
-  inline
-  bool operator!=(ProductID const& lh, ProductID const& rh) {
-    return !(lh == rh);
-  }
-
-  bool operator<(ProductID const& lh, ProductID const& rh);
-
-  std::ostream&
-  operator<<(std::ostream& os, ProductID const& id);
+  std::ostream& operator<<(std::ostream& os, ProductID const id);
 }
+
+namespace std {
+  template <>
+  struct hash<art::ProductID> {
+    constexpr std::size_t
+    operator()(art::ProductID const id) const noexcept
+    {
+      return id.value();
+    }
+  };
+}
+
 #endif /* canvas_Persistency_Provenance_ProductID_h */
 
 // Local Variables:

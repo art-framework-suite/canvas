@@ -1,15 +1,12 @@
 #ifndef canvas_Persistency_Provenance_ProductProvenance_h
 #define canvas_Persistency_Provenance_ProductProvenance_h
+// vim: set sw=2 expandtab :
 
-/*----------------------------------------------------------------------
+//  The event dependent portion of the description of a product
+//  and how it came into existence, plus the status.
 
-ProductProvenance: The event dependent portion of the description of a product
-and how it came into existence, plus the status.
-
-----------------------------------------------------------------------*/
-
-#include "canvas/Persistency/Provenance/BranchID.h"
 #include "canvas/Persistency/Provenance/ParentageID.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/ProductStatus.h"
 #include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 #include "canvas/Persistency/Provenance/Transient.h"
@@ -19,80 +16,50 @@ and how it came into existence, plus the status.
 #include <vector>
 
 namespace art {
-  class ProductProvenance;
-  typedef std::vector<ProductProvenance> ProductProvenances;
+  class ProductProvenance {
+  public:
+    struct Transients {
+      bool noParentage_{false};
+      std::shared_ptr<Parentage> parentagePtr_{nullptr};
+    };
 
-  bool operator<(ProductProvenance const &a, ProductProvenance const &b);
-  std::ostream &operator<<(std::ostream &os, ProductProvenance const &p);
-  bool operator==(ProductProvenance const &a, ProductProvenance const &b);
-  bool operator!=(ProductProvenance const &a, ProductProvenance const &b);
-}
+    ~ProductProvenance();
+    ProductProvenance();
+    ProductProvenance(ProductID const&, ProductStatus);
+    ProductProvenance(ProductID const&,
+                      ProductStatus,
+                      std::vector<ProductID> const& parents);
+    ProductProvenance(ProductProvenance const&);
+    ProductProvenance(ProductProvenance&&);
+    ProductProvenance& operator=(ProductProvenance const&);
+    ProductProvenance& operator=(ProductProvenance&&);
 
-class art::ProductProvenance {
-public:
+    void write(std::ostream&) const;
+    ProductID productID() const noexcept;
+    ProductStatus productStatus() const noexcept;
+    ParentageID const& parentageID() const noexcept;
+    Parentage const& parentage() const;
+    // Note: This is true for Run, SubRun, and Results products.
+    bool noParentage() const noexcept;
 
-  ProductProvenance() = default;
-  explicit ProductProvenance(BranchID const& bid);
-  ProductProvenance(BranchID const& bid,
-                    ProductStatus status);
-
-  ProductProvenance(BranchID const& bid,
-                    ProductStatus status,
-                    std::shared_ptr<Parentage> parentagePtr);
-
-  ProductProvenance(BranchID const& bid,
-                    ProductStatus status,
-                    ParentageID const& id);
-
-  ProductProvenance(BranchID const& bid,
-                    ProductStatus status,
-                    std::vector<BranchID> const& parents);
-
-  // use compiler-generated copy c'tor, copy assignment, and d'tor
-
-  void write(std::ostream& os) const;
-
-  BranchID const& branchID() const {return branchID_;}
-  ProductStatus const& productStatus() const {return productStatus_;}
-  ParentageID const& parentageID() const {return parentageID_;}
-  Parentage const& parentage() const;
-  void setStatus(ProductStatus status) const {productStatus_ = status;}
-  void setPresent() const;
-  void setNotPresent() const;
-
-  bool noParentage() const {return transients_.get().noParentage_;}
-
-  struct Transients {
-    Transients() = default;
-    std::shared_ptr<Parentage> parentagePtr_ {nullptr};
-    bool noParentage_ {false};
+  private:
+    ProductID productID_{};
+    ProductStatus productStatus_{productstatus::uninitialized()};
+    ParentageID parentageID_{};
+    mutable Transient<Transients> transients_{};
   };
 
-private:
+  using ProductProvenances = std::vector<ProductProvenance>;
 
-  std::shared_ptr<Parentage>& parentagePtr() const
-  {return transients_.get().parentagePtr_;}
+  std::ostream& operator<<(std::ostream& os, ProductProvenance const& p);
+  bool operator==(ProductProvenance const& a,
+                  ProductProvenance const& b) noexcept;
+  bool operator!=(ProductProvenance const& a,
+                  ProductProvenance const& b) noexcept;
+  bool operator<(ProductProvenance const& a,
+                 ProductProvenance const& b) noexcept;
 
-  BranchID branchID_ {};
-  mutable ProductStatus productStatus_ {productstatus::uninitialized()};
-  ParentageID parentageID_ {};
-  mutable Transient<Transients> transients_ {};
-};
-
-inline
-bool
-art::operator < (ProductProvenance const& a, ProductProvenance const& b) {
-  return a.branchID() < b.branchID();
-}
-
-inline
-std::ostream&
-art::operator<<(std::ostream& os, ProductProvenance const& p) {
-  p.write(os);
-  return os;
-}
-
-inline bool art::operator!=(ProductProvenance const& a, ProductProvenance const& b) { return !(a==b); }
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_ProductProvenance_h */
 

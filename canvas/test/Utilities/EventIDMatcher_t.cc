@@ -13,9 +13,8 @@
 using namespace std::string_literals;
 
 using namespace art;
-//using namespace std::placeholders;
+// using namespace std::placeholders;
 using namespace std;
-
 
 void
 dump_pats(vector<string> const& pats)
@@ -36,7 +35,8 @@ dump_ids(vector<EventID> const& cont)
 }
 
 void
-find_matches(string const& pat, vector<EventID> const& eids,
+find_matches(string const& pat,
+             vector<EventID> const& eids,
              vector<EventID>& matches)
 {
   auto m = EventIDMatcher(pat);
@@ -59,8 +59,9 @@ find_matches(string const& pat, vector<EventID> const& eids,
 }
 
 void
-find_list_matches(vector<string> const& pats, vector<EventID> const& eids,
-             vector<EventID>& matches)
+find_list_matches(vector<string> const& pats,
+                  vector<EventID> const& eids,
+                  vector<EventID>& matches)
 {
   auto m = EventIDMatcher(pats);
   //
@@ -82,11 +83,12 @@ find_list_matches(vector<string> const& pats, vector<EventID> const& eids,
 }
 
 void
-check_match(string const& pat, vector<EventID> const& expected,
+check_match(string const& pat,
+            vector<EventID> const& expected,
             vector<EventID> const& matches)
 {
-  //cout << "   eids.size(): " << eids.size() << endl;
-  //cout << "matches.size(): " << matches.size() << endl;
+  // cout << "   eids.size(): " << eids.size() << endl;
+  // cout << "matches.size(): " << matches.size() << endl;
   if (matches == expected) {
     return;
   }
@@ -99,11 +101,12 @@ check_match(string const& pat, vector<EventID> const& expected,
 }
 
 void
-check_list_match(vector<string> const& pats, vector<EventID> const& expected,
+check_list_match(vector<string> const& pats,
+                 vector<EventID> const& expected,
                  vector<EventID> const& matches)
 {
-  //cout << "   eids.size(): " << eids.size() << endl;
-  //cout << "matches.size(): " << matches.size() << endl;
+  // cout << "   eids.size(): " << eids.size() << endl;
+  // cout << "matches.size(): " << matches.size() << endl;
   if (matches == expected) {
     return;
   }
@@ -118,19 +121,23 @@ check_list_match(vector<string> const& pats, vector<EventID> const& expected,
 }
 
 void
-run_test(string const& pat, vector<EventID> const& eids, vector<EventID> const& expected)
+run_test(string const& pat,
+         vector<EventID> const& eids,
+         vector<EventID> const& expected)
 {
-    vector<EventID> matches;
-    find_matches(pat, eids, matches);
-    check_match(pat, expected, matches);
+  vector<EventID> matches;
+  find_matches(pat, eids, matches);
+  check_match(pat, expected, matches);
 }
 
 void
-run_list_test(vector<string> const& pats, vector<EventID> const& eids, vector<EventID> const& expected)
+run_list_test(vector<string> const& pats,
+              vector<EventID> const& eids,
+              vector<EventID> const& expected)
 {
-    vector<EventID> matches;
-    find_list_matches(pats, eids, matches);
-    check_list_match(pats, expected, matches);
+  vector<EventID> matches;
+  find_list_matches(pats, eids, matches);
+  check_list_match(pats, expected, matches);
 }
 
 int
@@ -142,7 +149,7 @@ main()
   vector<EventID> eids;
   for (auto run = 1U; run < 3U; ++run) {
     for (auto subrun = 0U; subrun < 2U; ++subrun) {
-      for (auto event = 1U; event < 3U; ++ event) {
+      for (auto event = 1U; event < 3U; ++event) {
         eids.emplace_back(run, subrun, event);
       }
     }
@@ -282,7 +289,7 @@ main()
   }
   for (auto run = 1U; run < 11U; ++run) {
     for (auto subrun = 0U; subrun < 10U; ++subrun) {
-      for (auto event = 1U; event < 11U; ++ event) {
+      for (auto event = 1U; event < 11U; ++event) {
         eids.emplace_back(run, subrun, event);
       }
     }
@@ -330,30 +337,10 @@ main()
     // Match complex pattern.
     auto pat = "1, 6 : 0, 2, 5-6  : 3, 6-7"s;
     vector<EventID> expected = {
-      {1, 0, 3},
-      {1, 0, 6},
-      {1, 0, 7},
-      {1, 2, 3},
-      {1, 2, 6},
-      {1, 2, 7},
-      {1, 5, 3},
-      {1, 5, 6},
-      {1, 5, 7},
-      {1, 6, 3},
-      {1, 6, 6},
-      {1, 6, 7},
-      {6, 0, 3},
-      {6, 0, 6},
-      {6, 0, 7},
-      {6, 2, 3},
-      {6, 2, 6},
-      {6, 2, 7},
-      {6, 5, 3},
-      {6, 5, 6},
-      {6, 5, 7},
-      {6, 6, 3},
-      {6, 6, 6},
-      {6, 6, 7},
+      {1, 0, 3}, {1, 0, 6}, {1, 0, 7}, {1, 2, 3}, {1, 2, 6}, {1, 2, 7},
+      {1, 5, 3}, {1, 5, 6}, {1, 5, 7}, {1, 6, 3}, {1, 6, 6}, {1, 6, 7},
+      {6, 0, 3}, {6, 0, 6}, {6, 0, 7}, {6, 2, 3}, {6, 2, 6}, {6, 2, 7},
+      {6, 5, 3}, {6, 5, 6}, {6, 5, 7}, {6, 6, 3}, {6, 6, 6}, {6, 6, 7},
     };
     run_test(pat, eids, expected);
   }
@@ -377,47 +364,14 @@ main()
       "1-2: 5 : 3, 5-5, 6-7, 9-10"s,
     };
     vector<EventID> expected = {
-      {1, 0, 3},
-      {1, 0, 6},
-      {1, 0, 7},
-      {1, 2, 3},
-      {1, 2, 6},
-      {1, 2, 7},
-      {1, 5, 3},
-      {1, 5, 5},
-      {1, 5, 6},
-      {1, 5, 7},
-      {1, 5, 9},
-      {1, 5, 10},
-      {1, 6, 3},
-      {1, 6, 6},
-      {1, 6, 7},
-      {2, 5, 3},
-      {2, 5, 5},
-      {2, 5, 6},
-      {2, 5, 7},
-      {2, 5, 9},
-      {2, 5, 10},
-      {6, 0, 3},
-      {6, 0, 6},
-      {6, 0, 7},
-      {6, 2, 3},
-      {6, 2, 6},
-      {6, 2, 7},
-      {6, 5, 3},
-      {6, 5, 6},
-      {6, 5, 7},
-      {6, 6, 3},
-      {6, 6, 6},
-      {6, 6, 7},
-      {7, 5, 3},
-      {7, 5, 5},
-      {7, 5, 6},
-      {7, 5, 7},
-      {7, 5, 9},
-      {7, 5, 10},
+      {1, 0, 3}, {1, 0, 6}, {1, 0, 7},  {1, 2, 3}, {1, 2, 6}, {1, 2, 7},
+      {1, 5, 3}, {1, 5, 5}, {1, 5, 6},  {1, 5, 7}, {1, 5, 9}, {1, 5, 10},
+      {1, 6, 3}, {1, 6, 6}, {1, 6, 7},  {2, 5, 3}, {2, 5, 5}, {2, 5, 6},
+      {2, 5, 7}, {2, 5, 9}, {2, 5, 10}, {6, 0, 3}, {6, 0, 6}, {6, 0, 7},
+      {6, 2, 3}, {6, 2, 6}, {6, 2, 7},  {6, 5, 3}, {6, 5, 6}, {6, 5, 7},
+      {6, 6, 3}, {6, 6, 6}, {6, 6, 7},  {7, 5, 3}, {7, 5, 5}, {7, 5, 6},
+      {7, 5, 7}, {7, 5, 9}, {7, 5, 10},
     };
     run_list_test(pats, eids, expected);
   }
 }
-

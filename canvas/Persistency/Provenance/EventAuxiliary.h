@@ -1,26 +1,20 @@
 #ifndef canvas_Persistency_Provenance_EventAuxiliary_h
 #define canvas_Persistency_Provenance_EventAuxiliary_h
-
-#include <iosfwd>
+// vim: set sw=2 expandtab :
 
 #include "canvas/Persistency/Provenance/BranchType.h"
-#include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/EventID.h"
+#include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/Timestamp.h"
 
-// Auxiliary event data that is persistent
+#include <atomic>
+#include <iosfwd>
 
 namespace art {
-   class EventAuxiliary;
-}
-
-class art::EventAuxiliary {
-public:
-
-  static constexpr BranchType branch_type = InEvent;
-
-   // These types are very tentative for now
-   enum ExperimentType {
+  class EventAuxiliary {
+  public: // TYPES
+    static constexpr BranchType branch_type = InEvent;
+    enum ExperimentType {
       Any = 0,
       Align = 1,
       Calib = 2,
@@ -29,66 +23,42 @@ public:
       Mc = 5,
       Raw = 6,
       Test = 7
-   };
+    };
 
-   EventAuxiliary()
-      :
-      id_(),
-      time_(),
-      isRealData_(false),
-      experimentType_(Any)
-   {}
+  public: // MEMBER FUNCTIONS -- Special Member Functions
+    ~EventAuxiliary();
+    EventAuxiliary();
+    EventAuxiliary(EventID const& theId,
+                   Timestamp const& theTime,
+                   bool isReal,
+                   ExperimentType eType = Any);
+    EventAuxiliary(EventAuxiliary const&);
+    EventAuxiliary(EventAuxiliary&&);
+    EventAuxiliary& operator=(EventAuxiliary const&);
+    EventAuxiliary& operator=(EventAuxiliary&&);
 
-   EventAuxiliary(EventID const &theId, Timestamp const &theTime,
-                  bool isReal, ExperimentType eType = Any)
-      :
-      id_(theId),
-      time_(theTime),
-      isRealData_(isReal),
-      experimentType_(eType)
-   {}
+  public: // MEMBER FUNCTIONS -- API for the user
+    Timestamp const& time() const noexcept;
+    EventID const& id() const noexcept;
+    EventID const& eventID() const noexcept;
+    RunID const& runID() const noexcept;
+    SubRunID const& subRunID() const noexcept;
+    RunNumber_t run() const noexcept;
+    SubRunNumber_t subRun() const noexcept;
+    EventNumber_t event() const noexcept;
+    bool isRealData() const noexcept;
+    EventAuxiliary::ExperimentType experimentType() const noexcept;
+    bool operator==(EventAuxiliary const& other) const noexcept;
+    void write(std::ostream& os) const;
 
-   void write(std::ostream& os) const;
-
-   Timestamp const &time() const { return time_; }
-
-   EventID const &id() const { return id_; }
-   RunID const &runID() const { return id_.runID(); }
-   SubRunID const &subRunID() const { return id_.subRunID(); }
-   RunNumber_t run() const { return id_.run(); }
-   SubRunNumber_t subRun() const { return id_.subRun(); }
-   EventNumber_t event() const { return id_.event(); }
-
-   bool isRealData() const { return isRealData_; }
-
-   ExperimentType experimentType() const { return experimentType_; }
-
-   bool operator==(EventAuxiliary const &other) const {
-      return
-         id_ == other.id_ &&
-         time_ == other.time_ &&
-         isRealData_ == other.isRealData_ &&
-         experimentType_ == other.experimentType_;
-   }
-
-private:
-   // Event ID
-   EventID id_;
-   // Time from DAQ
-   Timestamp time_;
-   // Is this real data (i.e. not simulated)
-   bool isRealData_;
-   // Something descriptive of the source of the data
-   ExperimentType experimentType_;
-};
-
-
-inline
-std::ostream&
-operator<<(std::ostream& os, const art::EventAuxiliary& p) {
-   p.write(os);
-   return os;
-}
+  private: // MEMBER DATA
+    EventID id_;
+    Timestamp time_;
+    bool isRealData_;
+    ExperimentType experimentType_;
+  };
+  std::ostream& operator<<(std::ostream&, const EventAuxiliary&);
+} // namespace art
 
 #endif /* canvas_Persistency_Provenance_EventAuxiliary_h */
 
