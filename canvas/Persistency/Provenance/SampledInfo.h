@@ -14,8 +14,7 @@
 namespace art {
   template <typename T>
   struct SampledInfo {
-    static_assert(std::is_same<T, RunID>::value ||
-                    std::is_same<T, SubRunID>::value,
+    static_assert(std::is_same_v<T, RunID> || std::is_same_v<T, SubRunID>,
                   "The template argument must be either RunID or SubRunID.");
     double weight;
     double probability;
