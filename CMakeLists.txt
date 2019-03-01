@@ -1,5 +1,8 @@
-# ======================================================================
-#  art main build file
+#
+#  canvas/CMakeLists.txt
+#  -------------------------------------------------------------------
+#
+#  CMake build file for library canvas 
 #
 #  cd .../path/to/build/directory
 #  source .../path/to/art/ups/setup_for_development
@@ -12,11 +15,10 @@
 #  make package (builds distribution tarfile)
 # ======================================================================
 
-
-# use cmake 3.11 or later
-cmake_minimum_required (VERSION 3.11)
+cmake_minimum_required (VERSION 3.11) # use cmake 3.11 or later
 
 project(canvas)
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # cetbuildtools contains our cmake modules
 find_package(cetbuildtools REQUIRED)
@@ -65,16 +67,23 @@ endif()
 
 cet_report_compiler_flags()
 
+# these are minimum required versions, not the actual product versions
 find_ups_product(cppunit)
 find_ups_product(clhep)
 find_ups_product(cetlib_except)
 find_ups_product(cetlib v2_01_00)
+find_ups_product(python v3_7_2)
 find_ups_product(fhiclcpp)
 find_ups_product(messagefacility)
 find_ups_product(range)
 find_ups_boost()
 find_ups_product(cetbuildtools)
 
+# ----------------------------------------------------------------------
+# Python stuff
+
+#cet_find_library(PYTHON NAMES python2.7 PATHS ENV PYTHON_LIB NO_DEFAULT_PATH)
+cet_find_library(PYTHON NAMES python3.7 PATHS ENV PYTHON_LIB NO_DEFAULT_PATH)
 
 # define CLHEP
 cet_find_library(CLHEP  NAMES CLHEP   PATHS ENV CLHEP_LIB_DIR NO_DEFAULT_PATH)
@@ -82,12 +91,18 @@ cet_find_library(CLHEP  NAMES CLHEP   PATHS ENV CLHEP_LIB_DIR NO_DEFAULT_PATH)
 # define cppunit
 cet_find_library(CPPUNIT NAMES cppunit   PATHS ENV CPPUNIT_LIB   NO_DEFAULT_PATH)
 
-# source
-add_subdirectory(canvas)
-add_subdirectory(tools)
+# ----------------------------------------------------------------------
+# Describe source tree layout:
 
-# ups - table and config files
-add_subdirectory(ups)
+add_subdirectory(canvas) # source
+add_subdirectory(tools) # tools
+add_subdirectory(ups) # ups - table and config files
 
-# packaging utility
+# ----------------------------------------------------------------------
+# Documentation generation:
+#find_package(Sphinx REQUIRED)
+add_subdirectory(docs)
+
+# ----------------------------------------------------------------------
+# Packaging utility
 include(UseCPack)
