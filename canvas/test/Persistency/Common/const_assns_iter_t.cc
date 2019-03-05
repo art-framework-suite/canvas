@@ -24,22 +24,12 @@ using abd_node_first_t = abd_node_t::first_type;
 using abd_node_second_t = abd_node_t::second_type;
 using abd_node_data_t = abd_node_t::data_type;
 
-#define ERR_MSG "Types are not the same."
-
-static_assert(std::is_same<ab_node_first_t, abd_node_first_t>::value, ERR_MSG);
-static_assert(std::is_same<ab_node_second_t, abd_node_second_t>::value,
-              ERR_MSG);
+static_assert(std::is_same_v<ab_node_first_t, abd_node_first_t>);
+static_assert(std::is_same_v<ab_node_second_t, abd_node_second_t>);
+static_assert(std::is_same_v<abd_node_first_t, tuple_element_t<0, abd_node_t>>);
 static_assert(
-  std::is_same<abd_node_first_t, tuple_element_t<0, abd_node_t>>::value,
-  ERR_MSG);
-static_assert(
-  std::is_same<abd_node_second_t, tuple_element_t<1, abd_node_t>>::value,
-  ERR_MSG);
-static_assert(
-  std::is_same<abd_node_data_t, tuple_element_t<2, abd_node_t>>::value,
-  ERR_MSG);
-
-#undef ERR_MSG
+  std::is_same_v<abd_node_second_t, tuple_element_t<1, abd_node_t>>);
+static_assert(std::is_same_v<abd_node_data_t, tuple_element_t<2, abd_node_t>>);
 
 int
 main()
@@ -118,10 +108,9 @@ main()
   std::for_each(assns.begin(), assns.end(), print);
   std::cout << std::endl;
 
-  static_assert(std::is_copy_constructible<ci_t>::value,
-                "Not copy constructible");
-  static_assert(std::is_copy_assignable<ci_t>::value, "Not copy assignable");
-  static_assert(std::is_move_assignable<ci_t>::value, "Not move assignable");
+  static_assert(std::is_copy_constructible_v<ci_t>);
+  static_assert(std::is_copy_assignable_v<ci_t>);
+  static_assert(std::is_move_assignable_v<ci_t>);
 
   assert(*((*(my_begin + 4)).data) == 30);
   my_begin += 4;
