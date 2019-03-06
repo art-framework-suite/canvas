@@ -13,8 +13,4 @@
 
    Depends on<depends>
 
-
-Library Overview
-----------------
-
-canvas stuf
+The canvas package is the infrastructure required for providing I/O operations for the full art framework and the lightweight gallery framework. In particular, the ROOT dictionaries art provides for experiments to use are located in canvas.

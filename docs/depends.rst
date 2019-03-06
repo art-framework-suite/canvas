@@ -1,5 +1,5 @@
-|depends| depends
-=================
+|release| depends on
+====================
 
 | (external link): clhep v2_4_1_0b
 | (external link): cppunit v1_14_0
