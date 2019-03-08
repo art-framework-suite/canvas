@@ -1,0 +1,6 @@
+find_package(cetlib_except REQUIRED)
+find_package(hep_concurrency REQUIRED)
+find_package(cetlib REQUIRED)
+find_package(fhiclcpp REQUIRED)
+find_package(range-v3 REQUIRED)
+find_package(Boost 1.50.0 REQUIRED COMPONENTS)
