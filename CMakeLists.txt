@@ -72,8 +72,7 @@ find_ups_product(cetlib v2_01_00)
 find_ups_product(fhiclcpp)
 find_ups_product(messagefacility)
 find_ups_product(range)
-find_ups_boost()
-
+find_ups_boost(BOOST_TARGETS)
 
 # define CLHEP
 cet_find_library(CLHEP  NAMES CLHEP   PATHS ENV CLHEP_LIB_DIR NO_DEFAULT_PATH)
