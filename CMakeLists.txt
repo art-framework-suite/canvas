@@ -19,7 +19,7 @@ cmake_minimum_required (VERSION 3.11)
 project(canvas)
 
 # cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
+find_package(cetbuildtools 7.13.00 REQUIRED)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -73,7 +73,6 @@ find_ups_product(fhiclcpp)
 find_ups_product(messagefacility)
 find_ups_product(range)
 find_ups_boost()
-find_ups_product(cetbuildtools)
 
 
 # define CLHEP
