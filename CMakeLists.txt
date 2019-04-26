@@ -41,7 +41,7 @@ find_package(cetlib_except REQUIRED)
 find_package(hep_concurrency REQUIRED)
 find_package(CLHEP REQUIRED COMPONENTS Vector Matrix)
 find_package(range-v3 REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS date_time REQUIRED)
 
 # source
 add_subdirectory(canvas)
