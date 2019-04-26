@@ -22,7 +22,7 @@ cet_make(LIBRARY_NAME canvas
   cetlib
   cetlib_except
   hep_concurrency
-  ${Boost_DATE_TIME_LIBRARY}
+  Boost::date_time
   CLHEP::Matrix
   CLHEP::Vector
   ${CMAKE_DL_LIBS}
