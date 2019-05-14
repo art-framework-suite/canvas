@@ -31,10 +31,8 @@ namespace art {
   class ModuleBase;
 
   namespace detail {
-    template <typename T>
-    InputTag input_tag(ProductToken<T> const&);
-    template <typename T>
-    InputTag input_tag(ViewToken<T> const&);
+    template <typename ProdA, typename ProdB, typename Data>
+    class safe_input_tag;
   }
 
   template <typename T>
@@ -53,7 +51,8 @@ namespace art {
 
     friend class DataViewImpl;
     friend class ModuleBase;
-    friend InputTag detail::input_tag<>(ProductToken const&);
+    template <typename ProdA, typename ProdB, typename Data>
+    friend class detail::safe_input_tag;
 
     // For now, the representation is just an InputTag.  For an
     // input-tag that includes a specified process name, the
@@ -81,7 +80,6 @@ namespace art {
 
     friend class DataViewImpl;
     friend class ModuleBase;
-    friend InputTag detail::input_tag<>(ViewToken const&);
 
     // See notes in ProductToken re. the representation.
     InputTag inputTag_{};

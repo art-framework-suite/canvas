@@ -16,24 +16,28 @@
 
 namespace art::detail {
 
-  inline InputTag
-  input_tag(InputTag const& tag)
-  {
-    return tag;
-  }
+  template <typename ProdA, typename ProdB, typename Data>
+  struct safe_input_tag {
+    safe_input_tag(InputTag const& input_tag) : tag{input_tag} {}
+    safe_input_tag(ProductToken<Assns<ProdA, ProdB, Data>> const& token)
+      : tag{token.inputTag_}
+    {}
+    art::InputTag tag;
+  };
 
-  template <typename T>
-  inline InputTag
-  input_tag(ProductToken<T> const& token)
+  template <typename ProdA, typename ProdB, typename Data, typename Tag>
+  InputTag
+  input_tag(Tag const& tag)
   {
-    return token.inputTag_;
-  }
-
-  template <typename T>
-  inline InputTag
-  input_tag(ViewToken<T> const& token)
-  {
-    return token.inputTag_;
+    static_assert(
+      std::is_convertible_v<Tag, InputTag> ||
+        std::is_same_v<Tag, ProductToken<Assns<ProdA, ProdB>>> ||
+        std::is_same_v<Tag, ProductToken<Assns<ProdA, ProdB, Data>>>,
+      "\n\nart error: The input tag or product token provided to the "
+      "smart-query object\n"
+      "           constructor has a type that conflicts with that of the "
+      "smart-query object.\n");
+    return safe_input_tag<ProdA, ProdB, Data>(tag).tag;
   }
 
   class IPRHelperDef {};
@@ -169,7 +173,7 @@ art::detail::IPRHelper<ProdA, ProdB, Data, DATACOLL, EVENT>::operator()(
 ////////////////////////////////////////////////////////////////////////
 // Implementation notes.
 //
-// The current implementation does not verify the that ProductID of the
+// The current implementation does not verify that the ProductID of the
 // item in the association collection matches that of the item in the
 // reference collection before attempting to dereference its Ptr
 // (although it does verify ptr.isAvailable()). This means that in the

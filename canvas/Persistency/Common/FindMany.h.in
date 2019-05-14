@@ -125,6 +125,7 @@
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/detail/IPRHelper.h"
 #include "canvas/Persistency/Common/detail/is_handle.h"
+#include "canvas/Persistency/Provenance/ProductToken.h"
 #include "canvas/Utilities/InputTag.h"
 #include "cetlib/maybe_ref.h"
 
@@ -287,7 +288,7 @@ art::@ART_IPR_CLASS_NAME@<ProdB, void>::@ART_IPR_CLASS_NAME@(Handle const& aColl
 {
   using ProdA = typename Handle::element_type::value_type;
   detail::IPRHelper<ProdA, ProdB, void, void, DataContainer> finder{
-    dc, detail::input_tag(tag)};
+    dc, detail::input_tag<ProdA, ProdB, void>(tag)};
   storedException_ = finder(*aCollection, bCollection_);
 }
 
@@ -301,7 +302,7 @@ art::@ART_IPR_CLASS_NAME@<ProdB, void>::@ART_IPR_CLASS_NAME@(ProdAColl const& vi
   using ProdA =
     std::remove_const_t<std::remove_pointer_t<typename ProdAColl::value_type>>;
   detail::IPRHelper<ProdA, ProdB, void, void, DataContainer> finder{
-    dc, detail::input_tag(tag)};
+    dc, detail::input_tag<ProdA, ProdB, void>(tag)};
   storedException_ = finder(view, bCollection_);
 }
 
@@ -316,7 +317,7 @@ art::@ART_IPR_CLASS_NAME@<ProdB, void>::@ART_IPR_CLASS_NAME@(PtrProdAColl const&
 {
   using ProdA = typename PtrProdAColl::value_type::value_type;
   detail::IPRHelper<ProdA, ProdB, void, void, DataContainer> finder{
-    dc, detail::input_tag(tag)};
+    dc, detail::input_tag<ProdA, ProdB, void>(tag)};
   storedException_ = finder(aPtrColl, bCollection_);
 }
 
@@ -327,7 +328,7 @@ art::@ART_IPR_CLASS_NAME@<ProdB, void>::@ART_IPR_CLASS_NAME@(std::initializer_li
     Tag const& tag)
 {
   detail::IPRHelper<ProdA, ProdB, void, void, DataContainer> finder{
-    dc, detail::input_tag(tag)};
+    dc, detail::input_tag<ProdA, ProdB, void>(tag)};
   storedException_ = finder(ptrs, bCollection_);
 }
 
@@ -396,7 +397,7 @@ art::@ART_IPR_CLASS_NAME@<ProdB, Data>::@ART_IPR_CLASS_NAME@(Handle const& aColl
 {
   using ProdA = typename Handle::element_type::value_type;
   detail::IPRHelper<ProdA, ProdB, Data, dataColl_t, DataContainer> finder{
-    dc, detail::input_tag(tag)};
+    dc, detail::input_tag<ProdA, ProdB, void>(tag)};
   base::setStoredException(
     finder(*aCollection, base::bCollection(), dataCollection_));
 }
@@ -411,7 +412,7 @@ art::@ART_IPR_CLASS_NAME@<ProdB, Data>::@ART_IPR_CLASS_NAME@(ProdAColl const& vi
   using ProdA =
     std::remove_const_t<std::remove_pointer_t<typename ProdAColl::value_type>>;
   detail::IPRHelper<ProdA, ProdB, Data, dataColl_t, DataContainer> finder{
-    dc, detail::input_tag(tag)};
+    dc, detail::input_tag<ProdA, ProdB, void>(tag)};
   base::setStoredException(finder(view, base::bCollection(), dataCollection_));
 }
 
@@ -426,19 +427,20 @@ art::@ART_IPR_CLASS_NAME@<ProdB, Data>::@ART_IPR_CLASS_NAME@(PtrProdAColl const&
 {
   using ProdA = typename PtrProdAColl::value_type::value_type;
   detail::IPRHelper<ProdA, ProdB, Data, dataColl_t, DataContainer> finder{
-    dc, detail::input_tag(tag)};
+    dc, detail::input_tag<ProdA, ProdB, Data>(tag)};
   base::setStoredException(
     finder(aPtrColl, base::bCollection(), dataCollection_));
 }
 
 template <typename ProdB, typename Data>
 template <typename ProdA, typename DataContainer, typename Tag>
-art::@ART_IPR_CLASS_NAME@<ProdB, Data>::@ART_IPR_CLASS_NAME@(std::initializer_list<Ptr<ProdA>> const& ptrs,
-    DataContainer const& dc,
-    Tag const& tag)
+art::@ART_IPR_CLASS_NAME@<ProdB, Data>::@ART_IPR_CLASS_NAME@(
+  std::initializer_list<Ptr<ProdA>> const& ptrs,
+  DataContainer const& dc,
+  Tag const& tag)
 {
   detail::IPRHelper<ProdA, ProdB, Data, dataColl_t, DataContainer> finder{
-    dc, detail::input_tag(tag)};
+    dc, detail::input_tag<ProdA, ProdB, Data>(tag)};
   base::setStoredException(finder(ptrs, base::bCollection(), dataCollection_));
 }
 
