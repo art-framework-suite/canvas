@@ -29,6 +29,10 @@ src = os.environ['MRB_SOURCE']
 top = os.environ['MRB_TOP']
 html = os.environ['HTML_DIR']#+'/'project
 
+if(not html):
+    print("You haven't set an install dir ($HTML_DIR). Please set one and try again.")
+    sys.exit() 
+
 def dotted_version(normal_version):
     return normal_version.lstrip('v').replace('_', '.')
 
@@ -44,13 +48,13 @@ release = dotted_version('@version@')
 #built_docs_path = src+'/'+project
 built_docs_path = top+'/all_docs/'+project
 
-print("\n\n\ninvestigating the version tab stuff..")
+print("Building ", project, " html files..\n")
 files = os.listdir(built_docs_path)
-print(files)
+#print(files)
 subdirs = [subdir for subdir in files
            if os.path.isdir(os.path.join(built_docs_path, subdir))]
 versions = { subdir: dotted_version(subdir) for subdir in subdirs }
-print(built_docs_path+subdirs[0])
+#print(built_docs_path+subdirs[0])
 
 versions['@version@'] = release
 
@@ -90,7 +94,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = []
+exclude_patterns = ['series_notes/*', 'suite_notes/*', '*temp.rst']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -220,6 +224,7 @@ with open(src+'/'+project+'/ups/product_deps') as deps_file:
 
 
 with open(src+'/'+project+'/docs/depends.rst', 'w+') as deps_page:
+  deps_page.write(':orphan:\n\n')
   deps_page.write('|release| depends on')
   deps_page.write('\n====================\n')
   for pkg in depends_on:
@@ -264,11 +269,11 @@ with open(src+'/'+project+'/docs/depends.rst', 'w+') as deps_page:
 proj_docs_dir = src + '/' + project + '/docs/'
 series_release_notes_command = "perl " + proj_docs_dir + "release-notes --series-notes " + project + ' ' + release
 suite_release_notes_command = "perl " + proj_docs_dir + "release-notes --suite-notes " + project + ' ' + release
-print("\n\n")
-print("\tI'm trying to get some sense of what variables show up as... ")
-print(series_release_notes_command)
-print(suite_release_notes_command)
-print("\n\n")
+#print("\n\n")
+#print("\tI'm trying to get some sense of what variables show up as... ")
+#print(series_release_notes_command)
+#print(suite_release_notes_command)
+#print("\n\n")
 
 # --- series-notes 
 ## series_release_notes_command = 'perl /home/ryan/Documents/fermilab/work/doc_devel/srcs/art/docs/release-notes --series-notes ' + project + ' ' + release + ' > /home/ryan/Documents/fermilab/work/doc_devel/srcs/art/docs/series_temp.rst'
