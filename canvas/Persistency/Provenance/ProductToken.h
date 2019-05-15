@@ -32,7 +32,7 @@ namespace art {
 
   namespace detail {
     template <typename ProdA, typename ProdB, typename Data>
-    class safe_input_tag;
+    struct safe_input_tag;
   }
 
   template <typename T>
@@ -52,7 +52,7 @@ namespace art {
     friend class DataViewImpl;
     friend class ModuleBase;
     template <typename ProdA, typename ProdB, typename Data>
-    friend class detail::safe_input_tag;
+    friend struct detail::safe_input_tag;
 
     // For now, the representation is just an InputTag.  For an
     // input-tag that includes a specified process name, the
