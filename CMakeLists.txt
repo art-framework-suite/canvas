@@ -72,7 +72,7 @@ find_ups_product(cppunit)
 find_ups_product(clhep)
 find_ups_product(cetlib_except)
 find_ups_product(cetlib v2_01_00)
-find_ups_product(python v3_7_2)
+#find_ups_product(python v3_7_2)
 find_ups_product(fhiclcpp)
 find_ups_product(messagefacility)
 find_ups_product(range)
@@ -101,7 +101,11 @@ add_subdirectory(ups) # ups - table and config files
 # ----------------------------------------------------------------------
 # Documentation generation:
 #find_package(Sphinx REQUIRED)
-add_subdirectory(docs)
+if(BUILD_DOCS)
+    add_subdirectory(docs)
+else()
+    message("Not going to build documentation because variable BUILD_DOCS was not set..")
+endif()
 
 # ----------------------------------------------------------------------
 # Packaging utility
