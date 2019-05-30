@@ -216,6 +216,18 @@ private:
   using base = Assns<L, R>;
 
 public:
+  // We do not allow D == bool since since the AssnsNode requires
+  // taking the reference to a std::vector<D> element.  For
+  // std::vector<bool>::at or operator[], the returned object is a
+  // value type and not a reference type.
+  static_assert(!std::is_same_v<D, bool>,
+                "\n\nart error: An 'Assns<A, B, D>' object with D = bool is not allowed.\n"
+                "           If you decide that D must represent a boolean type, then we\n"
+                "           recommend that you wrap a boolean value in a struct (e.g.):\n\n"
+                "             struct WrappedBool { bool flag; };\n\n"
+                "           Please contact artists@fnal.gov for guidance.\n");
+
+
   using left_t = typename base::left_t;
   using right_t = typename base::right_t;
   using data_t = D;

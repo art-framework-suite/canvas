@@ -324,7 +324,10 @@ art::Wrapper<T>::do_setPtr(std::type_info const& toType,
                            void const*& ptr) const
 {
   if constexpr (has_setPtr<T>::value) {
-    art::setPtr(obj, toType, index, ptr);
+    // Allow setPtr customizations by introducing the art::setPtr
+    // overload set, and not requiring art::setPtr(...).
+    using art::setPtr;
+    setPtr(obj, toType, index, ptr);
   } else {
     throw Exception{errors::ProductDoesNotSupportPtr}
       << "The product type " << cet::demangle_symbol(typeid(T).name())
@@ -344,7 +347,8 @@ art::Wrapper<T>::do_getElementAddresses(
     // concrete collection T should supply a getElementAddresses
     // function, in the same namespace at that in which T is
     // defined, or in the 'art' namespace.
-    art::getElementAddresses(obj, toType, indices, ptrs);
+    using art::getElementAddresses;
+    getElementAddresses(obj, toType, indices, ptrs);
   } else {
     throw Exception{errors::ProductDoesNotSupportPtr}
       << "The product type " << cet::demangle_symbol(typeid(T).name())

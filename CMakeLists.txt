@@ -21,7 +21,7 @@ project(canvas)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
+find_package(cetbuildtools 7.13.01 REQUIRED)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -76,7 +76,7 @@ find_ups_product(cetlib v2_01_00)
 find_ups_product(fhiclcpp)
 find_ups_product(messagefacility)
 find_ups_product(range)
-find_ups_boost()
+find_ups_boost(BOOST_TARGETS)
 find_ups_product(cetbuildtools)
 
 # ----------------------------------------------------------------------
