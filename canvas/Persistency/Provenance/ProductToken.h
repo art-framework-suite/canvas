@@ -28,7 +28,7 @@ namespace art {
 
   // Forward declarations needed for granting friendship
   class DataViewImpl;
-  class ModuleBase;
+  class ConsumesCollector;
 
   namespace detail {
     template <typename ProdA, typename ProdB, typename Data>
@@ -50,7 +50,7 @@ namespace art {
     explicit ProductToken(InputTag const& t) : inputTag_{t} {}
 
     friend class DataViewImpl;
-    friend class ModuleBase;
+    friend class ConsumesCollector;
     template <typename ProdA, typename ProdB, typename Data>
     friend struct detail::safe_input_tag;
 
@@ -79,7 +79,7 @@ namespace art {
     explicit ViewToken(InputTag const& t) : inputTag_{t} {}
 
     friend class DataViewImpl;
-    friend class ModuleBase;
+    friend class ConsumesCollector;
 
     // See notes in ProductToken re. the representation.
     InputTag inputTag_{};
