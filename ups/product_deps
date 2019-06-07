@@ -1,6 +1,6 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent canvas	v3_06_00
+parent canvas	v3_06_01
 defaultqual e17
 #
 fcldir -
@@ -10,7 +10,7 @@ product		version
 clhep		v2_3_4_6
 cppunit		v1_13_2c
 range		v3_0_3_0
-messagefacility	v2_02_05
+messagefacility	v2_02_06
 cetbuildtools	v7_13_02	-	only_for_build
 root		v6_16_00	c2
 end_product_list
