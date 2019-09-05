@@ -430,8 +430,8 @@ template <typename L, typename R>
 inline bool
 art::Assns<L, R, void>::left_first() const
 {
-  static bool lf_s = (art::TypeID{typeid(left_t)}.friendlyClassName() <
-                      art::TypeID{typeid(right_t)}.friendlyClassName());
+  static bool const lf_s = (art::TypeID{typeid(left_t)}.friendlyClassName() <
+                            art::TypeID{typeid(right_t)}.friendlyClassName());
   return lf_s;
 }
 
@@ -444,6 +444,7 @@ art::Assns<L, R, void>::fill_transients()
   ptrs_.reserve(ptr_data_1_.size());
   ptr_data_t const& l_ref = left_first() ? ptr_data_1_ : ptr_data_2_;
   ptr_data_t const& r_ref = left_first() ? ptr_data_2_ : ptr_data_1_;
+
   for (auto l = cbegin(l_ref), e = cend(l_ref), r = cbegin(r_ref); l != e;
        ++l, ++r) {
     ptrs_.emplace_back(
