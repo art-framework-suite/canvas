@@ -1,9 +1,11 @@
 #define BOOST_TEST_MODULE (InputTag_t)
-#include "boost/test/output_test_stream.hpp"
 #include "cetlib/quiet_unit_test.hpp"
 
+#include "boost/test/output_test_stream.hpp"
 #include "canvas/Utilities/InputTag.h"
+#include "cetlib/test_macros.h"
 
+#include <set>
 #include <string>
 
 BOOST_AUTO_TEST_SUITE(InputTag_t)
@@ -112,9 +114,12 @@ BOOST_AUTO_TEST_CASE(InputTagEmptyFields_4)
 
 BOOST_AUTO_TEST_CASE(InputTag_comparison)
 {
-  art::InputTag a1("alabel:aname:aprocess"), a2("alabel:aname:aprocess"),
-    a3(a1), b1("alabel:aname:anotherprocess"),
-    b2("alabel:anothername:aprocess"), b3("anotherlabel:aname:aprocess");
+  art::InputTag const a1{"alabel:aname:aprocess"};
+  art::InputTag const a2{"alabel:aname:aprocess"};
+  auto const a3{a1};
+  art::InputTag const b1{"alabel:aname:anotherprocess"};
+  art::InputTag const b2{"alabel:anothername:aprocess"};
+  art::InputTag const b3{"anotherlabel:aname:aprocess"};
   BOOST_CHECK_EQUAL(a1, a2);
   BOOST_CHECK_EQUAL(a1, a3);
   BOOST_CHECK_EQUAL(a2, a3);
@@ -125,6 +130,20 @@ BOOST_AUTO_TEST_CASE(InputTag_comparison)
   BOOST_CHECK_NE(b1, b2);
   BOOST_CHECK_NE(b1, b3);
   BOOST_CHECK_NE(b2, b3);
+}
+
+BOOST_AUTO_TEST_CASE(InputTag_set)
+{
+  std::set<art::InputTag> test;
+  test.emplace("c", "i");
+  test.emplace("a::");
+  test.emplace("b");
+
+  std::vector<art::InputTag> const ref{"a::", "b", "c:i:"};
+  CET_CHECK_EQUAL_COLLECTIONS(test, ref);
+
+  // Test that an already present InputTag is not inserted again.
+  BOOST_CHECK(test.emplace("c:i").second == false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

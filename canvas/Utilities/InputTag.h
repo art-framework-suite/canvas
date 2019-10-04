@@ -5,6 +5,7 @@
 #include <any>
 #include <iosfwd>
 #include <string>
+#include <tuple>
 
 namespace art {
 
@@ -54,6 +55,23 @@ namespace art {
   std::ostream& operator<<(std::ostream&, InputTag const&);
 
 } // namespace art
+
+// Specialization to allow associative containers with InputTag as the
+// key type.
+namespace std {
+  template <>
+  class less<art::InputTag> {
+  public:
+    inline bool
+    operator()(art::InputTag const& lhs, art::InputTag const& rhs) const
+      noexcept
+    {
+      auto const& a = std::tie(lhs.label(), lhs.instance(), lhs.process());
+      auto const& b = std::tie(rhs.label(), rhs.instance(), rhs.process());
+      return a < b;
+    }
+  };
+}
 
 #endif /* canvas_Utilities_InputTag_h */
 

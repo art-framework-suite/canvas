@@ -57,7 +57,6 @@ namespace art {
   InputTag::InputTag(InputTag&& rhs) = default;
 
   InputTag& InputTag::operator=(InputTag const& rhs) = default;
-
   InputTag& InputTag::operator=(InputTag&& rhs) = default;
 
   bool
