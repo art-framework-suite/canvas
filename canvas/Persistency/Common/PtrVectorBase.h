@@ -25,14 +25,14 @@ public:
   virtual ~PtrVectorBase() = default;
 
   // Observers
-  bool isNonnull() const;
-  bool isNull() const;
+  bool isNonnull() const noexcept;
+  bool isNull() const noexcept;
   bool isAvailable() const;
-  ProductID id() const;
-  EDProductGetter const* productGetter() const;
+  ProductID id() const noexcept;
+  EDProductGetter const* productGetter() const noexcept;
 
   // Mutators
-  void setProductGetter(EDProductGetter const*);
+  void setProductGetter(EDProductGetter const*) noexcept;
 
 protected:
   PtrVectorBase() = default;
@@ -40,13 +40,13 @@ protected:
   void clear();
   void swap(PtrVectorBase&);
   void updateCore(RefCore const& core);
-  bool operator==(PtrVectorBase const&) const;
+  bool operator==(PtrVectorBase const&) const noexcept;
 
 private:
   void reserve(size_type n);
   void fillPtrs() const;
   template <typename T>
-  typename Ptr<T>::key_type key(Ptr<T> const& ptr) const;
+  typename Ptr<T>::key_type key(Ptr<T> const& ptr) const noexcept;
 
   RefCore core_;
   mutable indices_t indicies_; // Will be zeroed-out by fillPtrs();
@@ -59,13 +59,13 @@ private:
 }; // PtrVectorBase
 
 inline bool
-art::PtrVectorBase::isNonnull() const
+art::PtrVectorBase::isNonnull() const noexcept
 {
   return core_.isNonnull();
 }
 
 inline bool
-art::PtrVectorBase::isNull() const
+art::PtrVectorBase::isNull() const noexcept
 {
   return !isNonnull();
 }
@@ -77,19 +77,19 @@ art::PtrVectorBase::isAvailable() const
 }
 
 inline art::ProductID
-art::PtrVectorBase::id() const
+art::PtrVectorBase::id() const noexcept
 {
   return core_.id();
 }
 
 inline art::EDProductGetter const*
-art::PtrVectorBase::productGetter() const
+art::PtrVectorBase::productGetter() const noexcept
 {
   return core_.productGetter();
 }
 
 inline void
-art::PtrVectorBase::setProductGetter(EDProductGetter const* g)
+art::PtrVectorBase::setProductGetter(EDProductGetter const* g) noexcept
 {
   core_.setProductGetter(g);
 }
@@ -97,7 +97,7 @@ art::PtrVectorBase::setProductGetter(EDProductGetter const* g)
 inline void
 art::PtrVectorBase::clear()
 {
-  core_ = RefCore();
+  core_ = RefCore{};
   indices_t tmp;
   indicies_.swap(tmp); // Free up memory
 }
@@ -116,13 +116,13 @@ art::PtrVectorBase::swap(PtrVectorBase& other)
 
 template <typename T>
 inline typename art::Ptr<T>::key_type
-art::PtrVectorBase::key(Ptr<T> const& ptr) const
+art::PtrVectorBase::key(Ptr<T> const& ptr) const noexcept
 {
   return ptr.key();
 }
 
 inline bool
-art::PtrVectorBase::operator==(PtrVectorBase const& other) const
+art::PtrVectorBase::operator==(PtrVectorBase const& other) const noexcept
 {
   return core_ == other.core_;
 }

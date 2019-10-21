@@ -75,15 +75,14 @@ namespace art {
 
   template <typename T>
   class Ptr {
-
   public:
-    typedef std::size_t key_type;
-    typedef T value_type;
-    typedef T const* const_pointer;
-    typedef T const& const_reference;
+    using key_type = std::size_t;
+    using value_type = T;
+    using const_pointer = T const*;
+    using const_reference = T const&;
 
     // 1.
-    Ptr() : core_(), key_(key_traits<key_type>::value) {}
+    Ptr() = default;
 
     template <typename H>
     Ptr(H const& handle, typename Ptr<T>::key_type key)
@@ -106,7 +105,7 @@ namespace art {
 
     // 3A.
     explicit Ptr(ProductID const& productID)
-      : core_{productID, nullptr, nullptr}, key_{key_traits<key_type>::value}
+      : core_{productID, nullptr, nullptr}
     {}
 
     // 3B.
@@ -127,12 +126,11 @@ namespace art {
 
     template <typename U>
     Ptr(Ptr<U> const& pu, std::enable_if_t<std::is_base_of_v<U, T>>* = nullptr)
-      : core_{pu.id(), dynamic_cast<T const*>(pu.get()), nullptr}
-      , key_{pu.key()}
+      : core_{pu.id(), static_cast<T const*>(pu.get()), nullptr}, key_{pu.key()}
     {}
 
     // 5. See notes above.
-    Ptr(ProductID const& productID, T const* item, key_type itemKey)
+    Ptr(ProductID const& productID, T const* item, key_type const itemKey)
       : core_{productID, item, nullptr}, key_{itemKey}
     {}
 
@@ -185,14 +183,14 @@ namespace art {
 
     // Checks for valid key.
     bool
-    isNonnull() const
+    isNonnull() const noexcept
     {
       return key_ != key_traits<key_type>::value;
     }
 
     // Checks for valid key.
     bool
-    isNull() const
+    isNull() const noexcept
     {
       return !isNonnull();
     }
@@ -203,19 +201,19 @@ namespace art {
     }
 
     RefCore const&
-    refCore() const
+    refCore() const noexcept
     {
       return core_;
     }
 
     ProductID
-    id() const
+    id() const noexcept
     {
       return core_.id();
     }
 
     EDProductGetter const*
-    productGetter() const
+    productGetter() const noexcept
     {
       return core_.productGetter();
     }
@@ -229,20 +227,20 @@ namespace art {
     }
 
     bool
-    hasCache() const
+    hasCache() const noexcept
     {
       return core_.productPtr() != nullptr;
     }
 
     key_type
-    key() const
+    key() const noexcept
     {
       return key_;
     }
 
     // MUST UPDATE WHEN CLASS IS CHANGED!
-    static short
-    Class_Version()
+    static constexpr short
+    Class_Version() noexcept
     {
       return 10;
     }
@@ -393,15 +391,15 @@ namespace art {
 
 // Specialization of std::hash for art::Ptr
 namespace std {
-  template <class T>
+  template <typename T>
   struct hash<art::Ptr<T>> {
     using ptr_t = art::Ptr<T>;
     using key_t = typename ptr_t::key_type;
 
     size_t
-    operator()(ptr_t const& p) const
+    operator()(ptr_t const& p) const noexcept
     {
-      return std::hash<art::ProductID>()(p.id()) ^ std::hash<key_t>()(p.key());
+      return std::hash<art::ProductID>{}(p.id()) ^ std::hash<key_t>{}(p.key());
     }
   };
 }

@@ -24,7 +24,7 @@ using namespace std;
 
 namespace art {
 
-  HLTPathStatus::~HLTPathStatus() {}
+  HLTPathStatus::~HLTPathStatus() = default;
 
   HLTPathStatus::HLTPathStatus()
   {
@@ -76,16 +76,13 @@ namespace art {
   hlt::HLTState
   HLTPathStatus::state() const
   {
-    auto ret =
-      static_cast<hlt::HLTState>(ATOMIC_LOAD_PSTATUS_LVAL(status_) & 0x03);
-    return ret;
+    return static_cast<hlt::HLTState>(ATOMIC_LOAD_PSTATUS_LVAL(status_) & 0x03);
   }
 
   unsigned
   HLTPathStatus::index() const
   {
-    auto ret = (static_cast<unsigned>(ATOMIC_LOAD_PSTATUS_LVAL(status_) >> 2));
-    return ret;
+    return static_cast<unsigned>(ATOMIC_LOAD_PSTATUS_LVAL(status_) >> 2);
   }
 
   void
@@ -97,22 +94,19 @@ namespace art {
   bool
   HLTPathStatus::wasrun() const
   {
-    auto ret = state() != hlt::Ready;
-    return ret;
+    return state() != hlt::Ready;
   }
 
   bool
   HLTPathStatus::accept() const
   {
-    auto ret = !wasrun() || (state() == hlt::Pass);
-    return ret;
+    return !wasrun() || (state() == hlt::Pass);
   }
 
   bool
   HLTPathStatus::error() const
   {
-    auto ret = state() == hlt::Exception;
-    return ret;
+    return state() == hlt::Exception;
   }
 
 } // namespace art
