@@ -19,10 +19,10 @@ e19:debug	e19:debug	e19:debug	e19:debug	-nq-
 e19:prof	e19:prof	e19:prof	e19:prof	-nq-
 c7:debug	c7:debug	c7:debug	c7:debug	-nq-
 c7:prof		c7:prof		c7:prof		c7:prof		-nq-
-e19:debug:py3	e19:debug:py3	e19:debug	e19:debug	-nq-
-e19:prof:py3	e19:prof:py3	e19:prof	e19:prof	-nq-
-c7:debug:py3	c7:debug:py3	c7:debug	c7:debug	-nq-
-c7:prof:py3	c7:prof:py3	c7:prof		c7:prof		-nq-
+e19:debug:py2	e19:debug:py2	e19:debug	e19:debug	-nq-
+e19:prof:py2	e19:prof:py2	e19:prof	e19:prof	-nq-
+c7:debug:py2	c7:debug:py2	c7:debug	c7:debug	-nq-
+c7:prof:py2	c7:prof:py2	c7:prof		c7:prof		-nq-
 end_qualifier_list
 
 # Local Variables:
