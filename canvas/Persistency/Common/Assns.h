@@ -134,12 +134,6 @@ public:
   using assn_t = typename ptrs_t::value_type;
   using const_iterator = typename ptrs_t::const_iterator;
 
-  // Clang can't handle type alias deprecations; so we use a typedef instead.
-  [[deprecated("\n\nart warning: 'assn_iterator' has been replaced with "
-               "'const_iterator'.\n"
-               "             The 'assn_iterator' type will be removed as of "
-               "art 3.02.\n\n")]] typedef const_iterator assn_iterator;
-
   using size_type = typename ptrs_t::size_type;
 
   // Constructors, destructor.
@@ -155,8 +149,15 @@ public:
   size_type size() const;
   std::string className() const;
 
-  // Modifier.
+  // Modifiers.
   void addSingle(Ptr<left_t> const& left, Ptr<right_t> const& right);
+
+  template <typename Ls>
+  void addMany(Ls const& lefts, Ptr<right_t> const& right);
+
+  template <typename Rs>
+  void addMany(Ptr<left_t> const& left, Rs const& rights);
+
   void swap(art::Assns<L, R, void>& other);
 
   std::unique_ptr<EDProduct> makePartner(
@@ -220,13 +221,13 @@ public:
   // taking the reference to a std::vector<D> element.  For
   // std::vector<bool>::at or operator[], the returned object is a
   // value type and not a reference type.
-  static_assert(!std::is_same_v<D, bool>,
-                "\n\nart error: An 'Assns<A, B, D>' object with D = bool is not allowed.\n"
-                "           If you decide that D must represent a boolean type, then we\n"
-                "           recommend that you wrap a boolean value in a struct (e.g.):\n\n"
-                "             struct WrappedBool { bool flag; };\n\n"
-                "           Please contact artists@fnal.gov for guidance.\n");
-
+  static_assert(
+    !std::is_same_v<D, bool>,
+    "\n\nart error: An 'Assns<A, B, D>' object with D = bool is not allowed.\n"
+    "           If you decide that D must represent a boolean type, then we\n"
+    "           recommend that you wrap a boolean value in a struct (e.g.):\n\n"
+    "             struct WrappedBool { bool flag; };\n\n"
+    "           Please contact artists@fnal.gov for guidance.\n");
 
   using left_t = typename base::left_t;
   using right_t = typename base::right_t;
@@ -253,9 +254,17 @@ public:
   data_t const& data(typename std::vector<data_t>::size_type index) const;
   data_t const& data(const_iterator it) const;
 
+  // Modifiers.
   void addSingle(Ptr<left_t> const& left,
                  Ptr<right_t> const& right,
                  data_t const& data);
+
+  template <typename Ls, typename Ds>
+  void addMany(Ls const& lefts, Ptr<right_t> const& right, Ds const& data);
+
+  template <typename Rs, typename Ds>
+  void addMany(Ptr<left_t> const& left, Rs const& rights, Ds const& data);
+
   void swap(art::Assns<L, R, D>& other);
 
   // This is needed (as opposed to using base::makePartner) because
@@ -353,6 +362,34 @@ art::Assns<L, R, void>::addSingle(Ptr<left_t> const& left,
 }
 
 template <typename L, typename R>
+template <typename Ls>
+inline void
+art::Assns<L, R, void>::addMany(Ls const& lefts, Ptr<right_t> const& right)
+{
+  static_assert(std::is_same_v<typename Ls::value_type, art::Ptr<L>>,
+                "\n\nart error: The first argument must be a container whose "
+                "value_type is art::Ptr<L>\n"
+                "           corresponding to an Assns<L, R(, D)> object.\n");
+  for (auto const& left : lefts) {
+    addSingle(left, right);
+  }
+}
+
+template <typename L, typename R>
+template <typename Rs>
+inline void
+art::Assns<L, R, void>::addMany(Ptr<left_t> const& left, Rs const& rights)
+{
+  static_assert(std::is_same_v<typename Rs::value_type, art::Ptr<R>>,
+                "\n\nart error: The second argument must be a container whose "
+                "value_type is art::Ptr<R>\n"
+                "           corresponding to an Assns<L, R(, D)> object.\n");
+  for (auto const& right : rights) {
+    addSingle(left, right);
+  }
+}
+
+template <typename L, typename R>
 inline void
 art::Assns<L, R, void>::swap(art::Assns<L, R, void>& other)
 {
@@ -393,8 +430,8 @@ template <typename L, typename R>
 inline bool
 art::Assns<L, R, void>::left_first() const
 {
-  static bool lf_s = (art::TypeID{typeid(left_t)}.friendlyClassName() <
-                      art::TypeID{typeid(right_t)}.friendlyClassName());
+  static bool const lf_s = (art::TypeID{typeid(left_t)}.friendlyClassName() <
+                            art::TypeID{typeid(right_t)}.friendlyClassName());
   return lf_s;
 }
 
@@ -407,6 +444,7 @@ art::Assns<L, R, void>::fill_transients()
   ptrs_.reserve(ptr_data_1_.size());
   ptr_data_t const& l_ref = left_first() ? ptr_data_1_ : ptr_data_2_;
   ptr_data_t const& r_ref = left_first() ? ptr_data_2_ : ptr_data_1_;
+
   for (auto l = cbegin(l_ref), e = cend(l_ref), r = cbegin(r_ref); l != e;
        ++l, ++r) {
     ptrs_.emplace_back(
@@ -511,6 +549,38 @@ art::Assns<L, R, D>::addSingle(Ptr<left_t> const& left,
 {
   base::addSingle(left, right);
   data_.push_back(data);
+}
+
+template <typename L, typename R, typename D>
+template <typename Ls, typename Ds>
+inline void
+art::Assns<L, R, D>::addMany(Ls const& lefts,
+                             Ptr<right_t> const& right,
+                             Ds const& data)
+{
+  static_assert(std::is_same_v<typename Ds::value_type, D>,
+                "\n\nart error: The data argument must be a container whose "
+                "value_type is D corresponding\n"
+                "           to an Assns<L, R, D> object.\n");
+  assert(lefts.size() == data.size());
+  base::addMany(lefts, right);
+  data_.insert(data_.end(), data.begin(), data.end());
+}
+
+template <typename L, typename R, typename D>
+template <typename Rs, typename Ds>
+void
+art::Assns<L, R, D>::addMany(Ptr<left_t> const& left,
+                             Rs const& rights,
+                             Ds const& data)
+{
+  static_assert(std::is_same_v<typename Ds::value_type, D>,
+                "\n\nart error: The data argument must be a container whose "
+                "value_type is D corresponding\n"
+                "           to an Assns<L, R, D> object.\n");
+  assert(rights.size() == data.size());
+  base::addMany(left, rights);
+  data_.insert(data_.end(), data.begin(), data.end());
 }
 
 template <typename L, typename R, typename D>

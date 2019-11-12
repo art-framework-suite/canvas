@@ -10,15 +10,11 @@
 
 namespace art {
 
-  RefCore::RefCoreTransients::RefCoreTransients() noexcept = default;
-
   RefCore::RefCoreTransients::RefCoreTransients(
     void const* prodPtr,
     EDProductGetter const* prodGetter) noexcept
     : itemPtr_{prodPtr}, prodGetter_{prodGetter}
   {}
-
-  RefCore::RefCore() = default;
 
   RefCore::RefCore(ProductID const& id,
                    void const* prodPtr,
@@ -29,29 +25,11 @@ namespace art {
   bool
   RefCore::isAvailable() const
   {
-    return productPtr() != nullptr ||
-           (id_.isValid() && productGetter() != nullptr &&
-            productGetter()->getIt() != nullptr);
-  }
-
-  bool
-  RefCore::isNonnull() const noexcept
-  {
-    return id_.isValid();
-  }
-
-  bool
-  RefCore::isNull() const noexcept
-  {
-    return !isNonnull();
-  }
-
-  bool RefCore::operator!() const noexcept { return isNull(); }
-
-  ProductID
-  RefCore::id() const noexcept
-  {
-    return id_;
+    if (productPtr()) {
+      return true;
+    }
+    return id_.isValid() && productGetter() != nullptr &&
+           productGetter()->getIt() != nullptr;
   }
 
   void const*
@@ -89,24 +67,6 @@ namespace art {
   {
     std::swap(id_, other.id_);
     std::swap(transients_, other.transients_);
-  }
-
-  bool
-  operator==(RefCore const& lhs, RefCore const& rhs)
-  {
-    return lhs.id() == rhs.id();
-  }
-
-  bool
-  operator!=(RefCore const& lhs, RefCore const& rhs)
-  {
-    return !(lhs == rhs);
-  }
-
-  bool
-  operator<(RefCore const& lhs, RefCore const& rhs)
-  {
-    return lhs.id() < rhs.id();
   }
 
   void

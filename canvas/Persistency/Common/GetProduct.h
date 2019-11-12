@@ -4,10 +4,9 @@
 namespace art::detail {
   template <typename COLLECTION>
   struct GetProduct {
-    typedef typename COLLECTION::value_type element_type;
-    typedef typename COLLECTION::const_iterator iter;
-    static element_type const*
-    address(iter const& i)
+    using const_iterator = typename COLLECTION::const_iterator;
+    static auto const*
+    address(const_iterator const& i)
     {
       return &*i;
     }

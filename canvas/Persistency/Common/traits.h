@@ -62,7 +62,7 @@ namespace art {
   struct has_value_type : std::false_type {};
 
   template <typename T>
-  struct has_value_type<T, cet::enable_if_type_exists_t<typename T::value_type>>
+  struct has_value_type<T, std::void_t<typename T::value_type>>
     : std::true_type {
     using element_type = typename T::value_type;
   };
@@ -71,8 +71,7 @@ namespace art {
   struct has_mapped_type : std::false_type {};
 
   template <typename T>
-  struct has_mapped_type<T,
-                         cet::enable_if_type_exists_t<typename T::mapped_type>>
+  struct has_mapped_type<T, std::void_t<typename T::mapped_type>>
     : std::true_type {
     using element_type = typename T::mapped_type;
   };

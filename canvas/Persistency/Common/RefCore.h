@@ -12,8 +12,7 @@ namespace art {
   class RefCore {
   public:
     struct RefCoreTransients {
-
-      RefCoreTransients() noexcept;
+      constexpr RefCoreTransients() = default;
       explicit RefCoreTransients(void const* prodPtr,
                                  EDProductGetter const* prodGetter) noexcept;
 
@@ -21,14 +20,22 @@ namespace art {
       EDProductGetter const* prodGetter_{nullptr};
     };
 
-    RefCore();
+    constexpr RefCore() = default;
     RefCore(ProductID const& theId,
             void const* prodPtr,
             EDProductGetter const* prodGetter);
 
-    bool isNonnull() const noexcept;
-    bool isNull() const noexcept;
-    bool operator!() const noexcept;
+    constexpr bool
+    isNonnull() const noexcept
+    {
+      return id_.isValid();
+    }
+    constexpr bool
+    isNull() const noexcept
+    {
+      return !isNonnull();
+    }
+    constexpr bool operator!() const noexcept { return isNull(); }
 
     // Checks if collection is in memory or available in the Event; no
     // type checking is done.  Actually fetches the collection data
@@ -36,7 +43,11 @@ namespace art {
     // fetched yet.
     bool isAvailable() const;
 
-    ProductID id() const noexcept;
+    constexpr ProductID
+    id() const noexcept
+    {
+      return id_;
+    }
     void const* productPtr() const noexcept;
 
     // Used by isAvailable() to actually read the data product
@@ -57,9 +68,23 @@ namespace art {
     RefCoreTransients transients_{};
   };
 
-  bool operator==(RefCore const&, RefCore const&);
-  bool operator!=(RefCore const&, RefCore const&);
-  bool operator<(RefCore const&, RefCore const&);
+  constexpr bool
+  operator==(RefCore const& lhs, RefCore const& rhs) noexcept
+  {
+    return lhs.id() == rhs.id();
+  }
+
+  constexpr bool
+  operator!=(RefCore const& lhs, RefCore const& rhs) noexcept
+  {
+    return !(lhs == rhs);
+  }
+
+  constexpr bool
+  operator<(RefCore const& lhs, RefCore const& rhs) noexcept
+  {
+    return lhs.id() < rhs.id();
+  }
 
   void swap(RefCore&, RefCore&);
 
