@@ -6,7 +6,6 @@
 #include "canvas/Persistency/Provenance/ProductID.h"
 #include "cetlib/SimultaneousFunctionSpawner.h"
 #include "cetlib/container_algorithms.h"
-#include "cetlib/test_macros.h"
 
 #include <string>
 #include <vector>
@@ -53,7 +52,7 @@ BOOST_AUTO_TEST_CASE(concurrent_insertion_reading)
     cet::SimultaneousFunctionSpawner sfs{tasks};
   }
 
-  BOOST_REQUIRE_EQUAL(ParentageRegistry::get().size(), parentages.size());
+  BOOST_REQUIRE(ParentageRegistry::get().size() == parentages.size());
 
   // Retrieve histories in parallel
   {
@@ -70,7 +69,7 @@ BOOST_AUTO_TEST_CASE(concurrent_insertion_reading)
         });
       });
     cet::SimultaneousFunctionSpawner sfs{tasks};
-    CET_CHECK_EQUAL_COLLECTIONS(parentages, retrievedParentages);
+    BOOST_TEST(parentages == retrievedParentages);
   }
 }
 
