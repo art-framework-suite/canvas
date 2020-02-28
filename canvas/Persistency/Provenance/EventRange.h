@@ -15,13 +15,11 @@
 namespace art {
 
   class EventRange {
-
-  public: // MEMBER FUNCTIONS -- Static API
+  public:
     static EventRange invalid() noexcept;
     static EventRange forSubRun(SubRunNumber_t s) noexcept;
     static bool are_valid(EventRange const& l, EventRange const& r) noexcept;
 
-  public: // MEMBER FUNCTIONS -- Special Member Functions
     ~EventRange() noexcept;
     explicit EventRange() noexcept;
 
@@ -35,7 +33,6 @@ namespace art {
     EventRange& operator=(EventRange const&) noexcept;
     EventRange& operator=(EventRange&&) noexcept;
 
-  public: // MEMBER FUNCTIONS -- API for the user
     bool operator<(EventRange const& other) const noexcept;
     bool operator==(EventRange const& other) const noexcept;
     bool operator!=(EventRange const& other) const noexcept;
@@ -67,11 +64,10 @@ namespace art {
     // Throws LogicError if our begin_ > e.
     void set_end(EventNumber_t const e);
 
-  private: // MEMBER FUNCTIONS -- Implementation details
+  private:
     // Throws LogicError if we are a full SubRun range.
     void require_not_full_SubRun() const;
 
-  private: // MEMBER DATA
     SubRunNumber_t subRun_{IDNumber<Level::SubRun>::invalid()};
     EventNumber_t begin_{IDNumber<Level::Event>::invalid()};
     EventNumber_t end_{IDNumber<Level::Event>::invalid()};

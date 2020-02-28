@@ -20,7 +20,7 @@ namespace {
   void
   testit(std::type_info const& tid, std::string const ref)
   {
-    BOOST_CHECK_EQUAL(uniform_type_name(tid), ref);
+    BOOST_TEST(uniform_type_name(tid) == ref);
   }
 }
 
