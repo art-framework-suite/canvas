@@ -4,7 +4,9 @@ cet_test(aggregate_t USE_BOOST_UNIT
 cet_test(aggregate_clhep_t USE_BOOST_UNIT
   LIBRARIES
   canvas
-  ${CLHEP})
+  CLHEP::Matrix
+  CLHEP::Vector
+  )
 
 cet_test(const_assns_iter_t LIBRARIES canvas)
 
