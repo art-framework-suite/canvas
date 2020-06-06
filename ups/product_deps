@@ -9,9 +9,9 @@ perllib  product_dir
 product         version		<format=2>
 clhep           v2_4_1_3a
 cppunit         v1_15_1a
-range           v3_0_10_0a
+range           v3_0_10_0b
 messagefacility	v2_06_01
-cetbuildtools   v7_17_00        -       only_for_build
+cetbuildtools   v7_17_01        -       only_for_build
 end_product_list
 
 qualifier	messagefacility clhep		cppunit		range		notes
