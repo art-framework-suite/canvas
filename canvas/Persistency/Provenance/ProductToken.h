@@ -19,6 +19,10 @@
 
 #include <string>
 
+namespace gallery {
+  class Event;
+}
+
 namespace art {
 
   template <typename T>
@@ -51,6 +55,7 @@ namespace art {
 
     friend class DataViewImpl;
     friend class ConsumesCollector;
+    friend class gallery::Event;
     template <typename ProdA, typename ProdB, typename Data>
     friend struct detail::safe_input_tag;
 

@@ -462,7 +462,7 @@ namespace art {
          "same events\n"
       << " Run: " << rn << '\n'
       << "  " << left << "  vs.\n"
-      << "  " << right;
+      << "  " << right << '\n';
   }
 
   bool

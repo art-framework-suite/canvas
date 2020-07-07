@@ -35,10 +35,14 @@ namespace art {
   {
     vector<string> tokens;
     boost::split(tokens, s, boost::is_any_of(":"), boost::token_compress_off);
-    int nwords = tokens.size();
-    if (nwords > 3) {
-      throw Exception(errors::Configuration, "InputTag")
-        << "Input tag " << s << " has " << nwords << " tokens";
+    auto const nwords = tokens.size();
+    if (nwords > 3u) {
+      throw Exception(errors::Configuration,
+                      "An error occurred while creating an input tag.\n")
+        << "The string '" << s
+        << "' has more than three colon-delimited tokens.\n"
+           "The supported syntax is '<module_label>:<optional instance "
+           "name>:<optional process name>'.";
     }
     if (nwords > 0) {
       label_ = tokens[0];
@@ -116,11 +120,11 @@ namespace art {
     if (fhicl::detail::is_sequence(a)) {
       vector<string> tmp;
       fhicl::detail::decode(a, tmp);
-      if (tmp.size() == 2)
-        tag = {tmp.at(0), tmp.at(1)};
-      else if (tmp.size() == 3)
-        tag = {tmp.at(0), tmp.at(1), tmp.at(2)};
-      else {
+      if (tmp.size() == 2) {
+        tag = {tmp[0], tmp[1]};
+      } else if (tmp.size() == 3) {
+        tag = {tmp[0], tmp[1], tmp[2]};
+      } else {
         ostringstream errmsg;
         errmsg << "When converting to InputTag by a sequence, FHiCL entries "
                   "must follow the convention:\n\n"
@@ -146,10 +150,10 @@ namespace art {
   ostream&
   operator<<(ostream& os, InputTag const& tag)
   {
-    static string const process(", process = ");
-    os << "InputTag:  label = " << tag.label()
-       << ", instance = " << tag.instance()
-       << (tag.process().empty() ? string() : (process + tag.process()));
+    static string const process("', process = '");
+    os << "InputTag: label = '" << tag.label() << "', instance = '"
+       << tag.instance()
+       << (tag.process().empty() ? string() : (process + tag.process())) << "'";
     return os;
   }
 

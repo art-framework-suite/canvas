@@ -41,8 +41,6 @@ namespace art {
                              std::size_t const i)
       : coll_{&assns}, index_{i}
     {}
-    const_AssnsIter<L, R, D, Dir>& operator=(
-      art::const_AssnsIter<L, R, D, Dir> const& iter);
 
     reference operator*() const;
     pointer operator->() const;
@@ -289,15 +287,6 @@ namespace art {
     auto const& l = left(*this, iter);
     auto const& r = right(*this, iter);
     return l.index_ >= r.index_;
-  }
-
-  template <typename L, typename R, typename D, Direction Dir>
-  art::const_AssnsIter<L, R, D, Dir>&
-  const_AssnsIter<L, R, D, Dir>::operator=(
-    art::const_AssnsIter<L, R, D, Dir> const& iter)
-  {
-    node_ = iter.node_;
-    return *this;
   }
 }
 

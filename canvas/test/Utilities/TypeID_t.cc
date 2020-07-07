@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE (TypeID_t)
-#include "boost/test/output_test_stream.hpp"
+#include "boost/test/tools/output_test_stream.hpp"
 #include "cetlib/quiet_unit_test.hpp"
 
 #include "canvas/Utilities/TypeID.h"
