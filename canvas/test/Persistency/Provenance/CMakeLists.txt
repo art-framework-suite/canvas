@@ -15,7 +15,7 @@ endforeach()
 cet_test(EventRange_t USE_BOOST_UNIT LIBRARIES canvas)
 cet_test(RangeSet_t USE_BOOST_UNIT LIBRARIES canvas)
 
-find_package(Threads REQUIRED)
+cet_find_package(Threads REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
 cet_test(ParentageRegistry_t USE_BOOST_UNIT LIBRARIES canvas cetlib Threads::Threads)

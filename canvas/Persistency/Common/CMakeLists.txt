@@ -12,5 +12,9 @@ foreach(ART_IPR_BASE_NAME FindOne FindMany)
     @ONLY)
 endforeach()
 
+cet_make_library(LIBRARY_NAME AssnsAlgorithms INTERFACE
+  SOURCE AssnsAlgorithms.h
+  LIBRARIES INTERFACE Range::Range canvas::canvas)
+
 install_headers(SUBDIRS detail)
 install_source(SUBDIRS detail)

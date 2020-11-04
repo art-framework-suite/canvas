@@ -1,3 +1,2 @@
-
-_canvas_install_tools( DIRNAME canvas_refactor
-                       SCRIPT_LIST fix_cmake_art.pl  fix_headers_art.pl  update_for_art.sh )
+cet_script(DESTINATION ${canvas_TOOLS_DIR}/canvas_refactor
+  fix_cmake_art.pl fix_headers_art.pl update_for_art.sh)

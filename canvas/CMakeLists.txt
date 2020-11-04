@@ -6,7 +6,7 @@ add_subdirectory(Utilities)
 add_subdirectory(Persistency)
 
 
-cet_make(LIBRARY_NAME canvas
+cet_make(LIBRARY_NAME canvas ### MIGRATE-ACTION-RECOMMENDED: use cet_make_library(), build_dictionary(), basic_plugin() with explicit source lists
   SUBDIRS Version ${CMAKE_CURRENT_BINARY_DIR}/Version
   Utilities
   Utilities/detail
