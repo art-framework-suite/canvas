@@ -16,12 +16,10 @@ cet_make(LIBRARY_NAME canvas ### MIGRATE-ACTION-RECOMMENDED: use cet_make_librar
   Persistency/Common
   Persistency/Common/detail
   LIBRARIES
-  MF_MessageLogger
+  messagefacility::MF_MessageLogger
   $<$<PLATFORM_ID:Darwin>:c++abi>
-  fhiclcpp
-  cetlib
-  cetlib_except
-  hep_concurrency
+  fhiclcpp::fhiclcpp
+  cetlib::cetlib
   Boost::date_time
   ${CLHEP}
   ${CMAKE_DL_LIBS}

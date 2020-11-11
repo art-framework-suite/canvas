@@ -29,7 +29,7 @@ cet_set_compiler_flags(DIAGS VIGILANT
   WERROR
   NO_UNDEFINED
   EXTRA_FLAGS -pedantic
-  EXTRA_CXX_FLAGS -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -DBOOST_TEST_NO_OLD_TOOLS
+  $<$<COMPILE_LANGUAGE:CXX>:-Wnon-virtual-dtor;-Wdelete-non-virtual-dtor;-DBOOST_TEST_NO_OLD_TOOLS>
   )
 
 if($ENV{CET_SANITIZE_ADDRESS})
@@ -64,12 +64,12 @@ cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
 find_ups_product(cppunit) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
 find_ups_product(clhep) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
-find_ups_product(cetlib_except) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
-find_ups_product(cetlib v3_00_00) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
-find_ups_product(fhiclcpp) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
-find_ups_product(messagefacility) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
+cet_find_package(cetlib_except)
+cet_find_package(cetlib)
+cet_find_package(fhiclcpp)
+cet_find_package(messagefacility)
 find_ups_product(range) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
-find_ups_boost(BOOST_TARGETS)
+cet_find_package(Boost COMPONENTS date_time REQUIRED)
 
 # define CLHEP
 cet_find_library(CLHEP  NAMES CLHEP   PATHS ENV CLHEP_LIB_DIR NO_DEFAULT_PATH) ### MIGRATE-ACTION-RECOMMENDED: use of ENV ... may be UPS-dependent ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking

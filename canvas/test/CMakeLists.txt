@@ -3,7 +3,7 @@ include(CetTest)
 cet_enable_asserts()
 # If you explicitly include CetTest in a subdirectory, you will need to
 # re-initialize the test environment.
-cet_test_env("FHICL_FILE_PATH=.")
+cet_test_env("FHICL_FILE_PATH=." OUT_VAR CET_TEST_ENV)
 
 # build Persistency libraries
 add_subdirectory(Persistency/Common)
