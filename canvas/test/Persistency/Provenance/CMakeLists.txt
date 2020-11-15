@@ -4,7 +4,7 @@ file(GLOB cppunit_files *.cppunit.cc)
 foreach(cppunit_source ${cppunit_files})
   get_filename_component(test_name ${cppunit_source} NAME_WE)
   cet_test(${test_name} SOURCE testRunner.cpp ${cppunit_source}
-    LIBRARIES PRIVATE ${CPPUNIT} canvas::canvas)
+    LIBRARIES PRIVATE CppUnit::CppUnit canvas::canvas)
 endforeach()
 
 foreach(test_source ProcessConfiguration_t.cpp ProcessHistory_t.cpp)

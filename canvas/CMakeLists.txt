@@ -21,7 +21,7 @@ cet_make(LIBRARY_NAME canvas ### MIGRATE-ACTION-RECOMMENDED: use cet_make_librar
   fhiclcpp::fhiclcpp
   cetlib::cetlib
   Boost::date_time
-  ${CLHEP}
+  CLHEP::CLHEP
   ${CMAKE_DL_LIBS}
   NO_DICTIONARY)
 

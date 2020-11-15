@@ -61,20 +61,14 @@ endif()
 
 cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
-find_ups_product(cppunit) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
-find_ups_product(clhep) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
-cet_find_package(cetlib_except)
-cet_find_package(cetlib)
-cet_find_package(fhiclcpp)
-cet_find_package(messagefacility)
-find_ups_product(range) ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
 cet_find_package(Boost COMPONENTS date_time REQUIRED)
-
-# define CLHEP
-cet_find_library(CLHEP  NAMES CLHEP   PATHS ENV CLHEP_LIB_DIR NO_DEFAULT_PATH) ### MIGRATE-ACTION-RECOMMENDED: use of ENV ... may be UPS-dependent ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
-
-# define cppunit
-cet_find_library(CPPUNIT NAMES cppunit   PATHS ENV CPPUNIT_LIB   NO_DEFAULT_PATH) ### MIGRATE-ACTION-RECOMMENDED: use of ENV ... may be UPS-dependent ### MIGRATE-ACTION-RECOMMENDED: use cet_find_package() with target semantics for linking
+cet_find_package(CLHEP REQUIRED)
+cet_find_package(PRIVATE CppUnit REQUIRED)
+cet_find_package(Range REQUIRED)
+cet_find_package(cetlib REQUIRED)
+cet_find_package(cetlib_except REQUIRED)
+cet_find_package(fhiclcpp REQUIRED)
+cet_find_package(messagefacility REQUIRED)
 
 # source
 add_subdirectory(canvas)
