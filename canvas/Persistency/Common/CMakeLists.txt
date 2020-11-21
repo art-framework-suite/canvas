@@ -1,4 +1,4 @@
-foreach(ART_IPR_BASE_NAME FindOne FindMany)
+foreach(ART_IPR_BASE_NAME IN ITEMS FindOne FindMany)
   UNSET(ART_IPR_BY_PTR)
   SET(ART_IPR_CLASS_NAME ${ART_IPR_BASE_NAME})
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${ART_IPR_BASE_NAME}.h.in
