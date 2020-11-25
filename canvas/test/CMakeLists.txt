@@ -1,4 +1,3 @@
-# Make sure tests have correct environment settings.
 include(CetTest)
 cet_enable_asserts()
 # If you explicitly include CetTest in a subdirectory, you will need to

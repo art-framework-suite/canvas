@@ -70,7 +70,7 @@ cet_make_library(
     Boost::date_time
     CLHEP::CLHEP
     ${CMAKE_DL_LIBS}
-    )
+)
 
 # Testing
 add_subdirectory(test)
