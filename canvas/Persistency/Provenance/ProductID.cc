@@ -1,5 +1,4 @@
 #include "canvas/Persistency/Provenance/ProductID.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
 
 #include <ostream>
 
@@ -18,12 +17,7 @@ namespace art {
   ProductID::value_type
   ProductID::toID(std::string const& canonicalProductName)
   {
-    auto const& check = cet::crc32{canonicalProductName}.digest();
-    mf::LogDebug("ProductID") << "Product created with id: "
-                              << "[" << check << "] "
-                              << "from canonical product name: "
-                              << "\"" << canonicalProductName << "\"";
-    return check;
+    return cet::crc32{canonicalProductName}.digest();
   }
 
   std::ostream&
