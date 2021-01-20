@@ -1,7 +1,7 @@
 #ifndef canvas_Utilities_fwd_h
 #define canvas_Utilities_fwd_h
 ////////////////////////////////////////////////////////////////////////
-// Fowrard declarations for art/Utilities.
+// Forward declarations for canvas/Utilities.
 ////////////////////////////////////////////////////////////////////////
 
 // These headers are required to forward-declare adequately types and
@@ -9,7 +9,6 @@
 #include "canvas/Utilities/Exception.h"
 
 namespace art {
-  class debugavlue; // DebugMacros.h
   class TypeID;
 }
 #endif /* canvas_Utilities_fwd_h */
