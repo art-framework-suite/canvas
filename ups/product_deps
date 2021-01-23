@@ -251,7 +251,7 @@ product		version		qual	flags		<table_format=2>
 clhep		v2_4_1_3a	-
 messagefacility	v2_07_02	-
 range		v3_0_10_0b	-
-cetmodules	v2_08_01	-	only_for_build
+cetmodules	v2_08_02	-	only_for_build
 cppunit		v1_15_1a	-	only_for_build
 end_product_list
 ####################################
