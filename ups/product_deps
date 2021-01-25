@@ -7,7 +7,7 @@ fcldir -
 perllib  product_dir
 #
 product         version		<format=2>
-clhep           v2_4_1_3a
+clhep           v2_4_4_1
 range           v3_0_10_0b
 messagefacility	v2_07_02
 cppunit         v1_15_1a        -       only_for_build
