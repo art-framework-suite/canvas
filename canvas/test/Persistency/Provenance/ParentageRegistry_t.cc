@@ -4,8 +4,8 @@
 #include "canvas/Persistency/Provenance/Parentage.h"
 #include "canvas/Persistency/Provenance/ParentageRegistry.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
-#include "cetlib/SimultaneousFunctionSpawner.h"
 #include "cetlib/container_algorithms.h"
+#include "hep_concurrency/simultaneous_function_spawner.h"
 
 #include <string>
 #include <vector>
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(concurrent_insertion_reading)
       parentages, std::back_inserter(tasks), [](auto const& p) {
         return [&p] { ParentageRegistry::emplace(p.id(), p); };
       });
-    cet::SimultaneousFunctionSpawner sfs{tasks};
+    hep::concurrency::simultaneous_function_spawner sfs{tasks};
   }
 
   BOOST_REQUIRE(ParentageRegistry::get().size() == parentages.size());
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(concurrent_insertion_reading)
           entry = std::move(retrievedParentage);
         });
       });
-    cet::SimultaneousFunctionSpawner sfs{tasks};
+    hep::concurrency::simultaneous_function_spawner sfs{tasks};
     BOOST_TEST(parentages == retrievedParentages);
   }
 }

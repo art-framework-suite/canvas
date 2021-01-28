@@ -5,27 +5,72 @@ add_subdirectory(Version)
 add_subdirectory(Utilities)
 add_subdirectory(Persistency)
 
-
-cet_make(LIBRARY_NAME canvas
-  SUBDIRS Version ${CMAKE_CURRENT_BINARY_DIR}/Version
-  Utilities
-  Utilities/detail
-  Persistency/Provenance
-  Persistency/Provenance/Compatibility
-  Persistency/Provenance/detail
-  Persistency/Common
-  Persistency/Common/detail
+cet_make_library(
+  LIBRARY_NAME canvas
+  SOURCE
+    Persistency/Provenance/ResultsAuxiliary.cc
+    Persistency/Provenance/ProcessConfiguration.cc
+    Persistency/Provenance/SubRunAuxiliary.cc
+    Persistency/Provenance/EventRange.cc
+    Persistency/Provenance/SubRunID.cc
+    Persistency/Provenance/EventID.cc
+    Persistency/Provenance/ProcessHistory.cc
+    Persistency/Provenance/RunID.cc
+    Persistency/Provenance/ParameterSetBlob.cc
+    Persistency/Provenance/BranchDescription.cc
+    Persistency/Provenance/RunAuxiliary.cc
+    Persistency/Provenance/History.cc
+    Persistency/Provenance/detail/createViewLookups.cc
+    Persistency/Provenance/detail/createProductLookups.cc
+    Persistency/Provenance/Compatibility/BranchID.cc
+    Persistency/Provenance/FileFormatVersion.cc
+    Persistency/Provenance/Parentage.cc
+    Persistency/Provenance/BranchType.cc
+    Persistency/Provenance/Hash.cc
+    Persistency/Provenance/Timestamp.cc
+    Persistency/Provenance/EventAuxiliary.cc
+    Persistency/Provenance/TypeLabel.cc
+    Persistency/Provenance/FileIndex.cc
+    Persistency/Provenance/ProductID.cc
+    Persistency/Provenance/RangeSet.cc
+    Persistency/Provenance/BranchChildren.cc
+    Persistency/Provenance/ProductTables.cc
+    Persistency/Provenance/BranchKey.cc
+    Persistency/Provenance/rootNames.cc
+    Persistency/Provenance/canonicalProductName.cc
+    Persistency/Provenance/ProductProvenance.cc
+    Persistency/Common/HLTGlobalStatus.cc
+    Persistency/Common/traits.cc
+    Persistency/Common/EDProductGetter.cc
+    Persistency/Common/RefCore.cc
+    Persistency/Common/RNGsnapshot.cc
+    Persistency/Common/HLTPathStatus.cc
+    Persistency/Common/PrincipalBase.cc
+    Persistency/Common/PtrVectorBase.cc
+    Persistency/Common/detail/throwPartnerException.cc
+    Persistency/Common/detail/maybeCastObj.cc
+    Persistency/Common/detail/aggregate.cc
+    Persistency/Common/EDProduct.cc
+    Persistency/Common/TriggerResults.cc
+    Utilities/EventIDMatcher.cc
+    Utilities/FriendlyName.cc
+    Utilities/uniform_type_name.cc
+    Utilities/TypeID.cc
+    Utilities/InputTag.cc
+    Utilities/DebugMacros.cc
+    Utilities/WrappedClassName.cc
+    Utilities/Exception.cc
+    ${CMAKE_CURRENT_BINARY_DIR}/Version/GetReleaseVersion.cc
   LIBRARIES
-  MF_MessageLogger
-  $<$<PLATFORM_ID:Darwin>:c++abi>
-  fhiclcpp
-  cetlib
-  cetlib_except
-  hep_concurrency
-  Boost::date_time
-  ${CLHEP}
-  ${CMAKE_DL_LIBS}
-  NO_DICTIONARY)
+    fhiclcpp::fhiclcpp
+    cetlib::cetlib
+  PRIVATE
+    messagefacility::MF_MessageLogger
+    $<$<PLATFORM_ID:Darwin>:c++abi>
+    Boost::date_time
+    CLHEP::CLHEP
+    ${CMAKE_DL_LIBS}
+)
 
 # Testing
 add_subdirectory(test)

@@ -1,4 +1,4 @@
-foreach(ART_IPR_BASE_NAME FindOne FindMany)
+foreach(ART_IPR_BASE_NAME IN ITEMS FindOne FindMany)
   UNSET(ART_IPR_BY_PTR)
   SET(ART_IPR_CLASS_NAME ${ART_IPR_BASE_NAME})
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${ART_IPR_BASE_NAME}.h.in
@@ -11,6 +11,10 @@ foreach(ART_IPR_BASE_NAME FindOne FindMany)
     ${CMAKE_CURRENT_BINARY_DIR}/${ART_IPR_CLASS_NAME}.h
     @ONLY)
 endforeach()
+
+cet_make_library(LIBRARY_NAME AssnsAlgorithms INTERFACE
+  SOURCE AssnsAlgorithms.h
+  LIBRARIES INTERFACE Range::Range canvas::canvas)
 
 install_headers(SUBDIRS detail)
 install_source(SUBDIRS detail)
