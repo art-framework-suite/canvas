@@ -4,7 +4,6 @@
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/FriendlyName.h"
 #include "canvas/Utilities/uniform_type_name.h"
-#include "hep_concurrency/RecursiveMutex.h"
 
 #include <cstddef>
 #include <map>
@@ -13,19 +12,18 @@
 #include <typeinfo>
 #include <utility>
 
-using namespace hep::concurrency;
 using namespace std;
 
 namespace art {
 
-  RecursiveMutex* TypeID::s_mutex{nullptr};
+  std::recursive_mutex* TypeID::s_mutex{nullptr};
   map<size_t, string>* TypeID::s_nameMap{nullptr};
 
   void
   TypeID::startup()
   {
     if (s_mutex == nullptr) {
-      s_mutex = new RecursiveMutex{"TypeID::s_mutex"};
+      s_mutex = new std::recursive_mutex;
       s_nameMap = new map<size_t, string>;
     }
   }
@@ -70,7 +68,7 @@ namespace art {
   string
   TypeID::className() const
   {
-    RecursiveMutexSentry sentry{*s_mutex, __func__};
+    std::lock_guard sentry{*s_mutex};
     auto hash_code = typeInfo().hash_code();
     auto entry = s_nameMap->find(hash_code);
     if (entry == s_nameMap->end()) {

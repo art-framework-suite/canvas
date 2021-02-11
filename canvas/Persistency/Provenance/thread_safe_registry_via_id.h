@@ -23,10 +23,9 @@
 // ===================================================================
 
 #include "canvas/Persistency/Provenance/Hash.h"
-#include "hep_concurrency/RecursiveMutex.h"
-#include "hep_concurrency/tsan.h"
 
 #include <map>
+#include <mutex>
 #include <type_traits>
 
 namespace art {
@@ -47,13 +46,13 @@ namespace art {
     static auto&
     getMutex()
     {
-      static hep::concurrency::RecursiveMutex m{"art::tsr<K,M>::m"};
+      static std::recursive_mutex m{};
       return m;
     }
     static auto
     instance(bool cleanup = false)
     {
-      hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+      std::lock_guard sentry{getMutex()};
       static collection_type* me = new collection_type{};
       if (cleanup) {
         delete me;
@@ -73,7 +72,7 @@ namespace art {
   void
   thread_safe_registry_via_id<K, M>::put(C const& container)
   {
-    hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+    std::lock_guard sentry{getMutex()};
     auto me = instance();
     for (auto const& e : container) {
       me->emplace(e);
@@ -84,7 +83,7 @@ namespace art {
   auto
   thread_safe_registry_via_id<K, M>::emplace(value_type const& value)
   {
-    hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+    std::lock_guard sentry{getMutex()};
     auto ret = instance()->emplace(value);
     return ret;
   }
@@ -93,7 +92,7 @@ namespace art {
   auto
   thread_safe_registry_via_id<K, M>::emplace(K const& key, M const& mapped)
   {
-    hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+    std::lock_guard sentry{getMutex()};
     auto ret = instance()->emplace(key, mapped);
     return ret;
   }
@@ -102,7 +101,7 @@ namespace art {
   bool
   thread_safe_registry_via_id<K, M>::empty()
   {
-    hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+    std::lock_guard sentry{getMutex()};
     auto ret = instance()->empty();
     return ret;
   }
@@ -119,7 +118,7 @@ namespace art {
   bool
   thread_safe_registry_via_id<K, M>::get(K const& k, M& mapped)
   {
-    hep::concurrency::RecursiveMutexSentry sentry{getMutex(), __func__};
+    std::lock_guard sentry{getMutex()};
     auto me = instance();
     auto it = me->find(k);
     if (it != me->cend()) {

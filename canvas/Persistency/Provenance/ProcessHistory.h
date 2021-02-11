@@ -5,10 +5,10 @@
 #include "canvas/Persistency/Provenance/ProcessConfiguration.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/Transient.h"
-#include "hep_concurrency/RecursiveMutex.h"
 
 #include <iosfwd>
 #include <map>
+#include <mutex>
 #include <string>
 #include <vector>
 
@@ -70,7 +70,7 @@ namespace art {
 
   public: // MEMBER FUNCTIONS
     // FIXME: Try to find a way to avoid exposing this function!
-    hep::concurrency::RecursiveMutex& get_mutex() const;
+    std::recursive_mutex& get_mutex() const;
 
     // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
     // Note: We do not give the strong exception safety guarantee because
@@ -100,35 +100,27 @@ namespace art {
     // processHistory() on the transaction object.
 
     bool empty() const;
-
     size_type size() const;
-
     size_type capacity() const;
 
     void reserve(size_type n);
 
     reference operator[](size_type i);
-
     const_reference operator[](size_type i) const;
 
     reference at(size_type i);
-
     const_reference at(size_type i) const;
 
     const_iterator begin() const;
-
     const_iterator end() const;
 
     const_iterator cbegin() const;
-
     const_iterator cend() const;
 
     const_reverse_iterator rbegin() const;
-
     const_reverse_iterator rend() const;
 
     const_reverse_iterator crbegin() const;
-
     const_reverse_iterator crend() const;
 
     collection_type const& data() const;
@@ -151,8 +143,7 @@ namespace art {
     // Note: threading: trying to call id() or getConfigurationForProcess().
     // Note: threading: We cannot protect the iteration interface, see notes
     // above.
-    mutable hep::concurrency::RecursiveMutex mutex_{
-      "art::ProcessHistory::mutex_"};
+    mutable std::recursive_mutex mutex_{};
   };
 
   typedef std::map<ProcessHistoryID const, ProcessHistory> ProcessHistoryMap;
@@ -160,11 +151,9 @@ namespace art {
   void swap(ProcessHistory& a, ProcessHistory& b);
 
   bool operator==(ProcessHistory const& a, ProcessHistory const& b);
-
   bool operator!=(ProcessHistory const& a, ProcessHistory const& b);
 
   bool isAncestor(ProcessHistory const& a, ProcessHistory const& b);
-
   bool isDescendant(ProcessHistory const& a, ProcessHistory const& b);
 
   std::ostream& operator<<(std::ostream& ost, ProcessHistory const& ph);

@@ -11,11 +11,9 @@
 // reasons) but cannot be persisted across invocations of the program.
 //
 
-#include "hep_concurrency/RecursiveMutex.h"
-#include "hep_concurrency/tsan.h"
-
 #include <iosfwd>
 #include <map>
+#include <mutex>
 #include <string>
 #include <typeinfo>
 #include <utility>
@@ -23,19 +21,13 @@
 namespace art {
 
   class TypeID {
-
-    // STATIC MEMBER FUNCTIONS
   public:
     static void startup();
     static void shutdown();
 
-    // STATIC DATA MEMBERS
-  private:
-    static hep::concurrency::RecursiveMutex* s_mutex;
+    static std::recursive_mutex* s_mutex;
     static std::map<size_t, std::string>* s_nameMap;
 
-    // MEMBER FUNCTIONS -- Special Member Functions
-  public:
     ~TypeID() noexcept;
     TypeID() noexcept;
     explicit TypeID(std::type_info const&) noexcept;
@@ -47,8 +39,6 @@ namespace art {
     TypeID& operator=(TypeID const&) noexcept;
     TypeID& operator=(TypeID&) noexcept;
 
-    // MEMBER FUNCTIONS -- API for the user
-  public:
     std::type_info const& typeInfo() const;
     char const* name() const;
     std::string className() const;
@@ -59,7 +49,6 @@ namespace art {
     void swap(TypeID&);
     void print(std::ostream&) const;
 
-    // MEMBER DATA
   private:
     std::type_info const* ti_{nullptr};
   };
