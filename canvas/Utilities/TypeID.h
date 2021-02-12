@@ -13,7 +13,6 @@
 
 #include <iosfwd>
 #include <map>
-#include <mutex>
 #include <string>
 #include <typeinfo>
 #include <utility>
@@ -22,16 +21,11 @@ namespace art {
 
   class TypeID {
   public:
-    static void startup();
-    static void shutdown();
-
-    static std::recursive_mutex* s_mutex;
-    static std::map<size_t, std::string>* s_nameMap;
-
     ~TypeID() noexcept;
     TypeID() noexcept;
     explicit TypeID(std::type_info const&) noexcept;
     explicit TypeID(std::type_info const*) noexcept;
+
     template <typename T>
     explicit TypeID(T const& val) noexcept;
     TypeID(TypeID const&) noexcept;

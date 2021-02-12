@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include <map>
+#include <mutex>
 #include <ostream>
 #include <string>
 #include <typeinfo>
@@ -14,33 +15,12 @@
 
 using namespace std;
 
+namespace {
+  map<size_t, string> name_cache{};
+  mutex cache_mutex{};
+}
+
 namespace art {
-
-  std::recursive_mutex* TypeID::s_mutex{nullptr};
-  map<size_t, string>* TypeID::s_nameMap{nullptr};
-
-  void
-  TypeID::startup()
-  {
-    if (s_mutex == nullptr) {
-      s_mutex = new std::recursive_mutex;
-      s_nameMap = new map<size_t, string>;
-    }
-  }
-
-  void
-  TypeID::shutdown()
-  {
-    delete s_nameMap;
-    s_nameMap = nullptr;
-    delete s_mutex;
-    s_mutex = nullptr;
-  }
-
-  struct TypeIDCleanup {
-    ~TypeIDCleanup() { TypeID::shutdown(); }
-    TypeIDCleanup() { TypeID::startup(); }
-  } typeIDCleaner_;
 
   TypeID::~TypeID() noexcept = default;
   TypeID::TypeID() noexcept = default;
@@ -50,7 +30,6 @@ namespace art {
   TypeID& TypeID::operator=(TypeID&) noexcept = default;
 
   TypeID::TypeID(type_info const& ti) noexcept : ti_{&ti} {}
-
   TypeID::TypeID(type_info const* ti) noexcept : ti_{ti} {}
 
   type_info const&
@@ -68,12 +47,12 @@ namespace art {
   string
   TypeID::className() const
   {
-    std::lock_guard sentry{*s_mutex};
     auto hash_code = typeInfo().hash_code();
-    auto entry = s_nameMap->find(hash_code);
-    if (entry == s_nameMap->end()) {
+    std::lock_guard sentry{cache_mutex};
+    auto entry = name_cache.find(hash_code);
+    if (entry == name_cache.end()) {
       entry =
-        s_nameMap->emplace(hash_code, uniform_type_name(typeInfo())).first;
+        name_cache.emplace(hash_code, uniform_type_name(typeInfo())).first;
     }
     return entry->second;
   }
