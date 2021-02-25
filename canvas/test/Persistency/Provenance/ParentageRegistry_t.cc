@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE (ParentageRegistry_t)
-#include "cetlib/quiet_unit_test.hpp"
+#include "boost/test/unit_test.hpp"
 
 #include "canvas/Persistency/Provenance/Parentage.h"
 #include "canvas/Persistency/Provenance/ParentageRegistry.h"
