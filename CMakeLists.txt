@@ -1,19 +1,6 @@
-# ======================================================================
-#  art main build file
-#
-#  cd .../path/to/build/directory
-#  source .../path/to/art/ups/setup_for_development
-#  cmake [-DCMAKE_INSTALL_PREFIX=/install/path]
-#        -DCMAKE_BUILD_TYPE=$CETPKG_TYPE
-#        $CETPKG_SOURCE
-#  make
-#  make test
-#  make install
-#  make package (builds distribution tarfile)
-# ======================================================================
 cmake_minimum_required(VERSION 3.18.2 FATAL_ERROR)
 
-find_package(cetmodules 2.04.00 REQUIRED)
+find_package(cetmodules 2.13.00 REQUIRED)
 project(canvas VERSION 3.11.00 LANGUAGES CXX C)
 
 include(CetCMakeEnv)
@@ -45,18 +32,9 @@ endif()
 
 cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
-cet_find_package(Boost COMPONENTS date_time REQUIRED)
-cet_find_package(CLHEP REQUIRED)
-cet_find_package(PRIVATE CppUnit REQUIRED)
-cet_find_package(Range REQUIRED)
-cet_find_package(cetlib REQUIRED)
-cet_find_package(cetlib_except REQUIRED)
-cet_find_package(fhiclcpp REQUIRED)
-cet_find_package(messagefacility REQUIRED)
-
 # source
 add_subdirectory(canvas)
 add_subdirectory(tools)
 
 # packaging utility
-cet_cmake_config(COMPATIBILITY SameMajorVersion)
+cet_cmake_config(CONFIG_POST_TARGET_VARS config/canvas-augment-CANVAS.cmake)

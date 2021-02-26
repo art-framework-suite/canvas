@@ -15,7 +15,8 @@ endforeach()
 cet_test(EventRange_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 cet_test(RangeSet_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 
-cet_find_package(Threads REQUIRED)
-set(THREADS_PREFER_PTHREAD_FLAG TRUE)
-
-cet_test(ParentageRegistry_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas Threads::Threads)
+cet_test(ParentageRegistry_t USE_BOOST_UNIT LIBRARIES PRIVATE
+  canvas::canvas
+  cetlib::container_algorithms
+  hep_concurrency::simultaneous_function_spawner
+  Threads::Threads)
