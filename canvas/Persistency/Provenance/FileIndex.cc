@@ -414,8 +414,7 @@ namespace art {
   bool
   operator<(FileIndex::Element const& lh, FileIndex::Element const& rh)
   {
-    bool const result = lh.eventID_ < rh.eventID_;
-    return result;
+    return lh.eventID_ < rh.eventID_;
   }
 
   bool
@@ -445,7 +444,7 @@ namespace art {
   bool
   operator!=(FileIndex::Element const& lh, FileIndex::Element const& rh)
   {
-    return lh < rh || rh < lh;
+    return !(lh == rh);
   }
 
   bool

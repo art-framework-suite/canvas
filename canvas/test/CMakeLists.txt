@@ -4,7 +4,6 @@ cet_test_env("FHICL_FILE_PATH=.")
 
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
-cet_find_package(CppUnit PRIVATE REQUIRED)
 cet_find_package(Threads PRIVATE REQUIRED)
 cet_find_package(hep_concurrency PRIVATE REQUIRED)
 
