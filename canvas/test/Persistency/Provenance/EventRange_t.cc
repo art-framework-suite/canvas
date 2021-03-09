@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE (EventRange_t)
 #include "canvas/Persistency/Provenance/EventRange.h"
-#include "cetlib/quiet_unit_test.hpp"
+#include "boost/test/unit_test.hpp"
 
 #include <iostream>
 #include <sstream>

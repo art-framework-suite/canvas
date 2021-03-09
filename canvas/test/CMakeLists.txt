@@ -1,10 +1,16 @@
 include(CetTest)
 cet_enable_asserts()
-# If you explicitly include CetTest in a subdirectory, you will need to
-# re-initialize the test environment.
 cet_test_env("FHICL_FILE_PATH=.")
 
-# build Persistency libraries
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+
+cet_find_package(CppUnit PRIVATE REQUIRED)
+cet_find_package(Threads PRIVATE REQUIRED)
+cet_find_package(hep_concurrency PRIVATE REQUIRED)
+
+# Put everything in a different export set.
+cet_register_export_set(SET_NAME Testing NAMESPACE canvas_test SET_DEFAULT)
+
 add_subdirectory(Persistency/Common)
 add_subdirectory(Persistency/Provenance)
 add_subdirectory(Version)

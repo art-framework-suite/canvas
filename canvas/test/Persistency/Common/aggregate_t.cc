@@ -1,11 +1,11 @@
 #define BOOST_TEST_MODULE (Product aggregation Test)
-#include "cetlib/quiet_unit_test.hpp"
+#include "boost/test/unit_test.hpp"
 
 //=====================================================
 // Unit-tests for non-CLHEP aggregate overloads
 // N.B. art::PtrVector cannot be overloaded
 
-#include "canvas/test/Persistency/Common/MockRun.h"
+#include "MockRun.h"
 #include "cetlib/map_vector.h"
 
 #include <map>

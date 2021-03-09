@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE (ClhepProduct aggregation Test)
-#include "canvas/test/Persistency/Common/MockRun.h"
-#include "cetlib/quiet_unit_test.hpp"
+#include "MockRun.h"
+#include "boost/test/unit_test.hpp"
 
 #include "CLHEP/Matrix/Matrix.h"
 #include "CLHEP/Matrix/SymMatrix.h"

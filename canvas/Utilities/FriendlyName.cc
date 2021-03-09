@@ -2,9 +2,9 @@
 // vim: set sw=2 expandtab :
 
 #include "canvas/Utilities/Exception.h"
-#include "hep_concurrency/RecursiveMutex.h"
 
 #include <map>
+#include <mutex>
 #include <regex>
 #include <string>
 
@@ -142,9 +142,9 @@ namespace {
 std::string
 art::friendlyname::friendlyName(std::string const& iFullName)
 {
-  static hep::concurrency::RecursiveMutex s_mutex;
+  static std::recursive_mutex s_mutex;
   static std::map<std::string, std::string> s_nameMap;
-  hep::concurrency::RecursiveMutexSentry sentry{s_mutex, __func__};
+  std::lock_guard sentry{s_mutex};
   auto entry = s_nameMap.find(iFullName);
   if (entry == s_nameMap.end()) {
     entry =

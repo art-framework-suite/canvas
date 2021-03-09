@@ -6,7 +6,6 @@
 #include "canvas/Persistency/Provenance/Transient.h"
 #include "cetlib/MD5Digest.h"
 #include "cetlib/container_algorithms.h"
-#include "hep_concurrency/RecursiveMutex.h"
 
 #include <iterator>
 #include <ostream>
@@ -14,7 +13,6 @@
 #include <utility>
 
 using namespace cet;
-using namespace hep::concurrency;
 using namespace std;
 
 namespace art {
@@ -74,7 +72,7 @@ namespace art {
     return *this;
   }
 
-  RecursiveMutex&
+  std::recursive_mutex&
   ProcessHistory::get_mutex() const
   {
     return mutex_;
@@ -206,7 +204,7 @@ namespace art {
     // Note: threading: We may be called by Principal::addProcessEntry()
     // Note: threading: with the mutex already locked, so we use
     // a recursive mutex.
-    RecursiveMutexSentry sentry{mutex_, __func__};
+    std::lock_guard sentry{mutex_};
     if (transients_.get().phid_.isValid()) {
       return transients_.get().phid_;
     }
@@ -233,7 +231,7 @@ namespace art {
   ProcessHistory::getConfigurationForProcess(string const& name,
                                              ProcessConfiguration& config) const
   {
-    RecursiveMutexSentry sentry{mutex_, __func__};
+    std::lock_guard sentry{mutex_};
     for (const_iterator i = data_.begin(), e = data_.end(); i != e; ++i) {
       if (i->processName() == name) {
         config = *i;

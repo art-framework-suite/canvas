@@ -6,11 +6,8 @@ cet_test(TypeID_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 cet_test(ensurePointer_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 cet_test(uniform_type_name_test USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 
-cet_make_exec(NAME EventIDMatcher_t
-  NO_INSTALL
-  LIBRARIES PRIVATE canvas::canvas
-)
+cet_make_exec(NAME EventIDMatcher_t NO_INSTALL
+  LIBRARIES PRIVATE canvas::canvas)
 
 cet_test(EventIDMatcher_test HANDBUILT
-  TEST_EXEC EventIDMatcher_t
-)
+  TEST_EXEC EventIDMatcher_t)

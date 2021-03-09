@@ -38,13 +38,14 @@ namespace art {
     using cet::enable_if_function_exists_t;
 
     // has_size_member
+    template <typename T>
+    using size_expression_t = decltype(std::declval<T const>().size());
+
     template <typename T, typename = void>
     struct has_size_member : std::false_type {};
 
     template <typename T>
-    struct has_size_member<
-      T,
-      enable_if_function_exists_t<size_t (T::*)() const, &T::size>>
+    struct has_size_member<T, std::void_t<size_expression_t<T>>>
       : std::true_type {};
 
     // has_makePartner_member
@@ -58,9 +59,6 @@ namespace art {
                                     std::type_info const&) const,
                                   &T::makePartner>> : std::true_type {};
   }
-
-  template <typename T, bool = detail::has_size_member<T>::value>
-  struct productSize;
 
   template <typename T>
   struct DoMakePartner;
@@ -198,7 +196,11 @@ template <typename T>
 std::string
 art::Wrapper<T>::productSize() const
 {
-  return art::productSize<T>()(obj);
+  if constexpr (detail::has_size_member<T>::value) {
+    return boost::lexical_cast<std::string>(obj.size());
+  } else {
+    return "-";
+  }
 }
 
 template <typename T>
@@ -367,55 +369,6 @@ art::Wrapper<T>::refOrThrow(T* ptr)
       << "Attempt to construct " << cet::demangle_symbol(typeid(*this).name())
       << " from nullptr.\n";
   }
-}
-
-////////////////////////////////////////////////////////////////////////
-// Metafunction support for compile-time selection of code used in
-// Wrapper implementation.
-
-namespace art {
-
-  template <typename T>
-  struct productSize<T, true> {
-    std::string
-    operator()(T const& obj) const
-    {
-      return boost::lexical_cast<std::string>(obj.size());
-    }
-  };
-
-  template <typename T>
-  struct productSize<T, false> {
-    std::string
-    operator()(T const&) const
-    {
-      return "-";
-    }
-  };
-
-  template <class E>
-  struct productSize<std::vector<E>, false>
-    : public productSize<std::vector<E>, true> {};
-
-  template <class E>
-  struct productSize<std::list<E>, false>
-    : public productSize<std::list<E>, true> {};
-
-  template <class E>
-  struct productSize<std::deque<E>, false>
-    : public productSize<std::deque<E>, true> {};
-
-  template <class E>
-  struct productSize<std::set<E>, false>
-    : public productSize<std::set<E>, true> {};
-
-  template <class E>
-  struct productSize<PtrVector<E>, false>
-    : public productSize<PtrVector<E>, true> {};
-
-  template <class E>
-  struct productSize<cet::map_vector<E>, false>
-    : public productSize<cet::map_vector<E>, true> {};
 }
 
 #endif /* canvas_Persistency_Common_Wrapper_h */

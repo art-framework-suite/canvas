@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE (Tests setPtr customization)
-#include "cetlib/quiet_unit_test.hpp"
+#include "boost/test/unit_test.hpp"
 
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/Wrapper.h"
