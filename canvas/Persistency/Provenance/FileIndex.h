@@ -48,9 +48,8 @@ namespace art {
       kEnd     /* 3 */
     };
 
-    class Element {
-    public:
-      static constexpr EntryNumber_t invalidEntry{-1};
+    struct Element {
+      static constexpr EntryNumber_t invalid{-1};
 
       Element() = default;
       Element(EventID const& eID);
@@ -58,8 +57,8 @@ namespace art {
 
       EntryType getEntryType() const;
 
-      EventID eventID_{};
-      EntryNumber_t entry_{invalidEntry};
+      EventID eventID{};
+      EntryNumber_t entry{invalid};
     };
 
     using const_iterator = std::vector<Element>::const_iterator;
@@ -72,16 +71,15 @@ namespace art {
     };
 
     struct Transients {
-      bool allInEntryOrder_{false};
-      bool resultCached_{false};
+      bool allInEntryOrder{false};
+      bool resultCached{false};
 
-      // The default value for sortState_ reflects the fact that
-      // the index is always sorted using Run, SubRun, and Event
-      // number by the RootOutput before being written out.
-      // In the other case when we create a new FileIndex, the
-      // vector is empty, which is consistent with it having been
-      // sorted.
-      SortState sortState_{kSorted_Run_SubRun_Event};
+      // The default value for sortState_ reflects the fact that the
+      // index is always sorted using Run, SubRun, and Event number by
+      // the RootOutput before being written out.  In the other case
+      // when we create a new FileIndex, the vector is empty, which is
+      // consistent with it having been sorted.
+      SortState sortState{kSorted_Run_SubRun_Event};
     };
 
     void addEntry(EventID const& eID, EntryNumber_t entry);
@@ -117,6 +115,8 @@ namespace art {
 
     void print_event_list(std::ostream& os) const;
 
+    friend bool operator==(FileIndex const&, FileIndex const&);
+
   private:
     bool& allInEntryOrder() const;
     bool& resultCached() const;
@@ -135,8 +135,10 @@ namespace art {
   bool operator==(FileIndex::Element const& lh, FileIndex::Element const& rh);
   bool operator!=(FileIndex::Element const& lh, FileIndex::Element const& rh);
 
-  class Compare_Run_SubRun_EventEntry {
-  public:
+  bool operator==(FileIndex const& lh, FileIndex const& rh);
+  bool operator!=(FileIndex const& lh, FileIndex const& rh);
+
+  struct Compare_Run_SubRun_EventEntry {
     bool operator()(FileIndex::Element const& lh, FileIndex::Element const& rh);
   };
 

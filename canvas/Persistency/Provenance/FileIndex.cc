@@ -29,21 +29,20 @@ namespace {
 
 namespace art {
 
-  FileIndex::EntryNumber_t constexpr FileIndex::Element::invalidEntry;
+  FileIndex::EntryNumber_t constexpr FileIndex::Element::invalid;
 
-  FileIndex::Element::Element(EventID const& eID) : Element(eID, invalidEntry)
-  {}
+  FileIndex::Element::Element(EventID const& eID) : Element(eID, invalid) {}
 
-  FileIndex::Element::Element(EventID const& eID, EntryNumber_t const entry)
-    : eventID_{eID}, entry_{entry}
+  FileIndex::Element::Element(EventID const& eID,
+                              EntryNumber_t const entryNumber)
+    : eventID{eID}, entry{entryNumber}
   {}
 
   FileIndex::EntryType
   FileIndex::Element::getEntryType() const
   {
-    return eventID_.isValid() ?
-             kEvent :
-             (eventID_.subRunID().isValid() ? kSubRun : kRun);
+    return eventID.isValid() ? kEvent :
+                               (eventID.subRunID().isValid() ? kSubRun : kRun);
   }
 
   FileIndex::iterator
@@ -97,19 +96,19 @@ namespace art {
   bool&
   FileIndex::allInEntryOrder() const
   {
-    return transients_.get().allInEntryOrder_;
+    return transients_.get().allInEntryOrder;
   }
 
   bool&
   FileIndex::resultCached() const
   {
-    return transients_.get().resultCached_;
+    return transients_.get().resultCached;
   }
 
   FileIndex::SortState&
   FileIndex::sortState() const
   {
-    return transients_.get().sortState_;
+    return transients_.get().sortState;
   }
 
   bool
@@ -166,14 +165,14 @@ namespace art {
   {
     if (!resultCached()) {
       resultCached() = true;
-      EntryNumber_t maxEntry{Element::invalidEntry};
+      EntryNumber_t maxEntry{Element::invalid};
       for (auto const& e : entries_) {
         if (e.getEntryType() == kEvent) {
-          if (e.entry_ < maxEntry) {
+          if (e.entry < maxEntry) {
             allInEntryOrder() = false;
             return false;
           }
-          maxEntry = e.entry_;
+          maxEntry = e.entry;
         }
       }
       allInEntryOrder() = true;
@@ -214,7 +213,7 @@ namespace art {
     }
     for (; it != itEnd; ++it) {
       if (it->getEntryType() == kEvent) {
-        if (it->eventID_ <= itPrevious->eventID_) {
+        if (it->eventID <= itPrevious->eventID) {
           return false;
         }
         itPrevious = it;
@@ -271,7 +270,7 @@ namespace art {
     if (it == itEnd) {
       return itEnd;
     }
-    if (exact && (it->eventID_.subRunID() != srID)) {
+    if (exact && (it->eventID.subRunID() != srID)) {
       return itEnd;
     }
     return it;
@@ -296,7 +295,7 @@ namespace art {
     if (it == itEnd) {
       return itEnd;
     }
-    if (exact && (it->eventID_.runID() != rID)) {
+    if (exact && (it->eventID.runID() != rID)) {
       return itEnd;
     }
     return it;
@@ -330,14 +329,14 @@ namespace art {
        << "\n";
     for (auto const& e : entries_) {
       if (e.getEntryType() == FileIndex::kEvent) {
-        os << setw(15) << e.eventID_.run() << setw(15) << e.eventID_.subRun()
-           << setw(15) << e.eventID_.event() << "\n";
+        os << setw(15) << e.eventID.run() << setw(15) << e.eventID.subRun()
+           << setw(15) << e.eventID.event() << "\n";
       } else if (e.getEntryType() == FileIndex::kSubRun) {
-        os << setw(15) << e.eventID_.run() << setw(15) << e.eventID_.subRun()
+        os << setw(15) << e.eventID.run() << setw(15) << e.eventID.subRun()
            << setw(15) << " "
            << "\n";
       } else if (e.getEntryType() == FileIndex::kRun) {
-        os << setw(15) << e.eventID_.run() << setw(15) << " " << setw(15) << " "
+        os << setw(15) << e.eventID.run() << setw(15) << " " << setw(15) << " "
            << "\n";
       }
     }
@@ -364,16 +363,16 @@ namespace art {
     // 1. The next run.
     // 2. An event number higher than we want.
     // 3. The end of the file index.
-    while ((it != itEnd) && (it->eventID_.runID() == runID) &&
-           (it->eventID_.event() < event)) {
-      last_subRunID = it->eventID_.subRunID();
+    while ((it != itEnd) && (it->eventID.runID() == runID) &&
+           (it->eventID.event() < event)) {
+      last_subRunID = it->eventID.subRunID();
       // Get the first event in the next subrun.
-      it = findPosition(EventID::firstEvent(it->eventID_.subRunID().next()),
-                        false);
+      it =
+        findPosition(EventID::firstEvent(it->eventID.subRunID().next()), false);
     }
     const_iterator result = itEnd;
-    if ((it != itEnd) && (it->eventID_.runID() == runID) &&
-        (it->eventID_.event() == event)) {
+    if ((it != itEnd) && (it->eventID.runID() == runID) &&
+        (it->eventID.event() == event)) {
       // We started on the correct event.
       result = it;
     } else if (last_subRunID.isValid()) {
@@ -395,10 +394,10 @@ namespace art {
       // Try to find the highest subrun number in this run.
       const_iterator findIt(firstEvent);
       SubRunID lastSubRunInRun{trySubRun};
-      for (; findIt != itEnd && findIt->eventID_.runID() == runID;
+      for (; findIt != itEnd && findIt->eventID.runID() == runID;
            findIt =
              findPosition(EventID::firstEvent(lastSubRunInRun.next()), false)) {
-        lastSubRunInRun = findIt->eventID_.subRunID();
+        lastSubRunInRun = findIt->eventID.subRunID();
       }
       // Now loop through each subrun looking for an exact match to our event.
       while ((findIt = findPosition(EventID(trySubRun, event), true)) ==
@@ -414,7 +413,7 @@ namespace art {
   bool
   operator<(FileIndex::Element const& lh, FileIndex::Element const& rh)
   {
-    return lh.eventID_ < rh.eventID_;
+    return lh.eventID < rh.eventID;
   }
 
   bool
@@ -448,26 +447,38 @@ namespace art {
   }
 
   bool
+  operator==(FileIndex const& lh, FileIndex const& rh)
+  {
+    return lh.entries_ == rh.entries_;
+  }
+
+  bool
+  operator!=(FileIndex const& lh, FileIndex const& rh)
+  {
+    return !(lh == rh);
+  }
+
+  bool
   Compare_Run_SubRun_EventEntry::operator()(FileIndex::Element const& lh,
                                             FileIndex::Element const& rh)
   {
-    if (lh.eventID_.subRunID() == rh.eventID_.subRunID()) {
-      if ((!lh.eventID_.isValid()) && (!rh.eventID_.isValid())) {
+    if (lh.eventID.subRunID() == rh.eventID.subRunID()) {
+      if ((!lh.eventID.isValid()) && (!rh.eventID.isValid())) {
         return false;
-      } else if (!lh.eventID_.isValid()) {
+      } else if (!lh.eventID.isValid()) {
         return true;
-      } else if (!rh.eventID_.isValid()) {
+      } else if (!rh.eventID.isValid()) {
         return false;
       }
-      return lh.entry_ < rh.entry_;
+      return lh.entry < rh.entry;
     }
-    return lh.eventID_.subRunID() < rh.eventID_.subRunID();
+    return lh.eventID.subRunID() < rh.eventID.subRunID();
   }
 
   ostream&
   operator<<(ostream& os, FileIndex::Element const& el)
   {
-    os << el.eventID_ << ": entry# " << el.entry_;
+    os << el.eventID << ": entry# " << el.entry;
     return os;
   }
 
@@ -482,15 +493,15 @@ namespace art {
        << "\n";
     for (auto const& e : fileIndex) {
       if (e.getEntryType() == FileIndex::kEvent) {
-        os << setw(15) << e.eventID_.run() << setw(15) << e.eventID_.subRun()
-           << setw(15) << e.eventID_.event() << setw(15) << e.entry_ << "\n";
+        os << setw(15) << e.eventID.run() << setw(15) << e.eventID.subRun()
+           << setw(15) << e.eventID.event() << setw(15) << e.entry << "\n";
       } else if (e.getEntryType() == FileIndex::kSubRun) {
-        os << setw(15) << e.eventID_.run() << setw(15) << e.eventID_.subRun()
-           << setw(15) << " " << setw(15) << e.entry_ << "  (SubRun)"
+        os << setw(15) << e.eventID.run() << setw(15) << e.eventID.subRun()
+           << setw(15) << " " << setw(15) << e.entry << "  (SubRun)"
            << "\n";
       } else if (e.getEntryType() == FileIndex::kRun) {
-        os << setw(15) << e.eventID_.run() << setw(15) << " " << setw(15) << " "
-           << setw(15) << e.entry_ << "  (Run)"
+        os << setw(15) << e.eventID.run() << setw(15) << " " << setw(15) << " "
+           << setw(15) << e.entry << "  (Run)"
            << "\n";
       }
     }
