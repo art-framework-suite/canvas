@@ -10,7 +10,7 @@
 #include <utility>
 
 namespace {
-  constexpr auto module_size = cet::pow<14, size_t>(2);
+  constexpr auto path_size [[maybe_unused]] = cet::pow<14, size_t>(2);
 }
 
 namespace art {
@@ -26,7 +26,7 @@ namespace art {
     : status_{static_cast<std::uint16_t>(index << 2 | static_cast<size_t>(state))}
   {
     assert(state < hlt::HLTState::N_STATES);
-    assert(index < module_size);
+    assert(index < path_size);
   }
 
   hlt::HLTState
