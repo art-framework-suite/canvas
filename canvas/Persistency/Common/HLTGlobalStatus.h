@@ -26,10 +26,10 @@ namespace art {
     bool wasrun() const;
     bool accept() const;
     bool error() const;
+
+    // Path-specific results
     HLTPathStatus const& at(unsigned const i) const;
     HLTPathStatus& at(unsigned const i);
-    HLTPathStatus const& operator[](unsigned const i) const;
-    HLTPathStatus& operator[](unsigned const i);
     bool wasrun(unsigned const i) const;
     bool accept(unsigned const i) const;
     bool error(unsigned const i) const;

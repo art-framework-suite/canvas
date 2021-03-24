@@ -10,7 +10,7 @@ namespace art::hlt {
     Exception = 3, // threw an exception
     N_STATES = 4
   };
-} // namespace art::hlt
+}
 
 #endif /* canvas_Persistency_Common_HLTenums_h */
 
