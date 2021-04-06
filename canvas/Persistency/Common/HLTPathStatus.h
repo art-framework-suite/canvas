@@ -33,8 +33,7 @@ namespace art {
     ~HLTPathStatus();
     HLTPathStatus();
     explicit HLTPathStatus(hlt::HLTState const state);
-    explicit HLTPathStatus(hlt::HLTState const state,
-                           std::size_t const index);
+    explicit HLTPathStatus(hlt::HLTState const state, std::size_t const index);
 
     // Get state of path.
     hlt::HLTState state() const;

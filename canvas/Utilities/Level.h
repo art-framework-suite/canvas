@@ -80,27 +80,27 @@ namespace art {
   operator<<(std::ostream& os, Level const l)
   {
     switch (l) {
-      case Level::Job:
-        os << "Job";
-        break;
-      case Level::InputFile:
-        os << "InputFile";
-        break;
-      case Level::Run:
-        os << "Run";
-        break;
-      case Level::SubRun:
-        os << "SubRun";
-        break;
-      case Level::Event:
-        os << "Event";
-        break;
-      case Level::NumNestingLevels:
-        os << underlying_value(Level::NumNestingLevels);
-        break;
-      case Level::ReadyToAdvance:
-        os << "ReadyToAdvance";
-        break;
+    case Level::Job:
+      os << "Job";
+      break;
+    case Level::InputFile:
+      os << "InputFile";
+      break;
+    case Level::Run:
+      os << "Run";
+      break;
+    case Level::SubRun:
+      os << "SubRun";
+      break;
+    case Level::Event:
+      os << "Event";
+      break;
+    case Level::NumNestingLevels:
+      os << underlying_value(Level::NumNestingLevels);
+      break;
+    case Level::ReadyToAdvance:
+      os << "ReadyToAdvance";
+      break;
     }
     return os;
   }

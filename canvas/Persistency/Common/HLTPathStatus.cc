@@ -23,7 +23,8 @@ namespace art {
   {}
 
   HLTPathStatus::HLTPathStatus(hlt::HLTState const state, size_t const index)
-    : status_{static_cast<std::uint16_t>(index << 2 | static_cast<size_t>(state))}
+    : status_{
+        static_cast<std::uint16_t>(index << 2 | static_cast<size_t>(state))}
   {
     assert(state < hlt::HLTState::N_STATES);
     assert(index < path_size);

@@ -1,9 +1,9 @@
 #define BOOST_TEST_MODULE (TimeStamp_t)
-#include "canvas/Persistency/Provenance/Timestamp.h"
 #include "boost/test/unit_test.hpp"
+#include "canvas/Persistency/Provenance/Timestamp.h"
 
-using art::TimeValue_t;
 using art::Timestamp;
+using art::TimeValue_t;
 
 BOOST_AUTO_TEST_SUITE(TimeStamp_t)
 
