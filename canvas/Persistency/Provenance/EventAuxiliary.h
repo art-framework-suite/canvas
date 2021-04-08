@@ -12,7 +12,7 @@
 
 namespace art {
   class EventAuxiliary {
-  public: // TYPES
+  public:
     static constexpr BranchType branch_type = InEvent;
     enum ExperimentType {
       Any = 0,
@@ -25,7 +25,6 @@ namespace art {
       Test = 7
     };
 
-  public: // MEMBER FUNCTIONS -- Special Member Functions
     ~EventAuxiliary();
     EventAuxiliary();
     EventAuxiliary(EventID const& theId,
@@ -37,7 +36,6 @@ namespace art {
     EventAuxiliary& operator=(EventAuxiliary const&);
     EventAuxiliary& operator=(EventAuxiliary&&);
 
-  public: // MEMBER FUNCTIONS -- API for the user
     Timestamp const& time() const noexcept;
     EventID const& id() const noexcept;
     EventID const& eventID() const noexcept;
@@ -51,11 +49,11 @@ namespace art {
     bool operator==(EventAuxiliary const& other) const noexcept;
     void write(std::ostream& os) const;
 
-  private: // MEMBER DATA
-    EventID id_;
-    Timestamp time_;
-    bool isRealData_;
-    ExperimentType experimentType_;
+  private:
+    EventID id_{};
+    Timestamp time_{};
+    bool isRealData_{false};
+    ExperimentType experimentType_{Any};
   };
   std::ostream& operator<<(std::ostream&, const EventAuxiliary&);
 } // namespace art
