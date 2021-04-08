@@ -20,7 +20,6 @@ namespace art {
     HLTGlobalStatus& operator=(HLTGlobalStatus const&);
     HLTGlobalStatus& operator=(HLTGlobalStatus&&);
 
-  public:
     std::size_t size() const;
     void reset();
     bool wasrun() const;

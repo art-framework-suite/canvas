@@ -9,6 +9,7 @@
 #include <iosfwd>
 #include <map>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -37,13 +38,10 @@ namespace art {
     };
 
     ~ProcessHistory();
-    // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
     ProcessHistory();
 
     // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
     explicit ProcessHistory(size_type n);
-
-    // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
     explicit ProcessHistory(collection_type const& vec);
 
     // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
@@ -127,22 +125,18 @@ namespace art {
 
     ProcessHistoryID id() const;
 
-    // Return true, and fill in config appropriately, if the a process
-    // with the given name is recorded in this ProcessHistory. Return
-    // false, and do not modify config, if process with the given name
-    // is found.
-    bool getConfigurationForProcess(std::string const& name,
-                                    ProcessConfiguration& config) const;
+    std::optional<ProcessConfiguration> getConfigurationForProcess(
+      std::string const& name) const;
 
   private:
     collection_type data_{};
     mutable Transient<Transients> transients_{};
-    // Note: threading: This is a recursive_mutex because sometimes
-    // Note: threading: we must call id() from Principal::addToProcessHistory()
-    // Note: threading: with the mutex already locked to stall other tasks
-    // Note: threading: trying to call id() or getConfigurationForProcess().
-    // Note: threading: We cannot protect the iteration interface, see notes
-    // above.
+    // FIXME-MT: This is a recursive_mutex because sometimes we must
+    //           call id() from Principal::addToProcessHistory() with
+    //           the mutex already locked to stall other tasks trying
+    //           to call id() or getConfigurationForProcess().  We
+    //           cannot protect the iteration interface, see notes
+    //           above.
     mutable std::recursive_mutex mutex_{};
   };
 
