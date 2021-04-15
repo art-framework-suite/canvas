@@ -94,7 +94,7 @@ public:
   }
 
 private:
-  void fillView(std::vector<void const*>& view) const override;
+  std::vector<void const*> getView() const override;
 
   std::string productSize() const override;
 
@@ -104,7 +104,7 @@ private:
 
   unsigned do_getRangeSetID() const override;
   void do_setRangeSetID(unsigned) override;
-  void do_combine(EDProduct* product) override;
+  void do_combine(EDProduct const* product) override;
   std::unique_ptr<EDProduct> do_createEmptySampledProduct(
     InputTag const& tag) const override;
 
@@ -122,13 +122,12 @@ private:
   }
   std::type_info const* typeInfo_() const override;
 
-  void do_setPtr(std::type_info const& toType,
-                 unsigned long index,
-                 void const*& ptr) const override;
+  void const* do_getElementAddress(std::type_info const& toType,
+                                   unsigned long index) const override;
 
-  void do_getElementAddresses(std::type_info const& toType,
-                              std::vector<unsigned long> const& indices,
-                              std::vector<void const*>& ptr) const override;
+  std::vector<void const*> do_getElementAddresses(
+    std::type_info const& toType,
+    std::vector<unsigned long> const& indices) const override;
 
   T&& refOrThrow(T* ptr);
 
@@ -186,10 +185,10 @@ art::Wrapper<T>::typeInfo_() const
 }
 
 template <typename T>
-void
-art::Wrapper<T>::fillView(std::vector<void const*>& view) const
+std::vector<void const*>
+art::Wrapper<T>::getView() const
 {
-  MaybeFillView<T>::fill(obj, view);
+  return MaybeGetView<T>::get(obj);
 }
 
 template <typename T>
@@ -205,12 +204,12 @@ art::Wrapper<T>::productSize() const
 
 template <typename T>
 void
-art::Wrapper<T>::do_combine(art::EDProduct* p)
+art::Wrapper<T>::do_combine(art::EDProduct const* p)
 {
   if (!p->isPresent())
     return;
 
-  auto wp = static_cast<Wrapper<T>*>(p);
+  auto wp = static_cast<Wrapper<T> const*>(p);
   detail::CanBeAggregated<T>::aggregate(obj, *wp->product());
 
   // The presence for the combined product is 'true', if we get this
@@ -320,16 +319,18 @@ art::Wrapper<T>::do_insertIfSampledProduct(std::string const& dataset,
 }
 
 template <typename T>
-inline void
-art::Wrapper<T>::do_setPtr(std::type_info const& toType,
-                           unsigned long const index [[maybe_unused]],
-                           void const*& ptr) const
+inline void const*
+art::Wrapper<T>::do_getElementAddress(std::type_info const& toType,
+                                      unsigned long const index
+                                      [[maybe_unused]]) const
 {
   if constexpr (has_setPtr<T>::value) {
     // Allow setPtr customizations by introducing the art::setPtr
     // overload set, and not requiring art::setPtr(...).
     using art::setPtr;
-    setPtr(obj, toType, index, ptr);
+    void const* result{nullptr};
+    setPtr(obj, toType, index, result);
+    return result;
   } else {
     throw Exception{errors::ProductDoesNotSupportPtr}
       << "The product type " << cet::demangle_symbol(typeid(T).name())
@@ -338,11 +339,10 @@ art::Wrapper<T>::do_setPtr(std::type_info const& toType,
 }
 
 template <typename T>
-inline void
+inline std::vector<void const*>
 art::Wrapper<T>::do_getElementAddresses(
   std::type_info const& toType,
-  std::vector<unsigned long> const& indices,
-  std::vector<void const*>& ptrs) const
+  std::vector<unsigned long> const& indices) const
 {
   if constexpr (has_setPtr<T>::value) {
     // getElementAddresses is the name of an overload set; each
@@ -350,7 +350,9 @@ art::Wrapper<T>::do_getElementAddresses(
     // function, in the same namespace at that in which T is
     // defined, or in the 'art' namespace.
     using art::getElementAddresses;
-    getElementAddresses(obj, toType, indices, ptrs);
+    std::vector<void const*> result;
+    getElementAddresses(obj, toType, indices, result);
+    return result;
   } else {
     throw Exception{errors::ProductDoesNotSupportPtr}
       << "The product type " << cet::demangle_symbol(typeid(T).name())
@@ -364,11 +366,10 @@ art::Wrapper<T>::refOrThrow(T* ptr)
 {
   if (ptr) {
     return std::move(*ptr);
-  } else {
-    throw Exception(errors::NullPointerError)
-      << "Attempt to construct " << cet::demangle_symbol(typeid(*this).name())
-      << " from nullptr.\n";
   }
+  throw Exception(errors::NullPointerError)
+    << "Attempt to construct " << cet::demangle_symbol(typeid(*this).name())
+    << " from nullptr.\n";
 }
 
 #endif /* canvas_Persistency_Common_Wrapper_h */

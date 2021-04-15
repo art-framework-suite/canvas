@@ -112,99 +112,108 @@ namespace art {
   };
 
   //
-  // The trait struct template has_fillView<T> is used to
+  // The trait struct template has_getView<T> is used to
   // indicate whether or not the type T has a member function
   //
-  //      void T::fillView(std::vector<void const*>&) const
+  //      void T::getView(std::vector<void const*>&) const
   //
-  // We assume the 'general case' for T is to not support fillView.
-  // Classes which do support fillView must specialize this trait.
+  // We assume the 'general case' for T is to not support getView.
+  // Classes which do support getView must specialize this trait.
   //
 
   template <typename T, typename = void>
-  struct has_fillView {};
+  struct has_getView {};
 
   template <typename T>
-  struct has_fillView<
+  struct has_getView<
     T,
     cet::enable_if_function_exists_t<void (T::*)(std::vector<void const*>&),
-                                     &T::fillView>> {};
+                                     &T::getView>> {};
 
   template <typename T>
-  struct CannotFillView {
-    static void
-    fill(T const&, std::vector<void const*>&)
+  struct CannotGetView {
+    [[noreturn]] static std::vector<void const*>
+    get(T const&)
     {
       throw Exception(errors::ProductDoesNotSupportViews)
         << "Product type " << cet::demangle_symbol(typeid(T).name())
-        << " has no fillView() capability.\n";
+        << " has no getView() capability.\n";
     }
   };
 
   template <class T, typename = void>
-  struct MaybeFillView : CannotFillView<T> {};
+  struct MaybeGetView : CannotGetView<T> {};
 
   template <typename T>
-  struct MaybeFillView<T, std::enable_if_t<has_fillView<T>::value>> {
-    static void
-    fill(T const& product, std::vector<void const*>& view)
+  struct MaybeGetView<T, std::enable_if_t<has_getView<T>::value>> {
+    static auto
+    get(T const& product)
     {
-      product.fillView(view);
+      return product.getView();
     }
   };
 
   template <class T, class A>
-  struct MaybeFillView<std::vector<T, A>> {
-    static void
-    fill(std::vector<T> const& product, std::vector<void const*>& view)
+  struct MaybeGetView<std::vector<T, A>> {
+    static auto
+    get(std::vector<T> const& product)
     {
+      std::vector<void const*> view;
       cet::transform_all(
-        product, std::back_inserter(view), [](auto const& p) { return &p; });
+        product, back_inserter(view), [](auto const& p) { return &p; });
+      return view;
     }
   };
 
   template <class A>
-  struct MaybeFillView<std::vector<bool, A>>
-    : CannotFillView<std::vector<bool, A>> {};
+  struct MaybeGetView<std::vector<bool, A>>
+    : CannotGetView<std::vector<bool, A>> {};
 
   template <class T, class A>
-  struct MaybeFillView<std::list<T, A>> {
-    static void
-    fill(std::list<T> const& product, std::vector<void const*>& view)
+  struct MaybeGetView<std::list<T, A>> {
+    static auto
+    get(std::list<T> const& product)
     {
+      std::vector<void const*> view;
       cet::transform_all(
-        product, std::back_inserter(view), [](auto const& p) { return &p; });
+        product, back_inserter(view), [](auto const& p) { return &p; });
+      return view;
     }
   };
 
   template <class T, class A>
-  struct MaybeFillView<std::deque<T, A>> {
-    static void
-    fill(std::deque<T> const& product, std::vector<void const*>& view)
+  struct MaybeGetView<std::deque<T, A>> {
+    static auto
+    get(std::deque<T> const& product)
     {
+      std::vector<void const*> view;
       cet::transform_all(
-        product, std::back_inserter(view), [](auto const& p) { return &p; });
+        product, back_inserter(view), [](auto const& p) { return &p; });
+      return view;
     }
   };
 
   template <class T, class A>
-  struct MaybeFillView<std::set<T, A>> {
-    static void
-    fill(std::set<T> const& product, std::vector<void const*>& view)
+  struct MaybeGetView<std::set<T, A>> {
+    static auto
+    get(std::set<T> const& product)
     {
+      std::vector<void const*> view;
       cet::transform_all(
-        product, std::back_inserter(view), [](auto const& p) { return &p; });
+        product, back_inserter(view), [](auto const& p) { return &p; });
+      return view;
     }
   };
 
   template <class T>
-  struct MaybeFillView<cet::map_vector<T>> {
-    static void
-    fill(cet::map_vector<T> const& product, std::vector<void const*>& view)
+  struct MaybeGetView<cet::map_vector<T>> {
+    static auto
+    get(cet::map_vector<T> const& product)
     {
-      cet::transform_all(product, std::back_inserter(view), [](auto const& p) {
-        return &p.second;
-      });
+      std::vector<void const*> view;
+      cet::transform_all(
+        product, back_inserter(view), [](auto const& p) { return &p.second; });
+      return view;
     }
   };
 
