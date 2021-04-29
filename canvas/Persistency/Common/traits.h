@@ -15,6 +15,7 @@
 #include <limits>
 #include <list>
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 #include <type_traits>
@@ -111,15 +112,27 @@ namespace art {
     }
   };
 
-  //
   // The trait struct template has_getView<T> is used to
   // indicate whether or not the type T has a member function
   //
-  //      void T::getView(std::vector<void const*>&) const
+  //      std::vector<void const*> T::getView() const
   //
   // We assume the 'general case' for T is to not support getView.
   // Classes which do support getView must specialize this trait.
-  //
+
+  template <typename T>
+  void const*
+  address_of(T const& t) noexcept
+  {
+    return &t;
+  }
+
+  template <typename T>
+  void const*
+  address_of_second(typename cet::map_vector<T>::value_type const& t) noexcept
+  {
+    return &t.second;
+  }
 
   template <typename T, typename = void>
   struct has_getView {};
@@ -159,8 +172,7 @@ namespace art {
     get(std::vector<T> const& product)
     {
       std::vector<void const*> view;
-      cet::transform_all(
-        product, back_inserter(view), [](auto const& p) { return &p; });
+      cet::transform_all(product, back_inserter(view), address_of<T>);
       return view;
     }
   };
@@ -175,8 +187,7 @@ namespace art {
     get(std::list<T> const& product)
     {
       std::vector<void const*> view;
-      cet::transform_all(
-        product, back_inserter(view), [](auto const& p) { return &p; });
+      cet::transform_all(product, back_inserter(view), address_of<T>);
       return view;
     }
   };
@@ -187,8 +198,7 @@ namespace art {
     get(std::deque<T> const& product)
     {
       std::vector<void const*> view;
-      cet::transform_all(
-        product, back_inserter(view), [](auto const& p) { return &p; });
+      cet::transform_all(product, back_inserter(view), address_of<T>);
       return view;
     }
   };
@@ -199,8 +209,7 @@ namespace art {
     get(std::set<T> const& product)
     {
       std::vector<void const*> view;
-      cet::transform_all(
-        product, back_inserter(view), [](auto const& p) { return &p; });
+      cet::transform_all(product, back_inserter(view), address_of<T>);
       return view;
     }
   };
@@ -211,8 +220,7 @@ namespace art {
     get(cet::map_vector<T> const& product)
     {
       std::vector<void const*> view;
-      cet::transform_all(
-        product, back_inserter(view), [](auto const& p) { return &p.second; });
+      cet::transform_all(product, back_inserter(view), address_of_second<T>);
       return view;
     }
   };
