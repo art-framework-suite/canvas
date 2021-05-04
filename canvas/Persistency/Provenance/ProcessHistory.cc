@@ -17,18 +17,14 @@ using namespace std;
 
 namespace art {
 
-  ProcessHistory::~ProcessHistory() {}
+  ProcessHistory::~ProcessHistory() = default;
+  ProcessHistory::ProcessHistory() = default;
 
   // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
-  ProcessHistory::ProcessHistory() : data_(), transients_{} {}
+  ProcessHistory::ProcessHistory(size_type const n) : data_(n) {}
 
   // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
-  ProcessHistory::ProcessHistory(size_type n) : data_(n), transients_{} {}
-
-  // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
-  ProcessHistory::ProcessHistory(collection_type const& vec)
-    : data_(vec), transients_{}
-  {}
+  ProcessHistory::ProcessHistory(collection_type const& vec) : data_(vec) {}
 
   // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
   // Note: We do not give the strong exception safety guarantee because
@@ -223,23 +219,16 @@ namespace art {
     return transients_.get().phid_;
   }
 
-  // Return true, and fill in config appropriately, if the a process
-  // with the given name is recorded in this ProcessHistory. Return
-  // false, and do not modify config, if process with the given name
-  // is found.
-  bool
-  ProcessHistory::getConfigurationForProcess(string const& name,
-                                             ProcessConfiguration& config) const
+  std::optional<ProcessConfiguration>
+  ProcessHistory::getConfigurationForProcess(string const& name) const
   {
     std::lock_guard sentry{mutex_};
     for (const_iterator i = data_.begin(), e = data_.end(); i != e; ++i) {
       if (i->processName() == name) {
-        config = *i;
-        return true;
+        return std::make_optional(*i);
       }
     }
-    // Name not found!
-    return false;
+    return std::nullopt;
   }
 
   void

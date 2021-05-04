@@ -34,6 +34,7 @@ namespace art {
   class RefCore;
   template <typename T>
   class Sampled;
+  class TriggerResults;
   template <typename T>
   class Wrapper;
   using product_typeids_t = std::map<product_metatype, TypeID>;

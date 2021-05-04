@@ -45,8 +45,7 @@ namespace art {
     return transients_.prodGetter_;
   }
 
-  // Used by RefCoreStreamer on read to set itemPtr_
-  // to the nullptr.
+  // Used by RefCoreStreamer on read to set itemPtr_ to the nullptr.
   void
   RefCore::setProductPtr(void const* prodPtr) const noexcept
   {
@@ -54,8 +53,8 @@ namespace art {
   }
 
   // Used by RefCoreStreamer on read.
-  // Note: prodGetter_ is actually a Group for art,
-  //       and a BranchData or AssnsBranchData for gallery.
+  // Note: prodGetter_ is actually a Group for art, and a BranchData
+  //       or AssnsBranchData for gallery.
   void
   RefCore::setProductGetter(EDProductGetter const* prodGetter) noexcept
   {

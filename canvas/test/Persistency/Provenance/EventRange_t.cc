@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE (EventRange_t)
-#include "canvas/Persistency/Provenance/EventRange.h"
 #include "boost/test/unit_test.hpp"
+#include "canvas/Persistency/Provenance/EventRange.h"
 
 #include <iostream>
 #include <sstream>

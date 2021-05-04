@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE (RangeSet_t)
+#include "boost/test/unit_test.hpp"
 #include "canvas/Persistency/Provenance/RangeSet.h"
 #include "canvas/Persistency/Provenance/RunID.h"
-#include "boost/test/unit_test.hpp"
 
 #include <iostream>
 #include <string>

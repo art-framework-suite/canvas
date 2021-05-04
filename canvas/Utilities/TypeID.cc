@@ -125,40 +125,40 @@ namespace art {
     pos = template_instance.find_first_of("<>,", pos);
     while (pos != string::npos) {
       switch (template_instance[pos]) {
-        case '<':
-          ++template_level;
-          if ((desired_arg == 0ul) && (template_level == 1ul)) {
-            // Found the begin of the desired template arg.
-            arg_start = pos + 1;
-          }
+      case '<':
+        ++template_level;
+        if ((desired_arg == 0ul) && (template_level == 1ul)) {
+          // Found the begin of the desired template arg.
+          arg_start = pos + 1;
+        }
+        break;
+      case '>':
+        --template_level;
+        if ((desired_arg == comma_count) && (template_level == 0ul)) {
+          // Found the end of the desired template arg -- trim trailing
+          // whitespace
+          auto const arg_end =
+            template_instance.find_last_not_of(" \t", pos - 1) + 1;
+          result = template_instance.substr(arg_start, arg_end - arg_start);
+          return result;
+        }
+        break;
+      case ',':
+        if (template_level != 1ul) {
+          // Ignore arguments not at the first level.
           break;
-        case '>':
-          --template_level;
-          if ((desired_arg == comma_count) && (template_level == 0ul)) {
-            // Found the end of the desired template arg -- trim trailing
-            // whitespace
-            auto const arg_end =
-              template_instance.find_last_not_of(" \t", pos - 1) + 1;
-            result = template_instance.substr(arg_start, arg_end - arg_start);
-            return result;
-          }
-          break;
-        case ',':
-          if (template_level != 1ul) {
-            // Ignore arguments not at the first level.
-            break;
-          }
-          if (comma_count == desired_arg) {
-            // Found the end of the desired template arg.
-            result = template_instance.substr(arg_start, pos - arg_start);
-            return result;
-          }
-          ++comma_count;
-          if (comma_count == desired_arg) {
-            // Found the begin of the desired template arg.
-            arg_start = pos + 1;
-          }
-          break;
+        }
+        if (comma_count == desired_arg) {
+          // Found the end of the desired template arg.
+          result = template_instance.substr(arg_start, pos - arg_start);
+          return result;
+        }
+        ++comma_count;
+        if (comma_count == desired_arg) {
+          // Found the begin of the desired template arg.
+          arg_start = pos + 1;
+        }
+        break;
       }
       ++pos;
       pos = template_instance.find_first_of("<>,", pos);

@@ -154,28 +154,8 @@ namespace art {
     T const* operator->() const
     {
       if (core_.productPtr() == nullptr) {
-        EDProduct const* prod{nullptr};
-        if (productGetter()) {
-          prod = productGetter()->getIt();
-        }
-        if (prod == nullptr) {
-          Exception e(errors::ProductNotFound);
-          e << "A request to resolve an Ptr to a product containing items of "
-               "type: "
-            << cet::demangle_symbol(typeid(T).name()) << " with ProductID "
-            << core_.id()
-            << "\ncannot be satisfied because the product cannot be found.\n";
-          if (productGetter() == nullptr) {
-            e << "The productGetter was not set -- are you trying to "
-                 "dereference a Ptr during mixing?\n";
-          } else {
-            e << "Probably the branch containing the product is not stored in "
-                 "the input file.\n";
-          }
-          throw e;
-        }
-        void const* ad{nullptr};
-        prod->setPtr(typeid(T), key_, ad);
+        EDProduct const* prod = parentProduct_();
+        void const* ad = prod->getElementAddress(typeid(T), key_);
         core_.setProductPtr(ad);
       }
       return reinterpret_cast<T const*>(core_.productPtr());
@@ -246,6 +226,32 @@ namespace art {
     }
 
   private:
+    EDProduct const*
+    parentProduct_() const
+    {
+      EDProduct const* product{nullptr};
+      if (productGetter()) {
+        product = productGetter()->getIt();
+      }
+      if (product == nullptr) {
+        Exception e(errors::ProductNotFound);
+        e << "A request to resolve an Ptr to a product containing items of "
+             "type: "
+          << cet::demangle_symbol(typeid(T).name()) << " with ProductID "
+          << core_.id()
+          << "\ncannot be satisfied because the product cannot be found.\n";
+        if (productGetter() == nullptr) {
+          e << "The productGetter was not set -- are you trying to "
+               "dereference a Ptr during mixing?\n";
+        } else {
+          e << "Probably the branch containing the product is not stored in "
+               "the input file.\n";
+        }
+        throw e;
+      }
+      return product;
+    }
+
     // Used to fetch the container product.
     RefCore core_{};
 
@@ -259,7 +265,7 @@ namespace art {
                    bool>
   operator==(Ptr<T> const& lhs, Ptr<U> const& rhs)
   {
-    return (lhs.refCore() == rhs.refCore()) && (lhs.key() == rhs.key());
+    return lhs.refCore() == rhs.refCore() and lhs.key() == rhs.key();
   }
 
   template <typename T, typename U>
@@ -280,8 +286,8 @@ namespace art {
     // The ordering of integer keys guarantees that the ordering of Ptrs within
     // a collection will be identical to the ordering of the referenced objects
     // in the collection.
-    return (lhs.refCore() == rhs.refCore()) ? (lhs.key() < rhs.key()) :
-                                              (lhs.refCore() < rhs.refCore());
+    return lhs.refCore() == rhs.refCore() ? lhs.key() < rhs.key() :
+                                            lhs.refCore() < rhs.refCore();
   }
 
   // Fill a vector of Ptrs from a persistent collection.

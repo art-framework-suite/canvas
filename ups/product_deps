@@ -86,8 +86,8 @@
 #
 #>  define_pythonpath
 ####################################
-parent		canvas
-defaultqual	e19
+parent          canvas
+defaultqual     e19
 ####################################
 
 ####################################
@@ -115,22 +115,22 @@ defaultqual	e19
 ##################
 # Format:
 #
-#>  <spec>		<base>		[<subdir-name>]
+#>  <spec>              <base>          [<subdir-name>]
 #
 # <base> may be `-' (negate defaults), "product_dir", or "fq_dir" as
 # desired.
 #
 # Available <spec>s and defaults:
 #
-#>  bindir		fq_dir		bin
+#>  bindir              fq_dir          bin
 #
 #     Built binaries for public use.
 #
-#>  cmakemoduledir	product_dir	Modules
+#>  cmakemoduledir      product_dir     Modules
 #
 #     CMake modules.
 #
-#>  fcldir		product_dir	fcl
+#>  fcldir              product_dir     fcl
 #
 #     FHiCL framework configuration files.
 #
@@ -138,19 +138,19 @@ defaultqual	e19
 #
 #     Framework data.
 #
-#>  gdmldir		product_dir	gdml
+#>  gdmldir             product_dir     gdml
 #
 #     GDML geometry description files.
 #
-#>  incdir		product_dir	include
+#>  incdir              product_dir     include
 #
 #     Headers.
 #
-#>  libdir		fq_dir		lib
+#>  libdir              fq_dir          lib
 #
 #     Compiled and other libraries.
 #
-#>  perllib		product_dir	perl5lib
+#>  perllib             product_dir     perl5lib
 #
 #     Perl modules, etc.
 #
@@ -164,7 +164,7 @@ defaultqual	e19
 #     An additional location for wirecell data to be added to
 #     WIRECELL_PATH; may be specified multiple times.
 #
-#>  testdir		product_dir	test
+#>  testdir             product_dir     test
 #
 #     Tests.
 #
@@ -173,8 +173,8 @@ defaultqual	e19
 #     Wirecell data.
 #
 ####################################
-fcldir	-
-perllib	product_dir
+fcldir  -
+perllib product_dir
 ####################################
 
 ####################################
@@ -185,8 +185,8 @@ perllib	product_dir
 ##################
 # Format:
 #
-#>  product		version		qual	["<table_format=#>"]
-#>  <ups-product_name>	<ups-version>	[<qual-trigger>]	[<flag>]
+#>  product             version         qual    ["<table_format=#>"]
+#>  <ups-product_name>  <ups-version>   [<qual-trigger>]        [<flag>]
 #>...
 #>  end_product_list
 #
@@ -249,10 +249,9 @@ perllib	product_dir
 ####################################
 product		version		qual	flags		<table_format=2>
 clhep		v2_4_4_1	-
-messagefacility	v2_08_00	-
+messagefacility	v2_08_01	-
 range		v3_0_11_0	-
-cetmodules	v2_13_01	-	only_for_build
-cppunit		v1_15_1a	-	only_for_build
+cetmodules	v2_17_00	-	only_for_build
 end_product_list
 ####################################
 
@@ -264,8 +263,8 @@ end_product_list
 #
 # Format:
 #
-#>  qualifier		<prod-spec>...	[<notes>]
-#>  <parent-qual>	<spec>...   [<text...>]
+#>  qualifier           <prod-spec>...  [<notes>]
+#>  <parent-qual>       <spec>...   [<text...>]
 #>...
 #>  end_qualifier_list
 #
@@ -307,13 +306,13 @@ end_product_list
 #   case it is optional.
 #
 ####################################
-qualifier	clhep		messagefacility	range	cppunit		notes
-c7:debug	c7:debug	c7:debug	-nq-	c7:debug
-c7:prof		c7:prof		c7:prof		-nq-	c7:prof
-e19:debug	e19:debug	e19:debug	-nq-	e19:debug
-e19:prof	e19:prof	e19:prof	-nq-	e19:prof
-e20:debug	e20:debug	e20:debug	-nq-	e20:debug
-e20:prof	e20:prof	e20:prof	-nq-	e20:prof
+qualifier       clhep           messagefacility range   notes
+c7:debug        c7:debug        c7:debug        -nq-
+c7:prof         c7:prof         c7:prof         -nq-
+e19:debug       e19:debug       e19:debug       -nq-
+e19:prof        e19:prof        e19:prof        -nq-
+e20:debug       e20:debug       e20:debug       -nq-
+e20:prof        e20:prof        e20:prof        -nq-
 end_qualifier_list
 ####################################
 

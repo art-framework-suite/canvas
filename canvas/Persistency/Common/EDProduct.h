@@ -34,9 +34,10 @@ public:
 
   // We use vector<void*> so as to keep the type information out
   // of the EDProduct class.
-  virtual void
-  fillView(std::vector<void const*>&) const
+  virtual std::vector<void const*>
+  getView() const
   { /* should be called only polymorphically */
+    return {};
   }
 
   virtual std::type_info const*
@@ -45,13 +46,12 @@ public:
     return typeInfo_();
   }
 
-  void setPtr(std::type_info const& toType,
-              unsigned long index,
-              void const*& ptr) const;
+  void const* getElementAddress(std::type_info const& toType,
+                                unsigned long index) const;
 
-  void getElementAddresses(std::type_info const& toType,
-                           std::vector<unsigned long> const& indices,
-                           std::vector<void const*>& ptr) const;
+  std::vector<void const*> getElementAddresses(
+    std::type_info const& toType,
+    std::vector<unsigned long> const& indices) const;
 
   virtual std::string
   productSize() const
@@ -110,15 +110,14 @@ private:
 
   virtual unsigned do_getRangeSetID() const = 0;
   virtual void do_setRangeSetID(unsigned) = 0;
-  virtual void do_combine(EDProduct*) = 0;
+  virtual void do_combine(EDProduct const*) = 0;
 
-  virtual void do_setPtr(std::type_info const& toType,
-                         unsigned long index,
-                         void const*& ptr) const = 0;
+  virtual void const* do_getElementAddress(std::type_info const& toType,
+                                           unsigned long index) const = 0;
 
-  virtual void do_getElementAddresses(std::type_info const& toType,
-                                      std::vector<unsigned long> const& indices,
-                                      std::vector<void const*>& ptr) const = 0;
+  virtual std::vector<void const*> do_getElementAddresses(
+    std::type_info const& toType,
+    std::vector<unsigned long> const& indices) const = 0;
 
   virtual std::unique_ptr<EDProduct> do_createEmptySampledProduct(
     InputTag const& tag) const = 0;

@@ -125,8 +125,7 @@ namespace art {
   Hash<I>::isValid() const
   {
     if (isCompactForm()) {
-      auto ret = hash_ != art::detail::InvalidHash();
-      return ret;
+      return hash_ != art::detail::InvalidHash();
     }
     return !hash_.empty();
   }

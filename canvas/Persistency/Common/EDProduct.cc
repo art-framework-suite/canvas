@@ -11,20 +11,18 @@
 
 using art::EDProduct;
 
-void
-EDProduct::setPtr(std::type_info const& toType,
-                  unsigned long index,
-                  void const*& ptr) const
+void const*
+EDProduct::getElementAddress(std::type_info const& toType,
+                             unsigned long const index) const
 {
-  do_setPtr(toType, index, ptr);
+  return do_getElementAddress(toType, index);
 }
 
-void
+std::vector<void const*>
 EDProduct::getElementAddresses(std::type_info const& toType,
-                               std::vector<unsigned long> const& indices,
-                               std::vector<void const*>& ptr) const
+                               std::vector<unsigned long> const& indices) const
 {
-  do_getElementAddresses(toType, indices, ptr);
+  return do_getElementAddresses(toType, indices);
 }
 
 // ======================================================================

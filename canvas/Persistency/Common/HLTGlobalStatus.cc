@@ -1,9 +1,9 @@
 #include "canvas/Persistency/Common/HLTGlobalStatus.h"
 // vim: set sw=2 expandtab :
 
-#include "canvas/Persistency/Common/HLTPathStatus.h"
 #include "canvas/Persistency/Common/HLTenums.h"
 
+#include <algorithm>
 #include <atomic>
 #include <cstddef>
 #include <ostream>
@@ -16,75 +16,50 @@ using namespace literals::string_literals;
 
 namespace art {
 
-  HLTGlobalStatus::~HLTGlobalStatus() {}
+  HLTGlobalStatus::~HLTGlobalStatus() = default;
 
   HLTGlobalStatus::HLTGlobalStatus(std::size_t const n /* = 0 */) : paths_(n) {}
 
-  HLTGlobalStatus::HLTGlobalStatus(HLTGlobalStatus const& rhs)
-    : paths_(rhs.paths_)
-  {}
+  HLTGlobalStatus::HLTGlobalStatus(HLTGlobalStatus const&) = default;
+  HLTGlobalStatus::HLTGlobalStatus(HLTGlobalStatus&&) = default;
 
-  HLTGlobalStatus::HLTGlobalStatus(HLTGlobalStatus&& rhs)
-    : paths_(move(rhs.paths_))
-  {}
-
-  HLTGlobalStatus&
-  HLTGlobalStatus::operator=(HLTGlobalStatus const& rhs)
-  {
-    if (this != &rhs) {
-      paths_ = rhs.paths_;
-    }
-    return *this;
-  }
-
-  HLTGlobalStatus&
-  HLTGlobalStatus::operator=(HLTGlobalStatus&& rhs)
-  {
-    paths_ = move(rhs.paths_);
-    return *this;
-  }
+  HLTGlobalStatus& HLTGlobalStatus::operator=(HLTGlobalStatus const&) = default;
+  HLTGlobalStatus& HLTGlobalStatus::operator=(HLTGlobalStatus&&) = default;
 
   std::size_t
   HLTGlobalStatus::size() const
   {
-    auto ret = paths_.size();
-    return ret;
+    return paths_.size();
   }
 
   void
   HLTGlobalStatus::reset()
   {
-    unsigned const n = paths_.size();
-    for (unsigned i = 0; i != n; ++i) {
-      paths_[i].reset();
-    }
+    std::for_each(begin(paths_), end(paths_), [](auto& path_status) {
+      path_status.reset();
+    });
   }
 
   bool
   HLTGlobalStatus::wasrun() const
   {
-    auto const n = paths_.size();
-    auto i = n;
-    for (i = 0; i != n; ++i) {
-      if (paths_[i].state() != hlt::Ready) {
-        return true;
-      }
-    }
-    return false;
+    return std::any_of(begin(paths_), end(paths_), [](auto const& path_status) {
+      return path_status.state() != hlt::Ready;
+    });
   }
 
   bool
   HLTGlobalStatus::accept() const
   {
-    bool at_least_one_ran = false;
-    bool at_least_one_accepted = false;
-    unsigned const n = paths_.size();
-    if (n == 0) {
+    if (empty(paths_)) {
       return true;
     }
-    auto i = n;
-    for (i = 0; i != n; ++i) {
-      auto const s(paths_[i].state());
+
+    bool at_least_one_ran = false;
+    bool at_least_one_accepted = false;
+
+    for (auto const& path_status : paths_) {
+      auto const s(path_status.state());
       if (s != hlt::Ready) {
         at_least_one_ran = true;
         if (s == hlt::Pass) {
@@ -92,6 +67,7 @@ namespace art {
         }
       }
     }
+
     if (!at_least_one_ran) {
       return true;
     }
@@ -101,74 +77,51 @@ namespace art {
   bool
   HLTGlobalStatus::error() const
   {
-    auto const n = paths_.size();
-    for (unsigned i = 0U; i != n; ++i) {
-      if (paths_[i].state() == hlt::Exception) {
-        return true;
-      }
-    }
-    return false;
+    return std::any_of(begin(paths_), end(paths_), [](auto const& path_status) {
+      return path_status.state() == hlt::Exception;
+    });
   }
 
-  const HLTPathStatus&
+  HLTPathStatus const&
   HLTGlobalStatus::at(unsigned const i) const
   {
-    auto const& ret = paths_.at(i);
-    return ret;
+    return paths_.at(i);
   }
 
   HLTPathStatus&
   HLTGlobalStatus::at(unsigned const i)
   {
-    auto& ret = paths_.at(i);
-    return ret;
-  }
-
-  const HLTPathStatus& HLTGlobalStatus::operator[](unsigned const i) const
-  {
-    auto const& ret = paths_.at(i);
-    return ret;
-  }
-
-  HLTPathStatus& HLTGlobalStatus::operator[](unsigned const i)
-  {
-    auto& ret = paths_.at(i);
-    return ret;
+    return paths_.at(i);
   }
 
   bool
   HLTGlobalStatus::wasrun(unsigned const i) const
   {
-    auto ret = paths_.at(i).wasrun();
-    return ret;
+    return paths_.at(i).wasrun();
   }
 
   bool
   HLTGlobalStatus::accept(unsigned const i) const
   {
-    auto ret = paths_.at(i).accept();
-    return ret;
+    return paths_.at(i).accept();
   }
 
   bool
   HLTGlobalStatus::error(unsigned const i) const
   {
-    auto ret = paths_.at(i).error();
-    return ret;
+    return paths_.at(i).error();
   }
 
   hlt::HLTState
   HLTGlobalStatus::state(unsigned const i) const
   {
-    auto ret = paths_.at(i).state();
-    return ret;
+    return paths_.at(i).state();
   }
 
   unsigned
   HLTGlobalStatus::index(unsigned const i) const
   {
-    auto ret = paths_.at(i).index();
-    return ret;
+    return paths_.at(i).index();
   }
 
   void

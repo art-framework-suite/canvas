@@ -31,11 +31,10 @@
 namespace art {
   template <typename K, typename M>
   class thread_safe_registry_via_id {
-  public: // Types
+  public:
     using collection_type = std::map<K, M>;
     using value_type = typename collection_type::value_type;
 
-  public: // Static API
     template <typename C>
     static void put(C const& container);
     static auto emplace(value_type const& value);
@@ -43,16 +42,10 @@ namespace art {
     static bool empty();
     static collection_type const& get();
     static bool get(K const& key, M& mapped);
-    static auto&
-    getMutex()
-    {
-      static std::recursive_mutex m{};
-      return m;
-    }
     static auto
     instance(bool cleanup = false)
     {
-      std::lock_guard sentry{getMutex()};
+      std::lock_guard sentry{mutex_()};
       static collection_type* me = new collection_type{};
       if (cleanup) {
         delete me;
@@ -65,6 +58,14 @@ namespace art {
       }
       return me;
     }
+
+  private:
+    static auto&
+    mutex_()
+    {
+      static std::recursive_mutex m{};
+      return m;
+    }
   };
 
   template <typename K, typename M>
@@ -72,7 +73,7 @@ namespace art {
   void
   thread_safe_registry_via_id<K, M>::put(C const& container)
   {
-    std::lock_guard sentry{getMutex()};
+    std::lock_guard sentry{mutex_()};
     auto me = instance();
     for (auto const& e : container) {
       me->emplace(e);
@@ -83,42 +84,38 @@ namespace art {
   auto
   thread_safe_registry_via_id<K, M>::emplace(value_type const& value)
   {
-    std::lock_guard sentry{getMutex()};
-    auto ret = instance()->emplace(value);
-    return ret;
+    std::lock_guard sentry{mutex_()};
+    return instance()->emplace(value);
   }
 
   template <typename K, typename M>
   auto
   thread_safe_registry_via_id<K, M>::emplace(K const& key, M const& mapped)
   {
-    std::lock_guard sentry{getMutex()};
-    auto ret = instance()->emplace(key, mapped);
-    return ret;
+    std::lock_guard sentry{mutex_()};
+    return instance()->emplace(key, mapped);
   }
 
   template <typename K, typename M>
   bool
   thread_safe_registry_via_id<K, M>::empty()
   {
-    std::lock_guard sentry{getMutex()};
-    auto ret = instance()->empty();
-    return ret;
+    std::lock_guard sentry{mutex_()};
+    return instance()->empty();
   }
 
   template <typename K, typename M>
   auto
   thread_safe_registry_via_id<K, M>::get() -> collection_type const&
   {
-    auto const& ret = *instance();
-    return ret;
+    return *instance();
   }
 
   template <typename K, typename M>
   bool
   thread_safe_registry_via_id<K, M>::get(K const& k, M& mapped)
   {
-    std::lock_guard sentry{getMutex()};
+    std::lock_guard sentry{mutex_()};
     auto me = instance();
     auto it = me->find(k);
     if (it != me->cend()) {

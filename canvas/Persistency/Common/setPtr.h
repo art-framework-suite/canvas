@@ -60,7 +60,7 @@ art::setPtr(cet::map_vector<T> const& obj,
   static size_t pos = vh.look_past_pair<T>();
   auto const it = obj.findOrThrow(cet::map_vector_key{iIndex});
   assert(it != obj.end());
-  if ((pos < wanted_type.size()) && vh.starts_with_pair(wanted_type, pos)) {
+  if (pos < wanted_type.size() and vh.starts_with_pair(wanted_type, pos)) {
     // Want value_type, not mapped_type;
     oPtr = detail::maybeCastObj(&*it, iToType);
   } else {
