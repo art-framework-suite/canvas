@@ -1,5 +1,5 @@
-#ifndef canvas_Utilities_WrappedTypeID_h
-#define canvas_Utilities_WrappedTypeID_h
+#ifndef canvas_Persistency_Common_WrappedTypeID_h
+#define canvas_Persistency_Common_WrappedTypeID_h
 // vim: set sw=2:
 //
 // WrappedTypeID: A unique identifier for a C++ type.
@@ -43,4 +43,4 @@ art::WrappedTypeID::make()
 // Local Variables:
 // mode: c++
 // End:
-#endif /* canvas_Utilities_WrappedTypeID_h */
+#endif /* canvas_Persistency_Common_WrappedTypeID_h */
