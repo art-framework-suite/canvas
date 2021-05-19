@@ -28,8 +28,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "canvas/Persistency/Provenance/EventID.h"
-#include "canvas/Persistency/Provenance/RunID.h"
-#include "canvas/Persistency/Provenance/SubRunID.h"
+#include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 #include "canvas/Persistency/Provenance/Transient.h"
 
 #include <iosfwd>

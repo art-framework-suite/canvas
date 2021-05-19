@@ -1,5 +1,4 @@
 #include "canvas/Persistency/Provenance/EventID.h"
-#include "canvas/Utilities/Exception.h"
 
 #include <ostream>
 

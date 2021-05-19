@@ -14,6 +14,7 @@ is determined entirely from the BranchKey.
 #include <iosfwd>
 #include <string>
 #include <tuple>
+#include <utility>
 
 namespace art {
   class BranchDescription;

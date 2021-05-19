@@ -2,11 +2,11 @@
 #include "canvas/Utilities/EventIDMatcher.h"
 
 #include "canvas/Persistency/Provenance/EventID.h"
+#include "canvas/Persistency/Provenance/RunID.h"
+#include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Utilities/Exception.h"
 
 #include <cstdio>
-#include <cstdlib>
-#include <iostream>
 #include <regex>
 #include <sstream>
 #include <string>
@@ -97,14 +97,14 @@ namespace art {
         }
         if (m[3].matched) {
           // wildcard
-          parsed_patterns_[patno][part_num].emplace_back(0U, 0U, true);
+          parsed_patterns_[patno][part_num].push_back({0U, 0U, true});
         } else if (m[4].matched) {
           // single num
           auto num = 0U;
           for (auto val : m.str(4)) {
             num = (num * 10U) + (val - '0');
           }
-          parsed_patterns_[patno][part_num].emplace_back(num, num, false);
+          parsed_patterns_[patno][part_num].push_back({num, num, false});
         } else {
           // range
           auto num_low = 0U;
@@ -115,8 +115,8 @@ namespace art {
           for (auto val : m.str(6)) {
             num_high = (num_high * 10U) + (val - '0');
           }
-          parsed_patterns_[patno][part_num].emplace_back(
-            num_low, num_high, false);
+          parsed_patterns_[patno][part_num].push_back(
+            {num_low, num_high, false});
         }
         if (sep == ':') {
           if (part_num == 0U) {
@@ -200,27 +200,27 @@ namespace art {
     for (auto const& parsed_pattern : parsed_patterns_) {
       for (auto i = 0U; i < 3; ++i) {
         for (auto const& val : parsed_pattern[i]) {
-          if (val.wildcard_) {
+          if (val.wildcard) {
             // Wildcards always match
             ret = true;
             break;
-          } else if (val.low_ == val.high_) {
+          } else if (val.low == val.high) {
             // Single value match
             if (i == 0U) {
               // run
-              if (eid.run() == val.low_) {
+              if (eid.run() == val.low) {
                 ret = true;
                 break;
               }
             } else if (i == 1U) {
               // subrun
-              if (eid.subRun() == val.low_) {
+              if (eid.subRun() == val.low) {
                 ret = true;
                 break;
               }
             } else {
               // event
-              if (eid.event() == val.low_) {
+              if (eid.event() == val.low) {
                 ret = true;
                 break;
               }
@@ -229,19 +229,19 @@ namespace art {
             // Range match
             if (i == 0U) {
               // run
-              if ((eid.run() >= val.low_) && (eid.run() <= val.high_)) {
+              if ((eid.run() >= val.low) && (eid.run() <= val.high)) {
                 ret = true;
                 break;
               }
             } else if (i == 1U) {
               // subrun
-              if ((eid.subRun() >= val.low_) && (eid.subRun() <= val.high_)) {
+              if ((eid.subRun() >= val.low) && (eid.subRun() <= val.high)) {
                 ret = true;
                 break;
               }
             } else {
               // event
-              if ((eid.event() >= val.low_) && (eid.event() <= val.high_)) {
+              if ((eid.event() >= val.low) && (eid.event() <= val.high)) {
                 ret = true;
                 break;
               }

@@ -12,10 +12,8 @@
 //
 
 #include <iosfwd>
-#include <map>
 #include <string>
 #include <typeinfo>
-#include <utility>
 
 namespace art {
 

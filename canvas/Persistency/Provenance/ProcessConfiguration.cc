@@ -2,9 +2,9 @@
 // vim: set sw=2 expandtab :
 
 #include "cetlib/MD5Digest.h"
+#include "fhiclcpp/ParameterSetID.h"
 
 #include <ostream>
-#include <sstream>
 #include <tuple>
 
 using namespace std;

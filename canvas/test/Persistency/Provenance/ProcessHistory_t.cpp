@@ -3,7 +3,6 @@
 #include "fhiclcpp/ParameterSetID.h"
 
 #include <cassert>
-#include <string>
 
 int
 main()

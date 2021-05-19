@@ -1,59 +1,29 @@
 #include "canvas/Persistency/Provenance/detail/createProductLookups.h"
 // vim: set sw=2:
 
-#include "canvas/Persistency/Provenance/BranchKey.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Utilities/FriendlyName.h"
 #include "canvas/Utilities/TypeID.h"
 
-#include <cassert>
+#include <algorithm>
+#include <string>
 #include <unordered_map>
 
 using namespace art;
 
 namespace {
 
-  class CheapTag {
-  public:
-    CheapTag(std::string const& label,
-             std::string const& instance,
-             std::string const& process)
-      : label_{label}, instance_{instance}, process_{process}
-    {}
-
-    std::string const&
-    label() const
-    {
-      return label_;
-    }
-    std::string const&
-    instance() const
-    {
-      return instance_;
-    }
-    std::string const&
-    process() const
-    {
-      return process_;
-    }
-
-  private:
-    std::string label_;
-    std::string instance_;
-    std::string process_;
+  struct CheapTag {
+    std::string label;
+    std::string instance;
+    std::string process;
   };
 
-  [[maybe_unused]] inline bool
+  inline bool
   operator==(CheapTag const& left, CheapTag const& right)
   {
-    return left.label() == right.label() &&
-           left.instance() == right.instance() &&
-           left.process() == right.process();
-  }
-
-  [[maybe_unused]] inline bool
-  operator!=(CheapTag const& left, CheapTag const& right)
-  {
-    return !(left == right);
+    return left.label == right.label && left.instance == right.instance &&
+           left.process == right.process;
   }
 
   class PendingBTLEntry {
@@ -67,19 +37,19 @@ namespace {
     {}
 
     std::string const&
-    fcn() const
+    fcn() const noexcept
     {
       return fcn_;
     }
     CheapTag const&
-    ct() const
+    ct() const noexcept
     {
       return ct_;
     }
     std::string const&
-    process() const
+    process() const noexcept
     {
-      return ct_.process();
+      return ct_.process;
     }
     ProductID
     pid() const

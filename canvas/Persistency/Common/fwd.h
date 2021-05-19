@@ -10,6 +10,8 @@
 #include "canvas/Utilities/TypeID.h"
 #include "canvas/Utilities/product_metatype.h"
 
+#include <map>
+
 namespace art {
   namespace detail {
     class AssnsBase;

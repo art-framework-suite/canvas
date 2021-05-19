@@ -13,20 +13,16 @@
 namespace art {
 
   class Parentage {
-
   public:
-    ~Parentage();
+    explicit Parentage(std::vector<ProductID> parents);
 
+    ~Parentage();
     Parentage();
 
-    explicit Parentage(std::vector<ProductID> const& parents);
-
     Parentage(Parentage const&);
-
     Parentage(Parentage&&);
 
     Parentage& operator=(Parentage const&);
-
     Parentage& operator=(Parentage&&);
 
   public:

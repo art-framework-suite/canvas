@@ -12,7 +12,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <limits>
 #include <ostream>
 #include <string>
 #include <utility>
@@ -308,7 +307,7 @@ namespace art {
                other.ranges_.cend(),
                back_inserter(merged));
     unique(merged.begin(), merged.end());
-    swap(ranges_, merged);
+    std::swap(ranges_, merged);
     isCollapsed_ = false;
     collapse();
     return *this;
@@ -363,7 +362,7 @@ namespace art {
       auto leftIt = ranges_.emplace(foundRange, s, begin, e);
       result = next(leftIt);
       EventRange right{s, e, end};
-      swap(*result, right);
+      std::swap(*result, right);
       did_split = true;
     }
     return make_pair(static_cast<size_t>(result - ranges_.cbegin()), did_split);

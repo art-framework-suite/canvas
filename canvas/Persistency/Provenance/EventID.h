@@ -7,8 +7,8 @@
 #include "canvas/Persistency/Provenance/RunID.h"
 #include "canvas/Persistency/Provenance/SubRunID.h"
 #include "canvas/Utilities/Exception.h"
+#include "canvas/Utilities/Level.h"
 
-#include <cstdint>
 #include <iosfwd>
 
 namespace art {

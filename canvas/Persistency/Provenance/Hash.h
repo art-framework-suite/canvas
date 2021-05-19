@@ -17,11 +17,9 @@
 #include "canvas/Utilities/Exception.h"
 #include "cetlib/MD5Digest.h"
 #include "cetlib/container_algorithms.h"
-#include "hep_concurrency/tsan.h"
 
 #include <ostream>
 #include <string>
-#include <utility>
 
 namespace art {
 

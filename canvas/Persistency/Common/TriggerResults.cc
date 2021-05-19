@@ -2,8 +2,6 @@
 // vim: set sw=2 expandtab :
 
 #include "canvas/Persistency/Common/HLTGlobalStatus.h"
-#include "canvas/Persistency/Common/traits.h"
-#include "fhiclcpp/ParameterSetID.h"
 
 using namespace std;
 

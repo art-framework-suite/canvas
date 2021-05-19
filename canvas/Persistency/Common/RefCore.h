@@ -6,7 +6,6 @@
 
 namespace art {
 
-  class EDProduct;
   class EDProductGetter;
 
   class RefCore {

@@ -1,4 +1,5 @@
 #include "canvas/Persistency/Provenance/ProductID.h"
+#include "cetlib/crc32.h"
 
 #include <ostream>
 

@@ -3,9 +3,8 @@
 
 namespace art {
 
-  EDProductGetter::~EDProductGetter() {}
-
-  EDProductGetter::EDProductGetter() {}
+  EDProductGetter::~EDProductGetter() = default;
+  EDProductGetter::EDProductGetter() = default;
 
   EDProduct const*
   EDProductGetter::getIt() const

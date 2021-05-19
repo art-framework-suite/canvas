@@ -8,7 +8,7 @@
 //   [beginEvent, endEvent)
 
 #include "canvas/Persistency/Provenance/IDNumber.h"
-#include "canvas/Utilities/Exception.h"
+#include "canvas/Utilities/Level.h"
 
 #include <ostream>
 

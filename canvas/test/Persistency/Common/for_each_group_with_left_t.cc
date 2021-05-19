@@ -1,12 +1,11 @@
 #include "canvas/Persistency/Common/Assns.h"
 #include "canvas/Persistency/Common/AssnsAlgorithms.h"
-#include "canvas/Persistency/Common/AssnsIter.h"
 #include "canvas/Persistency/Common/Ptr.h"
+#include "canvas/Utilities/Exception.h"
 
-#include <cassert>
-#include <forward_list>
 #include <iostream>
-#include <type_traits>
+#include <string>
+#include <vector>
 
 using intvec_t = std::vector<int>;
 using shortvec_t = std::vector<short>;

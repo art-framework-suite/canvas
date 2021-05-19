@@ -4,10 +4,8 @@
 
 #include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/EventID.h"
-#include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/Timestamp.h"
 
-#include <atomic>
 #include <iosfwd>
 
 namespace art {

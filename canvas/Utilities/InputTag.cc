@@ -7,9 +7,8 @@
 #include "fhiclcpp/coding.h"
 
 #include <ostream>
-#include <sstream>
+#include <stdexcept>
 #include <string>
-#include <utility>
 #include <vector>
 
 using namespace std;

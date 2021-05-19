@@ -4,8 +4,7 @@
 
 #include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
-#include "canvas/Persistency/Provenance/RunID.h"
-#include "canvas/Persistency/Provenance/Timestamp.h"
+#include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 
 #include <iosfwd>
 #include <set>
@@ -17,8 +16,6 @@ namespace art {
 class art::ResultsAuxiliary {
 public:
   static constexpr BranchType branch_type = InResults;
-
-  ResultsAuxiliary() : processHistoryID_(), allEventsProcessHistories_() {}
 
   void write(std::ostream& os) const;
 
@@ -38,11 +35,11 @@ public:
 
   // most recent process that put a RunProduct into this run
   // is the last on the list, this defines what "latest" is
-  mutable ProcessHistoryID processHistoryID_;
+  mutable ProcessHistoryID processHistoryID_{};
 
   // allEventsProcessHistories_ contains all the ProcessHistoryIDs for all
   // events in this run seen so far.
-  std::set<ProcessHistoryID> allEventsProcessHistories_;
+  std::set<ProcessHistoryID> allEventsProcessHistories_{};
 };
 
 inline std::ostream&

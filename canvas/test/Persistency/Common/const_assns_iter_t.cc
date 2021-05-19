@@ -2,9 +2,11 @@
 #include "canvas/Persistency/Common/AssnsIter.h"
 #include "canvas/Persistency/Common/Ptr.h"
 
+#include <algorithm>
 #include <cassert>
-#include <forward_list>
+#include <string>
 #include <type_traits>
+#include <vector>
 
 using namespace art;
 

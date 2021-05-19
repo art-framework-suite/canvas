@@ -2,7 +2,7 @@
 #include "fhiclcpp/ParameterSet.h"
 #include "fhiclcpp/exception.h"
 
-#include <iostream>
+#include <cassert>
 #include <sstream>
 #include <string>
 #include <vector>
