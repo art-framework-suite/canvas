@@ -7,14 +7,9 @@
 // The identifier is unique within an entire program, but cannot be
 // persisted across invocations of the program.
 
+#include "canvas/Persistency/Common/Wrapper.h"
+#include "canvas/Persistency/Common/fwd.h"
 #include "canvas/Utilities/TypeID.h"
-
-namespace art {
-  template <typename T>
-  class Wrapper;
-
-  struct WrappedTypeID;
-}
 
 struct art::WrappedTypeID {
   template <typename T>

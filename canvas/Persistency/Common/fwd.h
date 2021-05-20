@@ -37,6 +37,7 @@ namespace art {
   class TriggerResults;
   template <typename T>
   class Wrapper;
+  struct WrappedTypeID;
   using product_typeids_t = std::map<product_metatype, TypeID>;
 } // art
 

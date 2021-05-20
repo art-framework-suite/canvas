@@ -14,12 +14,16 @@ namespace art {
   struct BranchKey;
   class EventAuxiliary;
   class EventID;
+  class EventRange;
   class ModuleDescription;
   class Parentage;
   class ProcessConfiguration;
   class ProcessHistory;
   class ProductID;
   class ProductProvenance;
+  struct ProductTable;
+  class ProductTables;
+  class RangeSet;
   class RunAuxiliary;
   class RunID;
   class SubRunAuxiliary;
