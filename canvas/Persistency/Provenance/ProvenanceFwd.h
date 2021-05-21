@@ -15,6 +15,7 @@ namespace art {
   class EventAuxiliary;
   class EventID;
   class EventRange;
+  class FileIndex;
   class ModuleDescription;
   class Parentage;
   class ProcessConfiguration;
