@@ -3,17 +3,14 @@
 
 #include <typeinfo>
 
-namespace art {
-  namespace detail {
-    bool upcastAllowed(std::type_info const& tiFrom,
-                       std::type_info const& tiTo);
-    template <typename element_type>
-    void const* maybeCastObj(element_type const* address,
-                             std::type_info const& tiTo);
-    void const* maybeCastObj(void const* address,
-                             std::type_info const& tiFrom,
-                             std::type_info const& tiTo);
-  }
+namespace art::detail {
+  bool upcastAllowed(std::type_info const& tiFrom, std::type_info const& tiTo);
+  void const* maybeCastObj(void const* address,
+                           std::type_info const& tiFrom,
+                           std::type_info const& tiTo);
+  template <typename element_type>
+  void const* maybeCastObj(element_type const* address,
+                           std::type_info const& tiTo);
 }
 
 template <class element_type>
