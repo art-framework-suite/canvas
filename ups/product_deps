@@ -251,7 +251,7 @@ product		version		qual	flags		<table_format=2>
 clhep		v2_4_4_1	-
 messagefacility	v2_08_03	-
 range		v3_0_11_0	-
-cetmodules	v2_20_00	-	only_for_build
+cetmodules	v2_21_00	-	only_for_build
 end_product_list
 ####################################
 
