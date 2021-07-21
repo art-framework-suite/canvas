@@ -2,9 +2,6 @@
 #define canvas_Persistency_Common_EDProductGetter_h
 // vim: set sw=2 expandtab :
 
-#include "canvas/Persistency/Provenance/ProductID.h"
-#include "canvas/Utilities/fwd.h"
-
 namespace art {
 
   class EDProduct;
@@ -17,11 +14,8 @@ namespace art {
     EDProductGetter();
 
     EDProductGetter(EDProductGetter const&) = delete;
-
     EDProductGetter(EDProductGetter&&) = delete;
-
     EDProductGetter& operator=(EDProductGetter const&) = delete;
-
     EDProductGetter& operator=(EDProductGetter&&) = delete;
 
   public:

@@ -3,10 +3,8 @@
 
 #include "canvas/Persistency/Common/EDProductGetter.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
-#include "canvas/Utilities/Exception.h"
 
-#include <algorithm>
-#include <cassert>
+#include <algorithm> // std::swap
 
 namespace art {
 

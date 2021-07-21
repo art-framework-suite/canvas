@@ -3,7 +3,11 @@
 #include "canvas/Persistency/Common/PtrVector.h"
 #include "canvas/Persistency/Common/Sampled.h"
 #include "canvas/Utilities/Exception.h"
+#include "canvas/Utilities/InputTag.h"
 
+#include <cassert>
+#include <list>
+#include <map>
 #include <string>
 #include <vector>
 

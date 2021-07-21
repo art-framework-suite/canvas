@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE (Tests of Wrapper interface)
-#include "cetlib/quiet_unit_test.hpp"
+#include "boost/test/unit_test.hpp"
 
 #include "canvas/Persistency/Common/Sampled.h"
 #include "canvas/Persistency/Common/Wrapper.h"

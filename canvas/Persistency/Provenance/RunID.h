@@ -9,7 +9,7 @@
 //
 
 #include "canvas/Persistency/Provenance/IDNumber.h"
-#include <cstdint>
+#include "canvas/Utilities/Level.h"
 #include <iosfwd>
 
 namespace art {

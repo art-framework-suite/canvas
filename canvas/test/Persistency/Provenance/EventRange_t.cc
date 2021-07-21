@@ -2,7 +2,6 @@
 #include "boost/test/unit_test.hpp"
 #include "canvas/Persistency/Provenance/EventRange.h"
 
-#include <iostream>
 #include <sstream>
 #include <string>
 

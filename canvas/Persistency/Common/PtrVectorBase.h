@@ -3,9 +3,9 @@
 
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/RefCore.h"
+#include "canvas/Persistency/Common/fwd.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
 
-#include <typeinfo>
-#include <utility>
 #include <vector>
 
 namespace art {

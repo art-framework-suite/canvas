@@ -1,12 +1,11 @@
 // vim: set sw=2 expandtab :
 
 #include "canvas/Persistency/Provenance/ProductProvenance.h"
+#include "canvas/Persistency/Provenance/Parentage.h"
 #include "canvas/Persistency/Provenance/ParentageRegistry.h"
 #include "canvas/Utilities/Exception.h"
 
-#include <cassert>
 #include <ostream>
-#include <utility>
 
 using namespace std;
 

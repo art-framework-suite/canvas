@@ -7,53 +7,44 @@
 #include "CLHEP/Vector/ThreeVector.h"
 #include "CLHEP/Vector/TwoVector.h"
 
-namespace art {
-  namespace detail {
+using namespace CLHEP;
 
-    void
-    CanBeAggregated<CLHEP::HepVector>::aggregate(CLHEP::HepVector& p,
-                                                 CLHEP::HepVector const& other)
-    {
-      p += other;
-    }
+namespace art::detail {
+  void
+  CanBeAggregated<HepVector>::aggregate(HepVector& p, HepVector const& other)
+  {
+    p += other;
+  }
 
-    void
-    CanBeAggregated<CLHEP::Hep2Vector>::aggregate(
-      CLHEP::Hep2Vector& p,
-      CLHEP::Hep2Vector const& other)
-    {
-      p += other;
-    }
+  void
+  CanBeAggregated<Hep2Vector>::aggregate(Hep2Vector& p, Hep2Vector const& other)
+  {
+    p += other;
+  }
 
-    void
-    CanBeAggregated<CLHEP::Hep3Vector>::aggregate(
-      CLHEP::Hep3Vector& p,
-      CLHEP::Hep3Vector const& other)
-    {
-      p += other;
-    }
+  void
+  CanBeAggregated<Hep3Vector>::aggregate(Hep3Vector& p, Hep3Vector const& other)
+  {
+    p += other;
+  }
 
-    void
-    CanBeAggregated<CLHEP::HepLorentzVector>::aggregate(
-      CLHEP::HepLorentzVector& p,
-      CLHEP::HepLorentzVector const& other)
-    {
-      p += other;
-    }
+  void
+  CanBeAggregated<HepLorentzVector>::aggregate(HepLorentzVector& p,
+                                               HepLorentzVector const& other)
+  {
+    p += other;
+  }
 
-    void
-    CanBeAggregated<CLHEP::HepMatrix>::aggregate(CLHEP::HepMatrix& p,
-                                                 CLHEP::HepMatrix const& other)
-    {
-      p += other;
-    }
+  void
+  CanBeAggregated<HepMatrix>::aggregate(HepMatrix& p, HepMatrix const& other)
+  {
+    p += other;
+  }
 
-    void
-    CanBeAggregated<CLHEP::HepSymMatrix>::aggregate(
-      CLHEP::HepSymMatrix& p,
-      CLHEP::HepSymMatrix const& other)
-    {
-      p += other;
-    }
+  void
+  CanBeAggregated<HepSymMatrix>::aggregate(HepSymMatrix& p,
+                                           HepSymMatrix const& other)
+  {
+    p += other;
   }
 }

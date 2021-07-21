@@ -5,8 +5,7 @@
 // ProductID: A unique identifier for each EDProduct within a process.
 //=====================================================================
 
-#include "cetlib/crc32.h"
-
+#include <cstddef>    // for size_t
 #include <functional> // for std::hash
 #include <iosfwd>
 #include <string>

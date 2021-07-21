@@ -1,6 +1,5 @@
 #include "canvas/Persistency/Common/PtrVectorBase.h"
-
-#include <utility>
+#include "canvas/Utilities/Exception.h"
 
 void
 art::PtrVectorBase::fillPtrs() const

@@ -4,10 +4,8 @@
 
 #include "canvas/Persistency/Provenance/EventRange.h"
 #include "canvas/Persistency/Provenance/IDNumber.h"
-#include "canvas/Persistency/Provenance/RunID.h"
-#include "canvas/Persistency/Provenance/SubRunID.h"
-#include "canvas/Utilities/Exception.h"
-#include "cetlib/container_algorithms.h"
+#include "canvas/Persistency/Provenance/ProvenanceFwd.h"
+#include "canvas/Utilities/Level.h"
 
 #include <cstddef>
 #include <limits>

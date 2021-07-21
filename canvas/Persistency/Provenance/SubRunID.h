@@ -3,9 +3,11 @@
 
 // A SubRunID represents a unique period within a run.
 
+#include "canvas/Persistency/Provenance/IDNumber.h"
 #include "canvas/Persistency/Provenance/RunID.h"
+#include "canvas/Utilities/Exception.h"
+#include "canvas/Utilities/Level.h"
 
-#include <cstdint>
 #include <ostream>
 
 namespace art {

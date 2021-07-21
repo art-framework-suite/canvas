@@ -1,5 +1,5 @@
-#ifndef canvas_Utilities_WrappedTypeID_h
-#define canvas_Utilities_WrappedTypeID_h
+#ifndef canvas_Persistency_Common_WrappedTypeID_h
+#define canvas_Persistency_Common_WrappedTypeID_h
 // vim: set sw=2:
 //
 // WrappedTypeID: A unique identifier for a C++ type.
@@ -7,14 +7,9 @@
 // The identifier is unique within an entire program, but cannot be
 // persisted across invocations of the program.
 
+#include "canvas/Persistency/Common/Wrapper.h"
+#include "canvas/Persistency/Common/fwd.h"
 #include "canvas/Utilities/TypeID.h"
-
-namespace art {
-  template <typename T>
-  class Wrapper;
-
-  struct WrappedTypeID;
-}
 
 struct art::WrappedTypeID {
   template <typename T>
@@ -43,4 +38,4 @@ art::WrappedTypeID::make()
 // Local Variables:
 // mode: c++
 // End:
-#endif /* canvas_Utilities_WrappedTypeID_h */
+#endif /* canvas_Persistency_Common_WrappedTypeID_h */

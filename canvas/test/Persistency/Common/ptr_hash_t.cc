@@ -1,4 +1,6 @@
 #include "canvas/Persistency/Common/Ptr.h"
+#include "canvas/Persistency/Provenance/ProductID.h"
+
 #include <cassert>
 #include <unordered_set>
 

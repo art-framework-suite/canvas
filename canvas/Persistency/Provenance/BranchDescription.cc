@@ -1,6 +1,8 @@
 #include "canvas/Persistency/Provenance/BranchDescription.h"
 // vim: set sw=2 expandtab :
 
+#include "canvas/Persistency/Provenance/ProcessConfiguration.h"
+#include "canvas/Persistency/Provenance/TypeLabel.h"
 #include "canvas/Persistency/Provenance/canonicalProductName.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/FriendlyName.h"
@@ -8,10 +10,7 @@
 #include "fhiclcpp/ParameterSetID.h"
 
 #include <cassert>
-#include <cstdlib>
 #include <ostream>
-#include <sstream>
-#include <utility>
 
 using namespace std;
 

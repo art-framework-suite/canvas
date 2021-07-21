@@ -9,7 +9,6 @@
 
 #include <iosfwd>
 #include <set>
-#include <utility>
 
 // Auxiliary run data that is persistent
 
@@ -84,11 +83,8 @@ namespace art {
     std::set<ProcessHistoryID> allEventsProcessHistories_{};
 
     mutable unsigned rangeSetID_{-1u};
-
     RunID id_{};
-
     Timestamp beginTime_{};
-
     Timestamp endTime_{};
   };
 

@@ -4,7 +4,7 @@
 // Ensure we can get a desired pointer type from a compatible iterator.
 
 // In order to allow new iterator value types (e.g. smart pointers) to
-// be converted to pointers. specialize art::detail::EnsurePointer.
+// be converted to pointers, specialize art::detail::EnsurePointer.
 
 // See canvas/Persistency/Common/Ptr.h for an example of this. Also see
 // test/Utilities/ensurePointer.h for testing coverage illustration.
@@ -52,12 +52,12 @@ namespace art {
       constexpr TO
       operator()(FROM& from) const
       {
-        return detail::addr<TO>(from);
+        return addr<TO>(from);
       }
       constexpr TO
       operator()(FROM const& from) const
       {
-        return detail::addr<TO>(from);
+        return addr<TO>(from);
       }
     };
 
@@ -66,7 +66,7 @@ namespace art {
       constexpr TO
       operator()(PFROM* from) const
       {
-        return detail::addr<TO>(*from);
+        return addr<TO>(*from);
       }
     };
   }

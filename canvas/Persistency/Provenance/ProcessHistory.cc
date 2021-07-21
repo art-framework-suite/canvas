@@ -6,10 +6,10 @@
 #include "canvas/Persistency/Provenance/Transient.h"
 #include "cetlib/MD5Digest.h"
 #include "cetlib/container_algorithms.h"
+#include "fhiclcpp/ParameterSetID.h"
 
 #include <iterator>
 #include <ostream>
-#include <sstream>
 #include <utility>
 
 using namespace cet;

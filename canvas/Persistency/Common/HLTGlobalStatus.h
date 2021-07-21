@@ -5,7 +5,6 @@
 #include "canvas/Persistency/Common/HLTPathStatus.h"
 #include "canvas/Persistency/Common/HLTenums.h"
 
-#include <atomic>
 #include <cstddef>
 #include <ostream>
 #include <vector>

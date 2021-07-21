@@ -18,11 +18,10 @@
 // ================================================================================
 
 #include "canvas/Persistency/Provenance/BranchType.h"
-#include "canvas/Persistency/Provenance/ProcessConfiguration.h"
+#include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 #include "canvas/Persistency/Provenance/Transient.h"
-#include "canvas/Persistency/Provenance/TypeLabel.h"
 #include "canvas/Utilities/InputTag.h"
 #include "fhiclcpp/ParameterSetID.h"
 
@@ -30,8 +29,10 @@
 #include <map>
 #include <set>
 #include <string>
+#include <vector>
 
 namespace art {
+  class TypeLabel;
 
   namespace detail {
     class BranchDescriptionStreamer;

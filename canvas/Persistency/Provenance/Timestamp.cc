@@ -2,8 +2,6 @@
 #include "boost/date_time/posix_time/posix_time.hpp"
 
 #include <ctime>
-#include <iomanip>
-#include <sstream>
 
 namespace art {
   std::string

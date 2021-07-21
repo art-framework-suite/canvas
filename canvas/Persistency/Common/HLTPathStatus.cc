@@ -7,7 +7,6 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
-#include <utility>
 
 namespace {
   constexpr auto path_size [[maybe_unused]] = cet::pow<14, size_t>(2);

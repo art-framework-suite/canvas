@@ -1,13 +1,14 @@
 #include "canvas/Persistency/Provenance/FileIndex.h"
 // vim: set sw=2 expandtab :
 
+#include "canvas/Persistency/Provenance/RunID.h"
+#include "canvas/Persistency/Provenance/SubRunID.h"
 #include "cetlib/container_algorithms.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
-#include <algorithm>
+#include <cassert>
 #include <iomanip>
 #include <ostream>
-#include <utility>
 
 using namespace cet;
 using namespace std;

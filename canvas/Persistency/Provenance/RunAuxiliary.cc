@@ -1,7 +1,6 @@
 #include "canvas/Persistency/Provenance/RunAuxiliary.h"
 // vim: set sw=2 expandtab :
 
-#include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/RunID.h"
 #include "canvas/Persistency/Provenance/Timestamp.h"
@@ -16,18 +15,11 @@ namespace art {
 
   // Note: Cannot be noexcept because of processHistoryID_,
   // allEventsProcessHistories_, and id_.
-  RunAuxiliary::~RunAuxiliary() {}
+  RunAuxiliary::~RunAuxiliary() = default;
 
   // Note: Cannot be noexcept because of processHistoryID_,
   // allEventsProcessHistories_, and id_.
-  RunAuxiliary::RunAuxiliary()
-    : processHistoryID_{}
-    , allEventsProcessHistories_{}
-    , rangeSetID_{-1u}
-    , id_{}
-    , beginTime_{}
-    , endTime_{}
-  {}
+  RunAuxiliary::RunAuxiliary() = default;
 
   // Note: Cannot be noexcept because of processHistoryID_,
   // allEventsProcessHistories_, and id_.
@@ -57,55 +49,19 @@ namespace art {
 
   // Note: Cannot be noexcept because of processHistoryID_,
   // allEventsProcessHistories_, and id_.
-  RunAuxiliary::RunAuxiliary(RunAuxiliary const& rhs)
-    : processHistoryID_{rhs.processHistoryID_}
-    , allEventsProcessHistories_{rhs.allEventsProcessHistories_}
-    , rangeSetID_{rhs.rangeSetID_}
-    , id_{rhs.id_}
-    , beginTime_{rhs.beginTime_}
-    , endTime_{rhs.endTime_}
-  {}
+  RunAuxiliary::RunAuxiliary(RunAuxiliary const&) = default;
 
   // Note: Cannot be noexcept because of processHistoryID_,
   // allEventsProcessHistories_, and id_.
-  RunAuxiliary::RunAuxiliary(RunAuxiliary&& rhs)
-    : processHistoryID_{move(rhs.processHistoryID_)}
-    , allEventsProcessHistories_{move(rhs.allEventsProcessHistories_)}
-    , rangeSetID_{move(rhs.rangeSetID_)}
-    , id_{move(rhs.id_)}
-    , beginTime_{move(rhs.beginTime_)}
-    , endTime_{move(rhs.endTime_)}
-  {}
+  RunAuxiliary::RunAuxiliary(RunAuxiliary&&) = default;
 
   // Note: Cannot be noexcept because of processHistoryID_,
   // allEventsProcessHistories_, and id_.
-  RunAuxiliary&
-  RunAuxiliary::operator=(RunAuxiliary const& rhs)
-  {
-    if (this != &rhs) {
-      processHistoryID_ = rhs.processHistoryID_;
-      allEventsProcessHistories_ = rhs.allEventsProcessHistories_;
-      rangeSetID_ = rhs.rangeSetID_;
-      id_ = rhs.id_;
-      beginTime_ = rhs.beginTime_;
-      endTime_ = rhs.endTime_;
-    }
-    return *this;
-  }
+  RunAuxiliary& RunAuxiliary::operator=(RunAuxiliary const&) = default;
 
   // Note: Cannot be noexcept because of processHistoryID_,
   // allEventsProcessHistories_, and id_.
-  RunAuxiliary&
-  RunAuxiliary::operator=(RunAuxiliary&& rhs)
-  {
-    processHistoryID_ = move(rhs.processHistoryID_);
-    allEventsProcessHistories_ = move(rhs.allEventsProcessHistories_);
-    rangeSetID_ = move(rhs.rangeSetID_);
-    id_ = move(rhs.id_);
-    beginTime_ = move(rhs.beginTime_);
-    endTime_ = move(rhs.endTime_);
-    return *this;
-  }
+  RunAuxiliary& RunAuxiliary::operator=(RunAuxiliary&& rhs) = default;
 
   ProcessHistoryID&
   RunAuxiliary::processHistoryID() const noexcept

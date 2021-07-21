@@ -1,9 +1,11 @@
 #include "canvas/Persistency/Provenance/ProductTables.h"
 // vim: set sw=2 expandtab :
 
+#include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/detail/createProductLookups.h"
 #include "canvas/Persistency/Provenance/detail/createViewLookups.h"
-#include "cetlib/container_algorithms.h"
+
+#include <array>
 
 using namespace art;
 

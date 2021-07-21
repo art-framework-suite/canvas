@@ -14,8 +14,6 @@
 #include <deque>
 #include <limits>
 #include <list>
-#include <map>
-#include <memory>
 #include <set>
 #include <string>
 #include <type_traits>
@@ -34,7 +32,7 @@ namespace art {
   // That specialization must initialize the static data member
   // 'value'.
 
-  template <class K>
+  template <typename K>
   struct key_traits {
     using key_type = K;
     static constexpr key_type value{
@@ -42,7 +40,7 @@ namespace art {
   };
 
   // Partial specialization for std::pair
-  template <class U, class V>
+  template <typename U, typename V>
   struct key_traits<std::pair<U, V>> {
     using key_type = std::pair<U, V>;
     static const key_type value;
@@ -154,7 +152,7 @@ namespace art {
     }
   };
 
-  template <class T, typename = void>
+  template <typename T, typename = void>
   struct MaybeGetView : CannotGetView<T> {};
 
   template <typename T>
@@ -166,7 +164,7 @@ namespace art {
     }
   };
 
-  template <class T, class A>
+  template <typename T, typename A>
   struct MaybeGetView<std::vector<T, A>> {
     static auto
     get(std::vector<T> const& product)
@@ -177,11 +175,11 @@ namespace art {
     }
   };
 
-  template <class A>
+  template <typename A>
   struct MaybeGetView<std::vector<bool, A>>
     : CannotGetView<std::vector<bool, A>> {};
 
-  template <class T, class A>
+  template <typename T, typename A>
   struct MaybeGetView<std::list<T, A>> {
     static auto
     get(std::list<T> const& product)
@@ -192,7 +190,7 @@ namespace art {
     }
   };
 
-  template <class T, class A>
+  template <typename T, typename A>
   struct MaybeGetView<std::deque<T, A>> {
     static auto
     get(std::deque<T> const& product)
@@ -203,7 +201,7 @@ namespace art {
     }
   };
 
-  template <class T, class A>
+  template <typename T, typename A>
   struct MaybeGetView<std::set<T, A>> {
     static auto
     get(std::set<T> const& product)
@@ -214,7 +212,7 @@ namespace art {
     }
   };
 
-  template <class T>
+  template <typename T>
   struct MaybeGetView<cet::map_vector<T>> {
     static auto
     get(cet::map_vector<T> const& product)
@@ -235,19 +233,19 @@ namespace art {
   // Classes which do support setPtr must specialize this trait.
   //
 
-  template <class T>
+  template <typename T>
   struct has_setPtr : std::false_type {};
-  template <class T, class A>
+  template <typename T, typename A>
   struct has_setPtr<std::vector<T, A>> : std::true_type {};
-  template <class A>
+  template <typename A>
   struct has_setPtr<std::vector<bool, A>> : std::false_type {};
-  template <class T, class A>
+  template <typename T, typename A>
   struct has_setPtr<std::list<T, A>> : std::true_type {};
-  template <class T, class A>
+  template <typename T, typename A>
   struct has_setPtr<std::deque<T, A>> : std::true_type {};
-  template <class T, class A>
+  template <typename T, typename A>
   struct has_setPtr<std::set<T, A>> : std::true_type {};
-  template <class T>
+  template <typename T>
   struct has_setPtr<cet::map_vector<T>> : std::true_type {};
 }
 

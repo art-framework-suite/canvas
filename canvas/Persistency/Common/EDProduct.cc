@@ -7,8 +7,6 @@
 
 #include "canvas/Persistency/Common/EDProduct.h"
 
-#include "canvas/Persistency/Provenance/ProductID.h"
-
 using art::EDProduct;
 
 void const*

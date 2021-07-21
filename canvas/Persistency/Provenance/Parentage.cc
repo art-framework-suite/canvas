@@ -1,40 +1,25 @@
 #include "canvas/Persistency/Provenance/Parentage.h"
+#include "cetlib/MD5Digest.h"
 // vim: set sw=2 expandtab :
 
 #include <ostream>
-#include <sstream>
-#include <utility>
+#include <string>
 #include <vector>
 
 using namespace std;
 
 namespace art {
 
-  Parentage::~Parentage() {}
+  Parentage::~Parentage() = default;
+  Parentage::Parentage() = default;
 
-  Parentage::Parentage() : parents_{} {}
+  Parentage::Parentage(Parentage const&) = default;
+  Parentage::Parentage(Parentage&&) = default;
 
-  Parentage::Parentage(vector<ProductID> const& parents) : parents_{parents} {}
+  Parentage& Parentage::operator=(Parentage const&) = default;
+  Parentage& Parentage::operator=(Parentage&&) = default;
 
-  Parentage::Parentage(Parentage const& rhs) : parents_{rhs.parents_} {}
-
-  Parentage::Parentage(Parentage&& rhs) : parents_{move(rhs.parents_)} {}
-
-  Parentage&
-  Parentage::operator=(Parentage const& rhs)
-  {
-    if (this != &rhs) {
-      parents_ = rhs.parents_;
-    }
-    return *this;
-  }
-
-  Parentage&
-  Parentage::operator=(Parentage&& rhs)
-  {
-    parents_ = move(rhs.parents_);
-    return *this;
-  }
+  Parentage::Parentage(vector<ProductID> parents) : parents_{move(parents)} {}
 
   ParentageID
   Parentage::id() const
