@@ -28,8 +28,8 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "canvas/Persistency/Provenance/EventID.h"
-#include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 #include "canvas/Persistency/Provenance/Transient.h"
+#include "canvas/Persistency/Provenance/fwd.h"
 
 #include <iosfwd>
 #include <vector>

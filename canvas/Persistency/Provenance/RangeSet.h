@@ -4,7 +4,7 @@
 
 #include "canvas/Persistency/Provenance/EventRange.h"
 #include "canvas/Persistency/Provenance/IDNumber.h"
-#include "canvas/Persistency/Provenance/ProvenanceFwd.h"
+#include "canvas/Persistency/Provenance/fwd.h"
 #include "canvas/Utilities/Level.h"
 
 #include <cstddef>

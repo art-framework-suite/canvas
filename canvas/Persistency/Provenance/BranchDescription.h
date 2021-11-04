@@ -20,8 +20,8 @@
 #include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
-#include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 #include "canvas/Persistency/Provenance/Transient.h"
+#include "canvas/Persistency/Provenance/fwd.h"
 #include "canvas/Utilities/InputTag.h"
 #include "fhiclcpp/ParameterSetID.h"
 

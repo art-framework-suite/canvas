@@ -4,7 +4,7 @@
 
 #include "canvas/Persistency/Provenance/BranchDescription.h"
 #include "canvas/Persistency/Provenance/BranchType.h"
-#include "canvas/Persistency/Provenance/ProvenanceFwd.h"
+#include "canvas/Persistency/Provenance/fwd.h"
 #include "canvas/Persistency/Provenance/type_aliases.h"
 #include "cetlib/exempt_ptr.h"
 
