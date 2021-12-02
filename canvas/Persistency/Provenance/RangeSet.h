@@ -23,11 +23,10 @@ namespace art {
   }
 
   class RangeSet {
-
-  public: // TYPES
+  public:
     using const_iterator = std::vector<EventRange>::const_iterator;
 
-  public: // MEMBER FUNCTIONS -- Static API
+    // Static API
     static constexpr unsigned
     invalidChecksum()
     {
@@ -38,10 +37,9 @@ namespace art {
     static RangeSet forRun(RunID);
     static RangeSet forSubRun(SubRunID);
 
-  public: // MEMBER FUNCTIONS -- Special Member Functions
+    // Special Member Functions
     ~RangeSet();
 
-    explicit RangeSet();
     explicit RangeSet(RunNumber_t);
     explicit RangeSet(RunNumber_t, std::vector<EventRange> const& eventRanges);
 
@@ -50,7 +48,7 @@ namespace art {
     RangeSet& operator=(RangeSet const&);
     RangeSet& operator=(RangeSet&&);
 
-  public: // MEMBER FUNCTIONS -- API provided to user
+    // API provided to user
     RunNumber_t run() const;
     std::vector<EventRange> const& ranges() const;
 
@@ -105,6 +103,8 @@ namespace art {
     void clear();
 
   private:
+    explicit RangeSet();
+
     void require_not_full_run();
 
     RunNumber_t run_{IDNumber<Level::Run>::invalid()};
