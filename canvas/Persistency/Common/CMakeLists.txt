@@ -15,7 +15,7 @@ endforeach()
 cet_make_library(LIBRARY_NAME AssnsAlgorithms INTERFACE
   SOURCE AssnsAlgorithms.h
   LIBRARIES INTERFACE
-    Range::Range
+    range-v3::range-v3
     canvas::canvas
 )
 

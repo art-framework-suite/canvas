@@ -2,7 +2,7 @@
 #define canvas_Utilities_EventIDMatcher_h
 // vim: set sw=2 :
 
-#include "canvas/Persistency/Provenance/ProvenanceFwd.h"
+#include "canvas/Persistency/Provenance/fwd.h"
 
 #include <string>
 #include <vector>

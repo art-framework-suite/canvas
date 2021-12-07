@@ -1,5 +1,5 @@
-#ifndef canvas_Persistency_Provenance_ProvenanceFwd_h
-#define canvas_Persistency_Provenance_ProvenanceFwd_h
+#ifndef canvas_Persistency_Provenance_fwd_h
+#define canvas_Persistency_Provenance_fwd_h
 
 // ======================================================================
 //
@@ -44,7 +44,7 @@ namespace art {
 
 // ======================================================================
 
-#endif /* canvas_Persistency_Provenance_ProvenanceFwd_h */
+#endif /* canvas_Persistency_Provenance_fwd_h */
 
 // Local Variables:
 // mode: c++
