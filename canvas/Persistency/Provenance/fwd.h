@@ -25,6 +25,7 @@ namespace art {
   struct ProductTable;
   class ProductTables;
   class RangeSet;
+  class ResultsAuxiliary;
   class RunAuxiliary;
   class RunID;
   class SubRunAuxiliary;
