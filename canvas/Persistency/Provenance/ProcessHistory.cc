@@ -194,7 +194,7 @@ namespace art {
     return data_;
   }
 
-  ProcessHistoryID
+  ProcessHistoryID const&
   ProcessHistory::id() const
   {
     // Note: threading: We may be called by Principal::addProcessEntry()

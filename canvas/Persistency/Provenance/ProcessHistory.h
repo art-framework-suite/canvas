@@ -123,7 +123,7 @@ namespace art {
 
     collection_type const& data() const;
 
-    ProcessHistoryID id() const;
+    ProcessHistoryID const& id() const;
 
     std::optional<ProcessConfiguration> getConfigurationForProcess(
       std::string const& name) const;
