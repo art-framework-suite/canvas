@@ -16,6 +16,8 @@ namespace art {
 
   class History {
   public:
+    History();
+    explicit History(ProcessHistoryID const& phid);
     ProcessHistoryID const& processHistoryID() const noexcept;
     void setProcessHistoryID(ProcessHistoryID const& phid);
 

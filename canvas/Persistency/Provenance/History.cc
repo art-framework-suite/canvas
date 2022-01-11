@@ -3,6 +3,12 @@
 
 namespace art {
 
+  History::History() = default;
+
+  History::History(ProcessHistoryID const& phid)
+    : processHistoryID_{phid}
+  {}
+
   ProcessHistoryID const&
   History::processHistoryID() const noexcept
   {
