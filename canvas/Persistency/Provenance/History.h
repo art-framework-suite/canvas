@@ -16,21 +16,12 @@ namespace art {
 
   class History {
   public:
-    using size_type = std::size_t;
-
-    size_type size() const noexcept;
-
-    void addEventSelectionEntry(EventSelectionID const& eventSelection);
-
-    EventSelectionID const& getEventSelectionID(size_type i) const noexcept;
-    EventSelectionIDVector const& eventSelectionIDs() const noexcept;
     ProcessHistoryID const& processHistoryID() const noexcept;
-
     void setProcessHistoryID(ProcessHistoryID const& phid);
 
   private:
     EventSelectionIDVector eventSelections_;
-    mutable ProcessHistoryID processHistoryID_;
+    ProcessHistoryID processHistoryID_;
   };
 
 } // namespace art
