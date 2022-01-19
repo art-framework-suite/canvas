@@ -9,7 +9,6 @@
 // passed, with earlier processes at the beginning of the sequence.
 //
 
-#include "canvas/Persistency/Provenance/EventSelectionID.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 
 namespace art {
@@ -22,7 +21,6 @@ namespace art {
     void setProcessHistoryID(ProcessHistoryID const& phid);
 
   private:
-    EventSelectionIDVector eventSelections_;
     ProcessHistoryID processHistoryID_;
   };
 
