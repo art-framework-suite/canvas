@@ -3,11 +3,8 @@
 
 #include <ostream>
 
-using namespace std;
-
 namespace art {
 
-  EventAuxiliary::~EventAuxiliary() = default;
   EventAuxiliary::EventAuxiliary() = default;
 
   EventAuxiliary::EventAuxiliary(EventID const& theId,
@@ -16,12 +13,6 @@ namespace art {
                                  ExperimentType eType /*= Any*/)
     : id_{theId}, time_{theTime}, isRealData_{isReal}, experimentType_{eType}
   {}
-
-  EventAuxiliary::EventAuxiliary(EventAuxiliary const&) = default;
-  EventAuxiliary::EventAuxiliary(EventAuxiliary&&) = default;
-
-  EventAuxiliary& EventAuxiliary::operator=(EventAuxiliary const&) = default;
-  EventAuxiliary& EventAuxiliary::operator=(EventAuxiliary&&) = default;
 
   Timestamp const&
   EventAuxiliary::time() const noexcept
@@ -92,13 +83,13 @@ namespace art {
   }
 
   void
-  EventAuxiliary::write(ostream& os) const
+  EventAuxiliary::write(std::ostream& os) const
   {
-    os << id_ << endl;
+    os << id_ << '\n';
   }
 
-  ostream&
-  operator<<(ostream& os, const EventAuxiliary& p)
+  std::ostream&
+  operator<<(std::ostream& os, EventAuxiliary const& p)
   {
     p.write(os);
     return os;

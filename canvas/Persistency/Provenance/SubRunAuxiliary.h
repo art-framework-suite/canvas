@@ -15,12 +15,8 @@
 namespace art {
 
   class SubRunAuxiliary {
-
   public:
     static constexpr BranchType branch_type = InSubRun;
-
-  public:
-    ~SubRunAuxiliary();
 
     SubRunAuxiliary();
 
@@ -33,52 +29,32 @@ namespace art {
                     Timestamp const& theTime,
                     Timestamp const& theEndTime);
 
-    SubRunAuxiliary(SubRunAuxiliary const&);
-
-    SubRunAuxiliary(SubRunAuxiliary&&);
-
-    SubRunAuxiliary& operator=(SubRunAuxiliary const&);
-
-    SubRunAuxiliary& operator=(SubRunAuxiliary&&);
-
-  public:
     void write(std::ostream& os) const;
 
     ProcessHistoryID const& processHistoryID() const noexcept;
-
     void setProcessHistoryID(ProcessHistoryID const& phid) const;
 
     SubRunID const& id() const noexcept;
-
     SubRunID const& subRunID() const noexcept;
-
     RunID const& runID() const noexcept;
-
     RunNumber_t run() const noexcept;
-
     SubRunNumber_t subRun() const noexcept;
 
     Timestamp const& beginTime() const noexcept;
-
     Timestamp const& endTime() const noexcept;
 
     void setEndTime(Timestamp const& time);
-
     void setRangeSetID(unsigned const id) const;
-
     unsigned rangeSetID() const noexcept;
 
     bool mergeAuxiliary(SubRunAuxiliary const&);
 
   public:
     mutable ProcessHistoryID processHistoryID_{};
-
     mutable unsigned rangeSetID_{-1u};
 
     SubRunID id_{};
-
     Timestamp beginTime_{};
-
     Timestamp endTime_{};
   };
 

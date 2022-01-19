@@ -15,12 +15,8 @@
 namespace art {
 
   class RunAuxiliary {
-
-  public: // TYPES
+  public:
     static constexpr BranchType branch_type = InRun;
-
-  public: // MEMBER FUNCTIONS -- Special Member Functions
-    ~RunAuxiliary();
 
     RunAuxiliary();
 
@@ -32,39 +28,21 @@ namespace art {
                  Timestamp const& theTime,
                  Timestamp const& theEndTime);
 
-    RunAuxiliary(RunAuxiliary const&);
-
-    RunAuxiliary(RunAuxiliary&&);
-
-    RunAuxiliary& operator=(RunAuxiliary const&);
-
-    RunAuxiliary& operator=(RunAuxiliary&&);
-
-  public:
     void write(std::ostream&) const;
-
-    ProcessHistoryID& processHistoryID() const noexcept;
-
+    ProcessHistoryID const& processHistoryID() const noexcept;
     void setProcessHistoryID(ProcessHistoryID const&) const;
-
     unsigned rangeSetID() const noexcept;
-
     void setRangeSetID(unsigned const id) const;
 
     RunID const& id() const noexcept;
-
     RunID const& runID() const noexcept;
-
     void runID(RunID const&);
-
     RunNumber_t run() const noexcept;
 
     Timestamp const& beginTime() const noexcept;
-
     void beginTime(Timestamp const&);
 
     Timestamp const& endTime() const noexcept;
-
     void endTime(Timestamp const&);
 
     bool mergeAuxiliary(RunAuxiliary const&);

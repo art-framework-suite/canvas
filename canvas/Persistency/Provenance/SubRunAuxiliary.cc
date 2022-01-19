@@ -8,72 +8,20 @@ using namespace std;
 
 namespace art {
 
-  SubRunAuxiliary::~SubRunAuxiliary() {}
-
-  SubRunAuxiliary::SubRunAuxiliary()
-    : processHistoryID_{}, rangeSetID_{-1u}, id_{}, beginTime_{}, endTime_{}
-  {}
+  SubRunAuxiliary::SubRunAuxiliary() = default;
 
   SubRunAuxiliary::SubRunAuxiliary(SubRunID const& theId,
                                    Timestamp const& theTime,
                                    Timestamp const& theEndTime)
-    : processHistoryID_{}
-    , rangeSetID_{-1u}
-    , id_{theId}
-    , beginTime_{theTime}
-    , endTime_{theEndTime}
+    : id_{theId}, beginTime_{theTime}, endTime_{theEndTime}
   {}
 
   SubRunAuxiliary::SubRunAuxiliary(RunNumber_t const theRun,
                                    SubRunNumber_t const theSubRun,
                                    Timestamp const& theTime,
                                    Timestamp const& theEndTime)
-    : processHistoryID_{}
-    , rangeSetID_{-1u}
-    , id_{theRun, theSubRun}
-    , beginTime_{theTime}
-    , endTime_{theEndTime}
+    : SubRunAuxiliary{SubRunID{theRun, theSubRun}, theTime, theEndTime}
   {}
-
-  SubRunAuxiliary::SubRunAuxiliary(SubRunAuxiliary const& rhs)
-    : processHistoryID_{rhs.processHistoryID_}
-    , rangeSetID_{rhs.rangeSetID_}
-    , id_{rhs.id_}
-    , beginTime_{rhs.beginTime_}
-    , endTime_{rhs.endTime_}
-  {}
-
-  SubRunAuxiliary::SubRunAuxiliary(SubRunAuxiliary&& rhs)
-    : processHistoryID_{move(rhs.processHistoryID_)}
-    , rangeSetID_{move(rhs.rangeSetID_)}
-    , id_{move(rhs.id_)}
-    , beginTime_{move(rhs.beginTime_)}
-    , endTime_{move(rhs.endTime_)}
-  {}
-
-  SubRunAuxiliary&
-  SubRunAuxiliary::operator=(SubRunAuxiliary const& rhs)
-  {
-    if (this != &rhs) {
-      processHistoryID_ = rhs.processHistoryID_;
-      rangeSetID_ = rhs.rangeSetID_;
-      id_ = rhs.id_;
-      beginTime_ = rhs.beginTime_;
-      endTime_ = rhs.endTime_;
-    }
-    return *this;
-  }
-
-  SubRunAuxiliary&
-  SubRunAuxiliary::operator=(SubRunAuxiliary&& rhs)
-  {
-    processHistoryID_ = move(rhs.processHistoryID_);
-    rangeSetID_ = move(rhs.rangeSetID_);
-    id_ = move(rhs.id_);
-    beginTime_ = move(rhs.beginTime_);
-    endTime_ = move(rhs.endTime_);
-    return *this;
-  }
 
   ProcessHistoryID const&
   SubRunAuxiliary::processHistoryID() const noexcept

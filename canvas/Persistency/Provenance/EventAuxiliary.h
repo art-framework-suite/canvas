@@ -23,16 +23,11 @@ namespace art {
       Test = 7
     };
 
-    ~EventAuxiliary();
     EventAuxiliary();
     EventAuxiliary(EventID const& theId,
                    Timestamp const& theTime,
                    bool isReal,
                    ExperimentType eType = Any);
-    EventAuxiliary(EventAuxiliary const&);
-    EventAuxiliary(EventAuxiliary&&);
-    EventAuxiliary& operator=(EventAuxiliary const&);
-    EventAuxiliary& operator=(EventAuxiliary&&);
 
     Timestamp const& time() const noexcept;
     EventID const& id() const noexcept;

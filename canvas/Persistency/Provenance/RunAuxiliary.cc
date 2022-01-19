@@ -13,57 +13,21 @@ using namespace std;
 
 namespace art {
 
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
-  RunAuxiliary::~RunAuxiliary() = default;
-
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
   RunAuxiliary::RunAuxiliary() = default;
 
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
   RunAuxiliary::RunAuxiliary(RunID const& theId,
                              Timestamp const& theTime,
                              Timestamp const& theEndTime)
-    : processHistoryID_()
-    , allEventsProcessHistories_()
-    , rangeSetID_(-1u)
-    , id_(theId)
-    , beginTime_(theTime)
-    , endTime_(theEndTime)
+    : id_{theId}, beginTime_{theTime}, endTime_{theEndTime}
   {}
 
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
   RunAuxiliary::RunAuxiliary(RunNumber_t const& run,
                              Timestamp const& theTime,
                              Timestamp const& theEndTime)
-    : processHistoryID_()
-    , allEventsProcessHistories_()
-    , rangeSetID_(-1u)
-    , id_(run)
-    , beginTime_(theTime)
-    , endTime_(theEndTime)
+    : RunAuxiliary{RunID{run}, theTime, theEndTime}
   {}
 
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
-  RunAuxiliary::RunAuxiliary(RunAuxiliary const&) = default;
-
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
-  RunAuxiliary::RunAuxiliary(RunAuxiliary&&) = default;
-
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
-  RunAuxiliary& RunAuxiliary::operator=(RunAuxiliary const&) = default;
-
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
-  RunAuxiliary& RunAuxiliary::operator=(RunAuxiliary&& rhs) = default;
-
-  ProcessHistoryID&
+  ProcessHistoryID const&
   RunAuxiliary::processHistoryID() const noexcept
   {
     return processHistoryID_;
