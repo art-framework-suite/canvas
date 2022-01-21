@@ -30,7 +30,7 @@ namespace art {
   }
 
   void
-  SubRunAuxiliary::setProcessHistoryID(ProcessHistoryID const& phid) const
+  SubRunAuxiliary::setProcessHistoryID(ProcessHistoryID const& phid)
   {
     processHistoryID_ = phid;
   }

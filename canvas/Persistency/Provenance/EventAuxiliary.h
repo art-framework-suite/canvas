@@ -4,6 +4,7 @@
 
 #include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/EventID.h"
+#include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 #include "canvas/Persistency/Provenance/Timestamp.h"
 
 #include <iosfwd>
@@ -42,7 +43,14 @@ namespace art {
     bool operator==(EventAuxiliary const& other) const noexcept;
     void write(std::ostream& os) const;
 
+    ProcessHistoryID const& processHistoryID() const noexcept;
+    void setProcessHistoryID(ProcessHistoryID const&);
+
   private:
+    // most recent process that put a RunProduct into this run
+    // is the last on the list, this defines what "latest" is
+    ProcessHistoryID processHistoryID_{};
+
     EventID id_{};
     Timestamp time_{};
     bool isRealData_{false};

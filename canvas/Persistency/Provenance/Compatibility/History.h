@@ -1,5 +1,5 @@
-#ifndef canvas_Persistency_Provenance_History_h
-#define canvas_Persistency_Provenance_History_h
+#ifndef canvas_Persistency_Provenance_Compatibility_History_h
+#define canvas_Persistency_Provenance_Compatibility_History_h
 // vim: set sw=2 expandtab :
 
 //
@@ -26,7 +26,7 @@ namespace art {
 
 } // namespace art
 
-#endif /* canvas_Persistency_Provenance_History_h */
+#endif /* canvas_Persistency_Provenance_Compatibility_History_h */
 
 // Local Variables:
 // mode: c++

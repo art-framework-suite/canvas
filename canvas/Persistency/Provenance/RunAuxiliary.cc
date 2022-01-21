@@ -58,7 +58,7 @@ namespace art {
   }
 
   void
-  RunAuxiliary::setProcessHistoryID(ProcessHistoryID const& phid) const
+  RunAuxiliary::setProcessHistoryID(ProcessHistoryID const& phid)
   {
     processHistoryID_ = phid;
   }

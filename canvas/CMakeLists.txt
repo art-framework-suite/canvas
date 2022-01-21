@@ -31,13 +31,13 @@ cet_make_library(LIBRARY_NAME canvas
     Persistency/Provenance/BranchKey.cc
     Persistency/Provenance/BranchType.cc
     Persistency/Provenance/Compatibility/BranchID.cc
+    Persistency/Provenance/Compatibility/History.cc
     Persistency/Provenance/EventAuxiliary.cc
     Persistency/Provenance/EventID.cc
     Persistency/Provenance/EventRange.cc
     Persistency/Provenance/FileFormatVersion.cc
     Persistency/Provenance/FileIndex.cc
     Persistency/Provenance/Hash.cc
-    Persistency/Provenance/History.cc
     Persistency/Provenance/ParameterSetBlob.cc
     Persistency/Provenance/Parentage.cc
     Persistency/Provenance/ProcessConfiguration.cc

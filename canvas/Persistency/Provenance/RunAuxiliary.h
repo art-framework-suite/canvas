@@ -30,7 +30,7 @@ namespace art {
 
     void write(std::ostream&) const;
     ProcessHistoryID const& processHistoryID() const noexcept;
-    void setProcessHistoryID(ProcessHistoryID const&) const;
+    void setProcessHistoryID(ProcessHistoryID const&);
     unsigned rangeSetID() const noexcept;
     void setRangeSetID(unsigned const id) const;
 

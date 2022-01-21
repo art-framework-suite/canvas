@@ -88,6 +88,18 @@ namespace art {
     os << id_ << '\n';
   }
 
+  ProcessHistoryID const&
+  EventAuxiliary::processHistoryID() const noexcept
+  {
+    return processHistoryID_;
+  }
+
+  void
+  EventAuxiliary::setProcessHistoryID(ProcessHistoryID const& phid)
+  {
+    processHistoryID_ = phid;
+  }
+
   std::ostream&
   operator<<(std::ostream& os, EventAuxiliary const& p)
   {

@@ -32,7 +32,7 @@ namespace art {
     void write(std::ostream& os) const;
 
     ProcessHistoryID const& processHistoryID() const noexcept;
-    void setProcessHistoryID(ProcessHistoryID const& phid) const;
+    void setProcessHistoryID(ProcessHistoryID const& phid);
 
     SubRunID const& id() const noexcept;
     SubRunID const& subRunID() const noexcept;
