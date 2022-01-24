@@ -10,8 +10,13 @@ namespace art {
   EventAuxiliary::EventAuxiliary(EventID const& theId,
                                  Timestamp const& theTime,
                                  bool isReal,
-                                 ExperimentType eType /*= Any*/)
-    : id_{theId}, time_{theTime}, isRealData_{isReal}, experimentType_{eType}
+                                 ExperimentType eType /*= Any*/,
+                                 ProcessHistoryID const& phid /*= {}*/)
+    : processHistoryID_{phid}
+    , id_{theId}
+    , time_{theTime}
+    , isRealData_{isReal}
+    , experimentType_{eType}
   {}
 
   Timestamp const&

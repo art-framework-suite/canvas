@@ -28,7 +28,8 @@ namespace art {
     EventAuxiliary(EventID const& theId,
                    Timestamp const& theTime,
                    bool isReal,
-                   ExperimentType eType = Any);
+                   ExperimentType eType = Any,
+                   ProcessHistoryID const& phid = {});
 
     Timestamp const& time() const noexcept;
     EventID const& id() const noexcept;
