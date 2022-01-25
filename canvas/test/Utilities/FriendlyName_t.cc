@@ -43,8 +43,8 @@ BOOST_FIXTURE_TEST_SUITE(FriendlyName_t, FriendlyNameTestFixture)
 
 BOOST_AUTO_TEST_CASE(FriendlyName_t)
 {
-  for (auto const& pr : nameMap) {
-    BOOST_TEST(art::friendlyname::friendlyName(pr.first) == pr.second);
+  for (auto const& [type_name, friendly_name] : nameMap) {
+    BOOST_TEST(art::friendlyname::friendlyName(type_name) == friendly_name);
   }
 }
 

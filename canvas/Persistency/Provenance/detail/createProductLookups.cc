@@ -71,9 +71,7 @@ art::detail::createProductLookups(ProductDescriptionsByID const& descriptions)
   ProductLookup_t result;
   std::vector<PendingBTLEntry> pendingEntries;
   std::unordered_map<ProductID, CheapTag, ProductID::Hash> insertedABVs;
-  for (auto const& pr : descriptions) {
-    auto const pid = pr.first;
-    auto const& pd = pr.second;
+  for (auto const& [pid, pd] : descriptions) {
     auto const& prodFCN = pd.friendlyClassName();
     auto const& procName = pd.processName();
     result[prodFCN][procName].emplace_back(pid);

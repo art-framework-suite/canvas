@@ -43,6 +43,7 @@ cet_make_library(LIBRARY_NAME canvas
     Persistency/Provenance/ProcessConfiguration.cc
     Persistency/Provenance/ProcessHistory.cc
     Persistency/Provenance/ProductID.cc
+    Persistency/Provenance/ProductList.cc
     Persistency/Provenance/ProductProvenance.cc
     Persistency/Provenance/ProductTables.cc
     Persistency/Provenance/RangeSet.cc
@@ -77,6 +78,7 @@ cet_make_library(LIBRARY_NAME canvas
     CLHEP::Matrix
     CLHEP::Vector
     Boost::date_time
+    range-v3::range-v3
     ${CMAKE_DL_LIBS}
     $<$<PLATFORM_ID:Darwin>:c++abi>
 )
