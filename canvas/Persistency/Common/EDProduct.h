@@ -8,7 +8,7 @@
 //
 // ======================================================================
 
-#include "canvas/Persistency/Common/fwd.h"
+#include "canvas/Persistency/Common/types.h"
 
 #include <memory>
 #include <string>

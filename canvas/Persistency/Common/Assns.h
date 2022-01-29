@@ -82,8 +82,9 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
+#include "canvas/Persistency/Common/types.h"
+
 #include "canvas/Persistency/Common/AssnsBase.h"
-#include "canvas/Persistency/Common/AssnsIter.h"
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/Wrapper.h"
 #include "canvas/Persistency/Common/detail/throwPartnerException.h"
@@ -293,6 +294,7 @@ private:
 };
 
 /////
+#include "canvas/Persistency/Common/AssnsIter.h"
 
 ////////////////////////////////////////////////////////////////////////
 template <typename L, typename R>
