@@ -21,6 +21,8 @@ namespace art {
   class HLTPathStatus;
   class OutputHandle;
   template <typename T>
+  class ProductPtr;
+  template <typename T>
   class Ptr;
   template <typename T>
   class PtrVector;
