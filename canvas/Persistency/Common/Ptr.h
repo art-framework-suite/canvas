@@ -324,7 +324,6 @@ namespace art {
     // Specialize EnsurePointer for Ptr.
     template <typename TO, typename PTRVAL>
     struct EnsurePointer<TO, Ptr<PTRVAL>> {
-
       TO
       operator()(Ptr<PTRVAL>& from) const
       {
@@ -346,7 +345,6 @@ namespace art {
 
     template <typename T, typename C>
     class ItemGetter {
-
     public:
       T const*
       operator()(C const* product, typename Ptr<T>::key_type iKey) const
@@ -361,7 +359,6 @@ namespace art {
 
     template <typename T>
     class ItemGetter<T, cet::map_vector<T>> {
-
     public:
       T const*
       operator()(cet::map_vector<T> const* product,
@@ -375,7 +372,6 @@ namespace art {
 
     template <typename T>
     class ItemGetter<std::pair<cet::map_vector_key, T>, cet::map_vector<T>> {
-
     public:
       std::pair<cet::map_vector_key, T> const*
       operator()(cet::map_vector<T> const* product,
