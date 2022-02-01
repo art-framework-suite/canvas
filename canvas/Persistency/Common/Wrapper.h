@@ -142,7 +142,6 @@ private:
 
 #include "boost/lexical_cast.hpp"
 #include "canvas/Persistency/Common/GetProduct.h"
-#include "canvas/Persistency/Common/PtrVector.h"
 #include "canvas/Persistency/Common/getElementAddresses.h"
 #include "canvas/Persistency/Common/setPtr.h"
 #include "canvas/Persistency/Common/traits.h"

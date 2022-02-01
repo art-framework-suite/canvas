@@ -5,8 +5,7 @@
 //
 //  ProductPtr and related functions.
 //
-//  A ProductPtr is a persistent smart pointer to an item in a collection where
-//  the collection is in the art::Event.
+//  A ProductPtr is a persistent smart pointer to a data product.
 //
 //  How to construct a ProductPtr<T>:
 //
@@ -31,28 +30,18 @@
 //  4. From a ProductPtr<U> where U is a base or sub class of T.
 //       ProductPtr(ProductPtr<U> const&);
 //
-//  5. From a ProductID and an existing resolved pointer.
-//       ProductPtr(ProductID const&, T const*)
-//
-//     This signature is for expert-level or internal use only: it is
-//     a pre-condition that the pointer must be the product with the
-//     given ID. Errors will *not* be detected.
-//
 
 #include "canvas/Persistency/Common/EDProduct.h"
 #include "canvas/Persistency/Common/EDProductGetter.h"
-#include "canvas/Persistency/Common/GetProduct.h"
 #include "canvas/Persistency/Common/RefCore.h"
 #include "canvas/Persistency/Common/Wrapper.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Utilities/Exception.h"
 #include "cetlib_except/demangle.h"
 
-#include <cassert>
 #include <cstddef>
 #include <ostream>
 #include <type_traits>
-#include <vector>
 
 namespace art {
 
@@ -102,11 +91,6 @@ namespace art {
     ProductPtr(ProductPtr<U> const& pu,
                std::enable_if_t<std::is_base_of_v<U, T>>* = nullptr)
       : core_{pu.id(), static_cast<T const*>(pu.get()), nullptr}
-    {}
-
-    // 5. See notes above.
-    ProductPtr(ProductID const& productID, T const* item)
-      : core_{productID, item, nullptr}
     {}
 
     //
@@ -243,7 +227,7 @@ namespace art {
   std::ostream&
   operator<<(std::ostream& os, ProductPtr<T> const& p)
   {
-    os << "(" << p.id() << ", " << p.key() << ")";
+    os << "(" << p.id() << ")";
     return os;
   }
 
