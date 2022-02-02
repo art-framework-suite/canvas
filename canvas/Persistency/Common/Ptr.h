@@ -20,8 +20,6 @@
 //       Ptr(H const&, key_type);
 //
 //  3. From a ProductID.
-//       Ptr(ProductID const&); // Invalid ("null") Ptr.
-//
 //       Ptr(Product ID const&, key_type, EDProductGetter const*);
 //
 //     Obtain the ProductID from the collection handle or the result of
@@ -102,12 +100,7 @@ namespace art {
       }
     }
 
-    // 3A.
-    explicit Ptr(ProductID const& productID)
-      : core_{productID, nullptr, nullptr}
-    {}
-
-    // 3B.
+    // 3.
     Ptr(ProductID const& productID,
         key_type itemKey,
         EDProductGetter const* prodGetter)
