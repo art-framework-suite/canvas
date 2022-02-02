@@ -89,7 +89,7 @@ namespace art {
               detail::ItemGetter<T, typename H::element_type>{}(
                 handle.product(),
                 key),
-              nullptr}
+              handle.productGetter()}
       , key_{key}
     {
       if (core_.isNull()) {
@@ -170,9 +170,8 @@ namespace art {
     // Retrieve parent collection
     template <typename Collection>
     Collection const&
-    parentAs(EDProductGetter const* getter) const
+    parentAs() const
     {
-      core_.setProductGetter(getter);
       core_.isAvailable();
       auto product = parentProduct_();
       auto wrapped_product = dynamic_cast<Wrapper<Collection> const*>(product);
@@ -188,9 +187,9 @@ namespace art {
 
     template <template <typename...> class Collection, typename U = T>
     Collection<U> const&
-    parentAs(EDProductGetter const* getter) const
+    parentAs() const
     {
-      return parentAs<Collection<U>>(getter);
+      return parentAs<Collection<U>>();
     }
 
     RefCore const&
