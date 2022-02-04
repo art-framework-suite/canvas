@@ -447,7 +447,7 @@ template <typename... Args>
 inline void
 art::PtrVector<T>::emplace_back(Args&&... args)
 {
-  Ptr<T> p{std::forward<Args>(args)...};
+  Ptr<T> p(std::forward<Args>(args)...);
   updateCore(p.refCore());
   ptrs_.push_back(std::move(p));
 }
