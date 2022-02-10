@@ -123,14 +123,13 @@ namespace art {
       : core_{productID, item, nullptr}, key_{itemKey}
     {}
 
-    //
-    //  Accessors.
-    //
+    // =========
+    // Accessors
+    // =========
 
     T const& operator*() const
     {
-      // FIXME: This causes an nullptr dereference if isNull!
-      // return isNull() ? nullptr : operator->();
+      // Warning: This causes a nullptr dereference if isNull!
       return *get();
     }
 
@@ -360,8 +359,7 @@ namespace art {
         assert(product != nullptr);
         auto it = product->begin();
         advance(it, iKey);
-        T const* address = detail::GetProduct<C>::address(it);
-        return address;
+        return detail::GetProduct<C>::address(it);
       }
     };
 
@@ -370,11 +368,10 @@ namespace art {
     public:
       T const*
       operator()(cet::map_vector<T> const* product,
-                 typename Ptr<T>::key_type iKey) const
+                 typename Ptr<T>::key_type key) const
       {
         assert(product != nullptr);
-        cet::map_vector_key k(iKey);
-        return product->getOrNull(k);
+        return product->getOrNull(cet::map_vector_key{key});
       }
     };
 
@@ -383,11 +380,10 @@ namespace art {
     public:
       std::pair<cet::map_vector_key, T> const*
       operator()(cet::map_vector<T> const* product,
-                 typename Ptr<T>::key_type iKey) const
+                 typename Ptr<T>::key_type key) const
       {
         assert(product != nullptr);
-        cet::map_vector_key k(static_cast<unsigned>(iKey));
-        auto it = product->find(k);
+        auto it = product->find(cet::map_vector_key{key});
         if (it == product->end()) {
           return nullptr;
         }
@@ -395,7 +391,25 @@ namespace art {
       }
     };
 
+    template <typename T>
+    struct NotMapVector : std::true_type {
+      using type = typename T::value_type;
+    };
+
+    template <typename T>
+    struct NotMapVector<cet::map_vector<T>> : std::false_type {};
+
+    template <typename T>
+    using not_map_vector_t = typename NotMapVector<T>::type;
+
   } // namespace detail
+
+  // Deduction guide for handles.  We do not support CTAD for
+  // cet::map_vector as it is possible to construct a Ptr to the
+  // map_vector's value_type and mapped_type.  We don't want the
+  // default deduction behavior to surprise users of cet::map_vector.
+  template <typename H, typename T>
+  Ptr(H, T)->Ptr<detail::not_map_vector_t<typename H::element_type>>;
 
 } // namespace art
 

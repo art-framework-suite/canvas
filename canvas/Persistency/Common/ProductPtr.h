@@ -19,8 +19,6 @@
 //       ProductPtr(H const&);
 //
 //  3. From a ProductID.
-//       ProductPtr(ProductID const&); // Invalid ("null") ProductPtr.
-//
 //       ProductPtr(Product ID const&, EDProductGetter const*);
 //
 //     Obtain the ProductID from the handle or the result of
@@ -68,12 +66,7 @@ namespace art {
       }
     }
 
-    // 3A.
-    explicit ProductPtr(ProductID const& productID)
-      : core_{productID, nullptr, nullptr}
-    {}
-
-    // 3B.
+    // 3.
     ProductPtr(ProductID const& productID, EDProductGetter const* prodGetter)
       : core_{productID, nullptr, prodGetter}
     {}
@@ -99,8 +92,7 @@ namespace art {
 
     T const& operator*() const
     {
-      // FIXME: This causes an nullptr dereference if isNull!
-      // return isNull() ? nullptr : operator->();
+      // Warning: This causes a nullptr dereference if isNull!
       return *get();
     }
 
@@ -195,6 +187,10 @@ namespace art {
     // Used to fetch the container product.
     RefCore core_{};
   };
+
+  // Deduction guide for handles
+  template <typename H>
+  ProductPtr(H) -> ProductPtr<typename H::element_type>;
 
   template <typename T, typename U>
   std::enable_if_t<std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
