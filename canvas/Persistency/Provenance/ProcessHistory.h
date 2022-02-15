@@ -18,19 +18,19 @@ namespace art {
   // This class is a ProcessHistoryID and a vector of ProcessConfiguration.
   class ProcessHistory {
   public:
-    typedef ProcessConfiguration value_type;
-    typedef std::vector<value_type> collection_type;
+    using value_type = ProcessConfiguration;
+    using collection_type = std::vector<value_type>;
 
-    typedef collection_type::iterator iterator;
-    typedef collection_type::const_iterator const_iterator;
+    using iterator = collection_type::iterator;
+    using const_iterator = collection_type::const_iterator;
 
-    typedef collection_type::reverse_iterator reverse_iterator;
-    typedef collection_type::const_reverse_iterator const_reverse_iterator;
+    using reverse_iterator = collection_type::reverse_iterator;
+    using const_reverse_iterator = collection_type::const_reverse_iterator;
 
-    typedef collection_type::reference reference;
-    typedef collection_type::const_reference const_reference;
+    using reference = collection_type::reference;
+    using const_reference = collection_type::const_reference;
 
-    typedef collection_type::size_type size_type;
+    using size_type = collection_type::size_type;
 
     // Note: threading: The ProcessHistoryID ctor can throw!
     struct Transients {
@@ -140,7 +140,7 @@ namespace art {
     mutable std::recursive_mutex mutex_{};
   };
 
-  typedef std::map<ProcessHistoryID const, ProcessHistory> ProcessHistoryMap;
+  using ProcessHistoryMap = std::map<ProcessHistoryID const, ProcessHistory>;
 
   void swap(ProcessHistory& a, ProcessHistory& b);
 

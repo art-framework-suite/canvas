@@ -15,7 +15,7 @@ namespace art {
 
   class BranchID {
   public:
-    typedef unsigned int value_type;
+    using value_type = unsigned int;
 
     BranchID() = default;
     explicit BranchID(std::string const& branchName)

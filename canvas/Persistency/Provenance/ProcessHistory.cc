@@ -255,10 +255,9 @@ namespace art {
     if (a.size() >= b.size()) {
       return false;
     }
-    typedef ProcessHistory::collection_type::const_iterator const_iterator;
-    for (const_iterator itA = a.data().begin(),
-                        itB = b.data().begin(),
-                        itAEnd = a.data().end();
+    for (auto itA = a.data().cbegin(),
+              itB = b.data().cbegin(),
+              itAEnd = a.data().cend();
          itA != itAEnd;
          ++itA, ++itB) {
       if (*itA != *itB) {

@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////
 // ProductList
 //
-// This is a very-badly-named typedef; please make it go away soon.
+// This is a very-badly-named type alias; please make it go away soon.
 ////////////////////////////////////////////////////////////////////////
 
 #include "canvas/Persistency/Provenance/BranchDescription.h"

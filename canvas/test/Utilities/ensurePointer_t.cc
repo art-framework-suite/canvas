@@ -10,15 +10,15 @@ struct A {
 };
 struct B : A {};
 
-typedef std::vector<A> avec_t;
-typedef std::vector<A*> apvec_t;
-typedef std::vector<A const*> acpvec_t;
-typedef std::vector<B> bvec_t;
-typedef std::vector<B*> bpvec_t;
-typedef std::vector<B const*> bcpvec_t;
-typedef std::vector<int> ivec_t;
-typedef std::vector<int*> ipvec_t;
-typedef std::vector<int const*> icpvec_t;
+using avec_t = std::vector<A>;
+using apvec_t = std::vector<A*>;
+using acpvec_t = std::vector<A const*>;
+using bvec_t = std::vector<B>;
+using bpvec_t = std::vector<B*>;
+using bcpvec_t = std::vector<B const*>;
+using ivec_t = std::vector<int>;
+using ipvec_t = std::vector<int*>;
+using icpvec_t = std::vector<int const*>;
 
 BOOST_AUTO_TEST_SUITE(ensurePointer_t)
 
