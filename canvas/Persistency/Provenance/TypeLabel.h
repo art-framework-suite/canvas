@@ -30,6 +30,7 @@ namespace art {
               std::string const& instanceName,
               bool const supportsView,
               std::string emulatedModule);
+    ~TypeLabel();
 
     auto const&
     typeID() const
