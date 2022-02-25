@@ -89,7 +89,12 @@ namespace art {
       int compression_{invalidCompression};
     };
 
-    BranchDescription() = default;
+    BranchDescription();
+    BranchDescription(BranchDescription const&);
+    BranchDescription(BranchDescription&&);
+    BranchDescription& operator=(BranchDescription const&);
+    BranchDescription& operator=(BranchDescription&&);
+    ~BranchDescription();
 
     BranchDescription(BranchType const bt,
                       TypeLabel const& tl,

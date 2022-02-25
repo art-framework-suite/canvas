@@ -1,6 +1,5 @@
 include(CetMake)
 
-find_package(Boost COMPONENTS headers REQUIRED PUBLIC)
 find_package(Boost PRIVATE COMPONENTS headers date_time REQUIRED)
 find_package(CLHEP PRIVATE COMPONENTS Matrix Vector REQUIRED)
 find_package(Range-v3 REQUIRED PUBLIC)
