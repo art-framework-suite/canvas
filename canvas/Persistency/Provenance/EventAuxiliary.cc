@@ -19,6 +19,13 @@ namespace art {
     , experimentType_{eType}
   {}
 
+  EventAuxiliary
+  EventAuxiliary::duplicateWith(EventID const& id) const
+  {
+    return EventAuxiliary{
+      id, time_, isRealData_, experimentType_, processHistoryID_};
+  }
+
   Timestamp const&
   EventAuxiliary::time() const noexcept
   {

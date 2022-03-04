@@ -23,6 +23,12 @@ namespace art {
     : SubRunAuxiliary{SubRunID{theRun, theSubRun}, theTime, theEndTime}
   {}
 
+  SubRunAuxiliary
+  SubRunAuxiliary::duplicateWith(SubRunID const& id) const
+  {
+    return SubRunAuxiliary{id, beginTime_, endTime_};
+  }
+
   ProcessHistoryID const&
   SubRunAuxiliary::processHistoryID() const noexcept
   {
@@ -75,14 +81,6 @@ namespace art {
   SubRunAuxiliary::endTime() const noexcept
   {
     return endTime_;
-  }
-
-  void
-  SubRunAuxiliary::setEndTime(Timestamp const& time)
-  {
-    if (endTime_ == Timestamp::invalidTimestamp()) {
-      endTime_ = time;
-    }
   }
 
   void

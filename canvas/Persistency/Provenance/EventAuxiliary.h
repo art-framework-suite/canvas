@@ -31,6 +31,8 @@ namespace art {
                    ExperimentType eType = Any,
                    ProcessHistoryID const& phid = {});
 
+    EventAuxiliary duplicateWith(EventID const& id) const;
+
     Timestamp const& time() const noexcept;
     EventID const& id() const noexcept;
     EventID const& eventID() const noexcept;

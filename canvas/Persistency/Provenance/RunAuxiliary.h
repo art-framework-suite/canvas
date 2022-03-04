@@ -40,27 +40,22 @@ namespace art {
     RunNumber_t run() const noexcept;
 
     Timestamp const& beginTime() const noexcept;
-    void beginTime(Timestamp const&);
-
     Timestamp const& endTime() const noexcept;
+
+    void beginTime(Timestamp const&);
     void endTime(Timestamp const&);
 
     bool mergeAuxiliary(RunAuxiliary const&);
 
   private:
     void mergeNewTimestampsIntoThis_(RunAuxiliary const&);
-    void mergeNewProcessHistoryIntoThis_(RunAuxiliary const&);
 
     // most recent process that put a RunProduct into this run
     // is the last on the list, this defines what "latest" is
     mutable ProcessHistoryID processHistoryID_{};
-
-    // allEventsProcessHistories_ contains all the ProcessHistoryIDs for all
-    // events in this run seen so far.
-    // Note: The default ctor for set is not noexcept.
-    std::set<ProcessHistoryID> allEventsProcessHistories_{};
-
     mutable unsigned rangeSetID_{-1u};
+
+  public:
     RunID id_{};
     Timestamp beginTime_{};
     Timestamp endTime_{};

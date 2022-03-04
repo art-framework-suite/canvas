@@ -29,6 +29,8 @@ namespace art {
                     Timestamp const& theTime,
                     Timestamp const& theEndTime);
 
+    SubRunAuxiliary duplicateWith(SubRunID const& id) const;
+
     void write(std::ostream& os) const;
 
     ProcessHistoryID const& processHistoryID() const noexcept;
@@ -43,16 +45,16 @@ namespace art {
     Timestamp const& beginTime() const noexcept;
     Timestamp const& endTime() const noexcept;
 
-    void setEndTime(Timestamp const& time);
     void setRangeSetID(unsigned const id) const;
     unsigned rangeSetID() const noexcept;
 
     bool mergeAuxiliary(SubRunAuxiliary const&);
 
-  public:
+  private:
     mutable ProcessHistoryID processHistoryID_{};
     mutable unsigned rangeSetID_{-1u};
 
+  public:
     SubRunID id_{};
     Timestamp beginTime_{};
     Timestamp endTime_{};
