@@ -11,22 +11,37 @@ namespace art {
   SubRunAuxiliary::SubRunAuxiliary() = default;
 
   SubRunAuxiliary::SubRunAuxiliary(SubRunID const& theId,
-                                   Timestamp const& theTime,
-                                   Timestamp const& theEndTime)
+                                   Timestamp const theTime,
+                                   Timestamp const theEndTime)
     : id_{theId}, beginTime_{theTime}, endTime_{theEndTime}
   {}
 
   SubRunAuxiliary::SubRunAuxiliary(RunNumber_t const theRun,
                                    SubRunNumber_t const theSubRun,
-                                   Timestamp const& theTime,
-                                   Timestamp const& theEndTime)
+                                   Timestamp const theTime,
+                                   Timestamp const theEndTime)
     : SubRunAuxiliary{SubRunID{theRun, theSubRun}, theTime, theEndTime}
   {}
 
+  // private
+  SubRunAuxiliary::SubRunAuxiliary(SubRunID const& id,
+                                   Timestamp const beginTime,
+                                   Timestamp const endTime,
+                                   ProcessHistoryID const processHistoryID,
+                                   unsigned const rangeSetID)
+    : processHistoryID_{processHistoryID}
+    , rangeSetID_{rangeSetID}
+    , id_{id}
+    , beginTime_{beginTime}
+    , endTime_{endTime}
+  {}
+
   SubRunAuxiliary
-  SubRunAuxiliary::duplicateWith(SubRunID const& id) const
+  SubRunAuxiliary::duplicateWith(Timestamp const beginTime,
+                                 Timestamp const endTime) const
   {
-    return SubRunAuxiliary{id, beginTime_, endTime_};
+    return SubRunAuxiliary{
+      id_, beginTime, endTime, processHistoryID_, rangeSetID_};
   }
 
   ProcessHistoryID const&

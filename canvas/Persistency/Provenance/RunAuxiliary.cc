@@ -27,6 +27,27 @@ namespace art {
     : RunAuxiliary{RunID{run}, theTime, theEndTime}
   {}
 
+  // private
+  RunAuxiliary::RunAuxiliary(RunID const id,
+                             Timestamp const beginTime,
+                             Timestamp const endTime,
+                             ProcessHistoryID const processHistoryID,
+                             unsigned const rangeSetID)
+    : processHistoryID_{processHistoryID}
+    , rangeSetID_{rangeSetID}
+    , id_{id}
+    , beginTime_{beginTime}
+    , endTime_{endTime}
+  {}
+
+  RunAuxiliary
+  RunAuxiliary::duplicateWith(Timestamp const beginTime,
+                              Timestamp const endTime) const
+  {
+    return RunAuxiliary{
+      id_, beginTime, endTime, processHistoryID_, rangeSetID_};
+  }
+
   ProcessHistoryID const&
   RunAuxiliary::processHistoryID() const noexcept
   {
@@ -79,18 +100,6 @@ namespace art {
   RunAuxiliary::run() const noexcept
   {
     return id_.run();
-  }
-
-  void
-  RunAuxiliary::beginTime(Timestamp const& time)
-  {
-    beginTime_ = time;
-  }
-
-  void
-  RunAuxiliary::endTime(Timestamp const& time)
-  {
-    endTime_ = time;
   }
 
   void

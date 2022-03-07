@@ -28,6 +28,9 @@ namespace art {
                  Timestamp const& theTime,
                  Timestamp const& theEndTime);
 
+    RunAuxiliary duplicateWith(Timestamp beginTime,
+                               Timestamp endTime = {}) const;
+
     void write(std::ostream&) const;
     ProcessHistoryID const& processHistoryID() const noexcept;
     void setProcessHistoryID(ProcessHistoryID const&);
@@ -42,20 +45,20 @@ namespace art {
     Timestamp const& beginTime() const noexcept;
     Timestamp const& endTime() const noexcept;
 
-    void beginTime(Timestamp const&);
-    void endTime(Timestamp const&);
-
     bool mergeAuxiliary(RunAuxiliary const&);
 
   private:
     void mergeNewTimestampsIntoThis_(RunAuxiliary const&);
+    RunAuxiliary(RunID id,
+                 Timestamp beginTime,
+                 Timestamp endTime,
+                 ProcessHistoryID processHistoryID,
+                 unsigned rangeSetID);
 
     // most recent process that put a RunProduct into this run
     // is the last on the list, this defines what "latest" is
     mutable ProcessHistoryID processHistoryID_{};
     mutable unsigned rangeSetID_{-1u};
-
-  public:
     RunID id_{};
     Timestamp beginTime_{};
     Timestamp endTime_{};

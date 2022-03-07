@@ -21,15 +21,16 @@ namespace art {
     SubRunAuxiliary();
 
     SubRunAuxiliary(SubRunID const& theId,
-                    Timestamp const& theTime,
-                    Timestamp const& theEndTime);
+                    Timestamp beginTime,
+                    Timestamp endTime);
 
-    SubRunAuxiliary(RunNumber_t const theRun,
-                    SubRunNumber_t const theSubRun,
-                    Timestamp const& theTime,
-                    Timestamp const& theEndTime);
+    SubRunAuxiliary(RunNumber_t run,
+                    SubRunNumber_t subrun,
+                    Timestamp beginTime,
+                    Timestamp endTime);
 
-    SubRunAuxiliary duplicateWith(SubRunID const& id) const;
+    SubRunAuxiliary duplicateWith(Timestamp beginTime,
+                                  Timestamp endTime = {}) const;
 
     void write(std::ostream& os) const;
 
@@ -51,10 +52,14 @@ namespace art {
     bool mergeAuxiliary(SubRunAuxiliary const&);
 
   private:
+    SubRunAuxiliary(SubRunID const& id,
+                    Timestamp beginTime,
+                    Timestamp endTime,
+                    ProcessHistoryID processHistoryID,
+                    unsigned rangeSetID);
+
     mutable ProcessHistoryID processHistoryID_{};
     mutable unsigned rangeSetID_{-1u};
-
-  public:
     SubRunID id_{};
     Timestamp beginTime_{};
     Timestamp endTime_{};
