@@ -230,9 +230,9 @@ operator()(Acoll const& aColl, Bcoll& bColl, dataColl_t& dColl) const
   }
   // Now use the cache.
   size_t bIndex{0};
-  for (typename Acoll::const_iterator i = aColl.begin(), e = aColl.end();
-       i != e;
-       ++i, ++bIndex) {
+  using std::cbegin;
+  using std::cend;
+  for (auto i = cbegin(aColl), e = cend(aColl); i != e; ++i, ++bIndex) {
     auto foundItems = lookupCache.equal_range(
       ensurePointer<typename Ptr<ProdA>::const_pointer>(i));
     if (foundItems.first != lookupCache.cend()) {

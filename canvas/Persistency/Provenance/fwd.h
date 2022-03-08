@@ -3,14 +3,13 @@
 
 // ======================================================================
 //
-// ProvenanceFwd
+// fwd file for canvas/Persistency/Provenance
 //
 // ======================================================================
 
 namespace art {
 
   class BranchDescription;
-  class BranchID;
   struct BranchKey;
   class EventAuxiliary;
   class EventID;
@@ -25,6 +24,7 @@ namespace art {
   struct ProductTable;
   class ProductTables;
   class RangeSet;
+  class ResultsAuxiliary;
   class RunAuxiliary;
   class RunID;
   class SubRunAuxiliary;
@@ -35,7 +35,6 @@ namespace art {
 
 // ----------------------------------------------------------------------
 
-#include "canvas/Persistency/Provenance/Compatibility/BranchIDList.h"
 #include "canvas/Persistency/Provenance/ParentageID.h"
 #include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"

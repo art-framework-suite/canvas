@@ -227,7 +227,7 @@ namespace art {
   // The trait struct template has_setPtr<T> is used to
   // indicate whether or not the type T has a member function
   //
-  //      void T::setPtr(const std::type_info&, void const*&) const
+  //      void T::setPtr(std::type_info const&, void const*&) const
   //
   // We assume the 'general case' for T is to not support setPtr.
   // Classes which do support setPtr must specialize this trait.

@@ -15,8 +15,8 @@ namespace art {
   template <typename T>
   class Transient {
   public:
-    typedef T value_type;
-    Transient(T value = T()) : value_(value) {}
+    using value_type = T;
+    Transient(T value = {}) : value_(value) {}
     operator T() const { return value_; }
     Transient&
     operator=(T rh)

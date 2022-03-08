@@ -13,57 +13,42 @@ using namespace std;
 
 namespace art {
 
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
-  RunAuxiliary::~RunAuxiliary() = default;
-
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
   RunAuxiliary::RunAuxiliary() = default;
 
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
   RunAuxiliary::RunAuxiliary(RunID const& theId,
                              Timestamp const& theTime,
                              Timestamp const& theEndTime)
-    : processHistoryID_()
-    , allEventsProcessHistories_()
-    , rangeSetID_(-1u)
-    , id_(theId)
-    , beginTime_(theTime)
-    , endTime_(theEndTime)
+    : id_{theId}, beginTime_{theTime}, endTime_{theEndTime}
   {}
 
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
   RunAuxiliary::RunAuxiliary(RunNumber_t const& run,
                              Timestamp const& theTime,
                              Timestamp const& theEndTime)
-    : processHistoryID_()
-    , allEventsProcessHistories_()
-    , rangeSetID_(-1u)
-    , id_(run)
-    , beginTime_(theTime)
-    , endTime_(theEndTime)
+    : RunAuxiliary{RunID{run}, theTime, theEndTime}
   {}
 
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
-  RunAuxiliary::RunAuxiliary(RunAuxiliary const&) = default;
+  // private
+  RunAuxiliary::RunAuxiliary(RunID const id,
+                             Timestamp const beginTime,
+                             Timestamp const endTime,
+                             ProcessHistoryID const processHistoryID,
+                             unsigned const rangeSetID)
+    : processHistoryID_{processHistoryID}
+    , rangeSetID_{rangeSetID}
+    , id_{id}
+    , beginTime_{beginTime}
+    , endTime_{endTime}
+  {}
 
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
-  RunAuxiliary::RunAuxiliary(RunAuxiliary&&) = default;
+  RunAuxiliary
+  RunAuxiliary::duplicateWith(Timestamp const beginTime,
+                              Timestamp const endTime) const
+  {
+    return RunAuxiliary{
+      id_, beginTime, endTime, processHistoryID_, rangeSetID_};
+  }
 
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
-  RunAuxiliary& RunAuxiliary::operator=(RunAuxiliary const&) = default;
-
-  // Note: Cannot be noexcept because of processHistoryID_,
-  // allEventsProcessHistories_, and id_.
-  RunAuxiliary& RunAuxiliary::operator=(RunAuxiliary&& rhs) = default;
-
-  ProcessHistoryID&
+  ProcessHistoryID const&
   RunAuxiliary::processHistoryID() const noexcept
   {
     return processHistoryID_;
@@ -94,7 +79,7 @@ namespace art {
   }
 
   void
-  RunAuxiliary::setProcessHistoryID(ProcessHistoryID const& phid) const
+  RunAuxiliary::setProcessHistoryID(ProcessHistoryID const& phid)
   {
     processHistoryID_ = phid;
   }
@@ -118,18 +103,6 @@ namespace art {
   }
 
   void
-  RunAuxiliary::beginTime(Timestamp const& time)
-  {
-    beginTime_ = time;
-  }
-
-  void
-  RunAuxiliary::endTime(Timestamp const& time)
-  {
-    endTime_ = time;
-  }
-
-  void
   RunAuxiliary::setRangeSetID(unsigned const id) const
   {
     rangeSetID_ = id;
@@ -146,7 +119,6 @@ namespace art {
   RunAuxiliary::mergeAuxiliary(RunAuxiliary const& newAux)
   {
     mergeNewTimestampsIntoThis_(newAux);
-    mergeNewProcessHistoryIntoThis_(newAux);
     // Keep the process history ID that is in the preexisting principal
     // It may have been updated to include the current process.
     // There is one strange other case where the two ProcessHistoryIDs
@@ -172,13 +144,6 @@ namespace art {
     } else if (newAux.endTime() > endTime_) {
       endTime_ = newAux.endTime();
     }
-  }
-
-  void
-  RunAuxiliary::mergeNewProcessHistoryIntoThis_(RunAuxiliary const& newAux)
-  {
-    allEventsProcessHistories_.insert(newAux.allEventsProcessHistories_.begin(),
-                                      newAux.allEventsProcessHistories_.end());
   }
 
   ostream&

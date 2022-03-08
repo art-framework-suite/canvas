@@ -8,71 +8,40 @@ using namespace std;
 
 namespace art {
 
-  SubRunAuxiliary::~SubRunAuxiliary() {}
-
-  SubRunAuxiliary::SubRunAuxiliary()
-    : processHistoryID_{}, rangeSetID_{-1u}, id_{}, beginTime_{}, endTime_{}
-  {}
+  SubRunAuxiliary::SubRunAuxiliary() = default;
 
   SubRunAuxiliary::SubRunAuxiliary(SubRunID const& theId,
-                                   Timestamp const& theTime,
-                                   Timestamp const& theEndTime)
-    : processHistoryID_{}
-    , rangeSetID_{-1u}
-    , id_{theId}
-    , beginTime_{theTime}
-    , endTime_{theEndTime}
+                                   Timestamp const theTime,
+                                   Timestamp const theEndTime)
+    : id_{theId}, beginTime_{theTime}, endTime_{theEndTime}
   {}
 
   SubRunAuxiliary::SubRunAuxiliary(RunNumber_t const theRun,
                                    SubRunNumber_t const theSubRun,
-                                   Timestamp const& theTime,
-                                   Timestamp const& theEndTime)
-    : processHistoryID_{}
-    , rangeSetID_{-1u}
-    , id_{theRun, theSubRun}
-    , beginTime_{theTime}
-    , endTime_{theEndTime}
+                                   Timestamp const theTime,
+                                   Timestamp const theEndTime)
+    : SubRunAuxiliary{SubRunID{theRun, theSubRun}, theTime, theEndTime}
   {}
 
-  SubRunAuxiliary::SubRunAuxiliary(SubRunAuxiliary const& rhs)
-    : processHistoryID_{rhs.processHistoryID_}
-    , rangeSetID_{rhs.rangeSetID_}
-    , id_{rhs.id_}
-    , beginTime_{rhs.beginTime_}
-    , endTime_{rhs.endTime_}
+  // private
+  SubRunAuxiliary::SubRunAuxiliary(SubRunID const& id,
+                                   Timestamp const beginTime,
+                                   Timestamp const endTime,
+                                   ProcessHistoryID const processHistoryID,
+                                   unsigned const rangeSetID)
+    : processHistoryID_{processHistoryID}
+    , rangeSetID_{rangeSetID}
+    , id_{id}
+    , beginTime_{beginTime}
+    , endTime_{endTime}
   {}
 
-  SubRunAuxiliary::SubRunAuxiliary(SubRunAuxiliary&& rhs)
-    : processHistoryID_{move(rhs.processHistoryID_)}
-    , rangeSetID_{move(rhs.rangeSetID_)}
-    , id_{move(rhs.id_)}
-    , beginTime_{move(rhs.beginTime_)}
-    , endTime_{move(rhs.endTime_)}
-  {}
-
-  SubRunAuxiliary&
-  SubRunAuxiliary::operator=(SubRunAuxiliary const& rhs)
+  SubRunAuxiliary
+  SubRunAuxiliary::duplicateWith(Timestamp const beginTime,
+                                 Timestamp const endTime) const
   {
-    if (this != &rhs) {
-      processHistoryID_ = rhs.processHistoryID_;
-      rangeSetID_ = rhs.rangeSetID_;
-      id_ = rhs.id_;
-      beginTime_ = rhs.beginTime_;
-      endTime_ = rhs.endTime_;
-    }
-    return *this;
-  }
-
-  SubRunAuxiliary&
-  SubRunAuxiliary::operator=(SubRunAuxiliary&& rhs)
-  {
-    processHistoryID_ = move(rhs.processHistoryID_);
-    rangeSetID_ = move(rhs.rangeSetID_);
-    id_ = move(rhs.id_);
-    beginTime_ = move(rhs.beginTime_);
-    endTime_ = move(rhs.endTime_);
-    return *this;
+    return SubRunAuxiliary{
+      id_, beginTime, endTime, processHistoryID_, rangeSetID_};
   }
 
   ProcessHistoryID const&
@@ -82,7 +51,7 @@ namespace art {
   }
 
   void
-  SubRunAuxiliary::setProcessHistoryID(ProcessHistoryID const& phid) const
+  SubRunAuxiliary::setProcessHistoryID(ProcessHistoryID const& phid)
   {
     processHistoryID_ = phid;
   }
@@ -127,14 +96,6 @@ namespace art {
   SubRunAuxiliary::endTime() const noexcept
   {
     return endTime_;
-  }
-
-  void
-  SubRunAuxiliary::setEndTime(Timestamp const& time)
-  {
-    if (endTime_ == Timestamp::invalidTimestamp()) {
-      endTime_ = time;
-    }
   }
 
   void

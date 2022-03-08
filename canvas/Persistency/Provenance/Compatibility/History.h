@@ -1,5 +1,5 @@
-#ifndef canvas_Persistency_Provenance_History_h
-#define canvas_Persistency_Provenance_History_h
+#ifndef canvas_Persistency_Provenance_Compatibility_History_h
+#define canvas_Persistency_Provenance_Compatibility_History_h
 // vim: set sw=2 expandtab :
 
 //
@@ -9,33 +9,24 @@
 // passed, with earlier processes at the beginning of the sequence.
 //
 
-#include "canvas/Persistency/Provenance/EventSelectionID.h"
 #include "canvas/Persistency/Provenance/ProcessHistoryID.h"
 
 namespace art {
 
   class History {
   public:
-    using size_type = std::size_t;
-
-    size_type size() const noexcept;
-
-    void addEventSelectionEntry(EventSelectionID const& eventSelection);
-
-    EventSelectionID const& getEventSelectionID(size_type i) const noexcept;
-    EventSelectionIDVector const& eventSelectionIDs() const noexcept;
+    History();
+    explicit History(ProcessHistoryID const& phid);
     ProcessHistoryID const& processHistoryID() const noexcept;
-
     void setProcessHistoryID(ProcessHistoryID const& phid);
 
   private:
-    EventSelectionIDVector eventSelections_;
-    mutable ProcessHistoryID processHistoryID_;
+    ProcessHistoryID processHistoryID_;
   };
 
 } // namespace art
 
-#endif /* canvas_Persistency_Provenance_History_h */
+#endif /* canvas_Persistency_Provenance_Compatibility_History_h */
 
 // Local Variables:
 // mode: c++

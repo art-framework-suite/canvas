@@ -140,9 +140,7 @@ private:
 ////////////////////////////////////////////////////////////////////////
 // Implementation details.
 
-#include "boost/lexical_cast.hpp"
 #include "canvas/Persistency/Common/GetProduct.h"
-#include "canvas/Persistency/Common/PtrVector.h"
 #include "canvas/Persistency/Common/getElementAddresses.h"
 #include "canvas/Persistency/Common/setPtr.h"
 #include "canvas/Persistency/Common/traits.h"
@@ -196,7 +194,8 @@ std::string
 art::Wrapper<T>::productSize() const
 {
   if constexpr (detail::has_size_member<T>::value) {
-    return boost::lexical_cast<std::string>(obj.size());
+    using std::to_string;
+    return to_string(obj.size());
   } else {
     return "-";
   }

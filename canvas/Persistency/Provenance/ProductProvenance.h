@@ -5,6 +5,7 @@
 //  The event dependent portion of the description of a product
 //  and how it came into existence, plus the status.
 
+#include "canvas/Persistency/Provenance/Parentage.h"
 #include "canvas/Persistency/Provenance/ParentageID.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Persistency/Provenance/ProductStatus.h"
@@ -19,8 +20,8 @@ namespace art {
   class ProductProvenance {
   public:
     struct Transients {
-      bool noParentage_{false};
-      std::shared_ptr<Parentage> parentagePtr_{nullptr};
+      bool noParentage_{true};
+      Parentage parentage_{};
     };
 
     ~ProductProvenance();

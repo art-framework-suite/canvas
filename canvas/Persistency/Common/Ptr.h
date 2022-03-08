@@ -5,8 +5,8 @@
 //
 //  Ptr and related functions.
 //
-//  A Ptr is a persistent smart pointer to an item in a collection where
-//  the collection is in the art::Event.
+//  A Ptr is a persistent smart pointer to an item in a collection
+//  that is a data product.
 //
 //  How to construct a Ptr<T>:
 //
@@ -20,8 +20,6 @@
 //       Ptr(H const&, key_type);
 //
 //  3. From a ProductID.
-//       Ptr(ProductID const&); // Invalid ("null") Ptr.
-//
 //       Ptr(Product ID const&, key_type, EDProductGetter const*);
 //
 //     Obtain the ProductID from the collection handle or the result of
@@ -44,6 +42,7 @@
 #include "canvas/Persistency/Common/EDProductGetter.h"
 #include "canvas/Persistency/Common/GetProduct.h"
 #include "canvas/Persistency/Common/RefCore.h"
+#include "canvas/Persistency/Common/Wrapper.h"
 #include "canvas/Persistency/Common/traits.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
 #include "canvas/Utilities/Exception.h"
@@ -87,12 +86,10 @@ namespace art {
     template <typename H>
     Ptr(H const& handle, typename Ptr<T>::key_type key)
       : core_{handle.id(),
-              detail::ItemGetter<T,
-                                 std::remove_const_t<std::remove_pointer_t<
-                                   decltype(handle.product())>>>()(
+              detail::ItemGetter<T, typename H::element_type>{}(
                 handle.product(),
                 key),
-              nullptr}
+              handle.productGetter()}
       , key_{key}
     {
       if (core_.isNull()) {
@@ -103,12 +100,7 @@ namespace art {
       }
     }
 
-    // 3A.
-    explicit Ptr(ProductID const& productID)
-      : core_{productID, nullptr, nullptr}
-    {}
-
-    // 3B.
+    // 3.
     Ptr(ProductID const& productID,
         key_type itemKey,
         EDProductGetter const* prodGetter)
@@ -118,10 +110,7 @@ namespace art {
     // 4.
     template <typename U>
     Ptr(Ptr<U> const& pu, std::enable_if_t<std::is_base_of_v<T, U>>* = nullptr)
-      : core_{pu.id(),
-              (pu.hasCache() ? static_cast<T const*>(pu.get()) : nullptr),
-              pu.productGetter()}
-      , key_{pu.key()}
+      : core_{pu.id(), pu.get(), pu.productGetter()}, key_{pu.key()}
     {}
 
     template <typename U>
@@ -134,14 +123,13 @@ namespace art {
       : core_{productID, item, nullptr}, key_{itemKey}
     {}
 
-    //
-    //  Accessors.
-    //
+    // =========
+    // Accessors
+    // =========
 
     T const& operator*() const
     {
-      // FIXME: This causes an nullptr dereference if isNull!
-      // return isNull() ? nullptr : operator->();
+      // Warning: This causes a nullptr dereference if isNull!
       return *get();
     }
 
@@ -161,6 +149,54 @@ namespace art {
       return reinterpret_cast<T const*>(core_.productPtr());
     }
 
+    explicit operator bool() const
+    {
+      return isNonnull() && core_.isAvailable();
+    }
+
+    ProductID
+    id() const noexcept
+    {
+      return core_.id();
+    }
+
+    key_type
+    key() const noexcept
+    {
+      return key_;
+    }
+
+    // Retrieve parent collection
+    template <typename Collection>
+    Collection const&
+    parentAs() const
+    {
+      core_.isAvailable();
+      auto product = parentProduct_();
+      auto wrapped_product = dynamic_cast<Wrapper<Collection> const*>(product);
+      if (wrapped_product == nullptr) {
+        throw Exception(errors::ProductNotFound)
+          << "A request to retrieve the parent collection of type: "
+          << cet::demangle_symbol(typeid(Collection).name())
+          << " with ProductID " << core_.id()
+          << "\ncannot be satisfied due to a type mismatch.\n";
+      }
+      return *wrapped_product->product();
+    }
+
+    template <template <typename...> class Collection, typename U = T>
+    Collection<U> const&
+    parentAs() const
+    {
+      return parentAs<Collection<U>>();
+    }
+
+    RefCore const&
+    refCore() const noexcept
+    {
+      return core_;
+    }
+
     // Checks for valid key.
     bool
     isNonnull() const noexcept
@@ -175,47 +211,12 @@ namespace art {
       return !isNonnull();
     }
 
-    explicit operator bool() const
-    {
-      return (key_ != key_traits<key_type>::value) && core_.isAvailable();
-    }
-
-    RefCore const&
-    refCore() const noexcept
-    {
-      return core_;
-    }
-
-    ProductID
-    id() const noexcept
-    {
-      return core_.id();
-    }
-
-    EDProductGetter const*
-    productGetter() const noexcept
-    {
-      return core_.productGetter();
-    }
-
-    // Checks if collection is in memory or available
-    // in the event. No type checking is done.
+    // Checks if collection is in memory or available in the event. No
+    // type checking is done.
     bool
     isAvailable() const
     {
       return core_.isAvailable();
-    }
-
-    bool
-    hasCache() const noexcept
-    {
-      return core_.productPtr() != nullptr;
-    }
-
-    key_type
-    key() const noexcept
-    {
-      return key_;
     }
 
     // MUST UPDATE WHEN CLASS IS CHANGED!
@@ -223,6 +224,12 @@ namespace art {
     Class_Version() noexcept
     {
       return 10;
+    }
+
+    EDProductGetter const*
+    productGetter() const noexcept
+    {
+      return core_.productGetter();
     }
 
   private:
@@ -253,7 +260,7 @@ namespace art {
     }
 
     // Used to fetch the container product.
-    RefCore core_{};
+    mutable RefCore core_{};
 
     // Index into the container product.
     key_type key_{key_traits<key_type>::value};
@@ -324,7 +331,6 @@ namespace art {
     // Specialize EnsurePointer for Ptr.
     template <typename TO, typename PTRVAL>
     struct EnsurePointer<TO, Ptr<PTRVAL>> {
-
       TO
       operator()(Ptr<PTRVAL>& from) const
       {
@@ -346,7 +352,6 @@ namespace art {
 
     template <typename T, typename C>
     class ItemGetter {
-
     public:
       T const*
       operator()(C const* product, typename Ptr<T>::key_type iKey) const
@@ -354,36 +359,31 @@ namespace art {
         assert(product != nullptr);
         auto it = product->begin();
         advance(it, iKey);
-        T const* address = detail::GetProduct<C>::address(it);
-        return address;
+        return detail::GetProduct<C>::address(it);
       }
     };
 
     template <typename T>
     class ItemGetter<T, cet::map_vector<T>> {
-
     public:
       T const*
       operator()(cet::map_vector<T> const* product,
-                 typename Ptr<T>::key_type iKey) const
+                 typename Ptr<T>::key_type key) const
       {
         assert(product != nullptr);
-        cet::map_vector_key k(iKey);
-        return product->getOrNull(k);
+        return product->getOrNull(cet::map_vector_key{key});
       }
     };
 
     template <typename T>
     class ItemGetter<std::pair<cet::map_vector_key, T>, cet::map_vector<T>> {
-
     public:
       std::pair<cet::map_vector_key, T> const*
       operator()(cet::map_vector<T> const* product,
-                 typename Ptr<T>::key_type iKey) const
+                 typename Ptr<T>::key_type key) const
       {
         assert(product != nullptr);
-        cet::map_vector_key k(static_cast<unsigned>(iKey));
-        auto it = product->find(k);
+        auto it = product->find(cet::map_vector_key{key});
         if (it == product->end()) {
           return nullptr;
         }
@@ -391,7 +391,25 @@ namespace art {
       }
     };
 
+    template <typename T>
+    struct NotMapVector : std::true_type {
+      using type = typename T::value_type;
+    };
+
+    template <typename T>
+    struct NotMapVector<cet::map_vector<T>> : std::false_type {};
+
+    template <typename T>
+    using not_map_vector_t = typename NotMapVector<T>::type;
+
   } // namespace detail
+
+  // Deduction guide for handles.  We do not support CTAD for
+  // cet::map_vector as it is possible to construct a Ptr to the
+  // map_vector's value_type and mapped_type.  We don't want the
+  // default deduction behavior to surprise users of cet::map_vector.
+  template <typename H, typename T>
+  Ptr(H, T)->Ptr<detail::not_map_vector_t<typename H::element_type>>;
 
 } // namespace art
 

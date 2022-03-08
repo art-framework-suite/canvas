@@ -3,6 +3,8 @@
 
 /* Assns Iterator for art::Assns<L, R, D> */
 
+#include "canvas/Persistency/Common/types.h"
+
 #include "canvas/Persistency/Common/Assns.h"
 #include "canvas/Persistency/Common/AssnsNode.h"
 
@@ -10,8 +12,6 @@
 #include <iterator>
 
 namespace art {
-  enum class Direction : int { Forward = 1, Reverse = -1 };
-
   template <Direction Dir>
   constexpr int
   signed_one()

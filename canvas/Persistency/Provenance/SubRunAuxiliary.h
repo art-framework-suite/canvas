@@ -15,70 +15,53 @@
 namespace art {
 
   class SubRunAuxiliary {
-
   public:
     static constexpr BranchType branch_type = InSubRun;
-
-  public:
-    ~SubRunAuxiliary();
 
     SubRunAuxiliary();
 
     SubRunAuxiliary(SubRunID const& theId,
-                    Timestamp const& theTime,
-                    Timestamp const& theEndTime);
+                    Timestamp beginTime,
+                    Timestamp endTime);
 
-    SubRunAuxiliary(RunNumber_t const theRun,
-                    SubRunNumber_t const theSubRun,
-                    Timestamp const& theTime,
-                    Timestamp const& theEndTime);
+    SubRunAuxiliary(RunNumber_t run,
+                    SubRunNumber_t subrun,
+                    Timestamp beginTime,
+                    Timestamp endTime);
 
-    SubRunAuxiliary(SubRunAuxiliary const&);
+    SubRunAuxiliary duplicateWith(Timestamp beginTime,
+                                  Timestamp endTime = {}) const;
 
-    SubRunAuxiliary(SubRunAuxiliary&&);
-
-    SubRunAuxiliary& operator=(SubRunAuxiliary const&);
-
-    SubRunAuxiliary& operator=(SubRunAuxiliary&&);
-
-  public:
     void write(std::ostream& os) const;
 
     ProcessHistoryID const& processHistoryID() const noexcept;
-
-    void setProcessHistoryID(ProcessHistoryID const& phid) const;
+    void setProcessHistoryID(ProcessHistoryID const& phid);
 
     SubRunID const& id() const noexcept;
-
     SubRunID const& subRunID() const noexcept;
-
     RunID const& runID() const noexcept;
-
     RunNumber_t run() const noexcept;
-
     SubRunNumber_t subRun() const noexcept;
 
     Timestamp const& beginTime() const noexcept;
-
     Timestamp const& endTime() const noexcept;
 
-    void setEndTime(Timestamp const& time);
-
     void setRangeSetID(unsigned const id) const;
-
     unsigned rangeSetID() const noexcept;
 
     bool mergeAuxiliary(SubRunAuxiliary const&);
 
-  public:
+  private:
+    SubRunAuxiliary(SubRunID const& id,
+                    Timestamp beginTime,
+                    Timestamp endTime,
+                    ProcessHistoryID processHistoryID,
+                    unsigned rangeSetID);
+
     mutable ProcessHistoryID processHistoryID_{};
-
     mutable unsigned rangeSetID_{-1u};
-
     SubRunID id_{};
-
     Timestamp beginTime_{};
-
     Timestamp endTime_{};
   };
 

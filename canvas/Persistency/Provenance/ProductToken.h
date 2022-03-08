@@ -31,7 +31,7 @@ namespace art {
   class ViewToken;
 
   // Forward declarations needed for granting friendship
-  class DataViewImpl;
+  class ProductRetriever;
   class ConsumesCollector;
 
   namespace detail {
@@ -53,7 +53,7 @@ namespace art {
     explicit ProductToken() = default;
     explicit ProductToken(InputTag const& t) : inputTag_{t} {}
 
-    friend class DataViewImpl;
+    friend class ProductRetriever;
     friend class ConsumesCollector;
     friend class gallery::Event;
     template <typename ProdA, typename ProdB, typename Data>
@@ -83,7 +83,7 @@ namespace art {
     explicit ViewToken() = default;
     explicit ViewToken(InputTag const& t) : inputTag_{t} {}
 
-    friend class DataViewImpl;
+    friend class ProductRetriever;
     friend class ConsumesCollector;
 
     // See notes in ProductToken re. the representation.

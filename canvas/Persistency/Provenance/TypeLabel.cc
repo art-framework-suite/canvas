@@ -24,15 +24,16 @@ namespace art {
     : typeID_{itemtype}
     , productInstanceName_{instanceName}
     , supportsView_{supportsView}
-    , emulatedModule_{std::make_unique<std::string>(std::move(emulatedModule))}
+    , emulatedModule_{std::make_unique<std::string>(move(emulatedModule))}
   {}
+
+  TypeLabel::~TypeLabel() = default;
 
   std::string const&
   TypeLabel::emulatedModule() const
   {
     if (!emulatedModule_) {
-      throw art::Exception(art::errors::NullPointerError,
-                           "TypeLabel::emulatedModule\n")
+      throw Exception(errors::NullPointerError, "TypeLabel::emulatedModule\n")
         << "Attempt to retrieve an emulated module name when one does not "
            "exist.\n";
     }

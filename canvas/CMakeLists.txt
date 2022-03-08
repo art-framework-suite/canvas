@@ -1,6 +1,5 @@
 include(CetMake)
 
-find_package(Boost COMPONENTS headers REQUIRED PUBLIC)
 find_package(Boost PRIVATE COMPONENTS headers date_time REQUIRED)
 find_package(CLHEP PRIVATE COMPONENTS Matrix Vector REQUIRED)
 find_package(Range-v3 REQUIRED PUBLIC)
@@ -31,18 +30,19 @@ cet_make_library(LIBRARY_NAME canvas
     Persistency/Provenance/BranchKey.cc
     Persistency/Provenance/BranchType.cc
     Persistency/Provenance/Compatibility/BranchID.cc
+    Persistency/Provenance/Compatibility/History.cc
     Persistency/Provenance/EventAuxiliary.cc
     Persistency/Provenance/EventID.cc
     Persistency/Provenance/EventRange.cc
     Persistency/Provenance/FileFormatVersion.cc
     Persistency/Provenance/FileIndex.cc
     Persistency/Provenance/Hash.cc
-    Persistency/Provenance/History.cc
     Persistency/Provenance/ParameterSetBlob.cc
     Persistency/Provenance/Parentage.cc
     Persistency/Provenance/ProcessConfiguration.cc
     Persistency/Provenance/ProcessHistory.cc
     Persistency/Provenance/ProductID.cc
+    Persistency/Provenance/ProductList.cc
     Persistency/Provenance/ProductProvenance.cc
     Persistency/Provenance/ProductTables.cc
     Persistency/Provenance/RangeSet.cc
@@ -77,6 +77,7 @@ cet_make_library(LIBRARY_NAME canvas
     CLHEP::Matrix
     CLHEP::Vector
     Boost::date_time
+    range-v3::range-v3
     ${CMAKE_DL_LIBS}
     $<$<PLATFORM_ID:Darwin>:c++abi>
 )

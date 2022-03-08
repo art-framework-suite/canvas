@@ -55,9 +55,9 @@
 // * An attempt to create an Assns with a template argument D of
 // pointer-type will result in a compile-time assertion failure.
 //
-// Useful typedefs:
+// Useful type alias:
 //
-//   typedef std::pair<Ptr<L>, Ptr<R>> assn_t;
+//   using assn_t = std::pair<Ptr<L>, Ptr<R>>;
 //
 // Constructors:
 //
@@ -82,8 +82,9 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
+#include "canvas/Persistency/Common/types.h"
+
 #include "canvas/Persistency/Common/AssnsBase.h"
-#include "canvas/Persistency/Common/AssnsIter.h"
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/Wrapper.h"
 #include "canvas/Persistency/Common/detail/throwPartnerException.h"
@@ -186,8 +187,9 @@ private:
   // FIXME: The only reason this function is virtual is to cause the
   // correct behavior to occur when the wrong streamer class is
   // called. In future (>5.30.00) versions of ROOT that can register
-  // ioread rules for class template instantiations using typedefs, this
-  // can be made back into a static function.
+  // ioread rules for class template instantiations using
+  // typedefs/type aliases, this can be made back into a static
+  // function.
 #ifdef ROOT_CAN_REGISTER_IOREADS_PROPERLY
   static
 #else
@@ -293,6 +295,7 @@ private:
 };
 
 /////
+#include "canvas/Persistency/Common/AssnsIter.h"
 
 ////////////////////////////////////////////////////////////////////////
 template <typename L, typename R>

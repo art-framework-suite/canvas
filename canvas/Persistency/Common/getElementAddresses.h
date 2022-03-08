@@ -1,6 +1,7 @@
 #ifndef canvas_Persistency_Common_getElementAddresses_h
 #define canvas_Persistency_Common_getElementAddresses_h
 
+#include "canvas/Persistency/Common/GetProduct.h"
 #include "canvas/Persistency/Common/detail/maybeCastObj.h"
 #include "canvas/Utilities/uniform_type_name.h"
 

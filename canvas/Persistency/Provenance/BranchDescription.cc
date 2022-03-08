@@ -30,6 +30,15 @@ namespace {
 
 namespace art {
 
+  BranchDescription::BranchDescription() = default;
+  BranchDescription::BranchDescription(BranchDescription const&) = default;
+  BranchDescription::BranchDescription(BranchDescription&&) = default;
+  BranchDescription& BranchDescription::operator=(BranchDescription const&) =
+    default;
+  BranchDescription& BranchDescription::operator=(BranchDescription&&) =
+    default;
+  BranchDescription::~BranchDescription() = default;
+
   BranchDescription::BranchDescription(
     BranchType const bt,
     TypeLabel const& tl,
