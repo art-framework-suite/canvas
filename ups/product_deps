@@ -249,9 +249,9 @@ perllib product_dir
 ####################################
 product		version		qual	flags		<table_format=2>
 clhep		v2_4_5_1	-
-messagefacility	v2_08_06	-
+messagefacility	v2_08_07	-
 range		v3_0_11_0b	-
-cetmodules	v3_07_00	-	only_for_build
+cetmodules	v3_08_00	-	only_for_build
 end_product_list
 ####################################
 
