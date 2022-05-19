@@ -9,7 +9,7 @@ namespace art {
 }
 
 template <typename T>
-class art::SortInvalidFirst : public std::binary_function<T, T, bool> {
+class art::SortInvalidFirst {
 public:
   SortInvalidFirst() = default;
   constexpr explicit SortInvalidFirst(T const& invalidValue)
