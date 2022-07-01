@@ -248,10 +248,10 @@ perllib product_dir
 #
 ####################################
 product		version		qual	flags		<table_format=2>
-clhep		v2_4_5_1a	-
+clhep		v2_4_5_3a	-
 messagefacility	v2_08_07	-
-range		v3_0_11_0b	-
-cetmodules	v3_15_00	-	only_for_build
+range		v3_0_12_0	-
+cetmodules	v3_18_00	-	only_for_build
 end_product_list
 ####################################
 
@@ -307,16 +307,14 @@ end_product_list
 #
 ####################################
 qualifier       clhep           messagefacility range   notes
-c7:debug        c7:debug        c7:debug        -nq-
-c7:prof         c7:prof         c7:prof         -nq-
-e20:debug       e20:debug       e20:debug       -nq-
-e20:prof        e20:prof        e20:prof        -nq-
-e24:debug       e24:debug       e24:debug       -nq-
-e24:prof        e24:prof        e24:prof        -nq-
-e25:debug       e25:debug       e25:debug       -nq-
-e25:prof        e25:prof        e25:prof        -nq-
-e26:debug       e26:debug       e26:debug       -nq-
-e26:prof        e26:prof        e26:prof        -nq-
+c7:debug	c7:debug	c7:debug	-nq-
+c7:prof		c7:prof		c7:prof		-nq-
+c14:debug	c14:debug	c14:debug	-nq-
+c14:prof	c14:prof	c14:prof	-nq-
+e20:debug	e20:debug	e20:debug	-nq-
+e20:prof	e20:prof	e20:prof	-nq-
+e26:debug	e26:debug	e26:debug	-nq-
+e26:prof	e26:prof	e26:prof	-nq-
 end_qualifier_list
 ####################################
 
