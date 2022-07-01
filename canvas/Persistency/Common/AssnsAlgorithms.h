@@ -22,7 +22,7 @@
 // range library
 #include "range/v3/algorithm/for_each.hpp"
 #include "range/v3/view/all.hpp"
-#include "range/v3/view/group_by.hpp"
+#include "range/v3/view/chunk_by.hpp"
 #include "range/v3/view/map.hpp"
 #include "range/v3/view/transform.hpp"
 
@@ -111,7 +111,7 @@ namespace art {
   for_each_group(art::Assns<A, B, D> const& assns, F func)
   {
     ranges::for_each(assns | ranges::views::all |
-                       ranges::views::group_by([](auto a1, auto a2) {
+                       ranges::views::chunk_by([](auto a1, auto a2) {
                          return a1.first == a2.first;
                        }) |
                        ranges::views::transform([](auto pairs) {
@@ -153,7 +153,7 @@ namespace art {
   for_each_pair(art::Assns<A, B, D> const& assns, F func)
   {
     ranges::for_each(assns | ranges::views::all |
-                       ranges::views::group_by(
+                       ranges::views::chunk_by(
                          [](auto a1, auto a2) { return a1.first == a2.first; }),
                      func);
   }
