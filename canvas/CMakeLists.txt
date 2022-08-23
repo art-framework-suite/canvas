@@ -1,13 +1,13 @@
 include(CetMake)
 
-find_package(Boost PRIVATE COMPONENTS headers date_time REQUIRED)
-find_package(CLHEP PRIVATE COMPONENTS Matrix Vector REQUIRED)
-find_package(Range-v3 REQUIRED PUBLIC)
-find_package(cetlib REQUIRED PUBLIC)
-find_package(cetlib_except REQUIRED PUBLIC)
-find_package(fhiclcpp REQUIRED PUBLIC)
-find_package(hep_concurrency REQUIRED PUBLIC)
-find_package(messagefacility PRIVATE REQUIRED)
+find_package(Boost COMPONENTS headers date_time REQUIRED)
+find_package(CLHEP COMPONENTS Matrix Vector REQUIRED)
+find_package(Range-v3 REQUIRED EXPORT)
+find_package(cetlib REQUIRED EXPORT)
+find_package(cetlib_except REQUIRED EXPORT)
+find_package(fhiclcpp REQUIRED EXPORT)
+find_package(hep_concurrency REQUIRED EXPORT)
+find_package(messagefacility REQUIRED)
 
 cet_make_library(LIBRARY_NAME canvas
   SOURCE
