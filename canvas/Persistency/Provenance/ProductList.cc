@@ -4,6 +4,6 @@
 art::ProductDescriptions
 art::make_product_descriptions(ProductList const& productList)
 {
-  using namespace ranges;
+  using namespace ::ranges;
   return productList | views::values | to<ProductDescriptions>();
 }
