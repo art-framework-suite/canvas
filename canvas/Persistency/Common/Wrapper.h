@@ -170,7 +170,8 @@ art::Wrapper<T>::product() const
 }
 
 template <typename T>
-T const* art::Wrapper<T>::operator->() const
+T const*
+art::Wrapper<T>::operator->() const
 {
   return product();
 }
@@ -260,7 +261,8 @@ namespace art {
     create_empty_sampled_product(InputTag const& tag)
     {
       auto emptySampledProduct = std::make_unique<Sampled<T>>(tag);
-      return std::make_unique<Wrapper<Sampled<T>>>(std::move(emptySampledProduct));
+      return std::make_unique<Wrapper<Sampled<T>>>(
+        std::move(emptySampledProduct));
     }
 
     [[noreturn]] static void

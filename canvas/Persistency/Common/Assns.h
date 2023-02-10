@@ -328,8 +328,8 @@ art::Assns<L, R, void>::end() const
 }
 
 template <typename L, typename R>
-inline typename art::Assns<L, R, void>::assn_t const& art::Assns<L, R, void>::
-operator[](size_type const index) const
+inline typename art::Assns<L, R, void>::assn_t const&
+art::Assns<L, R, void>::operator[](size_type const index) const
 {
   return ptrs_[index];
 }

@@ -25,7 +25,8 @@ namespace {
 
   template <typename T>
   void
-  assert_sampled_forbidden() try {
+  assert_sampled_forbidden()
+  try {
     Sampled<T>{invalid_tag};
     assert(false && "Successful construction not expected.");
   }

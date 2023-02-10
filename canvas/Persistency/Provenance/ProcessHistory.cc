@@ -118,12 +118,14 @@ namespace art {
     data_.reserve(n);
   }
 
-  ProcessHistory::reference ProcessHistory::operator[](size_type i)
+  ProcessHistory::reference
+  ProcessHistory::operator[](size_type i)
   {
     return data_[i];
   }
 
-  ProcessHistory::const_reference ProcessHistory::operator[](size_type i) const
+  ProcessHistory::const_reference
+  ProcessHistory::operator[](size_type i) const
   {
     return data_[i];
   }

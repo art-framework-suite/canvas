@@ -127,7 +127,8 @@ namespace art {
     // Accessors
     // =========
 
-    T const& operator*() const
+    T const&
+    operator*() const
     {
       // Warning: This causes a nullptr dereference if isNull!
       return *get();
@@ -139,7 +140,8 @@ namespace art {
       return isNull() ? nullptr : operator->();
     }
 
-    T const* operator->() const
+    T const*
+    operator->() const
     {
       if (core_.productPtr() == nullptr) {
         EDProduct const* prod = parentProduct_();
@@ -409,7 +411,7 @@ namespace art {
   // map_vector's value_type and mapped_type.  We don't want the
   // default deduction behavior to surprise users of cet::map_vector.
   template <typename H, typename T>
-  Ptr(H, T)->Ptr<detail::not_map_vector_t<typename H::element_type>>;
+  Ptr(H, T) -> Ptr<detail::not_map_vector_t<typename H::element_type>>;
 
 } // namespace art
 

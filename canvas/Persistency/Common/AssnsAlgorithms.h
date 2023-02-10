@@ -111,13 +111,13 @@ namespace art {
   for_each_group(art::Assns<A, B, D> const& assns, F func)
   {
     ::ranges::for_each(assns | ::ranges::views::all |
-                       ::ranges::views::chunk_by([](auto a1, auto a2) {
-                         return a1.first == a2.first;
-                       }) |
-                       ::ranges::views::transform([](auto pairs) {
-                         return pairs | ::ranges::views::values;
-                       }),
-                     func);
+                         ::ranges::views::chunk_by([](auto a1, auto a2) {
+                           return a1.first == a2.first;
+                         }) |
+                         ::ranges::views::transform([](auto pairs) {
+                           return pairs | ::ranges::views::values;
+                         }),
+                       func);
   }
 
   /*
@@ -153,9 +153,10 @@ namespace art {
   for_each_pair(art::Assns<A, B, D> const& assns, F func)
   {
     ::ranges::for_each(assns | ::ranges::views::all |
-                       ::ranges::views::chunk_by(
-                         [](auto a1, auto a2) { return a1.first == a2.first; }),
-                     func);
+                         ::ranges::views::chunk_by([](auto a1, auto a2) {
+                           return a1.first == a2.first;
+                         }),
+                       func);
   }
 
 } // namespace art

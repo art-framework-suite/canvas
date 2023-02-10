@@ -11,10 +11,7 @@ namespace art {
 
   enum class Direction : int { Forward = 1, Reverse = -1 };
 
-  template <typename L,
-            typename R,
-            typename D,
-            Direction Dir>
+  template <typename L, typename R, typename D, Direction Dir>
   class const_AssnsIter;
 
   template <typename L, typename R, typename D>

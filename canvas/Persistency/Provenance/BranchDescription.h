@@ -232,8 +232,8 @@ namespace art {
     bool transientsFluffed_() const noexcept;
     bool isPsetIDUnique() const noexcept;
 
-    std::set<ProcessConfigurationID> const& processConfigurationIDs() const
-      noexcept;
+    std::set<ProcessConfigurationID> const& processConfigurationIDs()
+      const noexcept;
 
     Transients& guts() noexcept;
     Transients const& guts() const noexcept;

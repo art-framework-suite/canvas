@@ -90,7 +90,8 @@ namespace art {
     //  Accessors.
     //
 
-    T const& operator*() const
+    T const&
+    operator*() const
     {
       // Warning: This causes a nullptr dereference if isNull!
       return *get();
@@ -102,7 +103,8 @@ namespace art {
       return core_.isNull() ? nullptr : operator->();
     }
 
-    T const* operator->() const
+    T const*
+    operator->() const
     {
       if (core_.productPtr() == nullptr) {
         core_.setProductPtr(product_());
