@@ -92,7 +92,7 @@ public:
                          SubRunID const& id,
                          std::unique_ptr<EDProduct> product)
   {
-    return do_insertIfSampledProduct(dataset, id, move(product));
+    return do_insertIfSampledProduct(dataset, id, std::move(product));
   }
 
 private:
