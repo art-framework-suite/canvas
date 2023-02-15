@@ -74,7 +74,8 @@ namespace art {
 
 template <typename WANTED_POINTER, typename InputIterator>
 inline WANTED_POINTER
-art::ensurePointer(InputIterator it) try {
+art::ensurePointer(InputIterator it)
+try {
   static_assert(std::is_pointer_v<WANTED_POINTER>,
                 "Supplied template argument is not a pointer.");
   return detail::EnsurePointer<

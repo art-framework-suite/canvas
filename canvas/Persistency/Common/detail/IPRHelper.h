@@ -202,9 +202,10 @@ template <typename ProdA,
           typename EVENT>
 template <typename Acoll, typename Bcoll>
 auto
-art::detail::IPRHelper<ProdA, ProdB, Data, DATACOLL, EVENT>::
-operator()(Acoll const& aColl, Bcoll& bColl, dataColl_t& dColl) const
-  -> shared_exception_t
+art::detail::IPRHelper<ProdA, ProdB, Data, DATACOLL, EVENT>::operator()(
+  Acoll const& aColl,
+  Bcoll& bColl,
+  dataColl_t& dColl) const -> shared_exception_t
 {
   detail::BcollHelper<ProdB> bh(assnsTag_);
   detail::DataCollHelper<Data> dh;

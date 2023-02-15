@@ -75,7 +75,10 @@ namespace art {
     return *ti_ == *rhs.ti_;
   }
 
-  TypeID::operator bool() const { return ti_ != nullptr; }
+  TypeID::operator bool() const
+  {
+    return ti_ != nullptr;
+  }
 
   void
   TypeID::swap(TypeID& other)

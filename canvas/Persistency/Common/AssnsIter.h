@@ -108,7 +108,7 @@ namespace art {
   // Dereference
   template <typename L, typename R, typename D, Direction Dir>
   typename art::const_AssnsIter<L, R, D, Dir>::reference
-    const_AssnsIter<L, R, D, Dir>::operator*() const
+  const_AssnsIter<L, R, D, Dir>::operator*() const
   {
     auto const index = index_for_dereferencing<Dir>(index_);
     node_.first = (*coll_)[index].first;
@@ -120,7 +120,7 @@ namespace art {
   // right arrow
   template <typename L, typename R, typename D, Direction Dir>
   typename art::const_AssnsIter<L, R, D, Dir>::pointer
-    const_AssnsIter<L, R, D, Dir>::operator->() const
+  const_AssnsIter<L, R, D, Dir>::operator->() const
   {
     auto const index = index_for_dereferencing<Dir>(index_);
     node_.first = (*coll_)[index].first;
@@ -238,7 +238,7 @@ namespace art {
   // Dereference
   template <typename L, typename R, typename D, Direction Dir>
   typename art::const_AssnsIter<L, R, D, Dir>::value_type
-    const_AssnsIter<L, R, D, Dir>::operator[](std::size_t const i) const
+  const_AssnsIter<L, R, D, Dir>::operator[](std::size_t const i) const
   {
     art::const_AssnsIter<L, R, D, Dir> tmp{*this};
     tmp.index_ = tmp.index_ + signed_one<Dir>() * i;

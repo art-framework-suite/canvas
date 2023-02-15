@@ -14,8 +14,7 @@
 namespace art {
   using ProductList = std::map<BranchKey, BranchDescription>;
 
-  ProductDescriptions
-  make_product_descriptions(ProductList const& productList);
+  ProductDescriptions make_product_descriptions(ProductList const& productList);
 }
 
 #endif /* canvas_Persistency_Provenance_ProductList_h */

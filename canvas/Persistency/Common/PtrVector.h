@@ -348,8 +348,8 @@ art::PtrVector<T>::shrink_to_fit()
 
 // Element access.
 template <typename T>
-inline art::Ptr<T> const& art::PtrVector<T>::operator[](
-  unsigned long const idx) const
+inline art::Ptr<T> const&
+art::PtrVector<T>::operator[](unsigned long const idx) const
 {
   return *(begin() + idx);
 }

@@ -24,7 +24,7 @@ namespace art {
     : typeID_{itemtype}
     , productInstanceName_{instanceName}
     , supportsView_{supportsView}
-    , emulatedModule_{std::make_unique<std::string>(move(emulatedModule))}
+    , emulatedModule_{std::make_unique<std::string>(std::move(emulatedModule))}
   {}
 
   TypeLabel::~TypeLabel() = default;

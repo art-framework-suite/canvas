@@ -170,7 +170,8 @@ art::Wrapper<T>::product() const
 }
 
 template <typename T>
-T const* art::Wrapper<T>::operator->() const
+T const*
+art::Wrapper<T>::operator->() const
 {
   return product();
 }
@@ -260,7 +261,8 @@ namespace art {
     create_empty_sampled_product(InputTag const& tag)
     {
       auto emptySampledProduct = std::make_unique<Sampled<T>>(tag);
-      return std::make_unique<Wrapper<Sampled<T>>>(move(emptySampledProduct));
+      return std::make_unique<Wrapper<Sampled<T>>>(
+        std::move(emptySampledProduct));
     }
 
     [[noreturn]] static void
@@ -314,7 +316,7 @@ art::Wrapper<T>::do_insertIfSampledProduct(std::string const& dataset,
                                            std::unique_ptr<EDProduct> product)
 {
   prevent_recursion<T>::insert_if_sampled_product(
-    obj, dataset, id, move(product));
+    obj, dataset, id, std::move(product));
 }
 
 template <typename T>

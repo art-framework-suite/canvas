@@ -86,7 +86,9 @@ add_subdirectory(Persistency/Common)
 add_subdirectory(Version)
 
 # Testing
-add_subdirectory(test)
+if (BUILD_TESTING)
+  add_subdirectory(test)
+endif()
 
 set(install_subdirs
   Persistency/Provenance
