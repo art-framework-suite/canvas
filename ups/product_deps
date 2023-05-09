@@ -315,8 +315,8 @@ e20:debug	e20:debug	e20:debug	-nq-
 e20:prof	e20:prof	e20:prof	-nq-
 e26:debug	e26:debug	e26:debug	-nq-
 e26:prof	e26:prof	e26:prof	-nq-
-e27:debug	e27:debug	e26:debug	-nq-
-e27:prof	e27:prof	e26:prof	-nq-
+e27:debug	e27:debug	e27:debug	-nq-
+e27:prof	e27:prof	e27:prof	-nq-
 end_qualifier_list
 ####################################
 
