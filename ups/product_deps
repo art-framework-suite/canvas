@@ -248,10 +248,10 @@ perllib product_dir
 #
 ####################################
 product		version		qual	flags		<table_format=2>
-clhep		v2_4_6_4	-
+clhep		v2_4_6_4a	-
 messagefacility	v2_10_01	-
 range		v3_0_12_0	-
-cetmodules	v3_21_00	-	only_for_build
+cetmodules	v3_21_02	-	only_for_build
 end_product_list
 ####################################
 
@@ -317,6 +317,8 @@ e26:debug	e26:debug	e26:debug	-nq-
 e26:prof	e26:prof	e26:prof	-nq-
 e27:debug	e27:debug	e27:debug	-nq-
 e27:prof	e27:prof	e27:prof	-nq-
+e28:debug	e28:debug	e28:debug	-nq-
+e28:prof	e28:prof	e28:prof	-nq-
 end_qualifier_list
 ####################################
 
