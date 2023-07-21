@@ -12,6 +12,7 @@
 #include "canvas/Utilities/Exception.h"
 #include "cetlib_except/demangle.h"
 
+#include <concepts>
 #include <iterator>
 #include <type_traits>
 
@@ -20,27 +21,23 @@ namespace art {
   template <typename WANTED_POINTER, typename InputIterator>
   WANTED_POINTER ensurePointer(InputIterator it);
 
+  template <typename TO, typename FROM>
+  concept are_cv_compatible_b = std::same_as<std::remove_cv_t<std::remove_pointer_t<TO>>, std::remove_cv_t<std::remove_pointer_t<FROM>>> || 
+                                std::derived_from<std::remove_cv_t<std::remove_pointer_t<FROM>>, std::remove_cv_t<std::remove_pointer_t<TO>>>;
+
   namespace detail {
-    template <typename T1, typename T2>
-    struct are_cv_compatible {
-      using T1P = std::remove_cv_t<std::remove_pointer_t<T1>>;
-      using T2P = std::remove_cv_t<std::remove_pointer_t<T2>>;
-      static constexpr bool value{std::is_base_of_v<T1P, T2P> ||
-                                  std::is_same_v<T1P, T2P>};
-    };
 
     template <typename TO, typename FROM>
-    constexpr std::enable_if_t<are_cv_compatible<TO, FROM>::value,
-                               std::add_pointer_t<std::remove_pointer_t<TO>>>
+    requires art::are_cv_compatible_b<TO, FROM>
+    std::add_pointer_t<std::remove_pointer_t<TO>>
     addr(FROM& from)
     {
       return &from;
     }
 
     template <typename TO, typename FROM>
-    constexpr std::enable_if_t<!are_cv_compatible<TO, FROM>::value &&
-                                 are_cv_compatible<FROM, TO>::value,
-                               std::add_pointer_t<std::remove_pointer_t<TO>>>
+    requires (!art::are_cv_compatible_b<TO, FROM> && art::are_cv_compatible_b<FROM, TO>)
+    std::add_pointer_t<std::remove_pointer_t<TO>>
     addr(FROM& from)
     {
       return &dynamic_cast<
