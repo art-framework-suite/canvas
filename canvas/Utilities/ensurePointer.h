@@ -22,13 +22,16 @@ namespace art {
   WANTED_POINTER ensurePointer(InputIterator it);
 
   template <typename TO, typename FROM>
-  concept are_cv_compatible_b = std::same_as<std::remove_cv_t<std::remove_pointer_t<TO>>, std::remove_cv_t<std::remove_pointer_t<FROM>>> || 
-                                std::derived_from<std::remove_cv_t<std::remove_pointer_t<FROM>>, std::remove_cv_t<std::remove_pointer_t<TO>>>;
+  concept are_cv_compatible_b =
+    std::same_as<std::remove_cv_t<std::remove_pointer_t<TO>>,
+                 std::remove_cv_t<std::remove_pointer_t<FROM>>> ||
+    std::derived_from<std::remove_cv_t<std::remove_pointer_t<FROM>>,
+                      std::remove_cv_t<std::remove_pointer_t<TO>>>;
 
   namespace detail {
 
     template <typename TO, typename FROM>
-    requires art::are_cv_compatible_b<TO, FROM>
+      requires art::are_cv_compatible_b<TO, FROM>
     std::add_pointer_t<std::remove_pointer_t<TO>>
     addr(FROM& from)
     {
@@ -36,9 +39,9 @@ namespace art {
     }
 
     template <typename TO, typename FROM>
-    requires (!art::are_cv_compatible_b<TO, FROM> && art::are_cv_compatible_b<FROM, TO>)
-    std::add_pointer_t<std::remove_pointer_t<TO>>
-    addr(FROM& from)
+      requires(!art::are_cv_compatible_b<TO, FROM> &&
+               art::are_cv_compatible_b<FROM, TO>)
+    std::add_pointer_t<std::remove_pointer_t<TO>> addr(FROM& from)
     {
       return &dynamic_cast<
         std::add_lvalue_reference_t<std::remove_pointer_t<TO>>>(from);
