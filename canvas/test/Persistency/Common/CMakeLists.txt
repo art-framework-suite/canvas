@@ -13,3 +13,6 @@ cet_test(maybeCastObj_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 cet_test(sampled_t LIBRARIES PRIVATE canvas::canvas)
 cet_test(set_ptr_customization_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 cet_test(wrapper_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
+
+cet_test(bad_sampled_t LIBRARIES PRIVATE canvas::canvas)
+set_property(TARGET bad_sampled_t PROPERTY WILL_FAIL TRUE)

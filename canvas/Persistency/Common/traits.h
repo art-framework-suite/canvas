@@ -233,15 +233,6 @@ namespace art {
   // Classes which do support setPtr must specialize this trait.
   //
 
-  template <typename T, typename A>
-  concept has_set_ptr = (std::constructible_from<decltype(std::vector<T, A>), T, A> || 
-                        std::constructible_from<decltype(std::list<T, A>), T, A> ||
-                        std::constructible_from<std::deque, T, A> ||
-                        std::constructible_from<std::set, T, A> ||
-                        std::constructible_from<cet::map_vector, T, A>) && 
-                        (requires { {std::vector<T, A>} -> !std::same_as<std::vector<bool, A>> } || 
-                        requires { {std::vector<A, T>} -> !std::same_as<std::vector<bool, T>> });
-
   template <typename T>
   struct has_setPtr : std::false_type {};
   template <typename T, typename A>
