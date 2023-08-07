@@ -1,6 +1,7 @@
 include(CetTest)
+
 cet_enable_asserts()
-cet_test_env("FHICL_FILE_PATH=.")
+cet_test_env("FHICL_FILE_PATH=." "LC_ALL=en_US.utf8")
 
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
