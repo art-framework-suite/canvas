@@ -325,7 +325,7 @@ art::Wrapper<T>::do_getElementAddress(std::type_info const& toType,
                                       unsigned long const index
                                       [[maybe_unused]]) const
 {
-  if constexpr (has_setPtr<T>::value) {
+  if constexpr (has_setPtr<T>/* ::value */) {
     // Allow setPtr customizations by introducing the art::setPtr
     // overload set, and not requiring art::setPtr(...).
     using art::setPtr;
@@ -345,7 +345,7 @@ art::Wrapper<T>::do_getElementAddresses(
   std::type_info const& toType,
   std::vector<unsigned long> const& indices) const
 {
-  if constexpr (has_setPtr<T>::value) {
+  if constexpr (has_setPtr<T>/* ::value */) {
     // getElementAddresses is the name of an overload set; each
     // concrete collection T should supply a getElementAddresses
     // function, in the same namespace at that in which T is

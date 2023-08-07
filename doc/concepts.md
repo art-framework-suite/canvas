@@ -18,9 +18,10 @@
 * [ ] `Persistency/Common/ProductPtr.h`
 * [ ] `Persistency/Common/WrappedTypeID.h`
 * [ ] `Persistency/Common/GetProduct.h`
-* [ ] `Persistency/Common/Sampled.h`
+* [x] `Persistency/Common/Sampled.h`
 * [ ] `Persistency/Common/PtrVectorBase.h`
-* [ ] `Persistency/Common/setPtr.h`
+* [x] `Persistency/Common/setPtr.h`
+  * Concepts not necessary.
 * [ ] `Persistency/Common/fwd.h`
 * [ ] `Persistency/Common/getElementAddresses.h`
 * [ ] `Persistency/Common/AssnsAlgorithms.h`
@@ -32,7 +33,8 @@
 * [ ] `Persistency/Common/detail/aggregate.h`
 * [ ] `Persistency/Common/AssnsNode.h`
 * [ ] `Persistency/Common/Assns.h`
-* [ ] `Persistency/Common/FindMany.h.in`
+* [x] `Persistency/Common/FindMany.h`
+  * Concepts not necessary.
 * [ ] `Persistency/Common/traits.h`
 * [x] `Persistency/Common/AssnsIter.h`
   * Concepts not necessary.
