@@ -33,7 +33,7 @@ namespace art {
   class ProductID;
   class RefCore;
   template <typename T>
-  requires (!isSampled<T>)
+    requires(!isSampled<T>)
   class Sampled;
   class TriggerResults;
   template <typename T>

@@ -2,6 +2,8 @@
 
 using namespace art;
 
-int main() {
- [[maybe_unused]] Sampled<Sampled<int>> s;
+int
+main()
+{
+  [[maybe_unused]] Sampled<Sampled<int>> s;
 }
