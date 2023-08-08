@@ -234,24 +234,19 @@ namespace art {
   //
 
   template <typename T>
-  concept has_setPtr = requires(T t, std::type_info const& type_info, void const*& ptr) {
-    {t.setPtr(type_info, ptr)} -> std::same_as<void>;
-  };
-
-  // template <typename T>
-  // struct has_setPtr : std::false_type {};
-  // template <typename T, typename A>
-  // struct has_setPtr<std::vector<T, A>> : std::true_type {};
-  // template <typename A>
-  // struct has_setPtr<std::vector<bool, A>> : std::false_type {};
-  // template <typename T, typename A>
-  // struct has_setPtr<std::list<T, A>> : std::true_type {};
-  // template <typename T, typename A>
-  // struct has_setPtr<std::deque<T, A>> : std::true_type {};
-  // template <typename T, typename A>
-  // struct has_setPtr<std::set<T, A>> : std::true_type {};
-  // template <typename T>
-  // struct has_setPtr<cet::map_vector<T>> : std::true_type {};
+  struct has_setPtr : std::false_type {};
+  template <typename T, typename A>
+  struct has_setPtr<std::vector<T, A>> : std::true_type {};
+  template <typename A>
+  struct has_setPtr<std::vector<bool, A>> : std::false_type {};
+  template <typename T, typename A>
+  struct has_setPtr<std::list<T, A>> : std::true_type {};
+  template <typename T, typename A>
+  struct has_setPtr<std::deque<T, A>> : std::true_type {};
+  template <typename T, typename A>
+  struct has_setPtr<std::set<T, A>> : std::true_type {};
+  template <typename T>
+  struct has_setPtr<cet::map_vector<T>> : std::true_type {};
 }
 
 #endif /* canvas_Persistency_Common_traits_h */

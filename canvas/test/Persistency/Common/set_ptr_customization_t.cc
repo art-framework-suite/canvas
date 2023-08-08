@@ -27,10 +27,10 @@ namespace {
   auto always_true = [](customization_honored) { return true; };
 }
 
-/* namespace art {
-  template <has_setPtr T>
-  struct custom::collection<T> : std::true_type {};
-}*/
+namespace art {
+  template <typename T>
+  struct has_setPtr<custom::collection<T>> : std::true_type {};
+}
 
 namespace custom {
   template <class T>
