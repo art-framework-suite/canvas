@@ -60,14 +60,18 @@ public:
 
   PtrVector();
   template <typename U>
+  requires (std::derived_from<U, T> || std::derived_from<T, U>)
   PtrVector(PtrVector<U> const& other);
 
   template <typename U>
+  requires (std::same_as<T, U> || std::derived_from<U, T> || std::derived_from<T, U>)
   PtrVector(std::initializer_list<Ptr<U>> il);
   template <typename U>
+  requires (std::same_as<T, U> || std::derived_from<U, T> || std::derived_from<T, U>)
   PtrVector<T>& operator=(std::initializer_list<Ptr<U>> il);
 
   template <typename U>
+  requires (std::derived_from<U, T> || std::derived_from<T, U>)
   PtrVector<T>& operator=(PtrVector<U> const& other) &;
 
   // Iterators.
@@ -162,23 +166,25 @@ inline art::PtrVector<T>::PtrVector() = default;
 
 template <typename T>
 template <typename U>
+requires (std::derived_from<U, T> || std::derived_from<T, U>)
 inline art::PtrVector<T>::PtrVector(PtrVector<U> const& other)
   : PtrVectorBase{other}
 {
   // Ensure that types are compatible.
-  static_assert(std::is_base_of_v<T, U> || std::is_base_of_v<U, T>,
-                "PtrVector: incompatible types");
+  // static_assert(std::is_base_of_v<T, U> || std::is_base_of_v<U, T>,
+  //               "PtrVector: incompatible types");
   ptrs_.reserve(other.size());
   cet::copy_all(other, std::back_inserter(ptrs_));
 }
 
 template <typename T>
 template <typename U>
+requires (std::same_as<T, U> || std::derived_from<U, T> || std::derived_from<T, U>)
 inline art::PtrVector<T>::PtrVector(std::initializer_list<Ptr<U>> const il)
 {
-  static_assert(std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
-                  std::is_base_of_v<U, T>,
-                "PtrVector: incompatible types");
+  // static_assert(std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+  //                 std::is_base_of_v<U, T>,
+  //               "PtrVector: incompatible types");
   ptrs_.reserve(il.size());
   for (auto&& p : il) {
     updateCore(p.refCore());
@@ -188,23 +194,25 @@ inline art::PtrVector<T>::PtrVector(std::initializer_list<Ptr<U>> const il)
 
 template <typename T>
 template <typename U>
+requires (std::same_as<T, U> || std::derived_from<U, T> || std::derived_from<T, U>)
 inline art::PtrVector<T>&
 art::PtrVector<T>::operator=(std::initializer_list<Ptr<U>> const il)
 {
-  static_assert(std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
-                  std::is_base_of_v<U, T>,
-                "PtrVector: incompatible types");
+  // static_assert(std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+  //                 std::is_base_of_v<U, T>,
+  //               "PtrVector: incompatible types");
   assign(il);
   return *this;
 }
 
 template <typename T>
 template <typename U>
+requires (std::derived_from<U, T> || std::derived_from<T, U>)
 inline art::PtrVector<T>&
 art::PtrVector<T>::operator=(PtrVector<U> const& other) &
 {
-  static_assert(std::is_base_of_v<T, U> || std::is_base_of_v<U, T>,
-                "PtrVector: incompatible types");
+  // static_assert(std::is_base_of_v<T, U> || std::is_base_of_v<U, T>,
+  //               "PtrVector: incompatible types");
   PtrVectorBase::operator=(other);
   ptrs_.clear();
   cet::copy_all(other, std::back_inserter(ptrs_));
