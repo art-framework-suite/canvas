@@ -25,12 +25,12 @@
   * Concepts not necessary.
 * [x] `Persistency/Common/Wrapper.h`
   * Implementation of concepts would be overly complex.
-* [x] `Persistency/Common/PtrVector.h`
+* [ ] `Persistency/Common/PtrVector.h`
 * [ ] `Persistency/Common/ProductPtr.h`
 * [ ] `Persistency/Common/WrappedTypeID.h`
 * [x] `Persistency/Common/GetProduct.h`
   * Concepts not necessary.
-* [x] `Persistency/Common/Sampled.h`
+* [ ] `Persistency/Common/Sampled.h`
 * [x] `Persistency/Common/PtrVectorBase.h`
   * Concepts not necessary.
 * [x] `Persistency/Common/setPtr.h`
@@ -54,7 +54,7 @@
   * Concepts not necessary.
 * [x] `Persistency/Common/types.h`
   * Concepts not necessary.
-* [x] `Persistency/Common/Ptr.h`
+* [ ] `Persistency/Common/Ptr.h`
 * [x] `Utilities/TypeID.h`
   * Concepts not necessary. Unconstrained by design.
 * [x] `Utilities/InputTag.h`

@@ -13,8 +13,9 @@
 
 namespace art {
   template <typename T>
-  requires (std::same_as<T, RunID> || std::same_as<T, SubRunID>)
   struct SampledInfo {
+    static_assert(std::is_same_v<T, RunID> || std::is_same_v<T, SubRunID>,
+                  "The template argument must be either RunID or SubRunID.");
     double weight;
     double probability;
     std::vector<T> ids;

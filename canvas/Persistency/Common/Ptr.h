@@ -50,7 +50,6 @@
 #include "cetlib_except/demangle.h"
 
 #include <cassert>
-#include <concepts>
 #include <cstddef>
 #include <functional> // for std::hash
 #include <list>
@@ -61,10 +60,6 @@
 namespace art {
 
   namespace detail {
-
-    template <typename T, typename U>
-    concept comparable = (std::same_as<T, U> || std::derived_from<T, U> ||
-                          std::derived_from<U, T>);
 
     template <typename T, typename C>
     class ItemGetter;
@@ -274,30 +269,27 @@ namespace art {
   };
 
   template <typename T, typename U>
-  // std::enable_if_t<std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
-  //                    std::is_base_of_v<U, T>,
-  //                  bool>
-    requires detail::comparable<T, U> bool
+  std::enable_if_t<std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                     std::is_base_of_v<U, T>,
+                   bool>
   operator==(Ptr<T> const& lhs, Ptr<U> const& rhs)
   {
     return lhs.refCore() == rhs.refCore() and lhs.key() == rhs.key();
   }
 
   template <typename T, typename U>
-  // std::enable_if_t<std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
-  //                    std::is_base_of_v<U, T>,
-  //                  bool>
-    requires detail::comparable<T, U> bool
+  std::enable_if_t<std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                     std::is_base_of_v<U, T>,
+                   bool>
   operator!=(Ptr<T> const& lhs, Ptr<U> const& rhs)
   {
     return !(lhs == rhs);
   }
 
   template <typename T, typename U>
-  // std::enable_if_t<std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
-  //                    std::is_base_of_v<U, T>,
-  //                  bool>
-    requires detail::comparable<T, U> bool
+  std::enable_if_t<std::is_same_v<T, U> || std::is_base_of_v<T, U> ||
+                     std::is_base_of_v<U, T>,
+                   bool>
   operator<(Ptr<T> const& lhs, Ptr<U> const& rhs)
   {
     // The ordering of integer keys guarantees that the ordering of Ptrs within
