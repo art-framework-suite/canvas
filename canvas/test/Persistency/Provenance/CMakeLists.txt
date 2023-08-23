@@ -7,6 +7,7 @@ endforeach()
 
 cet_test(EventRange_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 cet_test(FileIndex_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
+cet_test(ProductToken_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 cet_test(RangeSet_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 cet_test(TimeStamp_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 

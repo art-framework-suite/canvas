@@ -17,6 +17,7 @@
 
 #include "canvas/Utilities/InputTag.h"
 
+#include <ostream>
 #include <string>
 
 namespace gallery {
@@ -27,24 +28,26 @@ namespace art {
 
   template <typename T>
   class ProductToken;
+
   template <typename T>
   class ViewToken;
-
-  // Forward declarations needed for granting friendship
-  class ProductRetriever;
-  class ConsumesCollector;
 
   namespace detail {
     template <typename ProdA, typename ProdB, typename Data>
     struct safe_input_tag;
   }
-
-  template <typename T>
+    
+ template <typename T>
   class ProductToken {
   public:
     using product_type = T;
 
-  private:
+    friend std::ostream& operator<<(std::ostream& os, ProductToken const& tok)
+    {
+      os << tok.inputTag_;
+      return os;
+    }
+
     static ProductToken<T>
     invalid()
     {
@@ -53,9 +56,12 @@ namespace art {
     explicit ProductToken() = default;
     explicit ProductToken(InputTag const& t) : inputTag_{t} {}
 
-    friend class ProductRetriever;
-    friend class ConsumesCollector;
-    friend class gallery::Event;
+    InputTag const& inputTag() const
+    {
+      return inputTag_;
+    }
+
+  private:
     template <typename ProdA, typename ProdB, typename Data>
     friend struct detail::safe_input_tag;
 
@@ -69,12 +75,12 @@ namespace art {
     InputTag inputTag_{};
   };
 
+
   template <typename Element>
   class ViewToken {
   public:
     using element_type = Element;
 
-  private:
     static ViewToken<Element>
     invalid()
     {
@@ -83,9 +89,19 @@ namespace art {
     explicit ViewToken() = default;
     explicit ViewToken(InputTag const& t) : inputTag_{t} {}
 
-    friend class ProductRetriever;
-    friend class ConsumesCollector;
+    InputTag const& inputTag() const
+    {
+      return inputTag_;
+    }
 
+
+    friend std::ostream& operator<<(std::ostream& os, ViewToken const& tok)
+    {
+      os << tok.inputTag_;
+      return os;
+    }
+
+  private:
     // See notes in ProductToken re. the representation.
     InputTag inputTag_{};
   };
