@@ -36,13 +36,14 @@ namespace art {
     template <typename ProdA, typename ProdB, typename Data>
     struct safe_input_tag;
   }
-    
- template <typename T>
+
+  template <typename T>
   class ProductToken {
   public:
     using product_type = T;
 
-    friend std::ostream& operator<<(std::ostream& os, ProductToken const& tok)
+    friend std::ostream&
+    operator<<(std::ostream& os, ProductToken const& tok)
     {
       os << tok.inputTag_;
       return os;
@@ -56,7 +57,8 @@ namespace art {
     explicit ProductToken() = default;
     explicit ProductToken(InputTag const& t) : inputTag_{t} {}
 
-    InputTag const& inputTag() const
+    InputTag const&
+    inputTag() const
     {
       return inputTag_;
     }
@@ -75,7 +77,6 @@ namespace art {
     InputTag inputTag_{};
   };
 
-
   template <typename Element>
   class ViewToken {
   public:
@@ -89,13 +90,14 @@ namespace art {
     explicit ViewToken() = default;
     explicit ViewToken(InputTag const& t) : inputTag_{t} {}
 
-    InputTag const& inputTag() const
+    InputTag const&
+    inputTag() const
     {
       return inputTag_;
     }
 
-
-    friend std::ostream& operator<<(std::ostream& os, ViewToken const& tok)
+    friend std::ostream&
+    operator<<(std::ostream& os, ViewToken const& tok)
     {
       os << tok.inputTag_;
       return os;
