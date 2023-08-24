@@ -6,7 +6,6 @@
 #include <sstream>
 #include <string>
 
-
 BOOST_AUTO_TEST_SUITE(ProductToken_t)
 
 BOOST_AUTO_TEST_CASE(streamingProductToken)
@@ -22,7 +21,6 @@ BOOST_AUTO_TEST_CASE(streamingProductToken)
   std::string result = os2.str();
   BOOST_TEST(result == expected);
 }
-
 
 BOOST_AUTO_TEST_CASE(streamingViewToken)
 {
