@@ -125,7 +125,6 @@
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/detail/IPRHelper.h"
 #include "canvas/Persistency/Common/detail/is_handle.h"
-#include "canvas/Persistency/Provenance/ProductToken.h"
 #include "canvas/Utilities/InputTag.h"
 
 #include <initializer_list>
