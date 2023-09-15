@@ -30,7 +30,7 @@
 * [ ] `Persistency/Common/WrappedTypeID.h`
 * [x] `Persistency/Common/GetProduct.h`
   * Concepts not necessary.
-* [ ] `Persistency/Common/Sampled.h`
+* [x] `Persistency/Common/Sampled.h`
 * [x] `Persistency/Common/PtrVectorBase.h`
   * Concepts not necessary.
 * [x] `Persistency/Common/setPtr.h`

@@ -13,3 +13,7 @@ cet_test(maybeCastObj_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 cet_test(sampled_t LIBRARIES PRIVATE canvas::canvas)
 cet_test(set_ptr_customization_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 cet_test(wrapper_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
+
+cet_test(bad_sampled_t COMPILE_ONLY LIBRARIES PRIVATE canvas::canvas)
+set_tests_properties(bad_sampled_t PROPERTIES
+  PASS_REGULAR_EXPRESSION "note: the expression ‘!\\(isSampled<T>\\) \\[with T = art::Sampled<int>\\]’ evaluated to ‘false’")

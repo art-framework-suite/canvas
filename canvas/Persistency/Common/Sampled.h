@@ -67,6 +67,7 @@
 namespace art {
 
   template <typename T>
+    requires(!isSampled<T>)
   class Sampled {
     // TODO: An unordered map may end up being better.
     using container_t = std::map<std::string, std::map<SubRunID, T>>;
@@ -101,6 +102,8 @@ namespace art {
       return 10;
     }
 
+    struct sampled_tag {};
+
   private:
     InputTag tag_{};
     container_t products_{};
@@ -114,6 +117,7 @@ namespace art {
 
   // Implementation below
   template <typename T>
+    requires(!art::isSampled<T>)
   Sampled<T>::Sampled(InputTag const& tag) noexcept(false) : tag_{tag}
   {
     // Due to Ptr reseeding issues, Assns or Ptr types (or
@@ -134,29 +138,31 @@ namespace art {
   }
 
   template <typename T>
-  InputTag const&
-  Sampled<T>::originalInputTag() const
+    requires(!art::isSampled<T>)
+  InputTag const& Sampled<T>::originalInputTag() const
   {
     return tag_;
   }
 
   template <typename T>
-  bool
+    requires(!art::isSampled<T>) bool
   Sampled<T>::empty() const
   {
     return products_.empty();
   }
 
   template <typename T>
-  cet::exempt_ptr<T const>
-  Sampled<T>::get(std::string const& dataset, RunID const& id) const
+    requires(!art::isSampled<T>)
+  cet::exempt_ptr<T const> Sampled<T>::get(std::string const& dataset,
+                                           RunID const& id) const
   {
     return get(dataset, SubRunID::invalidSubRun(id));
   }
 
   template <typename T>
-  cet::exempt_ptr<T const>
-  Sampled<T>::get(std::string const& dataset, SubRunID const& id) const
+    requires(!art::isSampled<T>)
+  cet::exempt_ptr<T const> Sampled<T>::get(std::string const& dataset,
+                                           SubRunID const& id) const
   {
     cet::exempt_ptr<T const> result{nullptr};
     auto dataset_it = products_.find(dataset);

@@ -14,6 +14,9 @@ namespace art {
     class AssnsBase;
   }
 
+  template <typename T>
+  concept isSampled = requires { typename T::sampled_tag; };
+
   class EDProduct;
   class EDProductGetter;
   class GroupQueryResult;
@@ -30,6 +33,7 @@ namespace art {
   class ProductID;
   class RefCore;
   template <typename T>
+    requires(!isSampled<T>)
   class Sampled;
   class TriggerResults;
   template <typename T>
