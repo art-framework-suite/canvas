@@ -63,8 +63,8 @@ namespace std {
   class less<art::InputTag> {
   public:
     inline bool
-    operator()(art::InputTag const& lhs, art::InputTag const& rhs) const
-      noexcept
+    operator()(art::InputTag const& lhs,
+               art::InputTag const& rhs) const noexcept
     {
       auto const& a = std::tie(lhs.label(), lhs.instance(), lhs.process());
       auto const& b = std::tie(rhs.label(), rhs.instance(), rhs.process());

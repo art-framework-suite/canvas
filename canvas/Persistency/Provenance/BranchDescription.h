@@ -20,8 +20,8 @@
 #include "canvas/Persistency/Provenance/BranchType.h"
 #include "canvas/Persistency/Provenance/ProcessConfigurationID.h"
 #include "canvas/Persistency/Provenance/ProductID.h"
-#include "canvas/Persistency/Provenance/ProvenanceFwd.h"
 #include "canvas/Persistency/Provenance/Transient.h"
+#include "canvas/Persistency/Provenance/fwd.h"
 #include "canvas/Utilities/InputTag.h"
 #include "fhiclcpp/ParameterSetID.h"
 
@@ -89,7 +89,12 @@ namespace art {
       int compression_{invalidCompression};
     };
 
-    BranchDescription() = default;
+    BranchDescription();
+    BranchDescription(BranchDescription const&);
+    BranchDescription(BranchDescription&&);
+    BranchDescription& operator=(BranchDescription const&);
+    BranchDescription& operator=(BranchDescription&&);
+    ~BranchDescription();
 
     BranchDescription(BranchType const bt,
                       TypeLabel const& tl,
@@ -227,8 +232,8 @@ namespace art {
     bool transientsFluffed_() const noexcept;
     bool isPsetIDUnique() const noexcept;
 
-    std::set<ProcessConfigurationID> const& processConfigurationIDs() const
-      noexcept;
+    std::set<ProcessConfigurationID> const& processConfigurationIDs()
+      const noexcept;
 
     Transients& guts() noexcept;
     Transients const& guts() const noexcept;

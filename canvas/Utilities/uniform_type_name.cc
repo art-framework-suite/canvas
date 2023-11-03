@@ -109,8 +109,8 @@ namespace {
   ///
   /// Inlined namespaces prevent direct use of Itanium ABI compressions
   /// so fully qualified typenames will be returned by any demangling.
-  /// For example, libc++'s inline namespace "std::__1::" means that
-  /// demangling a std::string argument will return
+  /// For example, libc++'s inline namespace "std::__[[:digit:]]+::" means that
+  /// demangling a std::string argument will return (e.g.):
   ///
   /// std::__1::basic_string<char, std::char_traits<char>, std::allocator<char>
   /// >
@@ -125,7 +125,7 @@ namespace {
   /// stripped of the inline namespace and any Itanium abbreviation
   /// reapplied. Currently known inlined namespaces are:
   ///
-  /// std::__1::     Clang/libc++
+  /// std::__[[:digit:]]+::     Clang/libc++
   /// std::__cxx11:: GCC/libstdc++
   ///
   /// For further information on the Itanium ABI abbreviations, see
@@ -137,7 +137,7 @@ namespace {
   {
     // libc++/libstdc++ std::ABI_TAG -> std::
     {
-      static std::regex const ns_regex("std::__(1|cxx11)::");
+      static std::regex const ns_regex("std::__([[:digit:]]+|cxx11)::");
       static std::string const ns_format("std::");
       reformat(name, ns_regex, ns_format);
     }

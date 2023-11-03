@@ -125,9 +125,7 @@
 #include "canvas/Persistency/Common/Ptr.h"
 #include "canvas/Persistency/Common/detail/IPRHelper.h"
 #include "canvas/Persistency/Common/detail/is_handle.h"
-#include "canvas/Persistency/Provenance/ProductToken.h"
 #include "canvas/Utilities/InputTag.h"
-#include "cetlib/maybe_ref.h"
 
 #include <initializer_list>
 #include <vector>
@@ -167,7 +165,7 @@ public:
   @ART_IPR_CLASS_NAME@(Handle const& aCollection,
       DataContainer const& dc,
       Tag const& tag,
-      std::enable_if_t<detail::is_handle<Handle>::value>* = nullptr);
+      std::enable_if_t<detail::is_handle_v<Handle>>* = nullptr);
 
   template <typename ProdAColl, typename DataContainer, typename Tag>
   @ART_IPR_CLASS_NAME@(ProdAColl const& view,
@@ -238,7 +236,7 @@ public:
   @ART_IPR_CLASS_NAME@(Handle const& aCollection,
       DataContainer const& dc,
       Tag const& tag,
-      std::enable_if_t<detail::is_handle<Handle>::value>* = nullptr);
+      std::enable_if_t<detail::is_handle_v<Handle>>* = nullptr);
 
   template <typename ProdAColl, typename DataContainer, typename Tag>
   @ART_IPR_CLASS_NAME@(ProdAColl const& view,
@@ -284,7 +282,7 @@ template <typename Handle, typename DataContainer, typename Tag>
 art::@ART_IPR_CLASS_NAME@<ProdB, void>::@ART_IPR_CLASS_NAME@(Handle const& aCollection,
     DataContainer const& dc,
     Tag const& tag,
-    std::enable_if_t<detail::is_handle<Handle>::value>*)
+    std::enable_if_t<detail::is_handle_v<Handle>>*)
 {
   using ProdA = typename Handle::element_type::value_type;
   detail::IPRHelper<ProdA, ProdB, void, void, DataContainer> finder{
@@ -393,7 +391,7 @@ template <typename Handle, typename DataContainer, typename Tag>
 art::@ART_IPR_CLASS_NAME@<ProdB, Data>::@ART_IPR_CLASS_NAME@(Handle const& aCollection,
     DataContainer const& dc,
     Tag const& tag,
-    std::enable_if_t<detail::is_handle<Handle>::value>*)
+    std::enable_if_t<detail::is_handle_v<Handle>>*)
 {
   using ProdA = typename Handle::element_type::value_type;
   detail::IPRHelper<ProdA, ProdB, Data, dataColl_t, DataContainer> finder{

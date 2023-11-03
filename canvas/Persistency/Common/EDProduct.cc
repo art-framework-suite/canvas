@@ -9,6 +9,20 @@
 
 using art::EDProduct;
 
+EDProduct::~EDProduct() = default;
+
+std::vector<void const*>
+EDProduct::getView() const
+{ /* should be called only polymorphically */
+  return {};
+}
+
+std::type_info const*
+EDProduct::typeInfo() const
+{
+  return typeInfo_();
+}
+
 void const*
 EDProduct::getElementAddress(std::type_info const& toType,
                              unsigned long const index) const

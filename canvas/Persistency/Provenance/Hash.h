@@ -15,8 +15,6 @@
 // ======================================================================
 
 #include "canvas/Utilities/Exception.h"
-#include "cetlib/MD5Digest.h"
-#include "cetlib/container_algorithms.h"
 
 #include <ostream>
 #include <string>
@@ -24,6 +22,10 @@
 namespace art {
 
   namespace detail {
+    // If hash is in the hexified 32 byte representation, make it be
+    // in the 16 byte unhexified representation.
+    void fixup(std::string& hash);
+    std::string hash_to_string(std::string const& hash);
     // This string is in the 16 byte (non-printable) representation.
     std::string const& InvalidHash();
   } // namespace detail
@@ -60,9 +62,6 @@ namespace art {
     void swap(Hash<I>&);
 
   private:
-    // If hash_ is in the hexified 32 byte representation,
-    // make it be in the 16 byte unhexified representation.
-    void fixup();
     std::string hash_{};
   };
 
@@ -77,25 +76,25 @@ namespace art {
   template <int I>
   Hash<I>::Hash()
   {
-    fixup();
+    detail::fixup(hash_);
   }
 
   template <int I>
   Hash<I>::Hash(std::string const& s) : hash_{s}
   {
-    fixup();
+    detail::fixup(hash_);
   }
 
   template <int I>
   Hash<I>::Hash(Hash<I> const& rhs) : hash_{rhs.hash_}
   {
-    fixup();
+    detail::fixup(hash_);
   }
 
   template <int I>
   Hash<I>::Hash(Hash<I>&& rhs) : hash_{std::move(rhs.hash_)}
   {
-    fixup();
+    detail::fixup(hash_);
   }
 
   template <int I>
@@ -104,7 +103,7 @@ namespace art {
   {
     if (this != &rhs) {
       hash_ = rhs.hash_;
-      fixup();
+      detail::fixup(hash_);
     }
     return *this;
   }
@@ -114,7 +113,7 @@ namespace art {
   Hash<I>::operator=(Hash<I>&& rhs)
   {
     hash_ = std::move(rhs.hash_);
-    fixup();
+    detail::fixup(hash_);
     return *this;
   }
 
@@ -165,11 +164,7 @@ namespace art {
   bool
   Hash<I>::operator!=(Hash<I> const& rhs) const
   {
-    if (isCompactForm() == rhs.isCompactForm()) {
-      return hash_ != rhs.hash_;
-    }
-    // Force both into compact form.
-    return Hash<I>{*this} != Hash<I>{rhs};
+    return !operator==(rhs);
   }
 
   template <int I>
@@ -177,19 +172,16 @@ namespace art {
   Hash<I>::print(std::ostream& os) const
   {
     Hash<I> tMe{*this};
-    cet::MD5Result temp;
-    cet::copy_all(tMe.hash_, temp.bytes);
-    os << temp.toString();
-    return os;
+    return os << detail::hash_to_string(tMe.hash_);
   }
 
   template <int I>
   void
   Hash<I>::swap(Hash<I>& rhs)
   {
-    fixup();
+    detail::fixup(hash_);
     hash_.swap(rhs.hash_);
-    fixup();
+    detail::fixup(hash_);
   }
 
   template <int I>
@@ -201,29 +193,6 @@ namespace art {
     }
     Hash<I> tMe(*this);
     return tMe.compactForm();
-  }
-
-  template <int I>
-  void
-  Hash<I>::fixup()
-  {
-    if (hash_.size() == 16) {
-      // Already in compact form.
-      return;
-    }
-    if (hash_.size() == 0) {
-      hash_ = art::detail::InvalidHash();
-      return;
-    }
-    if (hash_.size() == 32) {
-      cet::MD5Result md5;
-      md5.fromHexifiedString(hash_);
-      hash_ = md5.compactForm();
-      return;
-    }
-    throw art::Exception(art::errors::LogicError)
-      << "art::Hash<> instance with data in illegal state:\n"
-      << hash_ << "\nPlease report this to the core framework developers";
   }
 
   template <int I>

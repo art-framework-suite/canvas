@@ -13,7 +13,8 @@ namespace {
   void
   retrieve(fhicl::ParameterSet const& pset,
            std::string const& parm,
-           bool const should_succeed = true) try {
+           bool const should_succeed = true)
+  try {
     pset.get<art::InputTag>(parm);
     assert(should_succeed);
   }

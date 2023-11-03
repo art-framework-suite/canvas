@@ -7,26 +7,21 @@
 //
 // ======================================================================
 
-#include "canvas/Utilities/TypeID.h"
-#include "canvas/Utilities/product_metatype.h"
-
-#include <map>
+#include "canvas/Persistency/Common/types.h"
 
 namespace art {
   namespace detail {
     class AssnsBase;
   }
 
-  template <typename L, typename R, typename D>
-  class Assns;
-  template <typename L, typename R>
-  class Assns<L, R, void>;
   class EDProduct;
   class EDProductGetter;
   class GroupQueryResult;
   class HLTGlobalStatus;
   class HLTPathStatus;
   class OutputHandle;
+  template <typename T>
+  class ProductPtr;
   template <typename T>
   class Ptr;
   template <typename T>
@@ -40,7 +35,6 @@ namespace art {
   template <typename T>
   class Wrapper;
   struct WrappedTypeID;
-  using product_typeids_t = std::map<product_metatype, TypeID>;
 } // art
 
 // ======================================================================

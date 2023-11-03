@@ -34,7 +34,11 @@ namespace art {
     {
       return !isNonnull();
     }
-    constexpr bool operator!() const noexcept { return isNull(); }
+    constexpr bool
+    operator!() const noexcept
+    {
+      return isNull();
+    }
 
     // Checks if collection is in memory or available in the Event; no
     // type checking is done.  Actually fetches the collection data

@@ -8,7 +8,7 @@
 //
 // ======================================================================
 
-#include "canvas/Persistency/Common/fwd.h"
+#include "canvas/Persistency/Common/types.h"
 
 #include <memory>
 #include <string>
@@ -25,7 +25,7 @@ namespace art {
 
 class art::EDProduct {
 public:
-  virtual ~EDProduct() = default;
+  virtual ~EDProduct();
 
   bool
   isPresent() const
@@ -35,17 +35,8 @@ public:
 
   // We use vector<void*> so as to keep the type information out
   // of the EDProduct class.
-  virtual std::vector<void const*>
-  getView() const
-  { /* should be called only polymorphically */
-    return {};
-  }
-
-  virtual std::type_info const*
-  typeInfo() const
-  {
-    return typeInfo_();
-  }
+  virtual std::vector<void const*> getView() const;
+  virtual std::type_info const* typeInfo() const;
 
   void const* getElementAddress(std::type_info const& toType,
                                 unsigned long index) const;
@@ -101,7 +92,7 @@ public:
                          SubRunID const& id,
                          std::unique_ptr<EDProduct> product)
   {
-    return do_insertIfSampledProduct(dataset, id, move(product));
+    return do_insertIfSampledProduct(dataset, id, std::move(product));
   }
 
 private:

@@ -133,8 +133,8 @@ namespace art {
   }
 
   bool
-  EventRange::contains(SubRunNumber_t const s, EventNumber_t const e) const
-    noexcept
+  EventRange::contains(SubRunNumber_t const s,
+                       EventNumber_t const e) const noexcept
   {
     return (subRun_ == s) && (e >= begin_) && (e < end_);
   }

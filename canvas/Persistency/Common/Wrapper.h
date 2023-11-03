@@ -140,9 +140,7 @@ private:
 ////////////////////////////////////////////////////////////////////////
 // Implementation details.
 
-#include "boost/lexical_cast.hpp"
 #include "canvas/Persistency/Common/GetProduct.h"
-#include "canvas/Persistency/Common/PtrVector.h"
 #include "canvas/Persistency/Common/getElementAddresses.h"
 #include "canvas/Persistency/Common/setPtr.h"
 #include "canvas/Persistency/Common/traits.h"
@@ -172,7 +170,8 @@ art::Wrapper<T>::product() const
 }
 
 template <typename T>
-T const* art::Wrapper<T>::operator->() const
+T const*
+art::Wrapper<T>::operator->() const
 {
   return product();
 }
@@ -196,7 +195,8 @@ std::string
 art::Wrapper<T>::productSize() const
 {
   if constexpr (detail::has_size_member<T>::value) {
-    return boost::lexical_cast<std::string>(obj.size());
+    using std::to_string;
+    return to_string(obj.size());
   } else {
     return "-";
   }
@@ -261,7 +261,8 @@ namespace art {
     create_empty_sampled_product(InputTag const& tag)
     {
       auto emptySampledProduct = std::make_unique<Sampled<T>>(tag);
-      return std::make_unique<Wrapper<Sampled<T>>>(move(emptySampledProduct));
+      return std::make_unique<Wrapper<Sampled<T>>>(
+        std::move(emptySampledProduct));
     }
 
     [[noreturn]] static void
@@ -315,7 +316,7 @@ art::Wrapper<T>::do_insertIfSampledProduct(std::string const& dataset,
                                            std::unique_ptr<EDProduct> product)
 {
   prevent_recursion<T>::insert_if_sampled_product(
-    obj, dataset, id, move(product));
+    obj, dataset, id, std::move(product));
 }
 
 template <typename T>

@@ -202,9 +202,10 @@ template <typename ProdA,
           typename EVENT>
 template <typename Acoll, typename Bcoll>
 auto
-art::detail::IPRHelper<ProdA, ProdB, Data, DATACOLL, EVENT>::
-operator()(Acoll const& aColl, Bcoll& bColl, dataColl_t& dColl) const
-  -> shared_exception_t
+art::detail::IPRHelper<ProdA, ProdB, Data, DATACOLL, EVENT>::operator()(
+  Acoll const& aColl,
+  Bcoll& bColl,
+  dataColl_t& dColl) const -> shared_exception_t
 {
   detail::BcollHelper<ProdB> bh(assnsTag_);
   detail::DataCollHelper<Data> dh;
@@ -230,9 +231,9 @@ operator()(Acoll const& aColl, Bcoll& bColl, dataColl_t& dColl) const
   }
   // Now use the cache.
   size_t bIndex{0};
-  for (typename Acoll::const_iterator i = aColl.begin(), e = aColl.end();
-       i != e;
-       ++i, ++bIndex) {
+  using std::cbegin;
+  using std::cend;
+  for (auto i = cbegin(aColl), e = cend(aColl); i != e; ++i, ++bIndex) {
     auto foundItems = lookupCache.equal_range(
       ensurePointer<typename Ptr<ProdA>::const_pointer>(i));
     if (foundItems.first != lookupCache.cend()) {

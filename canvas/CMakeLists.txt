@@ -1,14 +1,13 @@
 include(CetMake)
 
-find_package(Boost COMPONENTS headers REQUIRED PUBLIC)
-find_package(Boost PRIVATE COMPONENTS headers date_time REQUIRED)
-find_package(CLHEP PRIVATE COMPONENTS Matrix Vector REQUIRED)
-find_package(Range REQUIRED PUBLIC)
-find_package(cetlib REQUIRED PUBLIC)
-find_package(cetlib_except REQUIRED PUBLIC)
-find_package(fhiclcpp REQUIRED PUBLIC)
-find_package(hep_concurrency REQUIRED PUBLIC)
-find_package(messagefacility PRIVATE REQUIRED)
+find_package(Boost COMPONENTS headers date_time REQUIRED)
+find_package(CLHEP COMPONENTS Matrix Vector REQUIRED)
+find_package(Range-v3 REQUIRED EXPORT)
+find_package(cetlib REQUIRED EXPORT)
+find_package(cetlib_except REQUIRED EXPORT)
+find_package(fhiclcpp REQUIRED EXPORT)
+find_package(hep_concurrency REQUIRED EXPORT)
+find_package(messagefacility REQUIRED)
 
 cet_make_library(LIBRARY_NAME canvas
   SOURCE
@@ -31,18 +30,19 @@ cet_make_library(LIBRARY_NAME canvas
     Persistency/Provenance/BranchKey.cc
     Persistency/Provenance/BranchType.cc
     Persistency/Provenance/Compatibility/BranchID.cc
+    Persistency/Provenance/Compatibility/History.cc
     Persistency/Provenance/EventAuxiliary.cc
     Persistency/Provenance/EventID.cc
     Persistency/Provenance/EventRange.cc
     Persistency/Provenance/FileFormatVersion.cc
     Persistency/Provenance/FileIndex.cc
     Persistency/Provenance/Hash.cc
-    Persistency/Provenance/History.cc
     Persistency/Provenance/ParameterSetBlob.cc
     Persistency/Provenance/Parentage.cc
     Persistency/Provenance/ProcessConfiguration.cc
     Persistency/Provenance/ProcessHistory.cc
     Persistency/Provenance/ProductID.cc
+    Persistency/Provenance/ProductList.cc
     Persistency/Provenance/ProductProvenance.cc
     Persistency/Provenance/ProductTables.cc
     Persistency/Provenance/RangeSet.cc
@@ -77,6 +77,7 @@ cet_make_library(LIBRARY_NAME canvas
     CLHEP::Matrix
     CLHEP::Vector
     Boost::date_time
+    range-v3::range-v3
     ${CMAKE_DL_LIBS}
     $<$<PLATFORM_ID:Darwin>:c++abi>
 )
@@ -85,7 +86,9 @@ add_subdirectory(Persistency/Common)
 add_subdirectory(Version)
 
 # Testing
-add_subdirectory(test)
+if (BUILD_TESTING)
+  add_subdirectory(test)
+endif()
 
 set(install_subdirs
   Persistency/Provenance

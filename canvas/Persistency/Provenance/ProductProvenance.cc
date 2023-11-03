@@ -16,24 +16,25 @@ namespace art {
 
   ProductProvenance::ProductProvenance(ProductID const& bid,
                                        ProductStatus const status)
-    : productID_{bid}, productStatus_{status}, parentageID_{}, transients_{}
+    : productID_{bid}, productStatus_{status}
   {}
 
   ProductProvenance::ProductProvenance(ProductID const& bid,
                                        ProductStatus const status,
                                        vector<ProductID> const& parents)
-    : productID_{bid}, productStatus_{status}, parentageID_{}, transients_{}
+    : productID_{bid}
+    , productStatus_{status}
+    , transients_{{false, Parentage{parents}}}
   {
-    transients_.get().parentagePtr_ = make_shared<Parentage>(parents);
-    parentageID_ = transients_.get().parentagePtr_->id();
-    ParentageRegistry::emplace(parentageID_, *transients_.get().parentagePtr_);
+    parentageID_ = transients_.get().parentage_.id();
+    ParentageRegistry::emplace(parentageID_, transients_.get().parentage_);
   }
 
-  ProductProvenance::ProductProvenance(ProductProvenance const& rhs) = default;
-  ProductProvenance::ProductProvenance(ProductProvenance&& rhs) = default;
-  ProductProvenance& ProductProvenance::operator=(
-    ProductProvenance const& rhs) = default;
-  ProductProvenance& ProductProvenance::operator=(ProductProvenance&& rhs) =
+  ProductProvenance::ProductProvenance(ProductProvenance const&) = default;
+  ProductProvenance::ProductProvenance(ProductProvenance&&) = default;
+  ProductProvenance& ProductProvenance::operator=(ProductProvenance const&) =
+    default;
+  ProductProvenance& ProductProvenance::operator=(ProductProvenance&&) =
     default;
 
   ProductID
@@ -64,11 +65,8 @@ namespace art {
   Parentage const&
   ProductProvenance::parentage() const
   {
-    if (!transients_.get().parentagePtr_) {
-      transients_.get().parentagePtr_ = make_shared<Parentage>();
-      ParentageRegistry::get(parentageID_, *transients_.get().parentagePtr_);
-    }
-    return *transients_.get().parentagePtr_;
+    ParentageRegistry::get(parentageID_, transients_.get().parentage_);
+    return transients_.get().parentage_;
   }
 
   void

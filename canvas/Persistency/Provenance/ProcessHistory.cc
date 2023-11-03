@@ -39,7 +39,7 @@ namespace art {
   //       data_ may be modified before the transients_ ctor throws.
   // Note: We do give the basic exception safety guarantee.
   ProcessHistory::ProcessHistory(ProcessHistory&& rhs)
-    : data_(move(rhs.data_)), transients_{move(rhs.transients_)}
+    : data_(std::move(rhs.data_)), transients_{std::move(rhs.transients_)}
   {}
 
   // Note: Cannot be noexcept because the ProcessHistoryID ctor can throw!
@@ -63,8 +63,8 @@ namespace art {
   ProcessHistory&
   ProcessHistory::operator=(ProcessHistory&& rhs)
   {
-    data_ = move(rhs.data_);
-    transients_ = move(rhs.transients_);
+    data_ = std::move(rhs.data_);
+    transients_ = std::move(rhs.transients_);
     return *this;
   }
 
@@ -118,12 +118,14 @@ namespace art {
     data_.reserve(n);
   }
 
-  ProcessHistory::reference ProcessHistory::operator[](size_type i)
+  ProcessHistory::reference
+  ProcessHistory::operator[](size_type i)
   {
     return data_[i];
   }
 
-  ProcessHistory::const_reference ProcessHistory::operator[](size_type i) const
+  ProcessHistory::const_reference
+  ProcessHistory::operator[](size_type i) const
   {
     return data_[i];
   }
@@ -194,7 +196,7 @@ namespace art {
     return data_;
   }
 
-  ProcessHistoryID
+  ProcessHistoryID const&
   ProcessHistory::id() const
   {
     // Note: threading: We may be called by Principal::addProcessEntry()
@@ -255,10 +257,9 @@ namespace art {
     if (a.size() >= b.size()) {
       return false;
     }
-    typedef ProcessHistory::collection_type::const_iterator const_iterator;
-    for (const_iterator itA = a.data().begin(),
-                        itB = b.data().begin(),
-                        itAEnd = a.data().end();
+    for (auto itA = a.data().cbegin(),
+              itB = b.data().cbegin(),
+              itAEnd = a.data().cend();
          itA != itAEnd;
          ++itA, ++itB) {
       if (*itA != *itB) {

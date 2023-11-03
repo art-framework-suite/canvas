@@ -59,17 +59,15 @@ BOOST_AUTO_TEST_SUITE(ptr_customizations_t)
 BOOST_AUTO_TEST_CASE(setPtr_t)
 {
   art::Wrapper<custom::collection<int>> w;
-  BOOST_CHECK_EXCEPTION(w.getElementAddress(typeid(int), {}),
-                        customization_honored,
-                        always_true);
+  BOOST_CHECK_EXCEPTION(
+    w.getElementAddress(typeid(int), {}), customization_honored, always_true);
 }
 
 BOOST_AUTO_TEST_CASE(getElementAddresses_t)
 {
   art::Wrapper<custom::collection<int>> w;
-  BOOST_CHECK_EXCEPTION(w.getElementAddresses(typeid(int), {}),
-                        customization_honored,
-                        always_true);
+  BOOST_CHECK_EXCEPTION(
+    w.getElementAddresses(typeid(int), {}), customization_honored, always_true);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

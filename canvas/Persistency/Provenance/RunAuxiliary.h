@@ -15,12 +15,8 @@
 namespace art {
 
   class RunAuxiliary {
-
-  public: // TYPES
+  public:
     static constexpr BranchType branch_type = InRun;
-
-  public: // MEMBER FUNCTIONS -- Special Member Functions
-    ~RunAuxiliary();
 
     RunAuxiliary();
 
@@ -32,56 +28,36 @@ namespace art {
                  Timestamp const& theTime,
                  Timestamp const& theEndTime);
 
-    RunAuxiliary(RunAuxiliary const&);
+    RunAuxiliary duplicateWith(Timestamp beginTime,
+                               Timestamp endTime = {}) const;
 
-    RunAuxiliary(RunAuxiliary&&);
-
-    RunAuxiliary& operator=(RunAuxiliary const&);
-
-    RunAuxiliary& operator=(RunAuxiliary&&);
-
-  public:
     void write(std::ostream&) const;
-
-    ProcessHistoryID& processHistoryID() const noexcept;
-
-    void setProcessHistoryID(ProcessHistoryID const&) const;
-
+    ProcessHistoryID const& processHistoryID() const noexcept;
+    void setProcessHistoryID(ProcessHistoryID const&);
     unsigned rangeSetID() const noexcept;
-
     void setRangeSetID(unsigned const id) const;
 
     RunID const& id() const noexcept;
-
     RunID const& runID() const noexcept;
-
     void runID(RunID const&);
-
     RunNumber_t run() const noexcept;
 
     Timestamp const& beginTime() const noexcept;
-
-    void beginTime(Timestamp const&);
-
     Timestamp const& endTime() const noexcept;
-
-    void endTime(Timestamp const&);
 
     bool mergeAuxiliary(RunAuxiliary const&);
 
   private:
     void mergeNewTimestampsIntoThis_(RunAuxiliary const&);
-    void mergeNewProcessHistoryIntoThis_(RunAuxiliary const&);
+    RunAuxiliary(RunID id,
+                 Timestamp beginTime,
+                 Timestamp endTime,
+                 ProcessHistoryID processHistoryID,
+                 unsigned rangeSetID);
 
     // most recent process that put a RunProduct into this run
     // is the last on the list, this defines what "latest" is
     mutable ProcessHistoryID processHistoryID_{};
-
-    // allEventsProcessHistories_ contains all the ProcessHistoryIDs for all
-    // events in this run seen so far.
-    // Note: The default ctor for set is not noexcept.
-    std::set<ProcessHistoryID> allEventsProcessHistories_{};
-
     mutable unsigned rangeSetID_{-1u};
     RunID id_{};
     Timestamp beginTime_{};

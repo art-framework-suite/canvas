@@ -2,8 +2,9 @@
 #define canvas_Persistency_Provenance_ReleaseVersion_h
 
 #include <string>
+
 namespace art {
-  typedef std::string ReleaseVersion;
+  using ReleaseVersion = std::string;
 }
 
 #endif /* canvas_Persistency_Provenance_ReleaseVersion_h */

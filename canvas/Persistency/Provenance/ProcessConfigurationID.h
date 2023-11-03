@@ -5,7 +5,7 @@
 #include "canvas/Persistency/Provenance/HashedTypes.h"
 
 namespace art {
-  typedef Hash<ProcessConfigurationType> ProcessConfigurationID;
+  using ProcessConfigurationID = Hash<ProcessConfigurationType>;
 }
 
 #endif /* canvas_Persistency_Provenance_ProcessConfigurationID_h */

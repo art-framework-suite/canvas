@@ -19,7 +19,8 @@ namespace art {
   Parentage& Parentage::operator=(Parentage const&) = default;
   Parentage& Parentage::operator=(Parentage&&) = default;
 
-  Parentage::Parentage(vector<ProductID> parents) : parents_{move(parents)} {}
+  Parentage::Parentage(vector<ProductID> parents) : parents_{std::move(parents)}
+  {}
 
   ParentageID
   Parentage::id() const

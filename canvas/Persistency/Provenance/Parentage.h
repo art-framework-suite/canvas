@@ -25,9 +25,7 @@ namespace art {
     Parentage& operator=(Parentage const&);
     Parentage& operator=(Parentage&&);
 
-  public:
     ParentageID id() const;
-
     std::vector<ProductID> const& parents() const;
 
   private:
@@ -37,7 +35,6 @@ namespace art {
   std::ostream& operator<<(std::ostream& os, Parentage const&);
 
   bool operator==(Parentage const& a, Parentage const& b);
-
   bool operator!=(Parentage const& a, Parentage const& b);
 
 } // namespace art

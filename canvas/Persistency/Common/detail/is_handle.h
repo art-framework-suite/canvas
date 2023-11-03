@@ -10,11 +10,11 @@ namespace art::detail {
   template <typename T>
   struct is_handle<T, std::void_t<typename T::HandleTag>> : std::true_type {};
 
+  template <typename T>
+  constexpr bool is_handle_v = is_handle<T>::value;
+
   template <typename T, typename U>
-  struct are_handles {
-    static constexpr bool value{detail::is_handle<T>::value &&
-                                detail::is_handle<U>::value};
-  };
+  constexpr bool are_handles_v{is_handle_v<T> && is_handle_v<U>};
 }
 #endif /* canvas_Persistency_Common_detail_is_handle_h */
 

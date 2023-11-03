@@ -19,12 +19,12 @@ tracked parameters within a ParameterSet,
 namespace art {
 
   struct ParameterSetBlob {
-    typedef std::string value_t;
+    using value_t = std::string;
 
-    ParameterSetBlob() : pset_() {}
+    ParameterSetBlob() = default;
     explicit ParameterSetBlob(value_t const& v) : pset_(v) {}
 
-    value_t pset_;
+    value_t pset_{};
   };
 
   std::ostream& operator<<(std::ostream& os, ParameterSetBlob const& blob);

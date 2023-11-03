@@ -348,8 +348,8 @@ art::PtrVector<T>::shrink_to_fit()
 
 // Element access.
 template <typename T>
-inline art::Ptr<T> const& art::PtrVector<T>::operator[](
-  unsigned long const idx) const
+inline art::Ptr<T> const&
+art::PtrVector<T>::operator[](unsigned long const idx) const
 {
   return *(begin() + idx);
 }
@@ -447,7 +447,7 @@ template <typename... Args>
 inline void
 art::PtrVector<T>::emplace_back(Args&&... args)
 {
-  Ptr<T> p{std::forward<Args>(args)...};
+  Ptr<T> p(std::forward<Args>(args)...);
   updateCore(p.refCore());
   ptrs_.push_back(std::move(p));
 }

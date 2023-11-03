@@ -7,7 +7,7 @@
 #include <string>
 
 namespace {
-  typedef std::map<std::string, std::string> fnmap_t;
+  using fnmap_t = std::map<std::string, std::string>;
 }
 
 struct FriendlyNameTestFixture {
@@ -18,33 +18,32 @@ struct FriendlyNameTestFixture {
 
 FriendlyNameTestFixture::FriendlyNameTestFixture() : nameMap()
 {
-  nameMap.insert(std::make_pair("Foo", "Foo"));
-  nameMap.insert(std::make_pair("bar::Foo", "bar::Foo"));
-  nameMap.insert(std::make_pair("std::vector<Foo>", "Foos"));
-  nameMap.insert(std::make_pair("std::vector<bar::Foo>", "bar::Foos"));
-  nameMap.insert(std::make_pair("V<A,B>", "ABV"));
-  nameMap.insert(
-    std::make_pair("art::Wrapper<MuonDigiCollection<CSCDetId,CSCALCTDigi> >",
-                   "CSCDetIdCSCALCTDigiMuonDigiCollection"));
-  nameMap.insert(std::make_pair("A<B<C>,D<E> >", "CBEDA"));
-  nameMap.insert(std::make_pair("A<B<C<D> > >", "DCBA"));
-  nameMap.insert(std::make_pair("A<B<C,D>,E<F> >", "CDBFEA"));
-  nameMap.insert(std::make_pair("Aa<Bb<Cc>,Dd<Ee> >", "CcBbEeDdAa"));
-  nameMap.insert(std::make_pair("Aa<Bb<Cc<Dd> > >", "DdCcBbAa"));
-  nameMap.insert(std::make_pair("Aa<Bb<Cc,Dd>,Ee<Ff> >", "CcDdBbFfEeAa"));
-  nameMap.insert(std::make_pair("Aa<Bb<Cc,Dd>,Ee<Ff,Gg> >", "CcDdBbFfGgEeAa"));
-  nameMap.insert(std::make_pair("cet::map_vector_key", "mvk"));
-  nameMap.insert(std::make_pair("cet::map_vector<Foo>", "Foomv"));
-  nameMap.insert(std::make_pair("art::Assns<Ll,Rr,Dd>", "LlRrDdart::Assns"));
-  nameMap.insert(std::make_pair("art::Assns<Rr,Ll,Dd>", "LlRrDdart::Assns"));
+  nameMap.try_emplace("Foo", "Foo");
+  nameMap.try_emplace("bar::Foo", "bar::Foo");
+  nameMap.try_emplace("std::vector<Foo>", "Foos");
+  nameMap.try_emplace("std::vector<bar::Foo>", "bar::Foos");
+  nameMap.try_emplace("V<A,B>", "ABV");
+  nameMap.try_emplace("art::Wrapper<MuonDigiCollection<CSCDetId,CSCALCTDigi> >",
+                      "CSCDetIdCSCALCTDigiMuonDigiCollection");
+  nameMap.try_emplace("A<B<C>,D<E> >", "CBEDA");
+  nameMap.try_emplace("A<B<C<D> > >", "DCBA");
+  nameMap.try_emplace("A<B<C,D>,E<F> >", "CDBFEA");
+  nameMap.try_emplace("Aa<Bb<Cc>,Dd<Ee> >", "CcBbEeDdAa");
+  nameMap.try_emplace("Aa<Bb<Cc<Dd> > >", "DdCcBbAa");
+  nameMap.try_emplace("Aa<Bb<Cc,Dd>,Ee<Ff> >", "CcDdBbFfEeAa");
+  nameMap.try_emplace("Aa<Bb<Cc,Dd>,Ee<Ff,Gg> >", "CcDdBbFfGgEeAa");
+  nameMap.try_emplace("cet::map_vector_key", "mvk");
+  nameMap.try_emplace("cet::map_vector<Foo>", "Foomv");
+  nameMap.try_emplace("art::Assns<Ll,Rr,Dd>", "LlRrDdart::Assns");
+  nameMap.try_emplace("art::Assns<Rr,Ll,Dd>", "LlRrDdart::Assns");
 }
 
 BOOST_FIXTURE_TEST_SUITE(FriendlyName_t, FriendlyNameTestFixture)
 
 BOOST_AUTO_TEST_CASE(FriendlyName_t)
 {
-  for (auto const& pr : nameMap) {
-    BOOST_TEST(art::friendlyname::friendlyName(pr.first) == pr.second);
+  for (auto const& [type_name, friendly_name] : nameMap) {
+    BOOST_TEST(art::friendlyname::friendlyName(type_name) == friendly_name);
   }
 }
 
