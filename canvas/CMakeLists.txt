@@ -6,7 +6,6 @@ find_package(Range-v3 REQUIRED EXPORT)
 find_package(cetlib REQUIRED EXPORT)
 find_package(cetlib_except REQUIRED EXPORT)
 find_package(fhiclcpp REQUIRED EXPORT)
-find_package(hep_concurrency REQUIRED EXPORT)
 find_package(messagefacility REQUIRED)
 
 cet_make_library(LIBRARY_NAME canvas
@@ -70,7 +69,6 @@ cet_make_library(LIBRARY_NAME canvas
     fhiclcpp::fhiclcpp
     cetlib::container_algorithms
     cetlib::cetlib
-    hep_concurrency::hep_concurrency
     cetlib_except::cetlib_except
   PRIVATE
     messagefacility::MF_MessageLogger
