@@ -251,6 +251,7 @@ product		version		qual	flags		<table_format=2>
 clhep		v2_4_7_1	-
 messagefacility	v2_10_04	-
 range		v3_0_12_0	-
+hep_concurrency	v1_09_02	-	only_for_build
 cetmodules	v3_22_02	-	only_for_build
 end_product_list
 ####################################
@@ -306,19 +307,19 @@ end_product_list
 #   case it is optional.
 #
 ####################################
-qualifier       clhep           messagefacility range   notes
-c14:debug	c14:debug	c14:debug	-nq-
-c14:prof	c14:prof	c14:prof	-nq-
-c15:debug	c15:debug	c15:debug	-nq-
-c15:prof	c15:prof	c15:prof	-nq-
-e20:debug	e20:debug	e20:debug	-nq-
-e20:prof	e20:prof	e20:prof	-nq-
-e26:debug	e26:debug	e26:debug	-nq-
-e26:prof	e26:prof	e26:prof	-nq-
-e27:debug	e27:debug	e27:debug	-nq-
-e27:prof	e27:prof	e27:prof	-nq-
-e28:debug	e28:debug	e28:debug	-nq-
-e28:prof	e28:prof	e28:prof	-nq-
+qualifier	clhep		messagefacility hep_concurrency	range	notes
+c14:debug	c14:debug	c14:debug	c14:debug       -nq-
+c14:prof	c14:prof	c14:prof	c14:prof        -nq-
+c15:debug	c15:debug	c15:debug	c15:debug       -nq-
+c15:prof	c15:prof	c15:prof	c15:prof        -nq-
+e20:debug	e20:debug	e20:debug	e20:debug       -nq-
+e20:prof	e20:prof	e20:prof	e20:prof        -nq-
+e26:debug	e26:debug	e26:debug	e26:debug       -nq-
+e26:prof	e26:prof	e26:prof	e26:prof        -nq-
+e27:debug	e27:debug	e27:debug	e27:debug       -nq-
+e27:prof	e27:prof	e27:prof	e27:prof        -nq-
+e28:debug	e28:debug	e28:debug	e28:debug       -nq-
+e28:prof	e28:prof	e28:prof	e28:prof	-nq-
 end_qualifier_list
 ####################################
 
