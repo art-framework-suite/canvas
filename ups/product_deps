@@ -252,7 +252,7 @@ clhep		v2_4_7_1	-
 messagefacility	v2_10_04	-
 range		v3_0_12_0	-
 hep_concurrency	v1_09_02	-	only_for_build
-cetmodules	v3_22_02	-	only_for_build
+cetmodules	v3_23_01	-	only_for_build
 end_product_list
 ####################################
 
