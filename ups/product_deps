@@ -87,7 +87,7 @@
 #>  define_pythonpath
 ####################################
 parent          canvas
-defaultqual     e19
+defaultqual     e28
 ####################################
 
 ####################################
@@ -308,16 +308,6 @@ end_product_list
 #
 ####################################
 qualifier	clhep		messagefacility hep_concurrency	range	notes
-c14:debug	c14:debug	c14:debug	c14:debug       -nq-
-c14:prof	c14:prof	c14:prof	c14:prof        -nq-
-c15:debug	c15:debug	c15:debug	c15:debug       -nq-
-c15:prof	c15:prof	c15:prof	c15:prof        -nq-
-e20:debug	e20:debug	e20:debug	e20:debug       -nq-
-e20:prof	e20:prof	e20:prof	e20:prof        -nq-
-e26:debug	e26:debug	e26:debug	e26:debug       -nq-
-e26:prof	e26:prof	e26:prof	e26:prof        -nq-
-e27:debug	e27:debug	e27:debug	e27:debug       -nq-
-e27:prof	e27:prof	e27:prof	e27:prof        -nq-
 e28:debug	e28:debug	e28:debug	e28:debug       -nq-
 e28:prof	e28:prof	e28:prof	e28:prof	-nq-
 end_qualifier_list
