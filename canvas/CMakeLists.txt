@@ -1,6 +1,6 @@
 include(CetMake)
 
-find_package(Boost COMPONENTS headers date_time REQUIRED)
+find_package(Boost COMPONENTS date_time REQUIRED)
 find_package(CLHEP COMPONENTS Matrix Vector REQUIRED)
 find_package(Range-v3 REQUIRED EXPORT)
 find_package(cetlib REQUIRED EXPORT)
