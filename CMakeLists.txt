@@ -37,4 +37,4 @@ add_subdirectory(canvas)
 add_subdirectory(tools)
 
 # packaging utility
-cet_cmake_config(CONFIG_POST_TARGET_VARS config/canvas-augment-CANVAS.cmake)
+cet_cmake_config()
