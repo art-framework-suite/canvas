@@ -4,6 +4,9 @@ find_package(cetmodules 2.13.00 REQUIRED)
 project(canvas VERSION 3.17.00 LANGUAGES CXX C)
 
 include(CetCMakeEnv)
+include(SetCompilerFlags)
+include(CetCMakeConfig)
+
 cet_cmake_env()
 
 cet_set_compiler_flags(DIAGS VIGILANT DWARF_VER 4
