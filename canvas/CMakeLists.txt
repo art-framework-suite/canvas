@@ -1,4 +1,6 @@
-include(CetMake)
+include(CetMakeLibrary)
+include(InstallHeaders)
+include(InstallSource)
 
 find_package(Boost COMPONENTS date_time REQUIRED)
 find_package(CLHEP COMPONENTS Matrix Vector REQUIRED)

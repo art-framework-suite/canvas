@@ -1,3 +1,5 @@
+include(CetMake)
+
 cet_test(Level_t)
 cet_test(InputTag_t USE_BOOST_UNIT LIBRARIES PRIVATE canvas::canvas)
 cet_test(ParameterSet_get_artInputTag_t LIBRARIES PRIVATE canvas::canvas)
