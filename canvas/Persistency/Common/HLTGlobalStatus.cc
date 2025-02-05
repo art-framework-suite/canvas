@@ -131,7 +131,7 @@ namespace art {
   }
 
   ostream&
-  operator<<(ostream& ost, const HLTGlobalStatus& hlt)
+  operator<<(ostream& ost, HLTGlobalStatus const& hlt)
   {
     vector<string> text{"n"s, "1"s, "0"s, "e"s};
     unsigned const n(hlt.size());

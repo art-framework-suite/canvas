@@ -43,7 +43,7 @@ namespace art {
   template <typename U, typename V>
   struct key_traits<std::pair<U, V>> {
     using key_type = std::pair<U, V>;
-    static const key_type value;
+    static key_type const value;
   };
 
   // If we ever need to support instantiations of std::basic_string
@@ -54,7 +54,7 @@ namespace art {
   template <>
   struct key_traits<std::string> {
     using key_type = std::string;
-    static const key_type value;
+    static key_type const value;
   };
 
   template <typename T, typename = void>

@@ -57,7 +57,7 @@ namespace art {
     bool isRealData_{false};
     ExperimentType experimentType_{Any};
   };
-  std::ostream& operator<<(std::ostream&, const EventAuxiliary&);
+  std::ostream& operator<<(std::ostream&, EventAuxiliary const&);
 } // namespace art
 
 #endif /* canvas_Persistency_Provenance_EventAuxiliary_h */

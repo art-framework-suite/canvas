@@ -112,7 +112,11 @@ namespace art {
       return reinterpret_cast<T const*>(core_.productPtr());
     }
 
-    explicit operator bool() const { return core_.isAvailable(); }
+    explicit
+    operator bool() const
+    {
+      return core_.isAvailable();
+    }
 
     RefCore const&
     refCore() const noexcept

@@ -31,9 +31,9 @@ namespace art {
 
   public:
     ConstPtrCache() : ptr_(0) {}
-    ConstPtrCache(const void* iPtr) : ptr_(iPtr) {}
+    ConstPtrCache(void const* iPtr) : ptr_(iPtr) {}
 
-    const void* ptr_;
+    void const* ptr_;
   };
 }
 #endif /* canvas_Persistency_Common_ConstPtrCache_h */

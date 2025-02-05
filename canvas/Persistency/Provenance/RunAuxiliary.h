@@ -64,7 +64,7 @@ namespace art {
     Timestamp endTime_{};
   };
 
-  std::ostream& operator<<(std::ostream&, const RunAuxiliary&);
+  std::ostream& operator<<(std::ostream&, RunAuxiliary const&);
 
 } // namespace art
 

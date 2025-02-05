@@ -151,7 +151,8 @@ namespace art {
       return reinterpret_cast<T const*>(core_.productPtr());
     }
 
-    explicit operator bool() const
+    explicit
+    operator bool() const
     {
       return isNonnull() && core_.isAvailable();
     }

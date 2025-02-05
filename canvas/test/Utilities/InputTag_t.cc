@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(InputTag_from_three_strings)
 
 BOOST_AUTO_TEST_CASE(InputTag_from_one_cstring)
 {
-  const char* mylabel = "mylabel";
+  char const* mylabel = "mylabel";
   std::string empty;
   art::InputTag t(mylabel);
   BOOST_TEST(t.label() == std::string(mylabel));
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(InputTag_convert_from_string)
 
 BOOST_AUTO_TEST_CASE(InputTag_convert_from_cstring)
 {
-  const char* mylabel = "alabel";
+  char const* mylabel = "alabel";
   std::string result = grabLabel(mylabel);
   BOOST_TEST(std::string(mylabel) == result);
 }

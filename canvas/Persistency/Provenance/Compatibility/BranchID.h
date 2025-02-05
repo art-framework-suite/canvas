@@ -41,7 +41,8 @@ namespace art {
 
     // This is for the use of tbb::hash<BranchID> (and possibly
     // std::hash<BranchID>?)
-    explicit operator std::size_t() const
+    explicit
+    operator std::size_t() const
     {
       return static_cast<std::size_t>(id_);
     }

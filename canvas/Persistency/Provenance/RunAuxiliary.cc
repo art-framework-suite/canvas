@@ -147,7 +147,7 @@ namespace art {
   }
 
   ostream&
-  operator<<(ostream& os, const RunAuxiliary& p)
+  operator<<(ostream& os, RunAuxiliary const& p)
   {
     p.write(os);
     return os;
