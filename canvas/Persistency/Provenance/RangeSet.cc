@@ -306,7 +306,7 @@ namespace art {
                other.ranges_.cbegin(),
                other.ranges_.cend(),
                back_inserter(merged));
-    (void)unique(merged.begin(), merged.end()); // discarding return value
+    ignore = unique(merged.begin(), merged.end()); // discarding return value
     std::swap(ranges_, merged);
     isCollapsed_ = false;
     collapse();
