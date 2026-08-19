@@ -248,7 +248,7 @@ perllib product_dir
 #
 ####################################
 product		version		qual	flags		<table_format=2>
-clhep		v2_4_7_1	-
+clhep		v2_4_7_2	-
 messagefacility	v2_11_01	-
 range		v3_0_12_0	-
 hep_concurrency	v1_10_00	-	only_for_build
